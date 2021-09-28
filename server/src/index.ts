@@ -8,7 +8,7 @@ const app = express();
 
 
 app.get("/api", (req, res) => {
-  const a: RoadModel = {x: 1, y: 2}
+  const a: RoadModel = {x: 1000, y: 2000}
   res.json(a);
 });
 

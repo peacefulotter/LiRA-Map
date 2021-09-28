@@ -12,7 +12,7 @@ const Map: React.FC<RoadModel> = ( props ) => {
   console.log(props.position);
   const pos = {x: 30, y: 30 }
   return (
-    <MapContainer center={[pos.x, pos.y]} zoom={13} scrollWheelZoom={false}>
+    <MapContainer center={[props.position.x, props.position.y]} zoom={5} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
