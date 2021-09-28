@@ -21,7 +21,9 @@ function App() {
 
   return (
     <div className="App">
+      <div className="Map">
       <Map position={data}/>
+      </div>
       <p>{!data ? "Loading..." : data.x}</p>
       <p>{!data ? "Loading..." : data.y}</p>
     </div>
