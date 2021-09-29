@@ -9,12 +9,3 @@
   color: white;
   font-size: 2em;
 }
-
-.Map {
-  width: 50vw;
-  height: 50vh;
-}
-
-.leaflet-container{
-  height:100%;
-}
