@@ -1,0 +1,16 @@
+
+.map-wrapper {
+    width: 90vw;
+    height: 90vh;
+}
+  
+.leaflet-container{
+    height:100%;
+    border-radius: 10px;
+}
+
+.leaflet-top.leaflet-right {
+    display: none;
+    visibility: hidden;
+    height: 0;
+}
