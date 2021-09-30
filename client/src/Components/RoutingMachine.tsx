@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import L, { ControlOptions, Map, LatLng } from 'leaflet';
+import L, { ControlOptions, LatLng } from 'leaflet';
+import { Polyline } from 'react-leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 import "../css/map.css"
@@ -11,9 +12,7 @@ interface Props extends ControlOptions {
 };
   
 const Routing = ( props: Props ) => {
-    console.log(props);
     const { roadStatus } = props;
-    // if ( map == null ) return (<></>);
     console.log(roadStatus);
 
     // test DTU 
@@ -23,25 +22,43 @@ const Routing = ( props: Props ) => {
         L.latLng(55.77443831729525, 2172.5152535157754)
     ]
 
-    const data: LatLng[] = [
-        L.latLng(13.0827, 80.2707),
-        L.latLng(13.0317, 80.1817),
-        L.latLng(12.8342, 79.7036)
+    const paris: LatLng[] = [
+      L.latLng(48.867195112021115, 2.3632306776047907),
+      L.latLng(48.837142068931385, 2.3179338465416466),
+    ]
+
+    const danemark: LatLng[] = [
+      L.latLng(55.673876269102614,  12.565291822766696),
+      L.latLng(55.78571634739484,   12.52142049280467)
     ]
 
     const instance = L.Routing.control({
-        waypoints: data,
-        plan: L.Routing.plan(data, {
-          createMarker: (i, wp, n) => {
-            if (i == 0 || i == n - 1) {
-              return L.marker( wp.latLng, { draggable: false } );
-            } else {
-              return L.marker( [0, 0] ); // TODO: change this
-            }
+      waypoints: danemark,
+      plan: L.Routing.plan(danemark, {
+        createMarker: (i, wp, n) => {
+          if (i == 0 || i == n - 1) {
+            return L.marker( wp.latLng, { draggable: false } );
+          } else {
+            return L.marker( [0, 0] ); // TODO: change this
           }
-        }),
-        addWaypoints: false // prevent users from adding new waypoints
-      });
+        }
+      }),
+      lineOptions: {
+        styles: [{color: 'white', opacity: 0.15, weight: 9}, {color: 'white', opacity: 0.8, weight: 6}, {color: 'purple', opacity: 1, weight: 2}],
+        addWaypoints: false,
+        missingRouteStyles: [{color: 'white', opacity: 0.15, weight: 7},{color: 'white', opacity: 0.6, weight: 4},{color: 'purple', opacity: 0.8, weight: 2, dashArray: '7,12'}],
+        extendToWaypoints: false,
+        missingRouteTolerance: 0
+      },
+      addWaypoints: false // prevent users from adding new waypoints
+    });
+
+    let path: LatLng[] = []
+    instance.on('routesfound', function (e) {
+      let route = e.routes[0];
+      path = route.coordinates;
+      console.log(e);
+    });
     
     /*
     const instance = L.Routing.control({
@@ -63,6 +80,9 @@ const Routing = ( props: Props ) => {
     })*/
         
     return instance;
+    // console.log(path);
+    // return <Polyline pathOptions={{color: 'purple'}} positions={path}></Polyline>
+      
 }
 
 const RoutingMachine = createControlComponent<L.Control, Props>( Routing );

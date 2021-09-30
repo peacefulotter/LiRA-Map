@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet'
-import L, { LocationEvent, LatLng, LatLngExpression, LeafletMouseEvent, Map } from 'leaflet';
+import { LocationEvent, LatLng, LatLngExpression, LeafletMouseEvent } from 'leaflet';
 
 import RoutingMachine from "./RoutingMachine";
 import { RoadModel } from '../assets/models'
@@ -22,7 +22,7 @@ const MapWrapper: FC<Props> = ( { roadStatus } ) => {
     const map = useMapEvents( {
       click(e: LeafletMouseEvent) {
         console.log(e);
-        setPosition(e.latlng)
+        // setPosition(e.latlng)
         map.flyTo(e.latlng, map.getZoom())
       },
       // when using map.locate()
