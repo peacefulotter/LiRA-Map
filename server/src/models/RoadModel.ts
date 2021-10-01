@@ -2,7 +2,6 @@
 import { RoadCondition } from './RoadCondition'
 
 export type RoadModel = {
-    x: number[],
-    y: number[],
-    condition: RoadCondition[]
+    paths: number[][][],
+    conditions: RoadCondition[]
 }

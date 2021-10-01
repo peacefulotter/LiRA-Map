@@ -20,7 +20,7 @@ const App: FC = () => {
   return (
     <div className="App">
       <div className="map-wrapper">
-        <Map roadStatus={data}/>
+        { data === undefined ? <></> : <Map roadStatus={data}/> }
       </div>
     </div>
   );
