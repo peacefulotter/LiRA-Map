@@ -38,17 +38,18 @@ const MapWrapper: FC<Props> = ( { roadStatus } ) => {
     )
   }
 
-  const segments = roadStatus.x.length;
+  const segments = roadStatus.paths.length;
   let roadCoords: LatLngExpression[] = []
   for (let i = 0; i < segments; i++) 
-      roadCoords.push( [roadStatus.x[ i ], roadStatus.y[ i ]] )
+      roadCoords.push( roadStatus.paths[ i ][ 0 ], roadStatus.paths[ i ][ 1 ] )
+
 
   console.log(roadStatus);
   console.log(roadCoords);
 
   return (
     <MapContainer 
-      center={[roadStatus.x[0], roadStatus.y[0]]} 
+      center={roadStatus.paths[ 0 ][ 0 ]} 
       zoom={5} 
       scrollWheelZoom={true}>
       <TileLayer

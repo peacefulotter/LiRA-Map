@@ -10,9 +10,13 @@ const app = express();
 
 app.get("/api", (req, res) => {
   const roadData: RoadModel = {
-    x: [55.78375070321902, 55.78, 55.78, 55.783],
-    y: [2172.519382460705, 2172.52, 2172.53, 2172.52],
-    condition: [RoadCondition.Good, RoadCondition.Correct, RoadCondition.Bad]
+    paths: [
+      [ [55.78375070321902, 2172.519382460705],
+        [55.78,             2172.52] ],
+      [ [55.78,             2172.53],
+        [ 55.783,           2172.52] ]
+    ],
+    conditions: [RoadCondition.Good, RoadCondition.Correct, RoadCondition.Bad]
   }
   res.json(roadData);
 });
