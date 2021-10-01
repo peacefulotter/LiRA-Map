@@ -1,6 +1,7 @@
 
+import { RoadCondition } from './RoadCondition'
 
-type RoadModel = {
-    x: number,
-    y: number
+export type RoadModel = {
+    paths: number[][][],
+    conditions: RoadCondition[]
 }

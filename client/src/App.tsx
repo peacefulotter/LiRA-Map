@@ -1,31 +1,27 @@
-import React from "react";
+import React, { FC, useState, useEffect } from "react";
 import Map from "./Components/Map"
+import { RoadModel } from './assets/models'
 import "./App.css";
 
-interface RoadModel {
-  x : number,
-  y : number
-}
 
-function App() {
-  const [data, setData] = React.useState<RoadModel>({x: 0, y: 0});
 
-  React.useEffect(() => {
+const App: FC = () => {
+  const [data, setData] = useState<RoadModel | undefined>(undefined);
+
+  useEffect( () => {
     fetch("/api")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setData(data as RoadModel);
       })
-  }, []);
+  }, [] );
 
   return (
     <div className="App">
-      <div className="Map">
-      <Map position={data}/>
+      <div className="map-wrapper">
+        { data === undefined ? <></> : <Map roadStatus={data}/> }
       </div>
-      <p>{!data ? "Loading..." : data.x}</p>
-      <p>{!data ? "Loading..." : data.y}</p>
     </div>
   );
 }
