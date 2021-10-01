@@ -1,0 +1,45 @@
+- branches, master on push -> build and deploy to docker
+
+- naming conventions
+
+- road conditions
+- road::hover -> popup (leaflet)
+- filters
+
+- router with switch and navbar
+
+- fake again => map matching and interpolation
+
+- deploy server and client to servers
+- docker?
+- OSRM
+
+
+- fake login
+
+
+
+
+
+
+## NEXT WEEK
+2 pages at most and 12 slides on the PROJECT VISION
+
+
+
+
+
+
+### Report 
+
+####  Project vision (1 or 2 pages) -> 2 WEEKS 
+- talk about the intermediate releases
+- idea of what the outcome could be  with examples (need to be concret)
+
+#### System specification (35 pages)
+react, ts, agile, ci/cd, docker
+
+HANDBOOK -> when to deliver it
+FINAL SUBMISSION -> when
+
+
