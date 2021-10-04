@@ -5,15 +5,15 @@ import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 import "../css/map.css"
 
-import { RoadModel } from '../assets/models'
+import { RoadSegments } from '../assets/models'
 
 interface Props extends ControlOptions {
-    roadStatus: RoadModel;
+  roadSegments: RoadSegments;
 };
   
 const Routing = ( props: Props ) => {
-    const { roadStatus } = props;
-    console.log(roadStatus);
+    const { roadSegments } = props;
+    console.log(roadSegments);
 
     // test DTU 
     const waypoints: LatLng[] = [
@@ -60,29 +60,10 @@ const Routing = ( props: Props ) => {
       console.log(e);
     });
     
-    /*
-    const instance = L.Routing.control({
-        waypoints: waypoints,
-        lineOptions: {
-            extendToWaypoints: false,
-            missingRouteTolerance: 1,
-            styles: [
-                {
-                color: "red",
-                opacity: 0.9,
-                weight: 5
-                }
-            ]
-        },
-        addWaypoints: false,
-        fitSelectedRoutes: true,
-        showAlternatives: true
-    })*/
         
     return instance;
     // console.log(path);
-    // return <Polyline pathOptions={{color: 'purple'}} positions={path}></Polyline>
-      
+    // return <Polyline pathOptions={{color: 'purple'}} positions={path}></Polyline> 
 }
 
 const RoutingMachine = createControlComponent<L.Control, Props>( Routing );
