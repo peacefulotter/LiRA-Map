@@ -19,7 +19,7 @@ interface RideMeta {
 }
 
 // represents one ride: a model + meta data of the ride
-interface Ride {
+export interface Ride {
   segments: RoadSegments,
   meta: RideMeta
 }
