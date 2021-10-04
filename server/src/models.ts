@@ -1,8 +1,14 @@
 
-import { LatLng } from 'leaflet';
 
-enum RoadCondition {
+
+export enum RoadCondition {
   'Good', 'Correct', 'Bad'
+}
+
+// the backend doesnt have leaflet (yet?)
+interface LatLng {
+  lat: number,
+  lng: number
 }
 
 export interface RoadSegment {

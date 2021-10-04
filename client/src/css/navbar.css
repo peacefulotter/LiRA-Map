@@ -1,0 +1,24 @@
+
+
+.nav-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 12vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.nav-tab {
+    font-size: 2.5vh;
+    color: white;
+    text-decoration: none;
+    margin-left: 7vw;
+}
+
+.nav-tab-active {
+    color:rgb(55, 180, 255);
+}

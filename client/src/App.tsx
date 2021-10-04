@@ -1,29 +1,31 @@
-import React, { FC, useState, useEffect } from "react";
-import Map from "./Components/Map"
-import { RoadModel } from './assets/models'
+import { FC } from "react";
+import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+
+import Navbar from './Components/Navbar'
+import Rides from './Components/Rides'
+// import Map from "./Components/Map"
+
 import "./App.css";
 
 
 
 const App: FC = () => {
-  const [data, setData] = useState<RoadModel | undefined>(undefined);
+    /*
+    <div className="map-wrapper">
+          { data === undefined ? <></> : <Map roadStatus={data}/> }
+    </div>*/
 
-  useEffect( () => {
-    fetch("/api")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setData(data as RoadModel);
-      })
-  }, [] );
-
-  return (
-    <div className="App">
-      <div className="map-wrapper">
-        { data === undefined ? <></> : <Map roadStatus={data}/> }
-      </div>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Router>
+                <Navbar />
+                <Switch>
+                    <Route exact path="/rides" component={() => <Rides />} />
+                    <Route exact path="/other" component={() => <div>chocolat</div>} />
+                </Switch>
+            </Router>
+        </div>
+    );
 }
 
 export default App;

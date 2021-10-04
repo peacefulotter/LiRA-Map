@@ -3,26 +3,26 @@ import { Polyline } from 'react-leaflet'
 import L, { LatLng } from 'leaflet';
 
 import RoutingMachine from "./RoutingMachine";
-import { RoadModel } from '../assets/models'
+import { RoadSegments, RoadSegment } from '../assets/models'
 
 import '../css/road.css'
 
 
 type Props = {
-  roads: RoadModel;
+  roadSegments: RoadSegments;
 };
 
-const Roads: FC<Props> = ( { roads } ) => {
-  console.log(roads.paths);
+const Roads: FC<Props> = ( { roadSegments } ) => {
+  console.log(roadSegments);
   
     return (<>
       {
-         roads.paths.map( (element: LatLng[], i: number) => {
-           let a = <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={element}></Polyline>
+         roadSegments.map( (seg: RoadSegment, i: number) => {
+           let a = <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={seg.path}></Polyline>
            console.log(a);
            // let path: LatLng[] = [L.latLng(element[0][0], element[0][1]), L.latLng(element[1][0], element[1][1])]
            
-          return <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={element}></Polyline>
+          return <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={seg.path}></Polyline>
       } )
       }
     </>)
