@@ -1,0 +1,33 @@
+
+
+.rides-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: calc(100% - 12vh);
+    padding: 10px;
+}
+
+.ride-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20vw;
+    min-height: 100%;
+    padding: 20px;
+    background-color: rgb(58, 58, 58);
+    overflow-y: scroll;
+}
+
+.map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.map-container .leaflet-container {
+    width: 90%;
+    height: 90%;
+}

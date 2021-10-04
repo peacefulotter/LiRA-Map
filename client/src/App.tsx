@@ -2,8 +2,7 @@ import { FC } from "react";
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 
 import Navbar from './Components/Navbar'
-import Rides from './Components/Rides'
-// import Map from "./Components/Map"
+import Rides from './Components/Rides/Rides'
 
 import "./App.css";
 
