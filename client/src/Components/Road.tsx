@@ -12,21 +12,15 @@ type Props = {
   roadSegments: RoadSegments;
 };
 
-const Roads: FC<Props> = ( { roadSegments } ) => {
-  console.log(roadSegments);
-  
-    return (<>
-      {
-         roadSegments.map( (seg: RoadSegment, i: number) => {
-           let a = <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={seg.path}></Polyline>
-           console.log(a);
-           // let path: LatLng[] = [L.latLng(element[0][0], element[0][1]), L.latLng(element[1][0], element[1][1])]
-           
-          return <Polyline key={`line${i}`} pathOptions={{color: 'red'}} positions={seg.path}></Polyline>
-      } )
-      }
-    </>)
-   
+const Roads: FC<Props> = ( { roadSegments } ) => {  
+    return <> { 
+		roadSegments.map( (seg: RoadSegment, i: number) => {			
+			return <Polyline 
+						key={`line${i}`} 
+						pathOptions={i ? {color: 'red'} : {color: 'blue'}} 
+						positions={seg.path}>	
+					</Polyline>
+		} ) } </>
 }
 
 export default Roads;
