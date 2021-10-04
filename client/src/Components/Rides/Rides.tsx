@@ -14,9 +14,10 @@ import '../../css/rides.css'
 
 
 const Rides: FC = () => {
-    const [ rides, setRides ] = useState<RidesModel | undefined>(undefined);
-    const [ currentRide, setCurrentRide ] = useState<Ride | undefined>(undefined);
+    const [ rides, setRides ] = useState<RidesModel | null>(null);
+    const [ currentRide, setCurrentRide ] = useState<Ride | null>(null);
 
+    // FIXME: dont recall useEffect everytime 
     useEffect( () => {
         fetch("/rides")
         .then((res) => res.json())
@@ -27,41 +28,24 @@ const Rides: FC = () => {
         })
     }, [] );
 
-    const showRide = (i: number) => {
-        console.log(i);
-        console.log(currentRide);
-        
-        if ( rides !== undefined )
-            setCurrentRide( rides[i] );
-        console.log(currentRide);
-        
+    const showRide = (i: number) => {        
+        if ( rides != null )
+            setCurrentRide( rides[i] );        
     }
 
-
     function LocationMarker() {
-        const [position, setPosition] = useState<LatLng | null>(null)
         const map = useMapEvents( {
           click(e: LeafletMouseEvent) {
             console.log(e);
-            // setPosition(e.latlng)
-            map.flyTo(e.latlng, map.getZoom())
-          },
-          // when using map.locate()
-          locationfound(e: LocationEvent ) {
-            console.log(e);
-          },
+          }
         } )
       
-        return position === null ? null : (
-          <Marker position={position}>
-          </Marker>
-        )
-      }
+        return null;
+    }
 
-    // <Polyline pathOptions={{color: 'purple'}} positions={roadCoords} />
     return (
         <div className="rides-wrapper">
-            { (rides === undefined || currentRide === undefined) ? <></> : 
+            { (rides === null || currentRide === null) ? <></> : 
                 <>
                 <div className="ride-list">
                     { rides.map( (r: Ride, i: number) => {
@@ -79,7 +63,6 @@ const Rides: FC = () => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         <LocationMarker />
-
                         <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
                         <Road roadSegments={currentRide.segments}></Road>
                     </MapContainer>

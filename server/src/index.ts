@@ -12,15 +12,15 @@ const app = express();
 
 const firstSegments: RoadSegments = [
   { path: [
-    { lat: 55.699151056122616, lng: 2172.576617002378 },
-    { lat: 55.691000420747365, lng: 2172.4950528142654 }
+    { lat: 57.74, lng: 12 },
+    { lat: 57.6792, lng: 12 }
   ],
     condition: RoadCondition.Good
   },
 
   { path: [
-    { lat: 55.78,  lng: 2172.53 },
-    { lat: 55.783, lng: 2172.52 }
+    { lat: 57.6792, lng: 12 },
+    { lat: 57.70, lng: 12.04 }
   ],
     condition: RoadCondition.Correct
   },
@@ -45,8 +45,9 @@ const secondRide: Ride = { meta: secondMeta, segments: secondSegments }
 
 app.get("/rides", (req, res) => {
   const data: RidesModel = [ firstRide, secondRide ]
+  // tslint:disable-next-line:no-console
   console.log(data);
-  
+
   res.json(data);
 });
 

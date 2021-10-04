@@ -9,15 +9,34 @@ import { roadStatusToCoords } from "../assets/road_utils";
 import '../css/map.css'
 
 
+/*
+function LocationMarker() {
+        const [position, setPosition] = useState<LatLng | null>(null)
+        const map = useMapEvents( {
+          click(e: LeafletMouseEvent) {
+            console.log(e);
+            // setPosition(e.latlng)
+            map.flyTo(e.latlng, map.getZoom())
+          },
+          // when using map.locate()
+          locationfound(e: LocationEvent ) {
+            console.log(e);
+          },
+        } )
+      
+        return position === null ? null : (
+          <Marker position={position}>
+          </Marker>
+        )
+    }*/
+
 type Props = {
   roadSegments: RoadSegments;
 };
 
 const MapWrapper: FC<Props> = ( { roadSegments } ) => {
 
-  const roadCoords = roadStatusToCoords( roadSegments )
-  // <Polyline pathOptions={{color: 'purple'}} positions={roadCoords} />
- 
+  const roadCoords = roadStatusToCoords( roadSegments ) 
     
   return (
     <MapContainer 
