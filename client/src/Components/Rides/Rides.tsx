@@ -55,10 +55,7 @@ const Rides: FC = () => {
                     }
                 </div>
                 <div className="meta-data">
-                { rides.map( (r: Ride, i: number) => {
-                        return <MetaDataTab ride={r} index={i} onClick={showRide} key={`ride${i}`}></MetaDataTab>
-                      })
-                    }
+                        <MetaDataTab ride={currentRide} key={`ride${currentRide}`}></MetaDataTab>
                 </div>
                 <div className="map-container">
                     <MapContainer 

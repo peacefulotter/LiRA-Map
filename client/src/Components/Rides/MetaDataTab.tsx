@@ -1,20 +1,20 @@
 import { FC, useState } from "react";
 
 import { Ride } from '../../assets/models'
-
+import MetaData from "./MetaData";
 import '../../css/ridecard.css'
 
-interface Props {
+type Props = {
     ride: Ride,
-    index: number,
-    onClick: (i: number) => void
-}
+    //index: number,
+    //onClick: () => void
+};
 
-const MetaDataTab: FC<Props> = ( { ride, index, onClick } ) => {
+const MetaDataTab: FC<Props> = ( { ride } ) => {  //metadata component is put, then measurement types should be listed in a checkbox
     // FIXME: replace ride with rideMeta as props
     return (
-        <div className="ride-metadata-container" onClick={() => onClick(index)}>
-            <div>blob</div>
+        <div className="ride-metadata-container" >
+            <MetaData data = {ride.meta} key={`ride${ride}`}></MetaData>
         </div>
     
   )
