@@ -13,7 +13,7 @@ export interface RoadSegment {
 export type RoadSegments = RoadSegment[];
 
 // represents the metadata of a ride
-interface RideMeta {
+export interface RideMeta {
   time: number,
   distance: number
 }
