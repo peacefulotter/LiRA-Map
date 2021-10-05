@@ -11,9 +11,25 @@ type Props = {
 };
 
 const MetaData: FC<Props> = ( { data } ) => {//print all necessary meta info with a map function here
+    //console.log(Object.keys(data))
+    return (
+        <div className="ride-metadata-container" >
+            {
+                  //console.log(e);
+                  <ul>
+                  <li> Duration: {data.time} </li>
+                  <li> Distance: {data.distance} </li>
+                  <li> Start: {data.start_time} </li>
+                  <li> End: {data.end_time} </li>
+                </ul>
+            }
+        </div>
+    )
     return (
         <div className="ride-metadata-container" >
             <div>{data.distance}</div>  
+            { JSON.stringify(data)
+            }
         </div>
     
   )

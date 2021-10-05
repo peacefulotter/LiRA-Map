@@ -16,6 +16,8 @@ export type RoadSegments = RoadSegment[];
 export interface RideMeta {
   time: number,
   distance: number
+  start_time: string,
+  end_time: string
 }
 
 // represents one ride: a model + meta data of the ride
@@ -24,4 +26,8 @@ export interface Ride {
   meta: RideMeta
 }
 
+
+
 export type RidesModel = Ride[];
+
+export type MeasurementsModel = string[];
