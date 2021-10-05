@@ -5,6 +5,7 @@ import { LatLng, LeafletMouseEvent, LocationEvent } from 'leaflet'
 
 import RoutingMachine from "../RoutingMachine";
 import RideCard from "./RideCard";
+import MetaDataTab from "./MetaDataTab";
 import Road from "../Road";
 
 import { roadStatusToCoords } from "../../assets/road_utils";
@@ -50,6 +51,12 @@ const Rides: FC = () => {
                 <div className="ride-list">
                     { rides.map( (r: Ride, i: number) => {
                         return <RideCard ride={r} index={i} onClick={showRide} key={`ride${i}`}></RideCard>
+                      })
+                    }
+                </div>
+                <div className="meta-data">
+                { rides.map( (r: Ride, i: number) => {
+                        return <MetaDataTab ride={r} index={i} onClick={showRide} key={`ride${i}`}></MetaDataTab>
                       })
                     }
                 </div>
