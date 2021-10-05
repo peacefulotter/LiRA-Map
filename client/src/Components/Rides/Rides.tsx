@@ -29,7 +29,8 @@ const Rides: FC = () => {
             setCurrentRide(data[1])
         })
     }, [] );
-
+ // we may not need to fetch it from backend?
+ /*
     useEffect(() => {
         fetch("/measurements")
         .then((res) => res.json())
@@ -39,7 +40,7 @@ const Rides: FC = () => {
         })
 
     }, []);
-
+*/
     
 
     const showRide = (i: number) => {        
