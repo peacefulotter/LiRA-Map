@@ -25,14 +25,7 @@ const MetaData: FC<Props> = ( { data } ) => {//print all necessary meta info wit
             }
         </div>
     )
-    return (
-        <div className="ride-metadata-container" >
-            <div>{data.distance}</div>  
-            { JSON.stringify(data)
-            }
-        </div>
     
-  )
 }
 
 export default MetaData;
