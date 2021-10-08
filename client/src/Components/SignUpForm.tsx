@@ -19,7 +19,7 @@ function SignUp (){
     
     
 
-    let handleChange = (event : any) => {
+    const handleChange = (event : any) => {
         event.preventDefault();
         const { name, value } = event.target;
         setState(prevState => ({
@@ -29,19 +29,14 @@ function SignUp (){
         console.log(state) ;
     }
     
-    function Redirect():void{
-        console.log("Hai cliccato il bottone")
-        const formData = new FormData()
-        formData.append('username', state.username)
-        formData.append('email', state.email)
-        formData.append('password', state.password)
+    const redirect = () => {
         let fetchCredential = {
             method:'POST',
-            body: formData,
+            body: JSON.stringify(state),
             headers: new Headers()
         }
         
-            fetch("/login", fetchCredential)
+        fetch("/login", fetchCredential)
             .then((res) => res.json())
             .then((res) => console.log(res))
          
@@ -69,7 +64,7 @@ function SignUp (){
                             
                         </div>
                         <div className='submit'>
-                            <button onClick={Redirect}>Register Me</button>
+                            <button onClick={redirect}>Register Me</button>
                            
                         </div>
                     </div>
