@@ -2,6 +2,7 @@ import React from 'react';
 import { FC, useState, useEffect } from "react";
 import '../css/signUpForm.css';
 import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 interface State {
     username : string,
@@ -29,6 +30,11 @@ function SignUp (){
         console.log(state) ;
     }
     
+    
+        let history = useHistory();
+      
+    
+
     function Redirect():void{
         console.log("Hai cliccato il bottone")
         const formData = new FormData()
@@ -44,6 +50,7 @@ function SignUp (){
             fetch("/login", fetchCredential)
             .then((res) => res.json())
             .then((res) => console.log(res))
+            history.push("/home")
          
     }
 
