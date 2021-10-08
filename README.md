@@ -1,4 +1,4 @@
-# LiRA-Map-Frontend
+# LiRA-Map
 
 
 #### Server
