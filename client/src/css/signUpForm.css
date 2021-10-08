@@ -36,7 +36,7 @@ form {
     flex-wrap: wrap;
 }
 
-label {
+.form-wrapper label {
     margin-bottom: 0.3em;
     font-size: 0.5em;
     color: #444;
