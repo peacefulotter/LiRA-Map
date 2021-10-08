@@ -31,12 +31,11 @@ function SignUp (){
     }
     
     
-        let history = useHistory();
+    let history = useHistory();
       
     
 
     function Redirect():void{
-        console.log("Hai cliccato il bottone")
         const formData = new FormData()
         formData.append('username', state.username)
         formData.append('email', state.email)
@@ -50,7 +49,7 @@ function SignUp (){
             fetch("/login", fetchCredential)
             .then((res) => res.json())
             .then((res) => console.log(res))
-            history.push("/home")
+            history.push("/rides")
          
     }
 
