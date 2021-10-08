@@ -68,7 +68,10 @@ app.post("/login",(req,res) => {
   const user = body.username;
   const email = body.email;
   const pass = body.password;
-  res.json({state: "approved", un: user, mail: email, pw: pass});
+
+  // do something with the credentials
+
+  res.json( { status: "ok" } );
 });
 
 

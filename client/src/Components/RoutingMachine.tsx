@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import L, { ControlOptions, LatLng } from 'leaflet';
-import { Polyline } from 'react-leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
