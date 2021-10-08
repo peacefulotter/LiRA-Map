@@ -2,6 +2,7 @@
 
 :root {
   --background: #2e2e2e;
+  --highlight-text: rgb(55, 180, 255);
 }
 
 .App {
@@ -11,6 +12,26 @@
   background-color: var(--background);
   height: 100vh;
   color: white;
-  font-size: 2em;
   overflow: hidden;;
 }
+
+
+
+.btn {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 12px 0px;
+  font-size: 1.3em;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.btn-checked {
+  background: rgba(0, 0, 255, 0.1) !important;
+  color: var(--highlight-text);
+}
+

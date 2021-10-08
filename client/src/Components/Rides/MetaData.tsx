@@ -2,27 +2,21 @@ import { FC, useState } from "react";
 
 import { Ride, RideMeta } from '../../assets/models'
 
-import '../../css/ridecard.css'
+import '../../css/ridemetadata.css'
+
 
 type Props = {
     data: RideMeta,
-    //index: number,
-    //onClick: () => void
 };
 
-const MetaData: FC<Props> = ( { data } ) => {//print all necessary meta info with a map function here
-    //console.log(Object.keys(data))
+//print all necessary meta info with a map function here
+const MetaData: FC<Props> = ( { data } ) => {
     return (
-        <div className="ride-metadata-container" >
-            {
-                  //console.log(e);
-                  <ul>
-                  <li> Duration: {data.time} </li>
-                  <li> Distance: {data.distance} </li>
-                  <li> Start: {data.start_time} </li>
-                  <li> End: {data.end_time} </li>
-                </ul>
-            }
+        <div className="ride-metadata-list" >
+            <div className="ride-metadata-elt">Duration: {data.time} </div>
+            <div className="ride-metadata-elt">Distance: {data.distance} </div>
+            <div className="ride-metadata-elt">Start: {data.start_time} </div>
+            <div className="ride-metadata-elt">End: {data.end_time} </div>
         </div>
     )
     

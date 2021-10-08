@@ -13,8 +13,8 @@ interface Props {
 const Rides: FC<Props> = ( { ride, index, onClick } ) => {
     // FIXME: replace ride with rideMeta as props
     return (
-        <div className="ride-card-container" onClick={() => onClick(index)}>
-            <div>{ride.meta.source}-{ride.meta.destination}</div>
+        <div className="btn ride-card-container" onClick={() => onClick(index)}>
+            {ride.meta.source}<br/>-<br/>{ride.meta.destination}
         </div>
     
   )
