@@ -12,6 +12,7 @@ const Rides: FC = () => {
         <div className="nav-wrapper">
             <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/rides">RIDES</NavLink>
             <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/other">OTHER</NavLink>
+            <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/login">LOGIN</NavLink>
         </div>
     )
 }
