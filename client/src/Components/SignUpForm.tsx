@@ -17,8 +17,6 @@ function SignUp (){
         password :"",
     });
     
-    
-
     const handleChange = (event : any) => {
         event.preventDefault();
         const { name, value } = event.target;
@@ -38,36 +36,32 @@ function SignUp (){
         
         fetch("/login", fetchCredential)
             .then((res) => res.json())
-            .then((res) => console.log(res))
-         
+            .then((data) => {
+                // if ( data.status === "ok")
+                //     history.push("/rides");
+            })
     }
 
     
         return(
-            <div className='wrapper'>
-                <div className='form-wrapper'>
-                    <h2>Sign Up</h2>
-                    <div>
-                        <div className='username'>
-                            <label htmlFor="username">Username</label>
-                            <input type='text' name='username' onChange={handleChange} />
-                           
-                        </div>
-                        <div className='email'>
-                            <label htmlFor="email">Email</label>
-                            <input type='email' name='email' onChange={handleChange} />
-                            
-                        </div>
-                        <div className='password'>
-                            <label htmlFor="password">Password</label>
-                            <input type='password' name='password' onChange={handleChange}/>
-                            
-                        </div>
-                        <div className='submit'>
-                            <button onClick={redirect}>Register Me</button>
-                           
-                        </div>
+            <div className='signup-wrapper'>
+                <h2>Sign Up</h2>
+                <div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="username">Username</label>
+                        <input type='text' name='username' onChange={handleChange} />
                     </div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="email">Email</label>
+                        <input type='email' name='email' onChange={handleChange} />
+                        
+                    </div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="password">Password</label>
+                        <input type='password' name='password' onChange={handleChange}/>
+                        
+                    </div>
+                    <div className='btn signup-btn' onClick={redirect}>Register Me</div>
                 </div>
             </div>
         )

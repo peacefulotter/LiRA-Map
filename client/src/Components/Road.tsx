@@ -1,8 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { Polyline } from 'react-leaflet'
-import L, { LatLng } from 'leaflet';
 
-import RoutingMachine from "./RoutingMachine";
 import { RoadSegments, RoadSegment } from '../assets/models'
 
 import '../css/road.css'
