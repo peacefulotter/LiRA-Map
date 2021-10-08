@@ -56,6 +56,7 @@ app.post("/login",(req,res) => {
   const user = req.body.Username;
   const email = req.body.Email;
   const pass = req.body.Password;
+  // tslint:disable-next-line:no-console
   console.log("Username:"+user+ " email:"+ email+" password:"+pass);
   res.json({state: "approved"});
 });
