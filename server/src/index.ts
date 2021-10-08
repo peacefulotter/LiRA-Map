@@ -6,7 +6,13 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+app.use(express.urlencoded({
+    extended: true
+}))
 
+app.use(express.json({
+  type: ['application/json', 'text/plain']
+}))
 
 
 
@@ -57,30 +63,18 @@ app.get("/measurements", (req, res) => {
 
 
 
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-)
-
-app.use(express.json())
-
-
 app.post("/login",(req,res) => {
-
-  const user = req.body.Username;
-  const email = req.body.Email;
-  const pass = req.body.Password;
-  // tslint:disable-next-line:no-console
-  console.log("Username:"+user+ " email:"+ email+" password:"+pass);
-  res.json({state: "approved"});
+  const body = req.body;
+  const user = body.username;
+  const email = body.email;
+  const pass = body.password;
+  res.json({state: "approved", un: user, mail: email, pw: pass});
 });
 
 
 
 app.get("/rides", (req, res) => {
   const data: RidesModel = [ firstRide, secondRide ]
-  // tslint:disable-next-line:no-console
   console.log(data);
 
   res.json(data);
