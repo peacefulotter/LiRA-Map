@@ -19,6 +19,17 @@
     overflow-y: scroll;
 }
 
+.meta-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35vw;
+    min-height: 100%;
+    padding: 20px;
+    background-color: rgb(58, 58, 58);
+
+}
+
 .map-container {
     display: flex;
     justify-content: center;

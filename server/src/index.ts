@@ -1,6 +1,6 @@
 
 import express from "express";
-import { RoadSegments, RideMeta, Ride, RoadCondition, RidesModel } from './models'
+import { RoadSegments, RideMeta, Ride, RoadCondition, RidesModel, MeasurementsModel } from './models'
 
 const PORT = process.env.PORT || 3001;
 
@@ -25,7 +25,9 @@ const firstSegments: RoadSegments = [
     condition: RoadCondition.Correct
   },
 ]
-const firstMeta: RideMeta = { time: 20, distance: 20 }
+const firstMeta: RideMeta = { time: 20, distance: 20,
+  start_time: new Date(2018, 0O5, 0O5, 17, 23, 42, 11).toLocaleString(),
+  end_time: new Date(2018, 0O5, 0O5, 17, 55, 12, 11).toLocaleString() }
 const firstRide: Ride = { meta: firstMeta, segments: firstSegments }
 
 const secondSegments: RoadSegments = [
@@ -36,9 +38,20 @@ const secondSegments: RoadSegments = [
     condition: RoadCondition.Bad
   },
 ]
-const secondMeta: RideMeta = { time: 10, distance: 10 }
+const secondMeta: RideMeta = { time: 10, distance: 10,
+  start_time: new Date(2019, 0O6, 0O5, 14, 13, 42, 11).toLocaleString(),
+  end_time: new Date(2019, 0O6, 0O5, 15, 55, 16, 11).toLocaleString() }
 const secondRide: Ride = { meta: secondMeta, segments: secondSegments }
 
+
+
+app.get("/measurements", (req, res) => {
+  const data: MeasurementsModel = [ "Track Position","Interpolation","Map Matching" ]
+  // tslint:disable-next-line:no-console
+  console.log(data);
+
+  res.json(data);
+});
 
 
 

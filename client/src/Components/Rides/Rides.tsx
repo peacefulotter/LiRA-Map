@@ -5,10 +5,11 @@ import { LatLng, LeafletMouseEvent, LocationEvent } from 'leaflet'
 
 import RoutingMachine from "../RoutingMachine";
 import RideCard from "./RideCard";
+import MetaDataTab from "./MetaDataTab";
 import Road from "../Road";
 
 import { roadStatusToCoords } from "../../assets/road_utils";
-import { RidesModel, Ride } from '../../assets/models'
+import { RidesModel, Ride,  MeasurementsModel } from '../../assets/models'
 
 import '../../css/rides.css'
 
@@ -16,6 +17,7 @@ import '../../css/rides.css'
 const Rides: FC = () => {
     const [ rides, setRides ] = useState<RidesModel | null>(null);
     const [ currentRide, setCurrentRide ] = useState<Ride | null>(null);
+    const [ measurementTypes, setMeasurementTypes ] = useState<MeasurementsModel | any>(null);
 
     // FIXME: dont recall useEffect everytime 
     useEffect( () => {
@@ -27,6 +29,19 @@ const Rides: FC = () => {
             setCurrentRide(data[1])
         })
     }, [] );
+ // we may not need to fetch it from backend?
+ /*
+    useEffect(() => {
+        fetch("/measurements")
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            setMeasurementTypes(data); 
+        })
+
+    }, []);
+*/
+    
 
     const showRide = (i: number) => {        
         if ( rides != null )
@@ -52,6 +67,9 @@ const Rides: FC = () => {
                         return <RideCard ride={r} index={i} onClick={showRide} key={`ride${i}`}></RideCard>
                       })
                     }
+                </div>
+                <div className="meta-data">
+                        <MetaDataTab ride={currentRide} measurementTypes = {measurementTypes} key={`ride${currentRide}`}></MetaDataTab>
                 </div>
                 <div className="map-container">
                     <MapContainer 
