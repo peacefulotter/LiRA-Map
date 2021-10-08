@@ -18,6 +18,8 @@ export interface RideMeta {
   distance: number
   start_time: string,
   end_time: string
+  source: string,
+  destination: string
 }
 
 // represents one ride: a model + meta data of the ride

@@ -14,7 +14,7 @@ const Rides: FC<Props> = ( { ride, index, onClick } ) => {
     // FIXME: replace ride with rideMeta as props
     return (
         <div className="ride-card-container" onClick={() => onClick(index)}>
-            <div>blob</div>
+            <div>{ride.meta.source}-{ride.meta.destination}</div>
         </div>
     
   )
