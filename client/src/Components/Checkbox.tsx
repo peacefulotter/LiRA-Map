@@ -8,7 +8,7 @@ interface Props {
 
 const Checkbox = (props: Props) => {
   return (
-    <div>
+    <div className="ride-metadata-checkbox">
       <label htmlFor={props.label}>{props.label}</label>
       <input
         type="checkbox"

@@ -5,7 +5,7 @@ import { LatLng, LeafletMouseEvent, LocationEvent } from 'leaflet'
 
 import RoutingMachine from "../RoutingMachine";
 import RideCard from "./RideCard";
-import MetaDataTab from "./MetaDataTab";
+import MetaDataCheckboxes from "./MetaDataCheckboxes";
 import Road from "../Road";
 
 import { roadStatusToCoords } from "../../assets/road_utils";
@@ -29,18 +29,18 @@ const Rides: FC = () => {
             setCurrentRide(data[1])
         })
     }, [] );
- // we may not need to fetch it from backend?
- /*
-    useEffect(() => {
-        fetch("/measurements")
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            setMeasurementTypes(data); 
-        })
+    // we may not need to fetch it from backend?
+    /*
+        useEffect(() => {
+            fetch("/measurements")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                setMeasurementTypes(data); 
+            })
 
-    }, []);
-*/
+        }, []);
+    */
     
 
     const showRide = (i: number) => {        
@@ -69,7 +69,7 @@ const Rides: FC = () => {
                     }
                 </div>
                 <div className="meta-data">
-                        <MetaDataTab ride={currentRide} measurementTypes = {measurementTypes} key={`ride${currentRide}`}></MetaDataTab>
+                     <MetaDataCheckboxes ride={currentRide} measurementTypes = {measurementTypes} key={`ride${currentRide}`}></MetaDataCheckboxes>
                 </div>
                 <div className="map-container">
                     <MapContainer 
