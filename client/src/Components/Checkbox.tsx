@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import JsxParser from 'react-jsx-parser'; 
 
 interface Props {
-  isChecked: boolean;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  label: string;
+	className: string;
+	content: any;
+  	onClick: (isChecked: boolean) => void;
 }
 
 const Checkbox = (props: Props) => {
-  return (
-    <div className="ride-metadata-checkbox">
-      <label htmlFor={props.label}>{props.label}</label>
-      <input
-        type="checkbox"
-        id={props.label}
-        checked={props.isChecked}
-        onChange={props.handleChange}
-      />
-    </div>
-  );
+	const { className, content, onClick } = props;
+  	const [ isChecked, setChecked ] = useState<boolean>(false)
+  
+  	return (
+        <div 
+            className={`${className} btn ${isChecked ? 'btn-checked' : ''}`} 
+            onClick={() => { 
+				onClick(!isChecked); 
+				setChecked(prev => !prev); 
+			}}>
+            <JsxParser jsx={content}></JsxParser>
+        </div>
+  	);
 };
 export default Checkbox;

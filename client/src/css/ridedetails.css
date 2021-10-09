@@ -26,6 +26,6 @@
 
 .ride-metadata-checkbox {
     width: 100%;
-    padding: 12px 0px;
     margin-bottom: 10px;
+    font-size: 1.1em !important;
 }

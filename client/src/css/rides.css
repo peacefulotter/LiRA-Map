@@ -8,17 +8,7 @@
     padding: 0px 10px;
 }
 
-.ride-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 20vw;
-    max-width: 150px;
-    min-height: 100%;
-    padding: 20px 10px;
-    background-color: rgb(58, 58, 58);
-    overflow-y: scroll;
-}
+
 
 .map-container {
     display: flex;
