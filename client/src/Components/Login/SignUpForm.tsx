@@ -1,7 +1,5 @@
-import React from 'react';
-import { FC, useState, useEffect } from "react";
-import '../css/signUpForm.css';
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import '../../css/signUpForm.css';
 
 interface State {
     username : string,
