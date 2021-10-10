@@ -10,12 +10,36 @@
     overflow-y: scroll;
 }
 
+.ride-search-container {
+    display: flex;
+    height: 30px;
+}
+
+.ride-search-input {
+    width: 100%;
+    padding: 3px 5px;
+    border: none;
+    color: white;
+    font-size: 1em;
+    background: var(--lightgrey);
+}
+
+.ride-search-cross {
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    background: var(--lightgrey);
+}
+
 .ride-sort-cb {
     font-size: 1.1em !important;
     border-radius: 0px !important;
     padding: 10px 15px !important;
     margin-bottom: 20px;
-    background: rgba(100, 100, 100, 0.5) !important;
+    background: var(--grey) !important;
 }
 
 .ride-sort-cb.btn-checked {

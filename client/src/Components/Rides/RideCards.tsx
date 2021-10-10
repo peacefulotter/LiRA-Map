@@ -13,18 +13,62 @@ interface Props {
 
 const RideCards: FC<Props> = ( { rides, onClick } ) => {
 
-    const sortRides = (isChecked: boolean) => {
+    const [ showRides, setShowRides ] = useState<Ride[]>(rides);
+    const [ search, setSearch ] = useState<string>("")
 
+    const getFilteredRides = () => {
+        return rides.filter( (ride: Ride) =>
+            search === '' ? true :
+                ride.meta.source.toLowerCase().includes( search ) ||
+                ride.meta.destination.toLowerCase().includes( search )
+        )
+    }
+
+    const getSortedRides = () => {
+        return [...showRides].sort((a: Ride, b: Ride) =>  
+            a.meta.source.localeCompare(b.meta.source)
+        )
+    }
+
+    
+    const filterRides = (e: any) => {
+        setSearch(e.target.value)
+        setShowRides(getFilteredRides())
+    }
+
+    const clearFilter = (e: any) => {
+        setSearch("")
+        setShowRides(rides);
+    }
+
+    const sortRides = (isChecked: boolean) => {
+        console.log(isChecked);
+        
+        isChecked ? 
+            setShowRides(getSortedRides())
+            : setShowRides(getFilteredRides())
     }
 
     return (
         <div className="ride-list">
+
+            <div className="ride-search-container">
+                <input 
+                    className="ride-search-input" 
+                    placeholder='Search..' 
+                    value={search} 
+                    onChange={filterRides} />
+                <div 
+                    className="ride-search-cross" 
+                    onClick={clearFilter}>X</div>
+            </div>
+
             <Checkbox 
                 className="ride-sort-cb"
                 content="Sort ▽"
                 onClick={sortRides}/>
 
-            { rides.map( (ride: Ride, i: number) => {
+            { showRides.map( (ride: Ride, i: number) => {
                 return <Checkbox 
                         key={`ride${i}`}
                         className="ride-card-container"
