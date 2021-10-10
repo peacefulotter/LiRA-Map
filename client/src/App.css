@@ -8,6 +8,9 @@
 
   --orange-background: rgba(218, 120, 55, 0.1);
   --orange-text: rgb(218, 120, 55);
+
+  --grey: rgba(100, 100, 100, 0.5);
+  --lightgrey: rgba(130, 130, 130, 0.5);
 }
 
 .App {
