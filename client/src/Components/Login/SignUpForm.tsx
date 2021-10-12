@@ -1,3 +1,6 @@
+import React from 'react';
+import { FC, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import '../../css/signUpForm.css';
 
@@ -25,6 +28,9 @@ function SignUp (){
         console.log(state) ;
     }
     
+    
+    let history = useHistory();
+     
     const redirect = () => {
         let fetchCredential = {
             method:'POST',
@@ -35,8 +41,8 @@ function SignUp (){
         fetch("/login", fetchCredential)
             .then((res) => res.json())
             .then((data) => {
-                // if ( data.status === "ok")
-                //     history.push("/rides");
+                 if ( data.status === "ok")
+                     history.push("/rides");
             })
     }
 
