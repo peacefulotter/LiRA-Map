@@ -1,0 +1,31 @@
+
+
+.meta-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35vw;
+    max-width: 250px;
+    min-height: 100%;
+    padding: 20px 10px;
+    background-color: rgb(58, 58, 58);
+    text-align: left;
+}
+
+.ride-metadata-separation {
+    width: 80%;
+    height: 1px;
+    background: grey;
+    margin: 40px 0px 20px 0px;
+}
+
+.ride-metadata-elt {
+    font-size: 1em;
+    margin-bottom: 8px;
+}
+
+.ride-metadata-checkbox {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1.1em !important;
+}
