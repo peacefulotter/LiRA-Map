@@ -4,7 +4,7 @@ import React from 'react'
 
 import Navbar from './Components/Navbar'
 import Rides from './Components/Rides/Rides'
-import SignUp from './Components/SignUpForm'
+import SignUp from './Components/Login/SignUpForm'
 
 import "./App.css";
 

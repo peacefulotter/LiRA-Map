@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 
 import RoutingMachine from "./RoutingMachine";
 import Road from "./Road";

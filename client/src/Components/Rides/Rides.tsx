@@ -4,18 +4,20 @@ import { LatLng, LeafletMouseEvent, LocationEvent } from 'leaflet'
 
 
 import RoutingMachine from "../RoutingMachine";
-import RideCard from "./RideCard";
+import RideCards from "./RideCards";
+import RideDetails from "./RideDetails";
 import Road from "../Road";
 
 import { roadStatusToCoords } from "../../assets/road_utils";
-import { RidesModel, Ride } from '../../assets/models'
+import { RidesModel, Ride,  MeasurementsModel } from '../../assets/models'
 
 import '../../css/rides.css'
 
 
 const Rides: FC = () => {
     const [ rides, setRides ] = useState<RidesModel | null>(null);
-    const [ currentRide, setCurrentRide ] = useState<Ride | null>(null);
+    const [ selectedRides, setSelectedRides ] = useState<Ride[]>([]);
+    const [ measurementTypes, setMeasurementTypes ] = useState<MeasurementsModel | any>(null);
 
     // FIXME: dont recall useEffect everytime 
     useEffect( () => {
@@ -24,15 +26,26 @@ const Rides: FC = () => {
         .then((data) => {
             console.log(data);
             setRides(data); // data as RidesModel
-            setCurrentRide(data[1])
         })
     }, [] );
 
-    const showRide = (i: number) => {        
+    // we may not need to fetch it from backend?
+    // fetch("/measurements")
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //         console.log(data);
+    //         setMeasurementTypes(data); 
+    //     })
+    
+
+    const showRide = (i: number, isChecked: boolean) => {        
         if ( rides != null )
-            setCurrentRide( rides[i] );        
+            isChecked ?
+                setSelectedRides( prev => [...prev, rides[i]] ) :
+                setSelectedRides( prev => prev.filter(r => r != rides[i]) )      
     }
 
+    // TODO: remove this later
     function LocationMarker() {
         const map = useMapEvents( {
           click(e: LeafletMouseEvent) {
@@ -43,19 +56,20 @@ const Rides: FC = () => {
         return null;
     }
 
+
+    // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
+
     return (
         <div className="rides-wrapper">
-            { (rides === null || currentRide === null) ? <></> : 
+            { (rides === null ) ? <></> : 
                 <>
-                <div className="ride-list">
-                    { rides.map( (r: Ride, i: number) => {
-                        return <RideCard ride={r} index={i} onClick={showRide} key={`ride${i}`}></RideCard>
-                      })
-                    }
-                </div>
+                <RideCards rides={rides} onClick={showRide}/>
+                
+                <RideDetails rides={selectedRides} measurementTypes={measurementTypes}></RideDetails>
+                
                 <div className="map-container">
                     <MapContainer 
-                        center={currentRide.segments[ 0 ].path[ 0 ]} 
+                        center={[57.6792, 12]} 
                         zoom={11} 
                         scrollWheelZoom={true}>
                         <TileLayer
@@ -63,8 +77,9 @@ const Rides: FC = () => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         <LocationMarker />
-                        <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
-                        <Road roadSegments={currentRide.segments}></Road>
+                        { selectedRides.map( (ride: Ride, i: number) => 
+                            <Road roadSegments={ride.segments} key={`ride-road-${i}`}></Road>
+                        ) }
                     </MapContainer>
                 </div>
                 </>
