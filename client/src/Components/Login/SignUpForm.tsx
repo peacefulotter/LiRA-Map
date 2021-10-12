@@ -1,7 +1,6 @@
 import React from 'react';
 import { FC, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
 import '../../css/signUpForm.css';
 
 interface State {
