@@ -1,8 +1,8 @@
 import React from 'react';
-import { FC, useState, useEffect } from "react";
-import '../css/signUpForm.css';
-import { NavLink } from "react-router-dom";
+import { FC, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useState } from "react";
+import '../../css/signUpForm.css';
 
 interface State {
     username : string,
@@ -18,9 +18,7 @@ function SignUp (){
         password :"",
     });
     
-    
-
-    let handleChange = (event : any) => {
+    const handleChange = (event : any) => {
         event.preventDefault();
         const { name, value } = event.target;
         setState(prevState => ({
@@ -32,53 +30,42 @@ function SignUp (){
     
     
     let history = useHistory();
-      
-    
-
-    function Redirect():void{
-        const formData = new FormData()
-        formData.append('username', state.username)
-        formData.append('email', state.email)
-        formData.append('password', state.password)
+     
+    const redirect = () => {
         let fetchCredential = {
             method:'POST',
-            body: formData,
+            body: JSON.stringify(state),
             headers: new Headers()
         }
         
-            fetch("/login", fetchCredential)
+        fetch("/login", fetchCredential)
             .then((res) => res.json())
-            .then((res) => console.log(res))
-            history.push("/rides")
-         
+            .then((data) => {
+                 if ( data.status === "ok")
+                     history.push("/rides");
+            })
     }
 
     
         return(
-            <div className='wrapper'>
-                <div className='form-wrapper'>
-                    <h2>Sign Up</h2>
-                    <div>
-                        <div className='username'>
-                            <label htmlFor="username">Username</label>
-                            <input type='text' name='username' onChange={handleChange} />
-                           
-                        </div>
-                        <div className='email'>
-                            <label htmlFor="email">Email</label>
-                            <input type='email' name='email' onChange={handleChange} />
-                            
-                        </div>
-                        <div className='password'>
-                            <label htmlFor="password">Password</label>
-                            <input type='password' name='password' onChange={handleChange}/>
-                            
-                        </div>
-                        <div className='submit'>
-                            <button onClick={Redirect}>Register Me</button>
-                           
-                        </div>
+            <div className='signup-wrapper'>
+                <h2>Sign Up</h2>
+                <div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="username">Username</label>
+                        <input type='text' name='username' onChange={handleChange} />
                     </div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="email">Email</label>
+                        <input type='email' name='email' onChange={handleChange} />
+                        
+                    </div>
+                    <div className='signup-input-container'>
+                        <label htmlFor="password">Password</label>
+                        <input type='password' name='password' onChange={handleChange}/>
+                        
+                    </div>
+                    <div className='btn signup-btn' onClick={redirect}>Register Me</div>
                 </div>
             </div>
         )
