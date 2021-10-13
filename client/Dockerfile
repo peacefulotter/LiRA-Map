@@ -1,0 +1,19 @@
+FROM node:16
+
+WORKDIR /app-client
+
+COPY package.json /app-client/package.json
+
+ADD . /app-client
+
+EXPOSE 80
+EXPOSE 5000
+EXPOSE 3001
+
+RUN yarn --silent
+
+RUN yarn build
+
+RUN yarn global add serve
+
+CMD ["serve", "-s", "-n", "build"]
