@@ -6,14 +6,8 @@ COPY package.json /app-client/package.json
 
 ADD . /app-client
 
-EXPOSE 80
-EXPOSE 5000
-EXPOSE 3001
+EXPOSE 3000
 
-RUN yarn --silent
+RUN npm i
 
-RUN yarn build
-
-RUN yarn global add serve
-
-CMD ["serve", "-s", "-n", "build"]
+CMD ["npm", "start"]

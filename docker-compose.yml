@@ -9,13 +9,11 @@ services:
     tty: true
     container_name: client
     ports:
-      - "80:5000"
+      - "3000:3000"
     depends_on:
       - server
     networks:
       - fullstack
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   server:
     build:
@@ -23,8 +21,6 @@ services:
       dockerfile: Dockerfile
     tty: true
     container_name: server
-    ports:
-      - "3001:3001"
     networks:
       - fullstack
 
