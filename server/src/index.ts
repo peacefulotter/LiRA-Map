@@ -5,38 +5,92 @@ import { RoadSegments, RideMeta, Ride, RoadCondition, RidesModel, MeasurementsMo
 import { Pool, Client, PoolClient, QueryResult } from 'pg';
 import { Client as SSH, ClientChannel } from 'ssh2'
 
+import * as tunnel from 'tunnel-ssh';
+import knex from 'knex'
+
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'/.env' });
 
 const env = process.env;
 
-const sshHostname = env.SSH_HOSTNAME;
-const sshUsername = env.SSH_USERNAME;
-const sshPassword = env.SSH_PASSWORD;
+const { SSH_USERNAME, SSH_PASSWORD, DB_USER, DB_PASSWORD } = env;
+const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
+const DB_NAME = "postgres";
+const SSH_PORT = 22;
+const DB_HOST = "liradbdev.compute.dtu.dk";
+const DB_PORT = 5432;
 
-const dbName = "postgres";
-const dbUser = env.DB_USER;
-const dbPwd = env.DB_PASSWORD;
-const dbHost = env.DB_HOST;
-const dbPort = 5432;
-
+const CLIENT_CONFIG = {
+	host: DB_HOST,
+	port: DB_PORT,
+	database: DB_NAME,
+	user: DB_USER,
+	password: DB_PASSWORD
+}
 
 const ssh = new SSH();
+const client = new Client(CLIENT_CONFIG);
 
+
+const sshConfig = {
+	host: SSH_HOSTNAME,
+	port: SSH_PORT,
+	username: SSH_USERNAME,
+	password: SSH_PASSWORD,
+	keepaliveInterval: 60000,
+	keepAlive: true,
+	dstHost: DB_HOST,
+	dstPort: DB_PORT,
+	localHost: 'localhost',
+	localPort: 8000
+};
+
+const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
+	if (err) {
+		throw err;
+	}
+	console.log(server);
+
+	const database = knex({
+		client: 'postgres',
+		connection: {
+		  host : DB_HOST,
+		  user : DB_USER,
+		  password : DB_PASSWORD,
+		  database : DB_NAME
+		}
+	  });
+
+	console.log(database);
+
+	// need to use await database.select... but throws EHOSTUNREACH
+	//'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
+	const res = database.select('*').from('public."Measurements"').where('"FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'');
+	res.then(a => console.log(a)).catch(err => console.log(err))
+	console.log(res);
+
+	
+	tnl.close();
+});
+
+
+
+
+/*
 ssh.on('ready', () =>  {
 	console.log("ready");
-	ssh.forwardOut(sshHostname, 22, dbHost, dbPort, async (err, stream) => {
+	ssh.forwardOut(SSH_HOSTNAME, SSH_PORT, DB_HOST, DB_PORT, async (err, stream) => {
 		stream.on('close', () => {
 			console.log('TCP :: CLOSED');
 			ssh.end();
 		})
-		const pool = new Pool({
-			host: dbHost,
-			port: 5432,
-			database: dbName,
-			user: dbUser,
-			password: dbPwd,
-		})
+		// const pool = new Pool({
+		// 	host: dbHost,
+		// 	port: 5432,
+		// 	database: dbName,
+		// 	user: dbUser,
+		// 	password: dbPwd,
+		// })
 
 
 		// for (let nRetry = 1; ; nRetry++) {
@@ -58,37 +112,30 @@ ssh.on('ready', () =>  {
 		// 	}
 		// }
 
-		pool.connect( (errConn: Error, client: PoolClient, done: (release?: any) => void) =>  {
-			if (errConn) {console.log("pool connect error: ", errConn)}
-			else {
-				console.log('connectedd...');
-				console.log(client);
-				console.log(done);
-				pool.query(
-					'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
-					(errQuery: Error, resQuery: QueryResult<any>) => {
-						console.log("pool query error: ", errQuery);
-						console.log("res query: ", resQuery);
-						pool.end();
-				})
+		// pool.connect( (errConn: Error, client: PoolClient, done: (release?: any) => void) =>  {
+		// 	if (errConn) {console.log("pool connect error: ", errConn)}
+		// 	else {
+		// 		console.log('connectedd...');
+		// 		console.log(client);
+		// 		console.log(done);
+		// 		pool.query(
+		// 			'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
+		// 			(errQuery: Error, resQuery: QueryResult<any>) => {
+		// 				console.log("pool query error: ", errQuery);
+		// 				console.log("res query: ", resQuery);
+		// 				pool.end();
+		// 		})
 
-			}
-		});
+		// 	}
+		// });
 
 
-        // const client = new Client({
-        //     host: dbHost,
-        //     port: dbPort,
-        //     database: dbName,
-        //     user: dbUser,
-        //     password: dbPwd,
-        // })
-		// client.connect(err => {
-		// 	if (err) {
-		// 	  console.error('connection error', err.stack)
-		// 	} else {
-		// 	  console.log('connected')
-		// 	}})
+		client.connect(errr => {
+			if (errr) {
+			  console.error('connection error',errr, errr.stack)
+			} else {
+			  console.log('connected')
+			}})
         // pool.connect( (errCon, c: PoolClient, done: (release?: any) => void) => {
         //     if (errCon) {console.log(errCon)}
         //     else {console.log('connected...', c)}
@@ -97,11 +144,12 @@ ssh.on('ready', () =>  {
     })
 })
 .connect({
-    host: sshHostname,
-    port: 22,
-    username: sshUsername,
-    password: sshPassword
+    host: SSH_HOSTNAME,
+    port: SSH_PORT,
+    username: SSH_USERNAME,
+    password: SSH_PASSWORD
 });
+*/
 
 
 const PORT = process.env.PORT || 3001;
