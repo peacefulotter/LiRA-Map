@@ -11,9 +11,15 @@ import knex from 'knex'
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'/.env' });
 
+
+import * as sql from 'mssql'
+
+
 const env = process.env;
 
 const { SSH_USERNAME, SSH_PASSWORD, DB_USER, DB_PASSWORD } = env;
+// se2-2021
+// h5vaVt
 const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
 const DB_NAME = "postgres";
 const SSH_PORT = 22;
@@ -25,12 +31,14 @@ const CLIENT_CONFIG = {
 	port: DB_PORT,
 	database: DB_NAME,
 	user: DB_USER,
-	password: DB_PASSWORD
-}
+	password: DB_PASSWORD,
+	ssl: true,
+	// connectionString: `${DB_NAME}://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/database?ssl=true`
+};
+
 
 const ssh = new SSH();
 const client = new Client(CLIENT_CONFIG);
-
 
 const sshConfig = {
 	host: SSH_HOSTNAME,
@@ -42,8 +50,8 @@ const sshConfig = {
 	dstHost: DB_HOST,
 	dstPort: DB_PORT,
 	localHost: 'localhost',
-	localPort: 8000
 };
+
 
 const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
 	if (err) {
@@ -51,105 +59,40 @@ const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
 	}
 	console.log(server);
 
-	const database = knex({
-		client: 'postgres',
-		connection: {
-		  host : DB_HOST,
-		  user : DB_USER,
-		  password : DB_PASSWORD,
-		  database : DB_NAME
-		}
-	  });
-
-	console.log(database);
-
-	// need to use await database.select... but throws EHOSTUNREACH
-	//'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
-	const res = database.select('*').from('public."Measurements"').where('"FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'');
-	res.then(a => console.log(a)).catch(err => console.log(err))
-	console.log(res);
-
-	
-	tnl.close();
-});
-
-
-
-
-/*
-ssh.on('ready', () =>  {
-	console.log("ready");
-	ssh.forwardOut(SSH_HOSTNAME, SSH_PORT, DB_HOST, DB_PORT, async (err, stream) => {
-		stream.on('close', () => {
-			console.log('TCP :: CLOSED');
-			ssh.end();
-		})
-		// const pool = new Pool({
-		// 	host: dbHost,
-		// 	port: 5432,
-		// 	database: dbName,
-		// 	user: dbUser,
-		// 	password: dbPwd,
-		// })
-
-
-		// for (let nRetry = 1; ; nRetry++) {
-		// 	try {
-		// 		const client = await pool.connect();
-		// 		if (nRetry > 1) {
-		// 			console.info('Now successfully connected to Postgres');
-		// 		}
-		// 		return client;
-		// 	} catch (e) {
-		// 		if (e.toString().includes('ECONNREFUSED') && nRetry < 5) {
-		// 			console.info('ECONNREFUSED connecting to Postgres, ' +
-		// 				'maybe container is not ready yet, will retry ' + nRetry);
-		// 			// Wait 1 second
-		// 			await new Promise(resolve => setTimeout(resolve, 1000));
-		// 		} else {
-		// 			throw e;
-		// 		}
-		// 	}
-		// }
-
-		// pool.connect( (errConn: Error, client: PoolClient, done: (release?: any) => void) =>  {
-		// 	if (errConn) {console.log("pool connect error: ", errConn)}
-		// 	else {
-		// 		console.log('connectedd...');
-		// 		console.log(client);
-		// 		console.log(done);
-		// 		pool.query(
-		// 			'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
-		// 			(errQuery: Error, resQuery: QueryResult<any>) => {
-		// 				console.log("pool query error: ", errQuery);
-		// 				console.log("res query: ", resQuery);
-		// 				pool.end();
-		// 		})
-
-		// 	}
-		// });
-
-
-		client.connect(errr => {
-			if (errr) {
-			  console.error('connection error',errr, errr.stack)
-			} else {
-			  console.log('connected')
-			}})
-        // pool.connect( (errCon, c: PoolClient, done: (release?: any) => void) => {
-        //     if (errCon) {console.log(errCon)}
-        //     else {console.log('connected...', c)}
-        // });
-        // client.end();
+    client.connect(err => {
+    if (err) {
+      console.error('connection error', err)
+    } else {
+      console.log('connected')
+    }
     })
+
+	const pool = new Pool({
+			host: DB_HOST,
+			port: DB_PORT,
+			database: DB_NAME,
+			user: DB_USER,
+			password: DB_PASSWORD,
+		})
+
+    pool.connect((err, client, release) => {
+      if (err) {
+        return console.error('Error acquiring client', err)
+      }
+      client.query(
+        'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
+        (errQuery: Error, resQuery: QueryResult<any>) => {
+          console.log("pool query error: ", errQuery);
+          console.log("res query: ", resQuery);
+          pool.end();
+      })
+    })
+
+		
+        
+        
+        
 })
-.connect({
-    host: SSH_HOSTNAME,
-    port: SSH_PORT,
-    username: SSH_USERNAME,
-    password: SSH_PASSWORD
-});
-*/
 
 
 const PORT = process.env.PORT || 3001;
@@ -205,7 +148,6 @@ const secondRide: Ride = { meta: secondMeta, segments: secondSegments }
 
 app.get("/measurements", (req, res) => {
   const data: MeasurementsModel = [ "Track Position","Interpolation","Map Matching" ]
-  // tslint:disable-next-line:no-console
   console.log(data);
 
   res.json(data);
@@ -235,6 +177,5 @@ app.get("/rides", (req, res) => {
 
 
 app.listen(PORT, () => {
-   // tslint:disable-next-line:no-console
-  console.log(`Server listening on ${PORT}`);
+  	console.log(`Server listening on ${PORT}`);
 });
