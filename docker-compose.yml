@@ -1,8 +1,9 @@
-version: '3.9'
+version: '3.7'
 
 services:
 
   client:
+    image: client
     build:
       context: client
       dockerfile: Dockerfile
@@ -16,6 +17,7 @@ services:
       - fullstack
 
   server:
+    image: server
     build:
       context: server
       dockerfile: Dockerfile
