@@ -62,10 +62,10 @@ const sshConfig = {
 	password: SSH_PASSWORD,
 	keepaliveInterval: 60000,
 	keepAlive: true,
-	dstHost: "localhost",
-	dstPort: 3333,
-	localHost: DB_HOST,
-	localPort: DB_PORT
+	dstHost: DB_HOST,
+	dstPort: DB_PORT,
+	localHost: "127.0.0.1",
+	localPort: 3333
 };
 
 
@@ -78,7 +78,7 @@ const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
 	const database = knex({
 		client: 'postgres',
 		connection: {
-		  	host : "localhost",
+		  	host : "127.0.0.1",
 		  	port: 3333,
 		  	user : DB_USER,
 		  	password : DB_PASSWORD,
@@ -89,8 +89,8 @@ const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
 
 	console.log("databaseeeeeee", database);
 
-	const res = database.select('*').from('public."Measurements"').where('"FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'');
-	res.then(a => console.log(a)).catch(errr => console.log(errr))
+	const res = database.select('*').from('public."Measurements"').where({"FK_Trip": '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a', "FK_MeasurementType": 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'});
+	res.then(a => console.log(a)).catch(errr => console.log("errr", errr))
 	console.log(res);
 
 	// const pool = new Pool({
