@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Polyline } from 'react-leaflet'
+import { Polyline, Circle } from 'react-leaflet'
 
 import { RoadSegments, RoadSegment } from '../assets/models'
 
@@ -11,13 +11,10 @@ type Props = {
 };
 
 const Roads: FC<Props> = ( { roadSegments } ) => {  
+	let p = roadSegments[0].path
     return <> { 
-		roadSegments.map( (seg: RoadSegment, i: number) => {			
-			return <Polyline 
-						key={`line${i}`} 
-						pathOptions={i ? {color: 'red'} : {color: 'blue'}} 
-						positions={seg.path}>	
-					</Polyline>
+		p.map( (pos: any, i: number) => {			
+			return <Circle center={[pos.lat, pos.lng]} radius={1} />
 		} ) } </>
 }
 

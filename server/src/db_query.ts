@@ -31,3 +31,14 @@ export const ggQuery = async (db: any) =>
     const firstRide: Ride = { meta: firstMeta, segments: firstSegments }
     return [ firstRide ];
 }
+
+export const example = async (db: any) => 
+{
+    return await db
+        .select('*')
+        .from( { public: "Measurements" } )
+        .where( {
+            "FK_Trip": '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a',
+            "FK_MeasurementType": 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
+        } );
+}
