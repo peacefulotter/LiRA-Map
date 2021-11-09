@@ -2,7 +2,8 @@
 import * as tunnel from 'tunnel-ssh';
 import knex from 'knex'
 
-import { ggQuery, example } from './db_query';
+import { RideMeta, RidePos } from './models'
+import { getRides, getRide } from './db_query';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -63,14 +64,16 @@ export const db = (app: any) => {
 
         const database = knex(DATABASE_CONFIG);
 
-        app.get("/rides", async (req: any, res: any) => {
-           const data = await ggQuery(database)
-            res.json( data )
+        app.post("/ride", async (req: any, res: any) => {
+            const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
+            console.log("Requested ride ", TRIP_ID);
+            const data: RidePos = await getRide(database, TRIP_ID );
+            res.json( data );
         } )
 
-        app.get("/example", async (req: any, res: any) => {
-            const data = await example(database)
-             res.json( data )
+        app.get("/rides", async (req: any, res: any) => {
+            const data: RideMeta[] = await getRides(database)
+            res.json( data )
          } )
     })
 
@@ -81,8 +84,6 @@ export const db = (app: any) => {
 
     process.on("SIGHUP", () =>  { tnl.close(); console.log("TUNNEL CLOSING"); });
     process.on("SIGUSR2", () =>  { tnl.close(); console.log("TUNNEL CLOSING 2"); });
-    // FIXME: DO WE NEED THIS?
-    // setTimeout( () => { tnl.close(); console.log("\nTUNNEL CLOSING ======\n"); }, 50000 );
 }
 
 
