@@ -2,31 +2,38 @@ import { FC, useState } from "react";
 
 import Checkbox from '../Checkbox';
 
-import { Ride } from '../../assets/models'
+import { RideMeta } from '../../assets/models'
 
 import '../../css/ridecard.css'
 
+const range = (n: number) => { 
+    return Array.from( {length: n}, (elt, i) => i);
+}
+
 interface Props {
-    rides: Ride[];
+    metas: RideMeta[];
     onClick: (i: number, isChecked: boolean) => void;
 }
 
-const RideCards: FC<Props> = ( { rides, onClick } ) => {
+const RideCards: FC<Props> = ( { metas, onClick } ) => {
 
-    const [ showRides, setShowRides ] = useState<Ride[]>(rides);
+    const [ showRides, setShowRides ] = useState<number[]>(range(metas.length));
     const [ search, setSearch ] = useState<string>("")
 
     const getFilteredRides = () => {
-        return rides.filter( (ride: Ride) =>
-            search === '' ? true :
-                ride.meta.source.toLowerCase().includes( search ) ||
-                ride.meta.destination.toLowerCase().includes( search )
-        )
+        return metas
+            .map( (meta: RideMeta, i: number) =>
+                search === '' && meta.TaskId.toString().includes( search ) 
+                ? -1 : i
+                // meta.source.toLowerCase().includes( search ) ||
+                // meta.destination.toLowerCase().includes( search )
+            )
+            .filter( (i: number) => i > 0 )
     }
 
     const getSortedRides = () => {
-        return [...showRides].sort((a: Ride, b: Ride) =>  
-            a.meta.source.localeCompare(b.meta.source)
+        return [...showRides].sort((a: number, b: number) =>  
+            metas[a].TaskId.toString().localeCompare(metas[b].TaskId.toString()) 
         )
     }
 
@@ -38,7 +45,7 @@ const RideCards: FC<Props> = ( { rides, onClick } ) => {
 
     const clearFilter = (e: any) => {
         setSearch("")
-        setShowRides(rides);
+        setShowRides(range(metas.length));
     }
 
     const sortRides = (isChecked: boolean) => {
@@ -68,11 +75,11 @@ const RideCards: FC<Props> = ( { rides, onClick } ) => {
                 content="Sort ▽"
                 onClick={sortRides}/>
 
-            { showRides.map( (ride: Ride, i: number) => {
+            { showRides.map( (num: number, i: number) => {
                 return <Checkbox 
                         key={`ride${i}`}
                         className="ride-card-container"
-                        content={`${ride.meta.source}<br/>-<br/>${ride.meta.destination}`}
+                        content={`${metas[num].TripId}<br/>-<br/>${metas[num].TaskId}`}
                         onClick={(isChecked) => onClick(i, isChecked)} />
             } )
             }

@@ -1,24 +1,23 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
-import { Ride, RideMeta } from '../../assets/models'
+import { RideMeta } from '../../assets/models'
 
 import '../../css/ridedetails.css'
 
 
 type Props = {
-    data: RideMeta,
+    md: RideMeta,
 };
 
 //print all necessary meta info with a map function here
-const MetaData: FC<Props> = ( { data } ) => {
+const MetaData: FC<Props> = ( { md } ) => {
     return (
         <>
 		<div className="ride-metadata-separation"></div>
         <div className="ride-metadata-list" >
-            <div className="ride-metadata-elt">Duration: {data.time} </div>
-            <div className="ride-metadata-elt">Distance: {data.distance} </div>
-            <div className="ride-metadata-elt">Start: {data.start_time} </div>
-            <div className="ride-metadata-elt">End: {data.end_time} </div>
+            { Object.entries(md).map( (elt, i) => 
+                <div className="ride-metadata-elt" key={'metadata-' + i}><b>{elt[0]}</b>: {elt[1]} </div>
+            ) }
         </div>
         </>
     )

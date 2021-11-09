@@ -1,10 +1,10 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import L, { ControlOptions, LatLng } from 'leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
-import Road from './Road'
-import { RoadSegments } from "../assets/models";
+import Ride from './Ride'
+import { RideModel } from "../assets/models";
 
 import "../css/map.css"
 
@@ -15,7 +15,7 @@ interface Props extends ControlOptions {
 const Routing = ( props: Props ) => {
 	const { path } = props;
 	const [coords, setCoords] = useState<LatLng[] | null>(null)
-	const [segments, setSegments] = useState<RoadSegments | null>(null)
+	const [segments, setSegments] = useState<RideModel | null>(null)
 	
 	const ride: LatLng[] = [path[0], path[1]]
 	console.log("ride", ride);

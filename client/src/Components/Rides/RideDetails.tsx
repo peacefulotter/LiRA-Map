@@ -3,17 +3,17 @@ import { FC, useState } from "react";
 import MetaData from "./MetaData";
 import Checkbox from "../Checkbox";
 
-import { MeasurementsModel, Ride } from '../../assets/models'
+import { Measurements, RideMeta } from '../../assets/models'
 
 import '../../css/ridedetails.css'
 
 type Props = {
-    rides: Ride[],
-    measurementTypes: MeasurementsModel
+    metas: RideMeta[],
+    measurementTypes: Measurements
 };
 
 
-const RideDetails: FC<Props> = ( { rides, measurementTypes } ) => {
+const RideDetails: FC<Props> = ( { metas, measurementTypes } ) => {
 	
 	const doSomething = (isChecked: boolean) => {
 		console.log(isChecked);
@@ -35,8 +35,8 @@ const RideDetails: FC<Props> = ( { rides, measurementTypes } ) => {
 				content='Map Matching'
 				onClick={doSomething}/>
 
-			{ rides.map( (ride: Ride, i: number) =>
-				<MetaData data = {ride.meta} key={`ride-md-${i}`}></MetaData>
+			{ metas.map( (meta: RideMeta, i: number) =>
+				<MetaData md={meta} key={`ride-md-${i}`}></MetaData>
 			) }
         </div>
   )
