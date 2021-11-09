@@ -18,81 +18,111 @@ import * as sql from 'mssql'
 const env = process.env;
 
 const { SSH_USERNAME, SSH_PASSWORD, DB_USER, DB_PASSWORD } = env;
-// se2-2021
-// h5vaVt
+
 const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
+const SSH_DB_PORT = 22;
+
 const DB_NAME = "postgres";
-const SSH_PORT = 22;
 const DB_HOST = "liradbdev.compute.dtu.dk";
 const DB_PORT = 5432;
 
-const CLIENT_CONFIG = {
-	host: DB_HOST,
-	port: DB_PORT,
-	database: DB_NAME,
-	user: DB_USER,
-	password: DB_PASSWORD,
-	ssl: true,
-	// connectionString: `${DB_NAME}://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/database?ssl=true`
-};
+
+const launchClient = () => {
+	const CLIENT_CONFIG = {
+		host: DB_HOST,
+		port: DB_PORT,
+		database: DB_NAME,
+		user: DB_USER,
+		password: DB_PASSWORD,
+		ssl: true,
+		// connectionString: `${DB_NAME}://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/database?ssl=true`
+	};
+
+	const client = new Client(CLIENT_CONFIG);
+
+	client.connect(errr => {
+		if (errr) {
+			console.error('connection error', errr)
+		} else {
+		  	console.log('connected')
+		}
+	})
+}
+// launchClient()
+
 
 
 const ssh = new SSH();
-const client = new Client(CLIENT_CONFIG);
+
 
 const sshConfig = {
 	host: SSH_HOSTNAME,
-	port: SSH_PORT,
+	port: 22,
 	username: SSH_USERNAME,
 	password: SSH_PASSWORD,
 	keepaliveInterval: 60000,
 	keepAlive: true,
-	dstHost: DB_HOST,
-	dstPort: DB_PORT,
-	localHost: 'localhost',
+	dstHost: "localhost",
+	dstPort: 3333,
+	localHost: DB_HOST,
+	localPort: DB_PORT
 };
 
 
 const tnl = tunnel.default(sshConfig, async (err: any, server: any) => {
 	if (err) {
-		throw err;
+		console.error("tudozdjiaojdijazdnnel", err);
 	}
-	console.log(server);
+	console.log("serverrrr", server);
 
-    client.connect(err => {
-    if (err) {
-      console.error('connection error', err)
-    } else {
-      console.log('connected')
-    }
-    })
+	const database = knex({
+		client: 'postgres',
+		connection: {
+		  	host : "localhost",
+		  	port: 3333,
+		  	user : DB_USER,
+		  	password : DB_PASSWORD,
+		  	database : DB_NAME,
+		}
+	});
 
-	const pool = new Pool({
-			host: DB_HOST,
-			port: DB_PORT,
-			database: DB_NAME,
-			user: DB_USER,
-			password: DB_PASSWORD,
-		})
 
-    pool.connect((err, client, release) => {
-      if (err) {
-        return console.error('Error acquiring client', err)
-      }
-      client.query(
-        'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
-        (errQuery: Error, resQuery: QueryResult<any>) => {
-          console.log("pool query error: ", errQuery);
-          console.log("res query: ", resQuery);
-          pool.end();
-      })
-    })
+	console.log("databaseeeeeee", database);
 
-		
-        
-        
-        
+	const res = database.select('*').from('public."Measurements"').where('"FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'');
+	res.then(a => console.log(a)).catch(errr => console.log(errr))
+	console.log(res);
+
+	// const pool = new Pool({
+	// 		host: DB_HOST,
+	// 		port: DB_PORT,
+	// 		database: DB_NAME,
+	// 		user: DB_USER,
+	// 		password: DB_PASSWORD,
+	// 	})
+
+	// console.log("poool", pool);
+
+
+	// pool.connect((errr, c, release) => {
+	// 	if (errr) {
+	// 		return console.error('Error acquiring client', errr)
+	// 	}
+	// 	console.log("client connect", c);
+
+	// 	c.query(
+	// 		'SELECT * FROM public."Measurements" where "FK_Trip" = \'7f67425e-26e6-4af3-9a6f-f72ff35a7b1a\' and "FK_MeasurementType" = \'a69d9fe0-7896-49e2-9e8d-e36f0d54f286\'',
+	// 		(errQuery: Error, resQuery: QueryResult<any>) => {
+	// 		console.log("pool query error: ", errQuery);
+	// 		console.log("res query: ", resQuery);
+	// 		pool.end();
+	// 	})
+	// })
 })
+
+
+
+
 
 
 const PORT = process.env.PORT || 3001;
@@ -106,7 +136,6 @@ app.use(express.urlencoded({
 app.use(express.json({
   type: ['application/json', 'text/plain']
 }))
-
 
 
 const firstSegments: RoadSegments = [
