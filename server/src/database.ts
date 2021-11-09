@@ -2,7 +2,7 @@
 import * as tunnel from 'tunnel-ssh';
 import knex from 'knex'
 
-import { ggQuery } from './db_query';
+import { ggQuery, example } from './db_query';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -67,6 +67,11 @@ export const db = (app: any) => {
            const data = await ggQuery(database)
             res.json( data )
         } )
+
+        app.get("/example", async (req: any, res: any) => {
+            const data = await example(database)
+             res.json( data )
+         } )
     })
 
     console.log(tnl);
