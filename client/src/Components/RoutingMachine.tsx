@@ -3,35 +3,26 @@ import L, { ControlOptions, LatLng } from 'leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
-import Ride from './Ride'
-import { RideModel } from "../assets/models";
 
 import "../css/map.css"
 
 interface Props extends ControlOptions {
-	path: LatLng[];
+	path: LatLng[]
 };
-  
-const Routing = ( props: Props ) => {
-	const { path } = props;
-	const [coords, setCoords] = useState<LatLng[] | null>(null)
-	const [segments, setSegments] = useState<RideModel | null>(null)
-	
-	const ride: LatLng[] = [path[0], path[1]]
-	console.log("ride", ride);
-	
-    
-   const instance = L.Routing.control( {
-    	waypoints: ride,
-     	plan: L.Routing.plan(ride, {
-        	createMarker: (i, wp, n) => {
-			if (i == 0 || i == n - 1) {
-				return L.marker( wp.latLng, { draggable: false } );
-			} else {
-				return L.marker( [0, 0] ); // TODO: change this
-			}
-			}
-      	} ),
+
+const getInstance = (path: LatLng[]) => {
+
+	const instance = L.Routing.control( {
+    	waypoints: path,
+     	// plan: L.Routing.plan(path, {
+        	// createMarker: (i, wp, n) => {
+			// if (i == 0 || i == n - 1) {
+			// 	return L.marker( wp.latLng, { draggable: false } );
+			// } else {
+			// 	return L.marker( [0, 0] ); // TODO: change this
+			// }
+			// }
+      	// } ),
 		lineOptions: {
 			styles: [
 				{color: 'white',  opacity: 0.15, weight: 9}, 
@@ -52,21 +43,32 @@ const Routing = ( props: Props ) => {
 
    
     instance.on('routesfound', function (e) {
-      	let route = e.routes[0];
-      	setCoords(route.coordinates);
+      	// let route = e.routes[0];
+      	// setCoords(route.coordinates);
 		// use setSegments()
-		route.coordinates.forEach((coord: LatLng) => {
+		// route.coordinates.forEach((coord: LatLng) => {
 			
-		});
+		// });
       	console.log("route found", e);
     });
-    
-        
-    // console.log(a);
-    // return coords === null || segments === null ? null : <Road roadSegments={segments}></Road>
+
+	instance.on('routingerror', function (e) {
+		console.log("routing error", e);
+  	});
+
 	return instance;
+}
+  
+const Routing = ( props: Props ) => {
+	const { path } = props;
+	// const [coords, setCoords] = useState<LatLng[] | null>(null)
+	// const [segments, setSegments] = useState<RideModel | null>(null)
+	const waypoints = path.filter((e: LatLng, i: number) => i % 50 === 0 )
+
+	const instance = getInstance(waypoints)
+   	return instance;
 }
 
 const RoutingMachine = createControlComponent<L.Control, Props>( Routing );
 
-export default RoutingMachine;
+export default RoutingMachine; 

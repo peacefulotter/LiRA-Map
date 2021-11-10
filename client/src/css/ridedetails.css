@@ -5,35 +5,51 @@
     flex-direction: column;
     align-items: center;
     width: 35vw;
-    min-width: 300px;
-    max-width: 350px;
+    min-width: 350px;
+    max-width: 450px;
     min-height: 100%;
-    padding: 20px 10px;
+    padding-top: 5px;
     background-color: rgb(58, 58, 58);
     text-align: left;
 }
 
 .ride-metadata-list {
-    width: 100%;
+    width: calc(100% - 40px);
+    padding: 0px 20px 100px 20px;
     overflow-y: scroll;
 }
 
 .ride-metadata-separation {
     width: 80%;
-    height: 1px;
-    background: grey;
+    height: 2px;
+    background: white;
     margin: 20px 0px 30px 0px;
 }
 
 .ride-metadata-elt {
     font-size: 1em;
-    margin-bottom: 8px;
+    margin-top: 13px;
     overflow-x: hidden;
     text-overflow: ellipsis;
 }
 
+.ride-metadata-elt b {
+    color: var(--highlight-text);
+}
+
+.sublist-elt b {
+    color: lightblue;
+}
+
+.sublist-elt {
+    margin-left: 10px;
+    font-size: 0.9em;
+    margin-top: 0px;
+    margin-bottom: 7px;
+}
+
 .ride-metadata-checkbox {
-    width: 100%;
-    margin-bottom: 10px;
+    width: 70%;
+    margin-bottom: 5px;
     font-size: 1.1em !important;
 }
