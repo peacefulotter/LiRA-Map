@@ -25,12 +25,22 @@ const Rides: FC = () => {
             setMetas(data);
         })
     }, [] );
+
+    useEffect(() => {
+        console.log('after change', selectedRides);
+        
+    }, [selectedRides])
     
 
-    const showRide = (i: number, isChecked: boolean) => {        
+    const showRide = (i: number, isChecked: boolean) => {         
+        console.log(selectedRides, i, isChecked);
+        const rm = selectedRides.filter(r => r != i)
+        console.log(rm);
+        
+               
         isChecked ?
             setSelectedRides( prev => [...prev, i] ) :
-            setSelectedRides( prev => prev.filter(r => r != i) )      
+            setSelectedRides( rm )        
     }
 
     // TODO: remove this later
@@ -64,8 +74,10 @@ const Rides: FC = () => {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <LocationMarker />
-                    { selectedRides.map( (n: number, i: number) => 
-                        <Ride tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
+                    { selectedRides.map( (n: number, i: number) => {
+                        console.log('drawing ride',n);
+                        return <Ride tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
+                    }
                     ) }
                 </MapContainer>
             </div>

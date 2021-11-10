@@ -21,7 +21,6 @@ const RideDetails: FC<Props> = ( { metas, measurementTypes } ) => {
 	
     return (
 		<div className="meta-data">
-			<h3>Filters to apply</h3>
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Track Position'

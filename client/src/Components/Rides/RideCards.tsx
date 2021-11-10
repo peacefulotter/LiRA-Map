@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import Checkbox from '../Checkbox';
 
@@ -15,45 +15,50 @@ interface Props {
     onClick: (i: number, isChecked: boolean) => void;
 }
 
+const substring = (meta: RideMeta, search: string) => {
+    return meta.TaskId.toString().includes( search )
+}
+
 const RideCards: FC<Props> = ( { metas, onClick } ) => {
+    const [ sorted, setSorted ] = useState<boolean>(false)
+    const [ searched, setSearched ] = useState<boolean>(false)
 
     const [ showRides, setShowRides ] = useState<number[]>(range(metas.length));
     const [ search, setSearch ] = useState<string>("")
 
-    const getFilteredRides = () => {
-        return metas
-            .map( (meta: RideMeta, i: number) =>
-                search === '' && meta.TaskId.toString().includes( search ) 
-                ? -1 : i
-                // meta.source.toLowerCase().includes( search ) ||
-                // meta.destination.toLowerCase().includes( search )
+    const updateRides = () => {
+        console.log(search);
+        let rides = range(metas.length);
+
+        if ( searched )
+            rides = rides
+                .map( (n: number, i: number ) => substring(metas[n], search) ? i : -1 )
+                .filter( (i: number) => i > 0 )
+
+        if ( sorted )
+            rides = rides.sort((a: number, b: number) =>
+                metas[a].TaskId < metas[b].TaskId ? -1 : 1
             )
-            .filter( (i: number) => i > 0 )
+
+        setShowRides(rides)
     }
 
-    const getSortedRides = () => {
-        return [...showRides].sort((a: number, b: number) =>  
-            metas[a].TaskId.toString().localeCompare(metas[b].TaskId.toString()) 
-        )
-    }
+    useEffect(updateRides, [searched, search, sorted])
 
+
+    const clearFilter = () => {
+        setSearch('')
+        setSearched(false)
+    }
     
-    const filterRides = (e: any) => {
-        setSearch(e.target.value)
-        setShowRides(getFilteredRides())
-    }
-
-    const clearFilter = (e: any) => {
-        setSearch("")
-        setShowRides(range(metas.length));
-    }
-
-    const sortRides = (isChecked: boolean) => {
-        console.log(isChecked);
+    const onFilterInput = (e: any) => {
+        console.log('filter rides', e.target.value);
         
-        isChecked ? 
-            setShowRides(getSortedRides())
-            : setShowRides(getFilteredRides())
+        if ( e.target.value === '')
+            return clearFilter()
+
+        setSearch(e.target.value)
+        setSearched(true)
     }
 
     return (
@@ -64,7 +69,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                     className="ride-search-input" 
                     placeholder='Search..' 
                     value={search} 
-                    onChange={filterRides} />
+                    onChange={onFilterInput} />
                 <div 
                     className="ride-search-cross" 
                     onClick={clearFilter}>X</div>
@@ -73,7 +78,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
             <Checkbox 
                 className="ride-sort-cb"
                 content="Sort ▽"
-                onClick={sortRides}/>
+                onClick={setSorted}/>
 
             { showRides.map( (num: number, i: number) => {
                 return <Checkbox 

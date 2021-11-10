@@ -5,6 +5,7 @@ import { Polyline, Circle } from 'react-leaflet'
 import { RidePos } from '../assets/models'
 
 import '../css/road.css'
+import RoutingMachine from "./RoutingMachine";
 
 
 type Props = {
@@ -23,16 +24,28 @@ const Ride: FC<Props> = ( { tripId } ) => {
         fetch("/ride", credentials)
         .then((res) => res.json())
         .then((data) => {
-            setPath(data);
-            console.log("Got data for ride: ", tripId);  
+            const path = data.filter((e: RidePos, i: number) => i % 5 === 0 )
+            setPath(path);
+            console.log("Got data for ride: ", tripId, ", length: ", path.length);  
         })
     }, [] );
 
-    return <> { 
-		path.map( (pos: LatLng, i: number) => {			
-			return <Circle center={[pos.lat, pos.lng]} radius={1} key={tripId + 'circle' + i} />
+
+
+    let groupedPos = []
+    for (let i = 0; i < path.length - 2; i++) {
+        groupedPos.push([path[i], path[i+1]])
+    }
+    
+    return ( <> 
+        <RoutingMachine path={path}></RoutingMachine>
+        { 
+		groupedPos.map( (pos: LatLng[], i: number) => {	
+            // return <Polyline positions={[ [pos[0].lat, pos[0].lng], [pos[1].lat, pos[1].lng] ]}></Polyline>		
+			return <Circle center={[pos[0].lat, pos[0].lng]} radius={1} key={tripId + 'circle' + i} />
 		} ) 
-	} </>
+	    } 
+    </> )
 }
 
 export default Ride;
