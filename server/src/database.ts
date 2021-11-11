@@ -3,7 +3,7 @@ import * as tunnel from 'tunnel-ssh';
 import knex from 'knex'
 
 import { RideMeta, RidePos } from './models'
-import { getRides, getRide } from './db_query';
+import { getRides, getRide, getinterpolatedRides, getRideInterpolation } from './db_query';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -16,8 +16,11 @@ const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
 const SSH_PORT = 22;
 
 const DB_NAME = "postgres";
-const DB_HOST = "liradbdev.compute.dtu.dk";
-const DB_PORT = 5432;
+// const DB_HOST = "liradbdev.compute.dtu.dk";
+// const DB_PORT = 5432;
+
+const DB_HOST = "liradb.compute.dtu.dk";
+const DB_PORT = 5435;
 
 const LOCALHOST = "127.0.0.1"
 const LOCALPORT = 3333
@@ -71,8 +74,16 @@ export const db = (app: any) => {
             res.json( data );
         } )
 
+        app.post("/inter_ride", async (req: any, res: any) => {
+            const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
+            console.log("Requested ride ", TRIP_ID);
+            const data: RidePos = await getRideInterpolation(database, TRIP_ID );
+            res.json( data );
+        } )
+
         app.get("/rides", async (req: any, res: any) => {
-            const data: RideMeta[] = await getRides(database)
+            // const data: RideMeta[] = await getRides(database)
+            const data: RideMeta[] = await getinterpolatedRides(database)
             res.json( data )
          } )
     })

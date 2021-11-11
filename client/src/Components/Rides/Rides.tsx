@@ -15,7 +15,7 @@ import '../../css/rides.css'
 const Rides: FC = () => {
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const [ measurementTypes, setMeasurementTypes ] = useState<Measurements>([]);
+    const [ measurementTypes, setMeasurementTypes ] = useState<Measurements[]>([]);
 
     useEffect( () => {
         fetch("/rides")
@@ -43,6 +43,16 @@ const Rides: FC = () => {
             setSelectedRides( rm )        
     }
 
+
+    const measurementClicked = (measurement: Measurements, isChecked: boolean) =>{
+        isChecked 
+            ? setMeasurementTypes( prev => [...prev, measurement])
+            : setMeasurementTypes( prev => prev.filter(value => value != measurement))
+        
+    }
+
+
+
     // TODO: remove this later
     function LocationMarker() {
         const map = useMapEvents( {
@@ -62,7 +72,7 @@ const Rides: FC = () => {
         <div className="rides-wrapper">
             <RideCards metas={metas} onClick={showRide}/>
             
-            <RideDetails metas={selectedRides.map(i => metas[i])} measurementTypes={measurementTypes}></RideDetails>
+            <RideDetails measurementClick={measurementClicked}  metas={selectedRides.map(i => metas[i])} ></RideDetails>
             
             <div className="map-container">
                 <MapContainer 
@@ -76,7 +86,7 @@ const Rides: FC = () => {
                     <LocationMarker />
                     { selectedRides.map( (n: number, i: number) => {
                         console.log('drawing ride',n);
-                        return <Ride tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
+                        return <Ride measurements = {measurementTypes} tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
                     }
                     ) }
                 </MapContainer>
