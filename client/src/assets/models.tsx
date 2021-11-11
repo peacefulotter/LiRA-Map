@@ -37,4 +37,8 @@ export interface RideModel {
   meta: RideMeta
 }
 
-export type Measurements = string[];
+export enum Measurements {
+  'Track Position', 'Interpolation', 'Map Matching'
+}
+
+

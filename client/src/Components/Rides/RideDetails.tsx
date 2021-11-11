@@ -6,33 +6,33 @@ import Checkbox from "../Checkbox";
 import { Measurements, RideMeta } from '../../assets/models'
 
 import '../../css/ridedetails.css'
+import { checkServerIdentity } from "tls";
 
 type Props = {
     metas: RideMeta[],
-    measurementTypes: Measurements
+	measurementClick: (measurement:Measurements, isChecked:boolean)=> void
 };
 
 
-const RideDetails: FC<Props> = ( { metas, measurementTypes } ) => {
+
+const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
 	
-	const doSomething = (isChecked: boolean) => {
-		console.log(isChecked);
-	}
+
 	
     return (
 		<div className="meta-data">
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Track Position'
-				onClick={doSomething} />
+				onClick={(isChecked) => measurementClick(Measurements["Track Position"], isChecked)} />
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Interpolation'			
-				onClick={doSomething}/>
+				onClick={(isChecked) => measurementClick(Measurements.Interpolation, isChecked)} />
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Map Matching'
-				onClick={doSomething}/>
+				onClick={(isChecked) => measurementClick(Measurements["Map Matching"], isChecked)} />
 
 			{ metas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`ride-md-${i}`}></MetaData>
