@@ -10,15 +10,11 @@ import { checkServerIdentity } from "tls";
 
 type Props = {
     metas: RideMeta[],
-	measurementClick: (measurement:Measurements, isChecked:boolean)=> void
+	measurementClick: (measurement: Measurements, isChecked: boolean) => void
 };
 
 
-
 const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
-	
-
-	
     return (
 		<div className="meta-data">
 			<Checkbox 
