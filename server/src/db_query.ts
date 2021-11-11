@@ -5,14 +5,12 @@ const MEASUREMENT_TYPE = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
 const TASKID1 = 1608
 const TASKID2 = 4032
 
-
+// FIXME: WTF WHY TWO FUNCTIONS
 export const getinterpolatedRides = async (db: any): Promise<RideMeta[]> => {
-    return await db.
-        select( '*' )
+    return await db
+        .select( '*' )
         .from( { public: 'Trips' } )
-        .where( {
-            'TaskId': TASKID1
-        } );
+        .where( { 'TaskId': TASKID1 } );
 }
 
 
@@ -38,9 +36,7 @@ export const getRideInterpolation = async ( db: any, tripId: string ): Promise<R
     const queryRes = await db
         .select( '*' )
         .from( { public: 'Measurements' } )
-        .where( {
-            'FK_Trip': tripId
-        } );
+        .where( { 'FK_Trip': tripId  } );
 
     queryRes.shift()
     return queryRes.map( (trackPos: any, i: number) => {

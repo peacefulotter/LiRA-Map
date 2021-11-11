@@ -1,12 +1,12 @@
 import { FC, useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
-import { LeafletMouseEvent, LocationEvent } from 'leaflet'
+import { LeafletMouseEvent } from 'leaflet'
 
-import RoutingMachine from "../RoutingMachine";
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
 import Ride from "../Ride";
 
+import { get } from '../../assets/fetch'
 import { RideMeta, Measurements } from '../../assets/models'
 
 import '../../css/rides.css'
@@ -17,27 +17,17 @@ const Rides: FC = () => {
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
     const [ measurementTypes, setMeasurementTypes ] = useState<Measurements[]>([]);
 
+    // fetch the metadata of all the rides
     useEffect( () => {
-        fetch("/rides")
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            setMetas(data);
-        })
+        get( '/rides', (data: any) => setMetas(data) )
     }, [] );
-
-    useEffect(() => {
-        console.log('after change', selectedRides);
-        
-    }, [selectedRides])
     
 
     const showRide = (i: number, isChecked: boolean) => {         
         console.log(selectedRides, i, isChecked);
         const rm = selectedRides.filter(r => r != i)
         console.log(rm);
-        
-               
+           
         isChecked ?
             setSelectedRides( prev => [...prev, i] ) :
             setSelectedRides( rm )        
@@ -48,7 +38,6 @@ const Rides: FC = () => {
         isChecked 
             ? setMeasurementTypes( prev => [...prev, measurement])
             : setMeasurementTypes( prev => prev.filter(value => value != measurement))
-        
     }
 
 
@@ -86,7 +75,7 @@ const Rides: FC = () => {
                     <LocationMarker />
                     { selectedRides.map( (n: number, i: number) => {
                         console.log('drawing ride',n);
-                        return <Ride measurements = {measurementTypes} tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
+                        return <Ride measurements={measurementTypes} tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
                     }
                     ) }
                 </MapContainer>

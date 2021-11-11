@@ -1,16 +1,14 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { LatLng } from 'leaflet'
 import { Polyline, Circle } from 'react-leaflet'
 
 import { RidePos } from '../assets/models'
 import { RideMeta, Measurements } from '../assets/models'
 
-
-
-import RideDetails from './Rides/RideDetails'
-
-import '../css/road.css'
 import RoutingMachine from "./RoutingMachine";
+
+import { post } from '../assets/fetch'
+import '../css/road.css'
 
 
 type Props = {
@@ -18,59 +16,45 @@ type Props = {
     measurements: Measurements[];
 };
 
+const usePrevious = <T extends unknown>(value: T): T | undefined => {
+    const ref = useRef<T>();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
 const Ride: FC<Props> = ( { tripId, measurements } ) => {
 	const [path, setPath] = useState<RidePos>([])
-
+    const prevMeasurements = usePrevious<Measurements[]>(measurements);
         
-        useEffect( () => {
-            console.log(measurements)
-            const credentials = {
-                method:'POST',
-                body: JSON.stringify({tripID: tripId}),
-                headers: new Headers()
-            }
+    useEffect( () => {
+        console.log(measurements)
+        let path;
+        const newMeasurement: Measurements = measurements
+            .filter( m => !prevMeasurements?.includes(m) )[0];
 
-            if(measurements.includes(1)){
-
-            fetch("/inter_ride", credentials)
-            .then((res) => res.json())
-            .then((data) => {
-                const path = data.filter((e: RidePos, i: number) => i % 5 === 0 )
-                setPath(path);
-                console.log("Got data for ride: ", tripId, ", length: ", path.length);  
-            })
-            }
-            else if(measurements.includes(0)){
-                fetch("/ride", credentials)
-            .then((res) => res.json())
-            .then((data) => {
-                const path = data.filter((e: RidePos, i: number) => i % 5 === 0 )
-                setPath(path);
-                console.log("Got data for ride: ", tripId, ", length: ", path.length);  
-            })
-
-
-            }
-
-
-        }, [measurements] );
-
-       
-	useEffect( () => {
-        const credentials = {
-            method:'POST',
-            body: JSON.stringify({tripID: tripId}),
-            headers: new Headers()
+        switch (newMeasurement) {
+            case Measurements["Track Position"]:
+                path = '/ride'
+                break;
+            case Measurements.Interpolation:
+                path = '/inter_ride'
+                break;
+            case Measurements["Map Matching"]:
+                path = '/ride' // TODO: add a proper path
+                break;
+            default:
+                path = '/ride'
+                break;
         }
-        fetch("/ride", credentials)
-        .then((res) => res.json())
-        .then((data) => {
-            const path = data.filter((e: RidePos, i: number) => i % 5 === 0 )
-            setPath(path);
-            console.log("Got data for ride: ", tripId, ", length: ", path.length);  
-        })
-    }, [] );
 
+        post(path, {tripID: tripId}, (data: any) => {
+            const path = data.filter((_e: RidePos, i: number) => i % 5 === 0 )
+            setPath(path);
+            console.log("Got data for ride: ", tripId, ", length: ", path.length);      
+        })
+    }, [measurements] );
     
 
     let groupedPos = []
