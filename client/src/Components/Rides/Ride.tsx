@@ -87,15 +87,9 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     }
     
     useEffect( () => {
-        let path;
-        // [2, 1]
-        // [1]
-        // [2, 1]
         const newMeasurement: MeasurementManagement = prevMeasurements === undefined 
             ? { m: measurements[0], isAdded: true }
             : getDiffMeasurements(prevMeasurements)
-
-        console.log(newMeasurement);
         
         if ( !newMeasurement.isAdded )
         {
@@ -103,24 +97,15 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             setPath([])
             return;
         }
-
-        switch (newMeasurement.m) {
-            case Measurements["Track Position"]:
-                path = '/ride'
-                break;
-            case Measurements.Interpolation:
-                path = '/inter_ride'
-                break;
-            case Measurements["Map Matching"]:
-                path = '/ride' // TODO: add a proper path
-                break;
-            default:
-                path = '/ride'
-                break;
+        else if ( newMeasurement.m === Measurements.Map_Match )
+        {
+            console.log('USE MAP MATCH TODO');
+            return;
         }
 
-        console.log(newMeasurement, prevMeasurements, measurements);
-        
+        const path = newMeasurement.m === Measurements.Track_Pos 
+            ? '/ride'
+            : '/inter_ride'        
 
         post(path, {tripID: tripId}, (data: any) => {
             setRide(data);
@@ -132,6 +117,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     useEffect( performancePath, [ride, mapZoom] )
     
 
+    /* FOR THE LINES */
     // let groupedPos = []
     // for (let i = 0; i < path.length - 2; i++) {
     //     groupedPos.push([path[i], path[i+1]])

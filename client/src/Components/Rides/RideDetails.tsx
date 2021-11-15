@@ -20,7 +20,7 @@ const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Track Position'
-				onClick={(isChecked) => measurementClick(Measurements["Track Position"], isChecked)} />
+				onClick={(isChecked) => measurementClick(Measurements.Track_Pos, isChecked)} />
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Interpolation'			
@@ -28,7 +28,7 @@ const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Map Matching'
-				onClick={(isChecked) => measurementClick(Measurements["Map Matching"], isChecked)} />
+				onClick={(isChecked) => measurementClick(Measurements.Map_Match, isChecked)} />
 
 			{ metas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`ride-md-${i}`}></MetaData>
