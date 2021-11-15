@@ -19,7 +19,7 @@ const substring = (meta: RideMeta, search: string) => {
     return meta.TaskId.toString().includes( search )
 }
 
-const RideCards: FC<Props> = ( { metas, onClick } ) => {
+const RideCards: FC<Props> = ( { metas, onClick } ) => {            
     const [ sorted, setSorted ] = useState<boolean>(false)
     const [ searched, setSearched ] = useState<boolean>(false)
 
@@ -27,7 +27,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     const [ search, setSearch ] = useState<string>("")
 
     const updateRides = () => {
-        console.log(search);
+        console.log(metas);
         let rides = range(metas.length);
 
         if ( searched )
@@ -43,7 +43,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         setShowRides(rides)
     }
 
-    useEffect(updateRides, [searched, search, sorted])
+    useEffect(updateRides, [searched, search, sorted, metas])
 
 
     const clearFilter = () => {

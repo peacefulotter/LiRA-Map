@@ -1,15 +1,14 @@
 - branches, master on push -> build and deploy to docker
 
 
-- road conditions
+
 - road::hover -> popup (leaflet)
 
-- fake again => map matching and interpolation
 
-- deploy server and client to servers
-- docker?
-- OSRM
 
+Draft for complete specification (everything there is to say about the architecture) -  40 pages
+	why, what, design - how does it work
+	react, ts, agile, ci/cd, docker
 
 
 
@@ -21,14 +20,15 @@
 - idea of what the outcome could be  with examples (need to be concret)
 
 #### System specification (35 pages)
-react, ts, agile, ci/cd, docker
-
-HANDBOOK -> when to deliver it
-FINAL SUBMISSION -> when
 
 
 
-7 is a good ride
-TASKID 12456
+
+
+
+TASKID 12456 
+
+--> track pos does not retrieve anything on liradb
+TASKID 3549 -> 29000 Interpolation and 0 TrackPos 
 
 
