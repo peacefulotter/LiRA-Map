@@ -38,7 +38,7 @@ export interface RideModel {
 }
 
 export enum Measurements {
-  'Track Position', 'Interpolation', 'Map Matching'
+  'Track_Pos', 'Interpolation', 'Map_Match'
 }
 
 
