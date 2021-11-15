@@ -1,9 +1,9 @@
 
 import * as tunnel from 'tunnel-ssh';
-import knex from 'knex'
+import knex, { Knex } from 'knex'
 
 import { RideMeta, RidePos } from './models'
-import { getRides, getRide, getinterpolatedRides, getRideInterpolation } from './db_query';
+import { getRides, getTrackPositions, getinterpolatedRides, getInterpolatedData } from './queries';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -65,25 +65,28 @@ export const db = (app: any) => {
     const tnl = tunnel.default(SSH_CONFIG, async (err: any, server: any) => {
         if (err) console.error("TUNNEL CREATION ERROR", err);
 
-        const database = knex(DATABASE_CONFIG);
+        const database: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
+
 
         app.post("/ride", async (req: any, res: any) => {
             const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
             console.log("Requested ride ", TRIP_ID);
-            const data: RidePos = await getRide(database, TRIP_ID );
+            const data: RidePos = await getTrackPositions(database, TRIP_ID );
             res.json( data );
         } )
 
         app.post("/inter_ride", async (req: any, res: any) => {
             const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
             console.log("Requested ride ", TRIP_ID);
-            const data: RidePos = await getRideInterpolation(database, TRIP_ID );
+            const data: RidePos = await getInterpolatedData( database, TRIP_ID );
             res.json( data );
         } )
 
         app.get("/rides", async (req: any, res: any) => {
-            // const data: RideMeta[] = await getRides(database)
-            const data: RideMeta[] = await getinterpolatedRides(database)
+            console.log("getting rides");
+
+            const data: RideMeta[] = await getRides(database)
+            // const data: RideMeta[] = await getinterpolatedRides(database)
             res.json( data )
          } )
     })
