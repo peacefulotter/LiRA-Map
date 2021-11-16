@@ -36,3 +36,9 @@ export interface RideModel {
 }
 
 export type Measurements = string[];
+
+export type Position3D = {
+  x: number;
+  y: number;
+  z: number;
+}

@@ -6,8 +6,8 @@ import { Express } from 'express';
 import http from 'http';
 import { Server } from 'net';
 
-import { RideMeta, RidePos } from './models'
-import { getRides, getTrackPositions, getinterpolatedRides, getInterpolatedData } from './queries';
+import { Position3D, RideMeta, RidePos } from './models'
+import { getRides, getTrackPositions, getAccelerationData, getInterpolatedData } from './queries';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -93,6 +93,13 @@ export const db = (app: Express, httpServer: http.Server) => {
             // const data: RideMeta[] = await getinterpolatedRides(database)
             res.json( data )
         } )
+
+        app.post("/acc", async (req: any, res: any) => {
+            const TRIP_ID = req.body.tripID;
+            console.log("Requested acc ", TRIP_ID);
+            const data: Position3D[] = await getAccelerationData(database, TRIP_ID);
+            res.json( data )
+        })
 
 
 
