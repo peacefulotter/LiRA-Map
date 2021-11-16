@@ -2,6 +2,8 @@
 import { RideMeta, RidePos } from './models'
 import { Knex } from 'knex'
 
+import { Position3D } from './models'
+
 const TRACK_POS = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
 const ACC_XYZ = '666607b6-0baa-4eb7-b395-21d3ea654159'
 
@@ -27,16 +29,30 @@ export const getTrackPositions = async ( db: Knex<any, unknown[]>, tripId: strin
 {
     return await fetchPositions( db, {
         'FK_Trip': tripId,
-        'FK_MeasurementType': TRACK_POS
+        'FK_MeasurementType': TRACK_POS // NOT WORKING ANYMORE
     } )
 }
-
 
 export const getInterpolatedData = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<RidePos> =>
 {
     return await fetchPositions(db, {
         'FK_Trip': tripId,
     } );
+}
+
+export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<Position3D[]> =>
+{
+    const res = await db
+        .select( '*' )
+        .from( { public: 'Measurements' } )
+        .where( { 'FK_Trip': tripId } );
+
+    console.log(res );
+
+    return res
+        .map( (data: any) => JSON.parse(data.message) )
+        .filter( (data: any) => data['@t'] === 'acc.xyz' )
+        .map( (data: any) => { return { x: data['acc.xyz.x'], y: data['acc.xyz.y'], z: data['acc.xyz.z'] } } )
 }
 
 
