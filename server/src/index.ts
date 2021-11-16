@@ -1,11 +1,13 @@
 
-import express from "express";
+import express, { Express } from "express";
+import { Server } from 'http';
+
 
 import { db } from './database'
 
 const PORT = process.env.PORT || 3001;
 
-const app = express();
+const app: Express = express();
 
 app.use(express.urlencoded({
     extended: true
@@ -23,9 +25,6 @@ app.use(express.json({
 // });
 
 
-db(app);
-
-
 
 app.post("/login",(req,res) => {
   const body = req.body;
@@ -39,6 +38,8 @@ app.post("/login",(req,res) => {
 });
 
 
-app.listen(PORT, () => {
+const server: Server = app.listen(PORT, () => {
   	console.log(`Server listening on ${PORT}`);
 });
+
+db(app, server);
