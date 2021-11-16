@@ -7,7 +7,7 @@ import http from 'http';
 import { Server } from 'net';
 
 import { Position3D, RideMeta, RidePos } from './models'
-import { getRides, getTrackPositions, getAccelerationData, getInterpolatedData } from './queries';
+import { getRides, getTrackPositions, getTest, getAccelerationData, getInterpolatedData } from './queries';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -75,12 +75,12 @@ export const db = (app: Express, httpServer: http.Server) => {
         app.post("/ride", async (req: any, res: any) => {
             const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
             console.log("Requested ride ", TRIP_ID);
-            const data: RidePos = await getTrackPositions(database, TRIP_ID );
+            const data: RidePos = await getTrackPositions( database, TRIP_ID );
             res.json( data );
         } )
 
         app.post("/inter_ride", async (req: any, res: any) => {
-            const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
+            const TRIP_ID = req.body.tripID;
             console.log("Requested ride ", TRIP_ID);
             const data: RidePos = await getInterpolatedData( database, TRIP_ID );
             res.json( data );
@@ -101,6 +101,12 @@ export const db = (app: Express, httpServer: http.Server) => {
             res.json( data )
         })
 
+
+        app.get("/test", async (req: any, res: any) => {
+            console.log("Requested /test ");
+            const data: any = await getTest(database);
+            res.json( data )
+        })
 
 
         // Nodemon reload, clean close so that it can restart properly
