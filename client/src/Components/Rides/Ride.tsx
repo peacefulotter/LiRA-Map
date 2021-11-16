@@ -51,11 +51,11 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
 	const [path, setPath] = useState<RidePos>([])
     const prevMeasurements = usePrevious<Measurements[]>(measurements);
         
-    // FIXME: use k nearest neighbor or something like this
+    // TODO: use k nearest neighbor or something like this
     const performancePath = () => {
         if ( ride.length === 0 ) return;
 
-        // first filter it to never show more then 3k
+        // first filter it to never show more then MAX_NB_POINTS
         const MAX_NB_POINTS = 2000
         const threshold = Math.floor(ride.length / MAX_NB_POINTS);
         console.log("threshold for filter", threshold);
@@ -68,10 +68,11 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         let maxLength = zooms[mappedZoom];
         console.log("max length is", maxLength);
         
-        let updatedPath = [];
-        for (let i = 0; i < r.length - 1; i++) {
-            const l = length(r[i], ride[i + 1]);
-            if ( l < maxLength ) continue;
+        let updatedPath = [];        
+        let batchSize = Math.max(16 - mapZoom, 1);
+        for (let i = 0; i < r.length - 1; i += batchSize) {
+            // const l = length(r[i], ride[i + 1]);            
+            // if ( l < maxLength ) continue;
             updatedPath.push(r[i]);
         }
 
