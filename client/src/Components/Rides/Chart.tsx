@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import {Line} from 'react-chartjs'
+import {Line, Pie} from 'react-chartjs-2'
 
-import {Line, Pie} from 'react-chartjs'
+export default class Chart extends React.Component{
+    
+    }
 
