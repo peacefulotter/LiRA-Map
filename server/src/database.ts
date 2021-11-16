@@ -1,6 +1,10 @@
 
 import * as tunnel from 'tunnel-ssh';
-import knex, { Knex } from 'knex'
+import knex, { Knex } from 'knex';
+
+import { Express } from 'express';
+import http from 'http';
+import { Server } from 'net';
 
 import { RideMeta, RidePos } from './models'
 import { getRides, getTrackPositions, getinterpolatedRides, getInterpolatedData } from './queries';
@@ -61,8 +65,8 @@ const DATABASE_CONFIG = {
 }
 
 
-export const db = (app: any) => {
-    const tnl = tunnel.default(SSH_CONFIG, async (err: any, server: any) => {
+export const db = (app: Express, httpServer: http.Server) => {
+    const tnl = tunnel.default(SSH_CONFIG, async (err: any, channel: Server) => {
         if (err) console.error("TUNNEL CREATION ERROR", err);
 
         const database: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
@@ -88,16 +92,25 @@ export const db = (app: any) => {
             const data: RideMeta[] = await getRides(database)
             // const data: RideMeta[] = await getinterpolatedRides(database)
             res.json( data )
-         } )
+        } )
+
+
+
+        // Nodemon reload, clean close so that it can restart properly
+        const closeConnection = () => {
+            console.log("TUNNEL AND DB CLOSING");
+            database.destroy();
+            channel.close();
+            tnl.close();
+            httpServer.close();
+        }
+
+        process.on( "SIGHUP", closeConnection );
+        process.on( "SIGUSR2", closeConnection )
     })
 
     console.log(tnl);
-
-
     tnl.on('error', (err) => { console.error('Something bad happened:', err); } );
-
-    process.on("SIGHUP", () =>  { tnl.close(); console.log("TUNNEL CLOSING"); });
-    process.on("SIGUSR2", () =>  { tnl.close(); console.log("TUNNEL CLOSING 2"); });
 }
 
 

@@ -3,10 +3,12 @@ import { RideMeta, RidePos } from './models'
 import { Knex } from 'knex'
 
 const TRACK_POS = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
+const ACC_XYZ = '666607b6-0baa-4eb7-b395-21d3ea654159'
+
 const TASKID1 = 1608
 const TASKID2 = 4032
 
-
+// TODO: get only the two column having the lat and lng attributes
 const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promise<RidePos> =>
 {
     const queryRes = await db
@@ -32,11 +34,10 @@ export const getTrackPositions = async ( db: Knex<any, unknown[]>, tripId: strin
 
 export const getInterpolatedData = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<RidePos> =>
 {
-    return await fetchPositions( db, {
-        'FK_Trip': tripId
-    } )
+    return await fetchPositions(db, {
+        'FK_Trip': tripId,
+    } );
 }
-
 
 
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
