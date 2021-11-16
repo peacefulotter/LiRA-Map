@@ -77,7 +77,7 @@ const Rides: FC = () => {
 
     const tileEventsHandler = {
         tileload: (e: any) => { 
-            console.log(e);
+            // console.log(e);
                        
             const coords = e.coords;
             const southWest: LatLng = new LatLng(
