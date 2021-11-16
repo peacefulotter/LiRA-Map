@@ -47,12 +47,23 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: str
         .from( { public: 'Measurements' } )
         .where( { 'FK_Trip': tripId } );
 
-    console.log(res );
+    console.log(res);
 
     return res
         .map( (data: any) => JSON.parse(data.message) )
         .filter( (data: any) => data['@t'] === 'acc.xyz' )
         .map( (data: any) => { return { x: data['acc.xyz.x'], y: data['acc.xyz.y'], z: data['acc.xyz.z'] } } )
+}
+
+export const getTest = async ( db: Knex<any, unknown[]> ): Promise<any> =>
+{
+    const res = await db
+        .select( 'TripId' )
+        .from( 'Trips' )
+
+    console.log(res);
+
+    return res;
 }
 
 

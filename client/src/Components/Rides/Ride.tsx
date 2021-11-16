@@ -134,7 +134,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     // <RoutingMachine path={path}></RoutingMachine>
     
     return ( <> 
-        { <Path path={path} measurement={measurements[0]}></Path>}
+        { <Path path={path} zoom={mapZoom} measurement={measurements[0]}></Path>}
     </> )
 }
 

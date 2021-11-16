@@ -12,6 +12,7 @@ interface Props extends ControlOptions {
 
 const getInstance = (path: LatLng[]) => {
 
+	// FIXME: MAX 100 POINTS
 	const instance = L.Routing.control( {
     	waypoints: path,
      	// plan: L.Routing.plan(path, {
