@@ -4,9 +4,10 @@
     display: flex;
     flex-direction: column;
     width: 20vw;
-    max-width: 180px;
+    max-width: 240px;
     min-height: 100%;
     background-color: rgb(58, 58, 58);
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 

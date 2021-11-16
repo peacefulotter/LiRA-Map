@@ -3,40 +3,35 @@ import { FC, useState } from "react";
 import MetaData from "./MetaData";
 import Checkbox from "../Checkbox";
 
-import { MeasurementsModel, Ride } from '../../assets/models'
+import { Measurements, RideMeta } from '../../assets/models'
 
 import '../../css/ridedetails.css'
+import { checkServerIdentity } from "tls";
 
 type Props = {
-    rides: Ride[],
-    measurementTypes: MeasurementsModel
+    metas: RideMeta[],
+	measurementClick: (measurement: Measurements, isChecked: boolean) => void
 };
 
 
-const RideDetails: FC<Props> = ( { rides, measurementTypes } ) => {
-	
-	const doSomething = (isChecked: boolean) => {
-		console.log(isChecked);
-	}
-	
+const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
     return (
 		<div className="meta-data">
-			<h3>Filters to apply</h3>
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Track Position'
-				onClick={doSomething} />
+				onClick={(isChecked) => measurementClick(Measurements["Track Position"], isChecked)} />
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Interpolation'			
-				onClick={doSomething}/>
+				onClick={(isChecked) => measurementClick(Measurements.Interpolation, isChecked)} />
 			<Checkbox 
 				className='ride-metadata-checkbox'
 				content='Map Matching'
-				onClick={doSomething}/>
+				onClick={(isChecked) => measurementClick(Measurements["Map Matching"], isChecked)} />
 
-			{ rides.map( (ride: Ride, i: number) =>
-				<MetaData data = {ride.meta} key={`ride-md-${i}`}></MetaData>
+			{ metas.map( (meta: RideMeta, i: number) =>
+				<MetaData md={meta} key={`ride-md-${i}`}></MetaData>
 			) }
         </div>
   )
