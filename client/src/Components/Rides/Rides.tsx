@@ -5,6 +5,7 @@ import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
 import Ride from "./Ride";
+import RideChart from "./RideChart"
 
 import { get } from '../../assets/fetch'
 import { RideMeta, Measurements } from '../../assets/models'
@@ -133,6 +134,9 @@ const Rides: FC = () => {
                     }
                     ) }
                 </MapContainer>
+            </div>
+            <div className="chart-container">
+                <RideChart/>
             </div>
       </div>
     
