@@ -27,7 +27,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     const [ search, setSearch ] = useState<string>("")
 
     const updateRides = () => {
-        console.log(metas);
         let rides = range(metas.length);
 
         if ( searched )
