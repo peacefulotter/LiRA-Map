@@ -38,28 +38,26 @@ type Props = {
     mapZoom: number;
 };
 
-const usePrevious = <T extends unknown>(value: T): T | undefined => {
-    const ref = useRef<T>();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  };
+
+const requests = [ '/ride', '/inter_ride' ]
 
 const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
-    const [ride, setRide] = useState<RidePos>([])
-	const [path, setPath] = useState<RidePos>([])
-    const prevMeasurements = usePrevious<Measurements[]>(measurements);
+    // array so that we can add other measurements
+    const [isLoaded, setLoaded] = useState<boolean[]>([false, false])   // data has been fetched
+    const [rides, setRides] = useState<RidePos[]>([[], []])             // full path from the db
+    const [paths, setPaths] = useState<RidePos[]>([[], []])             // filtered path shown on map
         
     // TODO: use k nearest neighbor or something like this
-    const performancePath = () => {
-        if ( ride.length === 0 ) return;
+    // measRide: the measurement ride we are updating
+    // i: the position of the measurement ride in the measRides array
+    const performancePath = (i: number) => {
+        if ( !isLoaded[i] ) return;
 
         // first filter it to never show more then MAX_NB_POINTS
         const MAX_NB_POINTS = 2000
-        const threshold = Math.floor(ride.length / MAX_NB_POINTS);
+        const threshold = Math.floor(rides[i].length / MAX_NB_POINTS);
         console.log("threshold for filter", threshold);
-        const r = ride.filter((r: LatLng, i: number) => i % threshold === 0 );
+        const r = rides[i].filter((r: LatLng, i: number) => i % threshold === 0 );
         console.log("r length after ", r.length);
         
 
@@ -77,45 +75,47 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         }
 
         console.log("before: ", r.length, "after: ", updatedPath.length);
-        setPath(updatedPath);
+        // setMeasRide(updated);
     }
 
-    const getDiffMeasurements = (prevM: Measurements[]): MeasurementManagement => {
-        return prevM.length > measurements.length 
-            ? { m: prevM.filter( m => !measurements.includes(m) )[0], isAdded: false }
-            : { m: measurements.filter( m => !prevM.includes(m) )[0], isAdded: true }
-        
-    }
-    
-    useEffect( () => {
-        const newMeasurement: MeasurementManagement = prevMeasurements === undefined 
-            ? { m: measurements[0], isAdded: true }
-            : getDiffMeasurements(prevMeasurements)
-        
-        if ( !newMeasurement.isAdded )
-        {
-            setRide([])
-            setPath([])
-            return;
-        }
-        else if ( newMeasurement.m === Measurements.Map_Match )
-        {
-            console.log('USE MAP MATCH TODO');
-            return;
-        }
 
-        const path = newMeasurement.m === Measurements.Track_Pos 
-            ? '/ride'
-            : '/inter_ride'        
+    const requestMeasurement = (i: number) => {
+        const path = requests[i]        
 
         post(path, {tripID: tripId}, (data: any) => {
-            setRide(data);
-            performancePath();
+            // setRide(data);
+            // performancePath();
             console.log("Got data for ride: ", tripId, ", length: ", data.length);      
         })
+    }
+
+    
+    useEffect( () => {
+        const toLoad = measurements
+            .filter(m => m < 2)         // dont take map matching into account 
+            .map( m => isLoaded[m] );   // get if the data is loaded already or not
+        console.log(toLoad);
+        toLoad
+            .filter( (elt: boolean) => elt ) // keep only the ones that we have to load
+            .forEach((elt: boolean, i: number) => requestMeasurement(i)) // and request them
+
+        // if ( !newMeasurement.isAdded )
+        // {
+        //     // setRide([])
+        //     // setPath([])
+        //     return;
+        // }
+        // else if ( newMeasurement.m === Measurements.Map_Match )
+        // {
+        //     console.log('USE MAP MATCH TODO');
+        //     return;
+        // }
+
+        // requestMeasurement(newMeasurement.m);
+        
     }, [measurements] );
 
-    useEffect( performancePath, [ride, mapZoom] )
+    // useEffect( performancePath, [ride, mapZoom] )
     
 
     /* FOR THE LINES */
@@ -134,7 +134,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     // <RoutingMachine path={path}></RoutingMachine>
     
     return ( <> 
-        { <Path path={path} zoom={mapZoom} measurement={measurements[0]}></Path>}
+        { <Path path={paths[0]} zoom={mapZoom} measurement={measurements[0]}></Path>}
     </> )
 }
 
