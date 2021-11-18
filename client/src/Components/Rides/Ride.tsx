@@ -1,8 +1,8 @@
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import { LatLng } from 'leaflet'
 import { Polyline, Circle } from 'react-leaflet'
 
-import { RidePos, RideMeta, Measurements } from '../../assets/models'
+import { RidePos, Measurements } from '../../assets/models'
 
 import RoutingMachine from "../RoutingMachine";
 import Path from "./Path";
@@ -27,11 +27,6 @@ const length = (a: LatLng, b: LatLng): number => {
     return Math.sqrt( delta[0] * delta[0] + delta[1] * delta[1] )
 }
 
-type MeasurementManagement = {
-    m: Measurements;
-    isAdded: boolean;
-}
-
 type Props = {
 	tripId: string;
     measurements: Measurements[];
@@ -50,92 +45,61 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     // TODO: use k nearest neighbor or something like this
     // measRide: the measurement ride we are updating
     // i: the position of the measurement ride in the measRides array
-    const performancePath = (i: number) => {
-        if ( !isLoaded[i] ) return;
-
+    const performancePath = (ride: RidePos, i: number): RidePos => {
         // first filter it to never show more then MAX_NB_POINTS
         const MAX_NB_POINTS = 2000
-        const threshold = Math.floor(rides[i].length / MAX_NB_POINTS);
-        console.log("threshold for filter", threshold);
-        const r = rides[i].filter((r: LatLng, i: number) => i % threshold === 0 );
-        console.log("r length after ", r.length);
+        const threshold: number = Math.floor(ride.length / MAX_NB_POINTS);
+        const r: RidePos = ride.filter((_, i: number) => i % threshold === 0 );
+        // console.log("r length after ", r.length);
         
-
-        console.log("starting filter with zoom", mapZoom);
-        let mappedZoom = (mapZoom <= 11) ? 0 : mapZoom - 11;
-        let maxLength = zooms[mappedZoom];
-        console.log("max length is", maxLength);
+        // const mappedZoom = (mapZoom <= 11) ? 0 : mapZoom - 11;
+        // const maxLength = zooms[mappedZoom];
+        // console.log("max length is", maxLength);
         
-        let updatedPath = [];        
-        let batchSize = Math.max(16 - mapZoom, 1);
+        const updatedPath: RidePos = [];        
+        const batchSize: number = Math.max(16 - mapZoom, 1);
         for (let i = 0; i < r.length - 1; i += batchSize) {
             // const l = length(r[i], ride[i + 1]);            
             // if ( l < maxLength ) continue;
             updatedPath.push(r[i]);
         }
 
-        console.log("before: ", r.length, "after: ", updatedPath.length);
-        // setMeasRide(updated);
+        // console.log("before: ", r.length, "after: ", updatedPath.length);
+        return updatedPath
     }
 
 
-    const requestMeasurement = (i: number) => {
-        const path = requests[i]        
-
-        post(path, {tripID: tripId}, (data: any) => {
-            // setRide(data);
-            // performancePath();
-            console.log("Got data for ride: ", tripId, ", length: ", data.length);      
+    const requestMeasurement = (i: number) => {        
+        post( requests[i], { tripID: tripId }, (data: any) => {
+            setRides(  rides.map(    (ride: RidePos,   j: number) => i === j ? data : ride ));
+            setPaths(  paths.map(    (p: RidePos,      j: number) => i === j ? performancePath(data, i) : p ));
+            setLoaded( isLoaded.map( (loaded: boolean, j: number) => i === j ? true : loaded))     
+            console.log("Got data for ride: ", tripId, ", length: ", data.length); 
         })
     }
 
     
     useEffect( () => {
-        const toLoad = measurements
-            .filter(m => m < 2)         // dont take map matching into account 
-            .map( m => isLoaded[m] );   // get if the data is loaded already or not
-        console.log(toLoad);
-        toLoad
-            .filter( (elt: boolean) => elt ) // keep only the ones that we have to load
-            .forEach((elt: boolean, i: number) => requestMeasurement(i)) // and request them
-
-        // if ( !newMeasurement.isAdded )
-        // {
-        //     // setRide([])
-        //     // setPath([])
-        //     return;
-        // }
-        // else if ( newMeasurement.m === Measurements.Map_Match )
-        // {
-        //     console.log('USE MAP MATCH TODO');
-        //     return;
-        // }
-
-        // requestMeasurement(newMeasurement.m);
+        console.log(measurements);
         
+        measurements
+            .filter( m => m < 2 && !isLoaded[m] )  // dont take map matching into account and the ones that are already loaded 
+            .forEach( m => requestMeasurement(m) ) // and request the rides
+            
+        console.log(isLoaded, rides, paths); 
     }, [measurements] );
 
-    // useEffect( performancePath, [ride, mapZoom] )
-    
-
-    /* FOR THE LINES */
-    // let groupedPos = []
-    // for (let i = 0; i < path.length - 2; i++) {
-    //     groupedPos.push([path[i], path[i+1]])
-    // }
-
-    // { 
-	// 	groupedPos.map( (pos: LatLng[], i: number) => {	
-    //      return <Polyline positions={[ [pos[0].lat, pos[0].lng], [pos[1].lat, pos[1].lng] ]}></Polyline>		
-	// 	} ) 
-	//  } 
+    useEffect( () => 
+        setPaths( paths.map( (p: RidePos, i: number) => performancePath(rides[i], i) ) )
+    , [mapZoom] )
+     
 
     /* ROUTING MACHINE TO GET THE MAP MATCHED */
     // <RoutingMachine path={path}></RoutingMachine>
     
-    return ( <> 
-        { <Path path={paths[0]} zoom={mapZoom} measurement={measurements[0]}></Path>}
-    </> )
+    return (<> { paths.map( (path: RidePos, i: number) =>
+        <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
+    ) } </>)
 }
 
 export default Ride;
