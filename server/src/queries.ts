@@ -64,7 +64,6 @@ export const getTest = async ( db: Knex<any, unknown[]> ): Promise<any> =>
     //     .from( 'Trips' )
 
     // console.log(res);
-
     return await o()
 }
 

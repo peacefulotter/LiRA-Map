@@ -34,7 +34,7 @@ const createRectangle = ( pos: LatLng[], i: number, weight: number, pathConfigs:
 }
 
 const createCircle = ( pos: LatLng[], i: number, weight: number, pathConfigs: PathEltDetails ) =>  {
-    const p = pos[0]
+    const p = pos[0]    
     return <Circle 
         center={[p.lat, p.lng]} 
         radius={1} 

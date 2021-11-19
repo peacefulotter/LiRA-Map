@@ -15,7 +15,6 @@ const getInstance = (path: RidePos) => {
 
 	console.log(path);
 	
-
 	// FIXME: MAX 100 POINTS
 	const instance = L.Routing.control( {
     	waypoints: path,

@@ -10,7 +10,6 @@ import Path from "./Path";
 import { post } from '../../assets/fetch'
 import '../../css/road.css'
 
-
 const zooms = [
     0.05,  // <= 11
     0.003,   // 12

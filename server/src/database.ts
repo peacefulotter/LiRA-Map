@@ -20,15 +20,14 @@ const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
 const SSH_PORT = 22;
 
 const DB_NAME = "postgres";
+
 // const DB_HOST = "liradbdev.compute.dtu.dk";
 // const DB_PORT = 5432;
-
 const DB_HOST = "liradb.compute.dtu.dk";
 const DB_PORT = 5435;
 
 const LOCALHOST = "127.0.0.1"
 const LOCALPORT = 3333
-
 
 const SSH_CONFIG = {
 	host: SSH_HOSTNAME,
