@@ -64,6 +64,8 @@ const DATABASE_CONFIG = {
     }
 }
 
+// http://liradbdev.compute.dtu.dk:5000/match/v1/car/12.5639696,55.7066193;12.5639715,55.7066193;12.5639753,55.7066193
+
 
 export const db = (app: Express, httpServer: http.Server) => {
     const tnl = tunnel.default(SSH_CONFIG, async (err: any, channel: Server) => {
@@ -120,10 +122,12 @@ export const db = (app: Express, httpServer: http.Server) => {
 
         process.on( "SIGHUP", closeConnection );
         process.on( "SIGUSR2", closeConnection )
+
+        tnl.on('error', (errr) => { console.error('Something bad happened:', errr); closeConnection() } );
+
     })
 
     console.log(tnl);
-    tnl.on('error', (err) => { console.error('Something bad happened:', err); } );
 }
 
 

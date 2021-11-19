@@ -64,7 +64,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             updatedPath.push(r[i]);
         }
 
-        // console.log("before: ", r.length, "after: ", updatedPath.length);
+        console.log("before: ", r.length, "after: ", updatedPath.length);
         return updatedPath
     }
 
@@ -96,10 +96,22 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
 
     /* ROUTING MACHINE TO GET THE MAP MATCHED */
     // <RoutingMachine path={path}></RoutingMachine>
+    const rmPath: RidePos = []
+    let l = Math.ceil(paths[1].length / 70)
+    for (let i = 0; i < paths[1].length; i += l) 
+    {
+        rmPath.push(paths[1][i])        
+    }
     
-    return (<> { paths.map( (path: RidePos, i: number) =>
-        <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
-    ) } </>)
+    
+    return (<> 
+        { 
+        // paths.map( (path: RidePos, i: number) =>
+        //     <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
+        // ) 
+        }
+         <RoutingMachine path={rmPath}></RoutingMachine>
+        </>)
 }
 
 export default Ride;

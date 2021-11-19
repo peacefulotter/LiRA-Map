@@ -1,8 +1,10 @@
 
 import { RideMeta, RidePos } from './models'
 import { Knex } from 'knex'
+import http from 'http'
 
 import { Position3D } from './models'
+import { o } from './osrm'
 
 const TRACK_POS = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
 const ACC_XYZ = '666607b6-0baa-4eb7-b395-21d3ea654159'
@@ -57,13 +59,13 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: str
 
 export const getTest = async ( db: Knex<any, unknown[]> ): Promise<any> =>
 {
-    const res = await db
-        .select( 'TripId' )
-        .from( 'Trips' )
+    // const res = await db
+    //     .select( 'TripId' )
+    //     .from( 'Trips' )
 
-    console.log(res);
+    // console.log(res);
 
-    return res;
+    return await o()
 }
 
 
