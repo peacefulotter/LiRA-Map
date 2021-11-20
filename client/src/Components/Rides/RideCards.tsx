@@ -83,7 +83,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                 return <Checkbox 
                         key={`ride${i}`}
                         className="ride-card-container"
-                        content={`${metas[num].TripId}<br/>-<br/>${metas[num].TaskId}`}
+                        content={`${metas[num].TaskId}`} // ${metas[num].TripId}<br/>-<br/>
                         onClick={(isChecked) => onClick(i, isChecked)} />
             } )
             }

@@ -7,7 +7,7 @@ import http from 'http';
 import { Server } from 'net';
 
 import { Position3D, RideMeta, RidePos } from './models'
-import { getRides, getTrackPositions, getTest, getAccelerationData, getInterpolatedData } from './queries';
+import { getRides, getTrackPositions, getTest, getAccelerationData, getInterpolatedData, getMeasurements } from './queries';
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -43,7 +43,7 @@ const SSH_CONFIG = {
 };
 
 const DATABASE_CONFIG = {
-    client: 'postgres',
+    client: 'pg',
     connection: {
           host : LOCALHOST,
           port: LOCALPORT,
@@ -51,15 +51,22 @@ const DATABASE_CONFIG = {
           password : DB_PASSWORD,
           database : DB_NAME,
     },
+    debug: true,
     pool: {
-        min: 2,
-        max: 6,
+        min: 0,
+        max: 7,
         "createTimeoutMillis": 3000,
         "acquireTimeoutMillis": 30000,
         "idleTimeoutMillis": 30000,
         "reapIntervalMillis": 1000,
         "createRetryIntervalMillis": 100,
         "propagateCreateError": false
+    },
+    log: {
+        warn(msg: any) { console.log('warning', msg); },
+        error(msg: any) { console.log('error', msg); },
+        deprecate(msg: any) { console.log('deprecate', msg); },
+        debug(msg: any) { console.log('debug', msg); },
     }
 }
 
@@ -77,6 +84,12 @@ export const db = (app: Express, httpServer: http.Server) => {
             const TRIP_ID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
             console.log("Requested ride ", TRIP_ID);
             const data: RidePos = await getTrackPositions( database, TRIP_ID );
+            res.json( data );
+        } )
+
+        app.get("/measurements", async (req: any, res: any) => {
+            console.log("Requested measurements");
+            const data: object[] = await getMeasurements( database );
             res.json( data );
         } )
 

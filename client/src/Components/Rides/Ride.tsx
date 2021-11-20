@@ -10,10 +10,6 @@ import Path from "./Path";
 import { post } from '../../assets/fetch'
 import '../../css/road.css'
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9d67b1cab1a94b3897aa8376eff7deb315391551
 const zooms = [
     0.05,  // <= 11
     0.003,   // 12
@@ -28,6 +24,11 @@ const zooms = [
 const length = (a: LatLng, b: LatLng): number => {
     let delta = [a.lat - b.lat, a.lng - b.lng];
     return Math.sqrt( delta[0] * delta[0] + delta[1] * delta[1] )
+}
+
+type DBRidePos = {
+    lat: number;
+    lon: number;
 }
 
 type Props = {
@@ -61,23 +62,32 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         
         const updatedPath: RidePos = [];        
         const batchSize: number = Math.max(16 - mapZoom, 1);
-        for (let i = 0; i < r.length - 1; i += batchSize) {
+        for (let i = 0; i < r.length - 2; i += batchSize) 
+        {
+            const average: number[] = [0, 0];
+
+            for (let j = 0; j < batchSize; j++) 
+            {
+                if ( r[i + j] === undefined ) continue;    
+                average[0] += r[i + j].lat;                
+                average[1] += r[i + j].lng;                
+            }
             // const l = length(r[i], ride[i + 1]);            
             // if ( l < maxLength ) continue;
-            updatedPath.push(r[i]);
+            const lat = average[0] / batchSize;
+            const lng = average[1] / batchSize;
+
+            updatedPath.push(new LatLng(lat, lng));
         }
 
-<<<<<<< HEAD
-        console.log("before: ", r.length, "after: ", updatedPath.length);
-=======
         // console.log("before: ", r.length, "after: ", updatedPath.length);
->>>>>>> 9d67b1cab1a94b3897aa8376eff7deb315391551
         return updatedPath
     }
 
 
     const requestMeasurement = (i: number) => {        
-        post( requests[i], { tripID: tripId }, (data: any) => {
+        post( requests[i], { tripID: tripId }, (res: any) => {
+            const data = res.map( (d: DBRidePos) => new LatLng(d.lat, d.lon) )
             setRides(  rides.map(    (ride: RidePos,   j: number) => i === j ? data : ride ));
             setPaths(  paths.map(    (p: RidePos,      j: number) => i === j ? performancePath(data, i) : p ));
             setLoaded( isLoaded.map( (loaded: boolean, j: number) => i === j ? true : loaded))     
@@ -113,11 +123,13 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     
     return (<> 
         { 
-        // paths.map( (path: RidePos, i: number) =>
-        //     <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
-        // ) 
+        paths.map( (path: RidePos, i: number) =>
+            <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
+        ) 
         }
-         <RoutingMachine path={rmPath}></RoutingMachine>
+        { 
+        // <RoutingMachine path={rmPath}></RoutingMachine> 
+        }
         </>)
 }
 

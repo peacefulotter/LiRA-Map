@@ -4,9 +4,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 35vw;
-    min-width: 350px;
-    max-width: 450px;
     min-height: 100%;
     padding-top: 5px;
     background-color: rgb(58, 58, 58);
@@ -49,7 +46,7 @@
 }
 
 .ride-metadata-checkbox {
-    width: 70%;
+    width: 85%;
     margin-bottom: 5px;
     font-size: 1.1em !important;
 }
