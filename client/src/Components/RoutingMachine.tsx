@@ -3,7 +3,10 @@ import L, { ControlOptions, LatLng } from 'leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
+<<<<<<< HEAD
 import { RidePos } from '../assets/models'
+=======
+>>>>>>> 9d67b1cab1a94b3897aa8376eff7deb315391551
 
 import "../css/map.css"
 

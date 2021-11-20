@@ -10,6 +10,10 @@ import Path from "./Path";
 import { post } from '../../assets/fetch'
 import '../../css/road.css'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9d67b1cab1a94b3897aa8376eff7deb315391551
 const zooms = [
     0.05,  // <= 11
     0.003,   // 12
@@ -63,7 +67,11 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             updatedPath.push(r[i]);
         }
 
+<<<<<<< HEAD
         console.log("before: ", r.length, "after: ", updatedPath.length);
+=======
+        // console.log("before: ", r.length, "after: ", updatedPath.length);
+>>>>>>> 9d67b1cab1a94b3897aa8376eff7deb315391551
         return updatedPath
     }
 

@@ -1,7 +1,6 @@
 
 import { RideMeta, RidePos } from './models'
 import { Knex } from 'knex'
-import http from 'http'
 
 import { Position3D } from './models'
 import { o } from './osrm'
