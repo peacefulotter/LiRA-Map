@@ -30,7 +30,14 @@ export interface RideMeta {
   // ChangeLog: string|null, //	null
 }
 
-export type RidePos = LatLng[];  
+export type RidePos = LatLng[];
+
+export interface PointData {
+  pos: LatLng;
+  value?: any;   // using this field depending on the measurement
+}
+
+export type RideData = PointData[]
 
 export interface RideModel {
   pos: RidePos,
@@ -38,7 +45,21 @@ export interface RideModel {
 }
 
 export enum Measurements {
-  'Track_Pos', 'Interpolation', 'Map_Match'
+  'Track_Pos', 'Interpolation', 'Map_Matching', 'Engine_RPM' 
 }
 
+export type MeasurementProperty = {
+  query: string;
+  name: string;
+  color: string;
+  size: number;
+  value: undefined | string;
+}
+
+export const MeasurementProperties: MeasurementProperty[] = [
+  { query: '/trackpos',      name: 'Track Pos',     color: "#0000CC", size: 1,       value: undefined },
+  { query: '/interpolation', name: 'Interpolation', color: "#2288FF", size: 1,       value: undefined },
+  { query: '/map_match',     name: 'Map Matching',  color: "#0000FF", size: 0.00003, value: undefined },
+  { query: '/rpms',          name: 'Engine RPM',    color: "#FF00FF", size: 1,       value: 'number'  },
+]
 

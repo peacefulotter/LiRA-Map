@@ -30,6 +30,13 @@ export interface RideMeta {
 
 export type RidePos = LatLng[];
 
+export interface PointData {
+  pos: LatLng;
+  value?: any;   // using this field depending on the measurement
+}
+
+export type RideData = PointData[]
+
 export interface RideModel {
   pos: RidePos,
   meta: RideMeta

@@ -4,6 +4,7 @@ import { Server } from 'http';
 
 
 import { db } from './database'
+import {o} from './osrm';
 
 const PORT = process.env.PORT || 3001;
 
@@ -43,3 +44,4 @@ const server: Server = app.listen(PORT, () => {
 });
 
 db(app, server);
+// o()
