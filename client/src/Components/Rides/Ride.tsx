@@ -97,9 +97,18 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         })
     }
 
+
+    /*
+        post('/acc', {tripId:tripId}, (data_acc: any) => {   //put it to try only!!!!
+            console.log(data_acc)
+        })
+*/
     
     useEffect( () => {
         console.log(measurements);
+        //post('/acc', {tripId:tripId}, (data_acc: any) => {   //put it to try only!!!!
+        //    console.log(data_acc)
+        //})
         
         measurements
             .filter( m => m != 2 && !isLoaded[m] )  // dont take map matching into account and the ones that are already loaded 

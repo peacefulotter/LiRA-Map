@@ -11,6 +11,7 @@ import { RideMeta, Measurements } from '../../assets/models'
 
 import '../../css/rides.css'
 import { logRoles } from "@testing-library/dom";
+import RideChart from "./RideChart";
 
 
 const Rides: FC = () => {
@@ -133,6 +134,9 @@ const Rides: FC = () => {
                     }
                     ) }
                 </MapContainer>
+            </div>
+            <div className="chart-container">
+                <RideChart/>
             </div>
       </div>
     
