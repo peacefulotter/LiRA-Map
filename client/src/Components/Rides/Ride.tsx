@@ -108,16 +108,19 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             ? '/ride'
             : '/inter_ride'        
 
+        post('/acc', {tripId:tripId}, (data_acc: any) => {   //put it to try only!!!!
+            console.log(data_acc)
+        })
+
+
         post(path, {tripID: tripId}, (data: any) => {
             setRide(data);
             performancePath();
             console.log("Got data for ride: ", tripId, ", length: ", data.length);      
         })
-/*
-        post('/acc', {tripId:tripId}, (data_acc: any) => {   //put it to try only!!!!
-            console.log(data_acc)
-        })
-*/
+
+        
+
     }, [measurements] );
 
     useEffect( performancePath, [ride, mapZoom] )
