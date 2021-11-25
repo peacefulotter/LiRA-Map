@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useRef } from "react";
 import { LatLng } from 'leaflet'
 import { Polyline, Circle } from 'react-leaflet'
 
-import { RidePos, RideMeta, Measurements } from '../../assets/models'
+import { RidePos, RideMeta, Measurements , AccelerationPoint, AccList} from '../../assets/models'
 
 import RoutingMachine from "../RoutingMachine";
 import Path from "./Path";
@@ -36,6 +36,7 @@ type Props = {
 	tripId: string;
     measurements: Measurements[];
     mapZoom: number;
+    //accelerations: AccList;
 };
 
 const usePrevious = <T extends unknown>(value: T): T | undefined => {
@@ -46,10 +47,11 @@ const usePrevious = <T extends unknown>(value: T): T | undefined => {
     return ref.current;
   };
 
-const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
+const Ride: FC<Props> = ( { tripId, measurements, mapZoom} ) => {
     const [ride, setRide] = useState<RidePos>([])
 	const [path, setPath] = useState<RidePos>([])
-    const prevMeasurements = usePrevious<Measurements[]>(measurements);
+    const prevMeasurements = usePrevious<Measurements[]>(measurements)
+    //const [accs, setaccs] = useState<AccList>(accelerations);
         
     // TODO: use k nearest neighbor or something like this
     const performancePath = () => {
@@ -108,10 +110,12 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             ? '/ride'
             : '/inter_ride'        
 
-        post('/acc', {tripId:tripId}, (data_acc: any) => {   //put it to try only!!!!
+            /*
+        post('/acc', {tripID:tripId}, (data_acc: any) => {   //put it to try only!!!!
             console.log(data_acc)
+            setaccs(data_acc);
         })
-
+*/
 
         post(path, {tripID: tripId}, (data: any) => {
             setRide(data);

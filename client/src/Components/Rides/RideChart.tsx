@@ -19,6 +19,8 @@ type Props = {
 
 const RideChart: FC<Props> = (  ) => {
 
+    
+
     const options = {
         animationEnabled: true,
         exportEnabled: true,

@@ -8,8 +8,9 @@ import Ride from "./Ride";
 import RideChart from "./RideChart"
 
 import { get } from '../../assets/fetch'
-import { RideMeta, Measurements } from '../../assets/models'
+import { RideMeta, Measurements, RidePos, AccList } from '../../assets/models'
 
+import { post } from '../../assets/fetch'
 import '../../css/rides.css'
 import { logRoles } from "@testing-library/dom";
 
@@ -20,6 +21,7 @@ const Rides: FC = () => {
     const [ measurementTypes, setMeasurementTypes ] = useState<Measurements[]>([]);
     const [ zoom, setZoom ] = useState<number>(11);
     const [ bounds, setBounds ] = useState<LatLngBounds | undefined>(undefined)
+    const [accs, setaccs] = useState<AccList>([]);
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -33,7 +35,14 @@ const Rides: FC = () => {
                    
         isChecked ?
             setSelectedRides( prev => [...prev, i] ) :
-            setSelectedRides( rm )        
+            setSelectedRides( rm )   
+        
+
+        post('/acc', {tripID:selectedRides[0]}, (data_acc: any) => {   //put it to try only!!!!
+                console.log(data_acc)  //selected ride should be found then data_acc should be given to ridechart
+                
+                setaccs(data_acc);
+        })
     }
 
     const measurementClicked = (measurement: Measurements, isChecked: boolean) => {
@@ -130,7 +139,7 @@ const Rides: FC = () => {
                     <LocationMarker />
                     { selectedRides.map( (n: number, i: number) => {
                         // console.log('drawing ride',n);
-                        return <Ride measurements={measurementTypes} tripId={metas[n].TripId} mapZoom={zoom} key={`ride-road-${i}`}></Ride>
+                        return <Ride measurements={measurementTypes} tripId={metas[n].TripId} mapZoom={zoom} key={`ride-road-${i}`} ></Ride>
                     }
                     ) }
                 </MapContainer>

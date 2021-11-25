@@ -41,4 +41,10 @@ export enum Measurements {
   'Track_Pos', 'Interpolation', 'Map_Match'
 }
 
+export interface AccelerationPoint {
+  x: number,
+  y: number,
+  z: number
+}
 
+export type AccList = AccelerationPoint[];

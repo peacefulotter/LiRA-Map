@@ -44,11 +44,11 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: str
 {
     const res = await db
         .select( '*' )
-        .from( "Measurements")
-        .where( { 'FK_Trip': tripId } );
+        .from(  { public: 'Measurements' })
+        .where(  {'FK_Trip': tripId, 'T': 'acc.xyz'  } );
 
     console.log(res);
-
+    res.shift()
     return res
         .map( (data: any) => JSON.parse(data.message) )
         .filter( (data: any) => data['@t'] === 'acc.xyz' )
