@@ -61,7 +61,8 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: str
         () => db
             .select( [ 'message' ] )
             .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId, 'T': 'acc.xyz' } ),
+            .where( { 'FK_Trip': tripId, 'T': 'acc.xyz' } )
+            .limit(100),
         (res: Position3D[]) => res.map( (msg: any) => {
             const data = JSON.parse(msg.message)
             return { x: data['acc.xyz.x'], y: data['acc.xyz.y'], z: data['acc.xyz.z'] }

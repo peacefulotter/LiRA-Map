@@ -142,12 +142,12 @@ export const db = (app: Express, httpServer: http.Server) => {
         } )
 
 
-        // app.post("/acc", async (req: any, res: any) => {
-        //     const TRIP_ID = req.body.tripID;
-        //     console.log("Requested acc ", TRIP_ID);
-        //     const data: Position3D[] = await getAccelerationData(database, TRIP_ID);
-        //     res.json( data )
-        // })
+         app.post("/acc", async (req: any, res: any) => {
+             const TRIP_ID = req.body.tripID;
+             console.log("Requested acc ", TRIP_ID);
+             const data: Position3D[] = await getDatabase<Position3D[]>(getAccelerationData, TRIP_ID);
+             res.json( data )
+         })
 
 
         // app.get("/test", async (req: any, res: any) => {
