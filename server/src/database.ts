@@ -1,4 +1,3 @@
-
 import * as tunnel from 'tunnel-ssh';
 import knex, { Knex } from 'knex';
 
@@ -8,6 +7,7 @@ import { Server } from 'net';
 
 import { Position3D, RideMeta, RideData } from './models'
 import { getRides, getInterpolatedRides, getTrackPositions, getTest, getAccelerationData, getInterpolatedData, getMeasurements, getRPMS } from './queries';
+import VPN from './vpn'
 
 import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
@@ -16,19 +16,16 @@ const env = process.env;
 
 const { SSH_USERNAME, SSH_PASSWORD, DB_USER, DB_PASSWORD } = env;
 
-const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
-const SSH_PORT = 22;
-
 const DB_NAME = "postgres";
-
 // const DB_HOST = "liradbdev.compute.dtu.dk";
 // const DB_PORT = 5432;
 const DB_HOST = "liradb.compute.dtu.dk";
 const DB_PORT = 5435;
-
 const LOCALHOST = "127.0.0.1"
 const LOCALPORT = 3333
 
+const SSH_HOSTNAME = "thinlinc.compute.dtu.dk";
+const SSH_PORT = 22;
 const SSH_CONFIG = {
 	host: SSH_HOSTNAME,
 	port: SSH_PORT,
@@ -53,7 +50,7 @@ const DATABASE_CONFIG = {
     },
     debug: true,
     pool: {
-        min: 0,
+        min: 1,
         max: 7,
         "createTimeoutMillis": 3000,
         "acquireTimeoutMillis": 30000,
@@ -70,11 +67,21 @@ const DATABASE_CONFIG = {
     }
 }
 
+
+let vpnConnected = false;
+
 // http://liradbdev.compute.dtu.dk:5000/match/v1/car/12.5639696,55.7066193;12.5639715,55.7066193;12.5639753,55.7066193
 type Func<T> = (db: Knex<any, unknown[]>, tripId: string) => Promise<T>;
 
 const getDatabase = <T>(func: Func<T>, tripID: string): Promise<T> => {
-    return new Promise( (resolve, reject) => {
+    return new Promise( async (resolve, reject) => {
+        if ( !vpnConnected )
+        {
+            const vpn = await VPN.connect( SSH_USERNAME, SSH_PASSWORD )
+            console.log(vpn);
+            vpnConnected = true;
+            console.log("vpn connected");
+        }
         const tnl = tunnel.default(SSH_CONFIG, async (err: any, channel: Server) => {
             if (err)
             {
@@ -83,17 +90,34 @@ const getDatabase = <T>(func: Func<T>, tripID: string): Promise<T> => {
             }
             const database: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
             const res: T = await func(database, tripID);
+            console.log(res);
 
-            database.destroy();
-            tnl.close();
+
+            // closing everything
+            await database.destroy();
+            channel.close((errr) => console.log('close channel err', errr) )
 
             resolve(res);
         })
+
+        tnl.on('error', (errr) => { console.error('Something bad happened:', errr); tnl.close() } );
     })
 }
 
 
+
 export const db = (app: Express, httpServer: http.Server) => {
+    const cleanup = () => {
+        if ( vpnConnected )
+            VPN.disconnect()
+        httpServer.close()
+    }
+
+    process.on( "SIGHUP",  cleanup );
+    process.on( "SIGUSR2", cleanup );
+    process.on( "SIGQUIT", cleanup );
+    process.on( "SIGINT",  cleanup );
+    process.on( "SIGTERM", cleanup );
     // const tnl = tunnel.default(SSH_CONFIG, async (err: any, channel: Server) => {
     //    if (err) console.error("TUNNEL CREATION ERROR", err);
 

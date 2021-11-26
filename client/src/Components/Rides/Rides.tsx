@@ -104,7 +104,7 @@ const Rides: FC = () => {
             // console.log(bounds);
                         
         },
-        tileunload: (e: any) => console.log('unload', e)
+        // tileunload: (e: any) => console.log('unload', e)
         
     }
 

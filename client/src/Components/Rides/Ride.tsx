@@ -42,6 +42,8 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     // measRide: the measurement ride we are updating
     // i: the position of the measurement ride in the measRides array
     const performancePath = (ride: RideData, i: number): RideData => {
+        console.log(ride, i);
+        
         if ( ride === undefined ) return [];
         
         // first filter it to never show more then MAX_NB_POINTS
@@ -82,9 +84,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     }
 
 
-    const requestMeasurement = (i: number) => { 
-        console.log('request meas');
-               
+    const requestMeasurement = (i: number) => {                
         post( MeasurementProperties[i].query, { tripID: tripId }, (res: RideData) => {
             const data = res.map( d => { return { pos: new LatLng(d.pos.lat, d.pos.lng), value: d.value } } )
             setRides(  rides.map(    (ride: RideData,   j: number) => i === j ? data : ride ));
@@ -102,7 +102,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         console.log(measurements);
         
         measurements
-            .filter( m => m != 2 && !isLoaded[m] )  // dont take map matching into account and the ones that are already loaded 
+            .filter( m => m != 2 && !isLoaded[m] ) // dont take map matching into account and the ones that are already loaded 
             .forEach( m => requestMeasurement(m) ) // and request the rides
             
         console.log(isLoaded, rides, paths); 

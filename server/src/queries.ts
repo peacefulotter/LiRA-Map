@@ -79,7 +79,7 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, tripId: string ): Promi
         (res: RideData) => res.map( (msg: any) => {
             const json = JSON.parse(msg.message)
             console.log(json);
-            return { pos: { lat: msg.lat, lng: msg.lon }, val: json['obd.rpm.value'] }
+            return { pos: { lat: msg.lat, lng: msg.lon }, value: json['obd.rpm.value'] }
         } )
     )
 }

@@ -34,7 +34,7 @@ export type RidePos = LatLng[];
 
 export interface PointData {
   pos: LatLng;
-  value?: any;   // using this field depending on the measurement
+  value?: number | undefined;   // using this field depending on the measurement
 }
 
 export type RideData = PointData[]

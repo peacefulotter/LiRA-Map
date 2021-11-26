@@ -18,8 +18,10 @@ const getColor = (val: any, type: string | undefined, defaultColor: string): str
     if ( type === undefined ) 
         return defaultColor;
     else if ( type === 'number' ) {
-        const red: number = Math.max(val * 2, 1)
-        const green: number = Math.max(1 - val * 2, 0);
+        const red: number = Math.max(val * 2, 1) * 255;                          // 0 -> 0, 0.5 -> 1, >0.5 -> 1
+        const green: number = val < 0.5 ? 255 : Math.max(2 - val * 2, 0) * 255;  // 0 -> 1, 0.5 -> 1, 1 -> 0 
+        console.log(val, red, green);
+        
         return `rgb(${red}, ${green}, 0)`
     }
     else
@@ -51,11 +53,12 @@ const createCircle = ( pos: LatLng[], value: any, i: number, weight: number, pro
 
 const createLines = ( pos: LatLng[], value: any, i: number, weight: number, properties: MeasurementProperty ) => {
     const color = value === undefined ? properties.color : getColor(value, properties.value, properties.color); 
-    const posA = pos[0]; const posB = pos[1];
+    const posA = pos[0]; 
+    const posB = pos[1];
     return <Polyline 
-        positions={[posA, posB]} 
-        key={`${posA.lat};${posA.lng};circle;${i}`}
-        pathOptions={{ color: properties.color }} />
+        positions={[[posA.lat, posA.lng], [posB.lat, posB.lng]]} 
+        key={`${posA.lat};${posA.lng};line;${i}`}
+        pathOptions={{ color: color }} />
 }
 
 const PATHS_CREATION: PathEltCreation[] = [
@@ -77,12 +80,14 @@ const Path: FC<Props> = ( { path, measurement, zoom } ) => {
         const createElement = PATHS_CREATION[measurement]      
         const weight = getWeight(zoom)        
         
-        if ( measurement === Measurements.Interpolation )
+        if ( measurement === Measurements.Interpolation || measurement === Measurements.Engine_RPM  )
         {
             for ( let i = 0; i < path.length - 1; i++ )
             {
-                console.log(path[i]);
-                const elt = createElement( [path[i].pos, path[i+1].pos], path[i].value, i, weight, properties )
+                let max = Math.max(...path.map((p: PointData) => p.value as number))
+                let min = Math.min(...path.map((p: PointData) => p.value as number).filter((p: number) => p > 0))
+                const value = (path[i].value as number - min) / (max - min)                
+                const elt = createElement( [path[i].pos, path[i+1].pos], value, i, weight, properties )
                 elementPath.push( elt )
             }
         }
@@ -91,6 +96,8 @@ const Path: FC<Props> = ( { path, measurement, zoom } ) => {
             for ( let i = 0; i < path.length; i++ ) 
             {
                 const point: PointData = path[i];
+                console.log(point);
+                
                 const elt = createElement( [point.pos], point.value, i, weight, properties )
                 elementPath.push( elt )
             } 
