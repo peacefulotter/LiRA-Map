@@ -1,8 +1,16 @@
 
 
-type LatLng = { lat: number, lng: number }
-enum RoadCondition { 'Good', 'Correct', 'Bad' }
 
+/*
+NOTE:
+  The positions we get from the database are in the form {lat: number, lon: number}
+  but leaflet uses {lat: number, lng: number}
+  Therefore, the server consistantly maps the result from a query to the leaflet format
+  so that the client doesn't have to do it.
+  It is simply a map:
+  res.map({lat: _.lat, lng: _.lon})
+*/
+type LatLng = { lat: number, lng: number }
 
 // represents the metadata of a ride
 export interface RideMeta {

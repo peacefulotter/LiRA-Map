@@ -45,7 +45,7 @@ export interface RideModel {
 }
 
 export enum Measurements {
-  'Track_Pos', 'Interpolation', 'Map_Matching', 'Engine_RPM' 
+  'Track_Pos', 'Interpolation', 'Map_Matching', 'Engine_RPM', 
 }
 
 export type MeasurementProperty = {

@@ -1,5 +1,5 @@
 
-import { RideMeta, Position3D, RideData } from './models'
+import { RideMeta, Position3D, RideData, RidePos } from './models'
 import { Knex } from 'knex'
 
 const TRACK_POS = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
@@ -29,10 +29,11 @@ const bigRequest = async <T>( request: () => any, treat: (res: T[]) => T[] ): Pr
 
 const fetchPositions = async ( db: Knex<any, unknown[]>, select: string[], query: object ): Promise<RideData> =>
 {
-    return await db
+    const res: {lat: number, lon: number}[] = await db
         .select( select )
         .from( { public: 'Measurements' } )
-        .where( query );
+        .where( query )
+    return res.map( (pos: {lat: number, lon: number}) => { return {pos: {lat: pos.lat, lng: pos.lon} } } )
 }
 
 export const getMeasurements = async ( db: Knex<any, unknown[]> ): Promise<object[]> => {
@@ -40,7 +41,7 @@ export const getMeasurements = async ( db: Knex<any, unknown[]> ): Promise<objec
 }
 
 
-export const getTrackPositions = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<RideData> =>
+export const getTrackPositions = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
 {
     return await fetchPositions( db, [ 'lat', 'lon' ], {
         'FK_Trip': tripId,
@@ -48,14 +49,14 @@ export const getTrackPositions = async ( db: Knex<any, unknown[]>, tripId: strin
     } )
 }
 
-export const getInterpolatedData = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<RideData> =>
+export const getInterpolatedData = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
 {
     return await fetchPositions(db, [ 'lat', 'lon' ], {
         'FK_Trip': tripId,
     } );
 }
 
-export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<Position3D[]> =>
+export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<Position3D[]> =>
 {
     return await bigRequest(
         () => db
@@ -69,7 +70,7 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, tripId: str
     )
 }
 
-export const getRPMS = async ( db: Knex<any, unknown[]>, tripId: string ): Promise<RideData> =>
+export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
 {
     return await bigRequest(
         () => db
@@ -84,27 +85,54 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, tripId: string ): Promi
     )
 }
 
-export const getTest = async ( db: Knex<any, unknown[]> ): Promise<any> =>
+export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
 {
-    const tripId = 'c1cf94d1-4957-467b-a61e-0d4f25b2a5ce' // '004098a1-5146-4516-a8b7-ff98c13950aa'
-    // const res = await db
-    //     .select( 'TripId' )
-    //     .from( 'Trips' )
-
-    // console.log(res);
-    // return await o()
+    tripId = 'b861b069-da00-4d02-b756-4031a9ec302e' // '004098a1-5146-4516-a8b7-ff98c13950aa'
+    // const tag = 'acc.xyz'
     return await bigRequest(
         () => db
-            .select( '*' )
+            .select( [ '*' ] )
             .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId, 'T': 'obd.rpm' } ),
-        (res: any[]) => res.map( (msg: any) => {
-            const data = JSON.parse(msg)
-            console.log(data);
-            return data
+            .where( { 'FK_Trip': tripId } )
+            .andWhereNot( { 'T': 'acc.xyz' } ),
+        (res: Position3D[]) => res.map( (msg: any) => {
+            const data = JSON.parse(msg.message)
+            const tag = data['@t']
+            for (const key in data) {
+                if (!key.startsWith(tag)) continue;
+                console.log(data);
+                console.log(key, data[key]);
+            }
+            return { x: 0, y: 0, z: 0 }
         } )
     )
 }
+
+
+export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<RideData> =>
+{
+    // obd.bat
+    // obd.rpm
+    // track.pos (1493)
+    // rpi.temp (1493)    
+    return await bigRequest(
+        () => db
+            .select( [ 'lon', 'lat', 'message' ] )
+            .from( { public: 'Measurements' } )
+            .where( { 'FK_Trip': tripId, 'T': measurement } ),
+        (res: RideData) => res.map( (msg: any) => {
+            const data = JSON.parse(msg.message)
+            const tag = data['@t']
+            let obj: any = {}
+            for (const key in data) {
+                if (!key.startsWith(tag)) continue;
+                obj[key.replace(tag, '').substring(1)] = data[key];
+            }
+            return { pos: {lat: msg.lat, lng: msg.lon }, value: obj }
+        } )
+    )
+}
+
 
 
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {

@@ -48,7 +48,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         
         // first filter it to never show more then MAX_NB_POINTS
         const MAX_NB_POINTS = 2000
-        const threshold: number = Math.floor(ride.length / MAX_NB_POINTS);
+        const threshold: number = Math.max(Math.floor(ride.length / MAX_NB_POINTS), 1)        
         const r: RideData = ride.filter((_, i: number) => i % threshold === 0 );
         // console.log("r length after ", r.length);
         
@@ -60,26 +60,28 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         const batchSize: number = Math.max(16 - mapZoom, 1);
         for (let i = 0; i < r.length - 2; i += batchSize) 
         {
-            const average: number[] = [0, 0];
+            const average: number[] = [0, 0, 0];
+            const portion = i + batchSize <= r.length - 1 ? batchSize : r.length - i            
 
-            for (let j = 0; j < batchSize; j++) 
+            for (let j = 0; j < portion; j++) 
             {
-                if ( r[i + j] === undefined ) continue;    
                 average[0] += r[i + j].pos.lat;                
                 average[1] += r[i + j].pos.lng;                
+                average[2] += r[i + j].value || 0;                
             }
             // const l = length(r[i], ride[i + 1]);            
             // if ( l < maxLength ) continue;
-            const lat = average[0] / batchSize;
-            const lng = average[1] / batchSize;
-
+            const lat = average[0] / portion;
+            const lng = average[1] / portion;
+            const val = average[2] / portion;            
+            
             updatedPath.push({
                 pos: new LatLng(lat, lng),
-                value: ride[i].value        // copy value
+                value: val
             });
         }
-
-        // console.log("before: ", r.length, "after: ", updatedPath.length);
+        
+        console.log("before: ", r.length, "after: ", updatedPath.length);
         return updatedPath
     }
 
@@ -88,7 +90,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         post( MeasurementProperties[i].query, { tripID: tripId }, (res: RideData) => {
             const data = res.map( d => { return { pos: new LatLng(d.pos.lat, d.pos.lng), value: d.value } } )
             setRides(  rides.map(    (ride: RideData,   j: number) => i === j ? data : ride ));
-            setPaths(  paths.map(    (path: RideData,   j: number) => i === j ? data : path )); // performancePath(res, i)
+            setPaths(  paths.map(    (path: RideData,   j: number) => i === j ? performancePath(data, i) : path )); // performancePath(res, i)
             setLoaded( isLoaded.map( (loaded: boolean,  j: number) => i === j ? true : loaded))  
             console.log(res);
             console.log(data);
@@ -102,7 +104,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
         console.log(measurements);
         
         measurements
-            .filter( m => m != 2 && !isLoaded[m] ) // dont take map matching into account and the ones that are already loaded 
+            .filter( m => !isLoaded[m] ) // dont take map matching into account and the ones that are already loaded 
             .forEach( m => requestMeasurement(m) ) // and request the rides
             
         console.log(isLoaded, rides, paths); 

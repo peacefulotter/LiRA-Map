@@ -19,9 +19,7 @@ const getColor = (val: any, type: string | undefined, defaultColor: string): str
         return defaultColor;
     else if ( type === 'number' ) {
         const red: number = Math.max(val * 2, 1) * 255;                          // 0 -> 0, 0.5 -> 1, >0.5 -> 1
-        const green: number = val < 0.5 ? 255 : Math.max(2 - val * 2, 0) * 255;  // 0 -> 1, 0.5 -> 1, 1 -> 0 
-        console.log(val, red, green);
-        
+        const green: number = val < 0.5 ? 255 : Math.max(2 - val * 2, 0) * 255;  // 0 -> 1, 0.5 -> 1, 1 -> 0         
         return `rgb(${red}, ${green}, 0)`
     }
     else
@@ -84,8 +82,9 @@ const Path: FC<Props> = ( { path, measurement, zoom } ) => {
         {
             for ( let i = 0; i < path.length - 1; i++ )
             {
-                let max = Math.max(...path.map((p: PointData) => p.value as number))
-                let min = Math.min(...path.map((p: PointData) => p.value as number).filter((p: number) => p > 0))
+                let values = path.map((p: PointData) => p.value as number)
+                let max = Math.max(...values)
+                let min = Math.min(...values.filter((p: number) => p > 0))
                 const value = (path[i].value as number - min) / (max - min)                
                 const elt = createElement( [path[i].pos, path[i+1].pos], value, i, weight, properties )
                 elementPath.push( elt )

@@ -3,7 +3,7 @@ import tmp from 'tmp';
 import { writeFile } from'fs'
 import { exec } from 'child_process'
 
-const VPN_HOST = 'vpn.ait.dtu.dk'
+const VPN_HOST = 'openvpn.compute.dtu.dk'
 const VPN_EXEC = '/opt/cisco/anyconnect/bin/vpn'
 
 const VPN = {
