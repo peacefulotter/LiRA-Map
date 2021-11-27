@@ -1,5 +1,7 @@
 
+import { ReactElement } from "react";
 import { LatLng } from 'leaflet';
+import { createLines, createPoints, createRectangle, createCircle } from '../Components/Rides/Path';
 
 enum RoadCondition {
   'Good', 'Correct', 'Bad'
@@ -44,22 +46,56 @@ export interface RideModel {
   meta: RideMeta
 }
 
-export enum Measurements {
-  'Track_Pos', 'Interpolation', 'Map_Matching', 'Engine_RPM', 
-}
-
 export type MeasurementProperty = {
-  query: string;
-  name: string;
-  color: string;
-  size: number;
-  value: undefined | string;
+	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => ReactElement[];
+	query: string;
+	name: string;
+	color: string;
+	size: number;
+	value?: string;
+	minValue?: number;
+	maxValue?: number;
 }
 
-export const MeasurementProperties: MeasurementProperty[] = [
-  { query: '/trackpos',      name: 'Track Pos',     color: "#0000CC", size: 1,       value: undefined },
-  { query: '/interpolation', name: 'Interpolation', color: "#2288FF", size: 1,       value: undefined },
-  { query: '/map_match',     name: 'Map Matching',  color: "#0000FF", size: 0.00003, value: undefined },
-  { query: '/rpms',          name: 'Engine RPM',    color: "#FF00FF", size: 1,       value: 'number'  },
-]
+export type Measurements = {
+	'Track_Pos': MeasurementProperty,
+	'Interpolation': MeasurementProperty, 
+	'Map_Matching': MeasurementProperty,
+	'Engine_RPM': MeasurementProperty
+}
+	
+export const MEASUREMENTS: Measurements = {
+	'Track_Pos': { 
+    	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => createPoints(path, weight, properties, createRectangle),
+		query: '/trackpos',      
+		name: 'Track Pos',     
+		color: "#0000CC", 
+		size: 1
+	},
+	'Interpolation': { 
+		createElements: createLines,
+		query: '/interpolation', 
+		name: 'Interpolation', 
+		color: "#2288FF",
+		size: 1 
+	}, 
+  	'Map_Matching' : { 
+		createElements: createLines,
+		query: '/map_match',
+		name: 'Map Matching', 
+		color: "#0000FF", 
+		size: 0.00003, 
+		value: 'object' 
+	},
+	'Engine_RPM': { 
+		createElements: createLines,
+		query: '/rpms', 
+		name: 'Engine RPM',    
+		color: "#FF00FF", 
+		size: 1, 
+		value: 'number', 
+		minValue: 2000, 
+		maxValue: 6000 
+	},
+}
 

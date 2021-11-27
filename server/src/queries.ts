@@ -114,7 +114,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
     // obd.bat
     // obd.rpm
     // track.pos (1493)
-    // rpi.temp (1493)    
+    // rpi.temp (1493)
     return await bigRequest(
         () => db
             .select( [ 'lon', 'lat', 'message' ] )
@@ -123,7 +123,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
         (res: RideData) => res.map( (msg: any) => {
             const data = JSON.parse(msg.message)
             const tag = data['@t']
-            let obj: any = {}
+            const obj: any = {}
             for (const key in data) {
                 if (!key.startsWith(tag)) continue;
                 obj[key.replace(tag, '').substring(1)] = data[key];

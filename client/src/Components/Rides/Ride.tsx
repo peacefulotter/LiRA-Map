@@ -1,8 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { LatLng } from 'leaflet'
-import { Polyline, Circle } from 'react-leaflet'
 
-import { RidePos, Measurements, PointData, RideData, MeasurementProperties } from '../../assets/models'
+import { Measurements, MEASUREMENTS, RideData } from '../../assets/models'
 
 import RoutingMachine from "../RoutingMachine";
 import Path from "./Path";
@@ -28,23 +27,36 @@ const length = (a: LatLng, b: LatLng): number => {
 
 type Props = {
 	tripId: string;
-    measurements: Measurements[];
+    measKeys: (keyof Measurements)[];
     mapZoom: number;
 };
 
-const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
-    // array so that we can add other measurements
-    const [isLoaded, setLoaded] = useState<boolean[]>([false, false])       // data has been fetched
-    const [rides, setRides] = useState<RideData[]>(Array.from({length: 4})) // full path from the db
-    const [paths, setPaths] = useState<RideData[]>(Array.from({length: 4})) // filtered path shown on map
-        
+type Ride = {
+    measurement: keyof Measurements
+}
+
+const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
+    // TODO: define types for the state
+    const [paths, setPaths] = useState<any>( (function()  {
+        const keys = Object.keys(MEASUREMENTS)
+        const res: {[key: string]: any} = {}
+        for ( const i in keys )
+        {
+            res[keys[i]] = {
+                loaded: false,
+                ride: null,
+                path: null
+            }
+        }
+        return res;
+    } )())  
+    
+    console.log(tripId, paths);
+    
+            
     // TODO: use k nearest neighbor or something like this
-    // measRide: the measurement ride we are updating
-    // i: the position of the measurement ride in the measRides array
-    const performancePath = (ride: RideData, i: number): RideData => {
-        console.log(ride, i);
-        
-        if ( ride === undefined ) return [];
+    const performancePath = (ride: RideData): RideData => {        
+        if ( ride === null || ride === undefined ) return [];
         
         // first filter it to never show more then MAX_NB_POINTS
         const MAX_NB_POINTS = 2000
@@ -73,7 +85,7 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             // if ( l < maxLength ) continue;
             const lat = average[0] / portion;
             const lng = average[1] / portion;
-            const val = average[2] / portion;            
+            const val = average[2] / portion;                        
             
             updatedPath.push({
                 pos: new LatLng(lat, lng),
@@ -81,19 +93,22 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
             });
         }
         
-        console.log("before: ", r.length, "after: ", updatedPath.length);
+        console.log("before:", r.length, " after:", updatedPath.length);
         return updatedPath
     }
 
 
-    const requestMeasurement = (i: number) => {                
-        post( MeasurementProperties[i].query, { tripID: tripId }, (res: RideData) => {
+    const requestMeasurement = (measurement: keyof Measurements) => {     
+        if ( paths[measurement].loaded ) return;
+
+        post( MEASUREMENTS[measurement].query, { tripID: tripId }, (res: RideData) => {
             const data = res.map( d => { return { pos: new LatLng(d.pos.lat, d.pos.lng), value: d.value } } )
-            setRides(  rides.map(    (ride: RideData,   j: number) => i === j ? data : ride ));
-            setPaths(  paths.map(    (path: RideData,   j: number) => i === j ? performancePath(data, i) : path )); // performancePath(res, i)
-            setLoaded( isLoaded.map( (loaded: boolean,  j: number) => i === j ? true : loaded))  
-            console.log(res);
-            console.log(data);
+            
+            const pathsCopy: any = {...paths}
+            pathsCopy[measurement].loaded = true;
+            pathsCopy[measurement].ride = data;
+            pathsCopy[measurement].path = performancePath(data);
+            setPaths(pathsCopy)
             
             console.log("Got data for ride: ", tripId, ", length: ", res.length); 
         })
@@ -101,18 +116,17 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
 
     
     useEffect( () => {
-        console.log(measurements);
-        
-        measurements
-            .filter( m => !isLoaded[m] ) // dont take map matching into account and the ones that are already loaded 
-            .forEach( m => requestMeasurement(m) ) // and request the rides
-            
-        console.log(isLoaded, rides, paths); 
-    }, [measurements] );
+        measKeys.forEach( m => requestMeasurement(m) )
+    }, [measKeys] );
 
-    useEffect( () => 
-        setPaths( paths.map( (p: RideData, i: number) => performancePath(rides[i], i) ) )
-    , [mapZoom] )
+    useEffect( () => {
+        const updatedPaths: any = {...paths}
+        Object.keys(paths).forEach( (key: string) => {
+            if ( paths[key].loaded )
+                updatedPaths[key].path = performancePath(paths[key].ride)
+        })
+        setPaths( updatedPaths )
+    }, [mapZoom] )
      
 
     /* ROUTING MACHINE TO GET THE MAP MATCHED */
@@ -120,14 +134,17 @@ const Ride: FC<Props> = ( { tripId, measurements, mapZoom } ) => {
     
     return (<> 
         { 
-        paths.map( (path: RideData, i: number) =>
-            ( path === undefined || path.length === 0 ) ? <></> :
-            <Path path={path} zoom={mapZoom} measurement={i} key={`${tripId}-path-${i}`}></Path>
-        ) 
+        Object.keys(paths).map( (key: string, i: number) => 
+            ( !paths[key].loaded ) 
+                ? <div key={`${tripId}-path-${i}`}></div> 
+                : <Path 
+                path={paths[key].path} 
+                zoom={mapZoom} 
+                measurement={key as keyof Measurements} 
+                key={`${tripId}-path-${i}`}></Path>     
+        )
         }
-        { 
-        // <RoutingMachine path={rmPath}></RoutingMachine> 
-        }
+        {/* { <RoutingMachine path={rmPath}></RoutingMachine>  } */}
         </>)
 }
 

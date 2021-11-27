@@ -26,7 +26,8 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     const [ showRides, setShowRides ] = useState<number[]>(range(metas.length));
     const [ search, setSearch ] = useState<string>("")
 
-    const updateRides = () => {
+
+    useEffect( () => {
         let rides = range(metas.length);
 
         if ( searched )
@@ -40,9 +41,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
             )
 
         setShowRides(rides)
-    }
-
-    useEffect(updateRides, [searched, search, sorted, metas])
+    }, [searched, search, sorted, metas])
 
 
     const clearFilter = () => {
