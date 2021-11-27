@@ -138,8 +138,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
     return await db
         .select( '*' )
-        .from( { public: 'Trips' } )
-        .limit( 30 );
+        .from( { public: 'Trips' } );
 }
 
 export const getInterpolatedRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {

@@ -47,7 +47,7 @@ export interface RideModel {
 }
 
 export type MeasurementProperty = {
-	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => ReactElement[];
+	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => ReactElement | ReactElement[];
 	query: string;
 	name: string;
 	color: string;

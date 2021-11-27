@@ -1,6 +1,7 @@
 import { FC, ReactElement, useEffect, useState } from "react";
-import L, { LatLng, LatLngBounds } from 'leaflet'
+import { LatLng, LatLngBounds } from 'leaflet'
 import { Rectangle, Circle, Polyline } from 'react-leaflet'
+import ReactLeafletMultiOptionsPolyline from 'react-leaflet-multi-options-polyline'
 
 import { MeasurementProperty, Measurements, MEASUREMENTS, RideData, PointData } from '../../assets/models'
 
@@ -8,7 +9,7 @@ import { MeasurementProperty, Measurements, MEASUREMENTS, RideData, PointData } 
 type Props = {
 	path: RideData;
     measurement: keyof Measurements;
-    zoom: number;
+    zoom: number
 };
 
 
@@ -59,32 +60,49 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
     return elementPath;
 }
 
-const createLine = (a: LatLng, b: LatLng, value: number, i: number, properties: MeasurementProperty): ReactElement => {
-    const color = getColor(value, properties.value, properties.color); 
-    return <Polyline 
-        positions={[[a.lat, a.lng], [b.lat, b.lng]]} 
-        key={`${a.lat};${a.lng};line;${i}`}
-        pathOptions={{ color: color }} />
+const createLine = (way: LatLng[], values: number[], properties: MeasurementProperty): ReactElement => {
+    const colors = values.map(value => { return {'color': getColor(value, properties.value, properties.color) } } )
+    console.log(way);
+    console.log(colors);
+
+    let a = <Polyline 
+        positions={way} 
+        key={`${Math.random()}-line`}
+        pathOptions={colors[0]} />
+        // dangerouslySetInnerHTML={{__html: DOMPurify.sanitize('<div>chocolat</div>')}} />
+    console.log(a);
+    return a
+    
+    // return <ReactLeafletMultiOptionsPolyline
+    //     positions={way}
+    //     options={colors}
+    //     optionIdxFn={ (latLng: any, prevLatLng: any, i: number) => i }
+    //     weight={5}
+    //     lineCap='butt'
+    //     opacity={0.75}
+    //     smoothFactor={1}
+    //     zoomAnimation={false} /> 
 }
 
-export const createLines = ( path: RideData, weight: number, properties: MeasurementProperty ): ReactElement[] => {
-    const elementPath: ReactElement[] = [];
+export const createLines = ( path: RideData, weight: number, properties: MeasurementProperty ): ReactElement => {
     const min = properties.minValue || 0;
     const max = properties.maxValue || 1;
 
-    for ( let i = 0; i < path.length - 1; i++ )
-    {                
-        const value = (path[i].value as number - min) / (max - min)              
-        const elt = createLine( path[i].pos, path[i+1].pos, value, i, properties )
-        elementPath.push( elt )
-    }
-
-    return elementPath;
+    const values: number[] = []
+    const way: LatLng[] = []
+    path.forEach((p: PointData) => {
+        values.push((p.value as number - min) / (max - min))
+        way.push(p.pos)
+    }) 
+    
+    return way.length > 0 
+        ? createLine( way, values, properties)
+        : <></>
 }
 
 const Path: FC<Props> = ( { path, measurement, zoom } ) => {
 
-    const [p, setP] = useState<ReactElement[]>([]);
+    const [p, setP] = useState<ReactElement | ReactElement[]>([]);
 
     useEffect( () => {
         if ( measurement === undefined ) return;

@@ -17,7 +17,6 @@ const Rides: FC = () => {
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
     const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
     const [ zoom, setZoom ] = useState<number>(11);
-    const [ bounds, setBounds ] = useState<LatLngBounds | undefined>(undefined)
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -45,64 +44,12 @@ const Rides: FC = () => {
           },
           zoom : (e: any) => {
               setZoom(e.target._animateToZoom);
-          },
-          tileunload: (e: any) => {
-            console.log(e);
-            
-          },
-          tileload: (e: any) => {
-            console.log(e);
-            
-          },
-          loading: (e: any) => {
-              console.log(e);
-              
-          },
-          tileloadstart:(e: any) => {
-            console.log(e);
-            
-        }, 
-        update: (e: any) => {
-            console.log(e);
-            
-        },
+          }
         } )
       
         return null;
     }
 
-    const tileEventsHandler = {
-        tileload: (e: any) => { 
-            // console.log(e);
-                       
-            const coords = e.coords;
-            const southWest: LatLng = new LatLng(
-                coords.x,
-                coords.y,
-                coords.z
-            )
-            const northEast: LatLng = new LatLng(
-                coords.x + e.target._tileSize.x,
-                coords.y + e.target._tileSize.y,
-                coords.z
-            )
-            // console.log(coords);
-            
-            // console.log(southWest, northEast);
-            const newBounds = new LatLngBounds(southWest, northEast);
-
-            if ( bounds === undefined  )
-                setBounds(newBounds)
-            else
-            {
-                // minX = 
-            }
-            // console.log(bounds);
-                        
-        },
-        // tileunload: (e: any) => console.log('unload', e)
-        
-    }
 
 
     // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
@@ -118,7 +65,6 @@ const Rides: FC = () => {
                     zoom={11} 
                     scrollWheelZoom={true}>
                     <TileLayer
-                        eventHandlers={tileEventsHandler}
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
