@@ -1,7 +1,7 @@
 
 import { ReactElement } from "react";
 import { LatLng } from 'leaflet';
-import { createLines, createPoints, createRectangle, createCircle } from '../Components/Rides/Path';
+import { createLines, createPoints, createRectangle, createCircle, createMultiLines } from '../Components/Rides/Path';
 
 enum RoadCondition {
   'Good', 'Correct', 'Bad'
@@ -47,7 +47,7 @@ export interface RideModel {
 }
 
 export type MeasurementProperty = {
-	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => ReactElement | ReactElement[];
+	createElements: ( path: RideData, weight: number, properties: MeasurementProperty, map?: any ) => ReactElement | ReactElement[];
 	query: string;
 	name: string;
 	color: string;
@@ -88,7 +88,7 @@ export const MEASUREMENTS: Measurements = {
 		value: 'object' 
 	},
 	'Engine_RPM': { 
-		createElements: createLines,
+		createElements: createMultiLines,
 		query: '/rpms', 
 		name: 'Engine RPM',    
 		color: "#FF00FF", 

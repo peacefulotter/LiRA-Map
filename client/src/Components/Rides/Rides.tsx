@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, useMapEvents, Marker, useMap } from 'react-leaflet'
 import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
 
 import RideCards from "./RideCards";
@@ -17,6 +17,7 @@ const Rides: FC = () => {
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
     const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
     const [ zoom, setZoom ] = useState<number>(11);
+    
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -38,7 +39,7 @@ const Rides: FC = () => {
 
     // TODO: remove this later
     function LocationMarker() {
-        useMapEvents( {
+        const map = useMapEvents( {
           click: (e: LeafletMouseEvent) => {
             console.log(e);
           },

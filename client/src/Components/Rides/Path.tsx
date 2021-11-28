@@ -1,7 +1,7 @@
 import { FC, ReactElement, useEffect, useState } from "react";
-import { LatLng, LatLngBounds } from 'leaflet'
+import L, { LatLng, LatLngBounds } from 'leaflet'
 import { Rectangle, Circle, Polyline } from 'react-leaflet'
-import ReactLeafletMultiOptionsPolyline from 'react-leaflet-multi-options-polyline'
+import 'leaflet-hotline'
 
 import { MeasurementProperty, Measurements, MEASUREMENTS, RideData, PointData } from '../../assets/models'
 
@@ -9,7 +9,8 @@ import { MeasurementProperty, Measurements, MEASUREMENTS, RideData, PointData } 
 type Props = {
 	path: RideData;
     measurement: keyof Measurements;
-    zoom: number
+    zoom: number;
+    map: any;
 };
 
 
@@ -60,47 +61,49 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
     return elementPath;
 }
 
-const createLine = (way: LatLng[], values: number[], properties: MeasurementProperty): ReactElement => {
-    const colors = values.map(value => { return {'color': getColor(value, properties.value, properties.color) } } )
-    console.log(way);
-    console.log(colors);
 
-    let a = <Polyline 
+const createMultiLine = (way: RideData, properties: MeasurementProperty, map: any ): any => {
+    // the Z value determines the color
+    const coords: [number, number, number][] = way
+        .map((point: PointData, i: number) => [point.pos.lat, point.pos.lng, point.value || 0])
+
+    return L.hotline(coords, {
+        weight: 4,
+        outlineWidth: 1,
+        palette: {
+            0.0: 'green',
+            0.5: 'yellow',
+            1.0: 'red'
+        },
+        min: properties.minValue || 0,
+        max: properties.maxValue || 1
+    }).addTo(map);
+}
+
+export const createMultiLines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
+    return ( path.length > 0 )
+        ? createMultiLine( path, properties, map )
+        : <></>
+}
+
+const createLine = ( way: LatLng[], values: number[], properties: MeasurementProperty ): ReactElement => {
+    const color = { color: properties.color };
+    return <Polyline 
         positions={way} 
         key={`${Math.random()}-line`}
-        pathOptions={colors[0]} />
-        // dangerouslySetInnerHTML={{__html: DOMPurify.sanitize('<div>chocolat</div>')}} />
-    console.log(a);
-    return a
-    
-    // return <ReactLeafletMultiOptionsPolyline
-    //     positions={way}
-    //     options={colors}
-    //     optionIdxFn={ (latLng: any, prevLatLng: any, i: number) => i }
-    //     weight={5}
-    //     lineCap='butt'
-    //     opacity={0.75}
-    //     smoothFactor={1}
-    //     zoomAnimation={false} /> 
+        pathOptions={color} />
 }
 
 export const createLines = ( path: RideData, weight: number, properties: MeasurementProperty ): ReactElement => {
-    const min = properties.minValue || 0;
-    const max = properties.maxValue || 1;
-
-    const values: number[] = []
-    const way: LatLng[] = []
-    path.forEach((p: PointData) => {
-        values.push((p.value as number - min) / (max - min))
-        way.push(p.pos)
-    }) 
+    const values: number[] = [0]
+    const way = path.map((p: PointData) =>  p.pos ) 
     
     return way.length > 0 
         ? createLine( way, values, properties)
         : <></>
 }
 
-const Path: FC<Props> = ( { path, measurement, zoom } ) => {
+const Path: FC<Props> = ( { path, measurement, zoom, map } ) => {
 
     const [p, setP] = useState<ReactElement | ReactElement[]>([]);
 
@@ -109,9 +112,16 @@ const Path: FC<Props> = ( { path, measurement, zoom } ) => {
 
         const properties: MeasurementProperty = MEASUREMENTS[measurement]; 
         const weight = getWeight(zoom)  
-        const elements = properties.createElements(path, weight, properties)
+        const elements: any = properties.createElements(path, weight, properties, map)
 
-        setP(elements);
+        // use elements.remove to distinguish ReactElement(s) and leaflet object(s)
+        if ( !elements.remove )
+            setP(elements);
+
+        return () => {
+            if ( elements.remove )
+                elements.remove(map)
+        }
 
     }, [path, measurement])  
 

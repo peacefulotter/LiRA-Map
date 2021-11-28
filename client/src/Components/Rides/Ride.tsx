@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
 import { Measurements, MEASUREMENTS, RideData } from '../../assets/models'
@@ -33,8 +34,10 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
             }
         }
         return res;
-    } )())      
-
+    } )())   
+    
+    const map = useMapEvents({})
+    
     const requestMeasurement = (measurement: keyof Measurements) => {     
         if ( paths[measurement].loaded ) return;
 
@@ -52,7 +55,21 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
 
     
     useEffect( () => {
-        measKeys.forEach( m => requestMeasurement(m) )
+        Object.keys(paths).forEach( (key: string) => {
+            const k = key as keyof Measurements;
+            const include = measKeys.includes(k)
+            // load
+            if ( include && !paths[k].loaded )
+                requestMeasurement(k)
+            // unload
+            else if ( !include && paths[k].loaded )
+            {
+                const pathsCopy: any = {...paths}
+                pathsCopy[k].loaded = false;
+                pathsCopy[k].path = undefined;
+                setPaths(pathsCopy)
+            }
+        })        
     }, [measKeys] );
 
 
@@ -65,6 +82,7 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
                 path={paths[key].path} 
                 zoom={mapZoom} 
                 measurement={key as keyof Measurements} 
+                map={map}
                 key={`${tripId}-path-${i}`}></Path>     
         )
         }

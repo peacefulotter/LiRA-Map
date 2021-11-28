@@ -7216,6 +7216,11 @@
     "lodash" "^4.17.5"
     "webpack-sources" "^1.1.0"
 
+"leaflet-hotline@^0.4.0":
+  "integrity" "sha1-4BBpg2qdLix4sfodsgE70DyP+Nk="
+  "resolved" "https://registry.npmjs.org/leaflet-hotline/-/leaflet-hotline-0.4.0.tgz"
+  "version" "0.4.0"
+
 "leaflet-routing-machine@^3.2.12":
   "integrity" "sha512-HLde58G1YtD9xSIzZavJ6BPABZaV1hHeGst8ouhzuxmSC3s32NVtADT+njbIUMW1maHRCrsgTk/E4hz5QH7FrA=="
   "resolved" "https://registry.npmjs.org/leaflet-routing-machine/-/leaflet-routing-machine-3.2.12.tgz"
