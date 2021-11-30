@@ -19,15 +19,15 @@ const substring = (meta: RideMeta, search: string) => {
     return meta.TaskId.toString().includes( search )
 }
 
-const RideCards: FC<Props> = ( { metas, onClick } ) => {
+const RideCards: FC<Props> = ( { metas, onClick } ) => {            
     const [ sorted, setSorted ] = useState<boolean>(false)
     const [ searched, setSearched ] = useState<boolean>(false)
 
     const [ showRides, setShowRides ] = useState<number[]>(range(metas.length));
     const [ search, setSearch ] = useState<string>("")
 
-    const updateRides = () => {
-        console.log(search);
+
+    useEffect( () => {
         let rides = range(metas.length);
 
         if ( searched )
@@ -41,9 +41,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
             )
 
         setShowRides(rides)
-    }
-
-    useEffect(updateRides, [searched, search, sorted])
+    }, [searched, search, sorted, metas])
 
 
     const clearFilter = () => {
@@ -84,7 +82,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                 return <Checkbox 
                         key={`ride${i}`}
                         className="ride-card-container"
-                        content={`${metas[num].TripId}<br/>-<br/>${metas[num].TaskId}`}
+                        content={`${metas[num].TaskId}`} // ${metas[num].TripId}<br/>-<br/>
                         onClick={(isChecked) => onClick(i, isChecked)} />
             } )
             }

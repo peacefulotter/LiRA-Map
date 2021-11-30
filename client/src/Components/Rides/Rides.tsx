@@ -1,10 +1,10 @@
 import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvents, Marker } from 'react-leaflet'
-import { LeafletMouseEvent } from 'leaflet'
+import { MapContainer, TileLayer, useMapEvents, Marker, useMap } from 'react-leaflet'
+import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
-import Ride from "../Ride";
+import Ride from "./Ride";
 
 import { get } from '../../assets/fetch'
 import { RideMeta, Measurements } from '../../assets/models'
@@ -15,7 +15,9 @@ import '../../css/rides.css'
 const Rides: FC = () => {
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const [ measurementTypes, setMeasurementTypes ] = useState<Measurements[]>([]);
+    const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
+    const [ zoom, setZoom ] = useState<number>(11);
+    
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -24,29 +26,25 @@ const Rides: FC = () => {
     
 
     const showRide = (i: number, isChecked: boolean) => {         
-        console.log(selectedRides, i, isChecked);
-        const rm = selectedRides.filter(r => r != i)
-        console.log(rm);
-           
-        isChecked ?
-            setSelectedRides( prev => [...prev, i] ) :
-            setSelectedRides( rm )        
+        isChecked
+            ? setSelectedRides( prev => [...prev, i] ) 
+            : setSelectedRides( selectedRides.filter(r => r != i) )        
     }
 
-
-    const measurementClicked = (measurement: Measurements, isChecked: boolean) =>{
+    const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        
         isChecked 
             ? setMeasurementTypes( prev => [...prev, measurement])
             : setMeasurementTypes( prev => prev.filter(value => value != measurement))
     }
 
-
-
     // TODO: remove this later
     function LocationMarker() {
         const map = useMapEvents( {
-          click(e: LeafletMouseEvent) {
+          click: (e: LeafletMouseEvent) => {
             console.log(e);
+          },
+          zoom : (e: any) => {
+              setZoom(e.target._animateToZoom);
           }
         } )
       
@@ -54,14 +52,13 @@ const Rides: FC = () => {
     }
 
 
-    // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
-    if ( metas.length == 0 ) return <div className="rides-wrapper"></div>
 
+    // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
     return (
         <div className="rides-wrapper">
             <RideCards metas={metas} onClick={showRide}/>
             
-            <RideDetails measurementClick={measurementClicked}  metas={selectedRides.map(i => metas[i])} ></RideDetails>
+            <RideDetails measurementClick={measurementClicked} metas={selectedRides.map(i => metas[i])} ></RideDetails>
             
             <div className="map-container">
                 <MapContainer 
@@ -73,10 +70,10 @@ const Rides: FC = () => {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <LocationMarker />
-                    { selectedRides.map( (n: number, i: number) => {
-                        console.log('drawing ride',n);
-                        return <Ride measurements={measurementTypes} tripId={metas[n].TripId} key={`ride-road-${i}`}></Ride>
-                    }
+                    { metas.map( (meta: RideMeta, i: number) =>
+                        !selectedRides.includes(i) 
+                            ? <div key={`ride-road-${i}`}></div>
+                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} mapZoom={zoom} key={`ride-road-${i}`}></Ride>
                     ) }
                 </MapContainer>
             </div>

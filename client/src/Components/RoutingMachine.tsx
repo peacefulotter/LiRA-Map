@@ -3,15 +3,19 @@ import L, { ControlOptions, LatLng } from 'leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
+import { RidePos } from '../assets/models'
 
 import "../css/map.css"
 
 interface Props extends ControlOptions {
-	path: LatLng[]
+	path: RidePos
 };
 
-const getInstance = (path: LatLng[]) => {
+const getInstance = (path: RidePos) => {
 
+	console.log(path);
+	
+	// FIXME: MAX 100 POINTS
 	const instance = L.Routing.control( {
     	waypoints: path,
      	// plan: L.Routing.plan(path, {
@@ -23,6 +27,9 @@ const getInstance = (path: LatLng[]) => {
 			// }
 			// }
       	// } ),
+		router: new L.Routing.OSRMv1({
+			serviceUrl: 'http://liradbdev.compute.dtu.dk:5000/match/v1/car/'
+		}),
 		lineOptions: {
 			styles: [
 				{color: 'white',  opacity: 0.15, weight: 9}, 
@@ -63,9 +70,9 @@ const Routing = ( props: Props ) => {
 	const { path } = props;
 	// const [coords, setCoords] = useState<LatLng[] | null>(null)
 	// const [segments, setSegments] = useState<RideModel | null>(null)
-	const waypoints = path.filter((e: LatLng, i: number) => i % 50 === 0 )
+	// const waypoints = path.filter((e: LatLng, i: number) => i % 50 === 0 )
 
-	const instance = getInstance(waypoints)
+	const instance = getInstance(path)
    	return instance;
 }
 

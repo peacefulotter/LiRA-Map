@@ -10,8 +10,8 @@ type Props = {
 };
 
 type Elt = {
-    i: number,
     key: string,
+    title: string,
     value: string,
     isSublist?: boolean
 }
@@ -46,37 +46,38 @@ const MetaData: FC<Props> = ( { md } ) => {
 
     const [elts, setElts] = useState<Elt[]>([])
 
-    const getMDelt = ( {i, key, value, isSublist }: Elt) => {        
-        return <div className={`ride-metadata-elt ${isSublist ? 'sublist-elt' : ''}`} key={'metadata-' + i}>
-            <b>{key}</b><br></br>{value} 
+    const getMDelt = ( { key, title, value, isSublist }: Elt) => {                
+        return <div className={`ride-metadata-elt ${isSublist ? 'sublist-elt' : ''}`} key={`metadata-${key}`}>
+            <b>{title}</b><br></br>{value} 
         </div>
     }
 
     useEffect(() => {
         const newElts: Elt[] = Object.entries(md)
             .filter( (elt) => !BANNED_MD.includes(elt[0]) )
-            .flatMap( (elt, i) => {
-                const [key, value] = elt;
+            .flatMap( (elt: any, i: number) => {
+                const [title, value] = elt;
+                const key = md.TaskId + '-' + i;
 
-                if ( POSITION_MD.includes(key) )
+                if ( POSITION_MD.includes(title) )
                 {
-                    const baseElt = {i: i, key: key, value: '' };
+                    const baseElt: Elt = { key: key, title: title, value: '' };
                     
                     let positions: [string, any][] = [];
                     try { positions = Object.entries(JSON.parse(value)) }
                     catch(e) { }                    
 
-                    const mappedPos = positions
+                    const mappedPos: Elt[] = positions
                         .map( (pos: [string, any], j) => { 
-                            return { i: i * 3000 + j + 3000, key: pos[0], value: pos[1], isSublist: true }
+                            return { key: key + '-' + j, title: pos[0], value: pos[1], isSublist: true }
                         } )
                     return [ baseElt, ...mappedPos];
                     
                 }
-                else if ( DATE_MD.includes(key))
-                    return { i: i, key: key, value: formatDate(value) }
+                else if ( DATE_MD.includes(title))
+                    return { key: key, title: title, value: formatDate(value) }
 
-                return { i: i, key: key, value: value }
+                return { key: key, title: title, value: value }
             } )
         
         setElts(newElts);

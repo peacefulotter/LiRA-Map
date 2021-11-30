@@ -1,5 +1,7 @@
 
+import { ReactElement } from "react";
 import { LatLng } from 'leaflet';
+import { createLines, createPoints, createRectangle, createCircle, createMultiLines } from '../Components/Rides/Path';
 
 enum RoadCondition {
   'Good', 'Correct', 'Bad'
@@ -30,15 +32,70 @@ export interface RideMeta {
   // ChangeLog: string|null, //	null
 }
 
-export type RidePos = LatLng[];  
+export type RidePos = LatLng[];
+
+export interface PointData {
+  pos: LatLng;
+  value?: number | undefined;   // using this field depending on the measurement
+}
+
+export type RideData = PointData[]
 
 export interface RideModel {
   pos: RidePos,
   meta: RideMeta
 }
 
-export enum Measurements {
-  'Track Position', 'Interpolation', 'Map Matching'
+export type MeasurementProperty = {
+	createElements: ( path: RideData, weight: number, properties: MeasurementProperty, map?: any ) => ReactElement | ReactElement[];
+	query: string;
+	name: string;
+	color: string;
+	size: number;
+	value?: string;
+	minValue?: number;
+	maxValue?: number;
 }
 
+export type Measurements = {
+	'Track_Pos': MeasurementProperty,
+	'Interpolation': MeasurementProperty, 
+	'Map_Matching': MeasurementProperty,
+	'Engine_RPM': MeasurementProperty
+}
+	
+export const MEASUREMENTS: Measurements = {
+	'Track_Pos': { 
+    	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => createPoints(path, weight, properties, createRectangle),
+		query: '/trackpos',      
+		name: 'Track Pos',     
+		color: "#0000CC", 
+		size: 1
+	},
+	'Interpolation': { 
+		createElements: createLines,
+		query: '/interpolation', 
+		name: 'Interpolation', 
+		color: "#2288FF",
+		size: 1 
+	}, 
+  	'Map_Matching' : { 
+		createElements: createLines,
+		query: '/map_match',
+		name: 'Map Matching', 
+		color: "#0000FF", 
+		size: 0.00003, 
+		value: 'object' 
+	},
+	'Engine_RPM': { 
+		createElements: createMultiLines,
+		query: '/rpms', 
+		name: 'Engine RPM',    
+		color: "#FF00FF", 
+		size: 1, 
+		value: 'number', 
+		minValue: 2000, 
+		maxValue: 6000 
+	},
+}
 
