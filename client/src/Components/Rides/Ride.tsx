@@ -13,15 +13,17 @@ import '../../css/road.css'
 
 type Props = {
 	tripId: string;
+    taskId: number; 
     measKeys: (keyof Measurements)[];
     mapZoom: number;
+    updateChart: (addData: boolean, dataName: string, data: number[]) => void;
 };
 
 type Ride = {
     measurement: keyof Measurements
 }
 
-const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
+const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, updateChart } ) => {
     // TODO: define types for the state
     const [paths, setPaths] = useState<any>( (function()  {
         const keys = Object.keys(MEASUREMENTS)
@@ -41,13 +43,18 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
     const requestMeasurement = (measurement: keyof Measurements) => {     
         if ( paths[measurement].loaded ) return;
 
-        post( MEASUREMENTS[measurement].query, { tripID: tripId }, (res: RideData) => {
+        const meas = MEASUREMENTS[measurement]
+
+        post( meas.query, { tripID: tripId }, (res: RideData) => {
             const data = res.map( d => { return { pos: new LatLng(d.pos.lat, d.pos.lng), value: d.value } } )
             
             const pathsCopy: any = {...paths}
             pathsCopy[measurement].loaded = true;
             pathsCopy[measurement].path = data;
             setPaths(pathsCopy)
+
+            if ( meas.value )
+                updateChart(true, meas.name + '-' + taskId, res.map( d => d.value as number ) )
             
             console.log("Got data for ride: ", tripId, ", length: ", res.length); 
         })
@@ -74,7 +81,7 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
 
 
     return (<> 
-        { 
+        {
         Object.keys(paths).map( (key: string, i: number) => 
             ( !paths[key].loaded ) 
                 ? <div key={`${tripId}-path-${i}`}></div> 
@@ -86,7 +93,7 @@ const Ride: FC<Props> = ( { tripId, measKeys, mapZoom } ) => {
                 key={`${tripId}-path-${i}`}></Path>     
         )
         }
-        {/* { <RoutingMachine path={rmPath}></RoutingMachine>  } */}
+        {/* { <RoutingMachine path={rmPath}></RoutingMachine> } */}
         </>)
 }
 

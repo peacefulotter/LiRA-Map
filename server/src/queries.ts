@@ -89,28 +89,19 @@ export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
 {
     tripId = 'b861b069-da00-4d02-b756-4031a9ec302e' // '004098a1-5146-4516-a8b7-ff98c13950aa'
     // const tag = 'acc.xyz'
-    return await bigRequest(
-        () => db
-            .select( [ '*' ] )
+    return await db
+            .select( '*' )
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId } )
-            .andWhereNot( { 'T': 'acc.xyz' } ),
-        (res: Position3D[]) => res.map( (msg: any) => {
-            const data = JSON.parse(msg.message)
-            const tag = data['@t']
-            for (const key in data) {
-                if (!key.startsWith(tag)) continue;
-                console.log(data);
-                console.log(key, data[key]);
-            }
-            return { x: 0, y: 0, z: 0 }
-        } )
-    )
 }
 
 
 export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<RideData> =>
 {
+    // obd.spd
+    // obd.rpm_rl
+    // obd.acc_yaw
+    // obd.acc_trans
     // obd.bat
     // obd.rpm
     // track.pos (1493)

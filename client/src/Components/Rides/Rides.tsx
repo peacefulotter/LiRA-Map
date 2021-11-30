@@ -4,6 +4,7 @@ import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
+import useChart from "./useChart";
 import Ride from "./Ride";
 
 import { get } from '../../assets/fetch'
@@ -17,7 +18,7 @@ const Rides: FC = () => {
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
     const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
     const [ zoom, setZoom ] = useState<number>(11);
-    
+    const { addChartData, removeChartData, chart } = useChart()
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -28,7 +29,13 @@ const Rides: FC = () => {
     const showRide = (i: number, isChecked: boolean) => {         
         isChecked
             ? setSelectedRides( prev => [...prev, i] ) 
-            : setSelectedRides( selectedRides.filter(r => r != i) )        
+            : setSelectedRides( selectedRides.filter(r => r != i) )  
+    }
+
+    const updateChart = ( addData: boolean, dataName: string, data: number[] ) => {
+        addData 
+            ? addChartData(data, dataName)
+            : removeChartData(dataName)
     }
 
     const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        
@@ -73,9 +80,10 @@ const Rides: FC = () => {
                     { metas.map( (meta: RideMeta, i: number) =>
                         !selectedRides.includes(i) 
                             ? <div key={`ride-road-${i}`}></div>
-                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} mapZoom={zoom} key={`ride-road-${i}`}></Ride>
+                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} updateChart={updateChart}></Ride>
                     ) }
                 </MapContainer>
+                { chart }
             </div>
       </div>
     
