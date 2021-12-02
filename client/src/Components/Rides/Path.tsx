@@ -62,7 +62,7 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
 }
 
 
-const createMultiLine = (way: RideData, properties: MeasurementProperty, map: any ): any => {
+const createHotline = (way: RideData, properties: MeasurementProperty, map: any ): any => {
     // the Z value determines the color
     const coords: [number, number, number][] = way
         .map((point: PointData, i: number) => [point.pos.lat, point.pos.lng, point.value || 0])
@@ -80,9 +80,9 @@ const createMultiLine = (way: RideData, properties: MeasurementProperty, map: an
     }).addTo(map);
 }
 
-export const createMultiLines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
+export const createHotlines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
     return ( path.length > 0 )
-        ? createMultiLine( path, properties, map )
+        ? createHotline( path, properties, map )
         : <></>
 }
 
@@ -103,6 +103,7 @@ export const createLines = ( path: RideData, weight: number, properties: Measure
         : <></>
 }
 
+// FIXME: remove the useEffect and the useState
 const Path: FC<Props> = ( { path, measurement, zoom, map } ) => {
 
     const [p, setP] = useState<ReactElement | ReactElement[]>([]);

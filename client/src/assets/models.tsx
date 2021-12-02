@@ -1,7 +1,7 @@
 
 import { ReactElement } from "react";
 import { LatLng } from 'leaflet';
-import { createLines, createPoints, createRectangle, createCircle, createMultiLines } from '../Components/Rides/Path';
+import { createLines, createPoints, createRectangle, createCircle, createHotlines } from '../Components/Rides/Path';
 
 enum RoadCondition {
   'Good', 'Correct', 'Bad'
@@ -88,7 +88,7 @@ export const MEASUREMENTS: Measurements = {
 		value: 'object' 
 	},
 	'Engine_RPM': { 
-		createElements: createMultiLines,
+		createElements: createHotlines,
 		query: '/rpms', 
 		name: 'Engine RPM',    
 		color: "#FF00FF", 

@@ -11,6 +11,8 @@ interface Props extends ControlOptions {
 	path: RidePos
 };
 
+// TODO: move this to rides
+
 const getInstance = (path: RidePos) => {
 
 	console.log(path);

@@ -11,8 +11,8 @@ type Props = {
   ridePos: RidePos;
 };
 
-// //  {/* <RoutingMachine path={ridePos} /> */}
-//       {/* <Ride rideId={rideId}></Ride> */}
+// TODO: remove this?
+// TODO: or generalize this: props: [CallComponent1, ...]
 
 const MapWrapper: FC<Props> = ( { ridePos } ) => {    
   return (
