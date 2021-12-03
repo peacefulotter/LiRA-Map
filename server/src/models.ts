@@ -41,6 +41,7 @@ export type RidePos = LatLng[];
 export interface PointData {
   pos: LatLng;
   value?: any;   // using this field depending on the measurement
+  timestamp?: number // timestamp for a coordinate
 }
 
 export type RideData = PointData[]

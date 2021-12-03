@@ -1,4 +1,4 @@
-import { useState } from 'react' 
+import { useState, FC } from 'react' 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const colors = [
@@ -6,19 +6,26 @@ const colors = [
     "#82ca9d"
 ]
 
+interface ChartPoint {
+    timestamp: string;
+    value: number;
+}
+
+type ChartData = ChartPoint[]
+
 const useChart = () => {
     const [chartData, setChartData] = useState<{[key: string]: number}[]>([])
     const [linesData, setLinesData] = useState<string[]>([])
 
-    const addChartData = (data: number[], dataName: string) => {
+    const addChartData = (data: ChartData, dataName: string) => {
         console.log(dataName, data);
         const updateLines = [...linesData]
         updateLines.push(dataName)
         setLinesData(updateLines)
 
-        const updatedChart = chartData.length > 0 
-            ? chartData.map( (d, i) => { return { ...d, [dataName]: data[i] } } )
-            : data.map( (d, i) => { return { [dataName]: data[i] }  } )
+        const updatedChart: {[key: string]: number}[] = chartData.length > 0 
+            ? chartData.map( (d, i) => { return { ...d, [dataName]: data[i].value } } )
+            : data.map( (d, i) => { return { [dataName]: data[i].value }  } )
         setChartData( updatedChart )
 
         console.log(updatedChart)

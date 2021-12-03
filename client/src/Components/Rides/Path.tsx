@@ -1,5 +1,5 @@
 import { FC, ReactElement, useEffect, useState } from "react";
-import L, { LatLng, LatLngBounds } from 'leaflet'
+import L, { LatLng, LatLngBounds, LineCapShape } from 'leaflet'
 import { Rectangle, Circle, Polyline } from 'react-leaflet'
 import 'leaflet-hotline'
 
@@ -30,7 +30,7 @@ const getColor = (val: any, type: string | undefined, defaultColor: string): str
 type createPointFunc = (pos: LatLng, i: number, weight: number, properties: MeasurementProperty) => ReactElement;
 
 export const createRectangle = ( pos: LatLng, i: number, weight: number, properties: MeasurementProperty ): ReactElement => {
-    const size: number = properties.size;
+    const size: number = properties.size; // / 1000;
     const bounds: LatLngBounds = new LatLngBounds(
         [pos.lat - size / 2, pos.lng - size / 2],
         [pos.lat + size / 3, pos.lng + size / 1.2]
@@ -85,6 +85,8 @@ export const createHotlines = (path: RideData, weight: number, properties: Measu
         ? createHotline( path, properties, map )
         : <></>
 }
+
+
 
 const createLine = ( way: LatLng[], values: number[], properties: MeasurementProperty ): ReactElement => {
     const color = { color: properties.color };

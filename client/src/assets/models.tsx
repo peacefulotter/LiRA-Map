@@ -61,15 +61,17 @@ export type Measurements = {
 	'Track_Pos': MeasurementProperty,
 	'Interpolation': MeasurementProperty, 
 	'Map_Matching': MeasurementProperty,
-	'Engine_RPM': MeasurementProperty
+	'Engine_RPM': MeasurementProperty,
 }
 	
+
+// TODO: explain to put this on the db
 export const MEASUREMENTS: Measurements = {
 	'Track_Pos': { 
-    	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => createPoints(path, weight, properties, createRectangle),
+    	createElements: ( path: RideData, weight: number, properties: MeasurementProperty ) => createPoints(path, weight, properties, createCircle),
 		query: '/trackpos',      
 		name: 'Track Pos',     
-		color: "#0000CC", 
+		color: "#AA00CC", 
 		size: 1
 	},
 	'Interpolation': { 
@@ -96,6 +98,6 @@ export const MEASUREMENTS: Measurements = {
 		value: 'number', 
 		minValue: 2000, 
 		maxValue: 6000 
-	},
+	}
 }
 

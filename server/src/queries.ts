@@ -26,7 +26,7 @@ export const getTrackPositions = async ( db: Knex<any, unknown[]>, [tripId]: [st
 {
     return await fetchPositions( db, {
         'FK_Trip': tripId,
-        'FK_MeasurementType': TRACK_POS // NOT WORKING ANYMORE
+        'T': 'track.pos' // NOT WORKING ANYMORE
     } )
 }
 
@@ -50,27 +50,37 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [
     } )
 }
 
+// TODO get timestamp for each coord
 export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
 {
     const res = await db
-            .select( [ 'message', 'lat', 'lon' ] )
+            .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId, 'T': 'obd.rpm' } );
 
     return res.map( (msg: any) => {
         const json = JSON.parse(msg.message)
-        return { pos: { lat: msg.lat, lng: msg.lon }, value: json['obd.rpm.value'] }
-    } )
+        return { pos: { lat: msg.lat, lng: msg.lon }, value: json['obd.rpm.value'], timestamp: new Date(msg.Created_Date).getTime() }
+    } ).sort( (a, b) => a.timestamp - b.timestamp )
 }
 
 export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
 {
     tripId = 'b861b069-da00-4d02-b756-4031a9ec302e' // '004098a1-5146-4516-a8b7-ff98c13950aa'
     // const tag = 'acc.xyz'
-    return await db
-            .select( '*' )
+    const res = await db
+            .select( ['lon', 'lat', 'message', 'Created_Date'] )
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId } )
+
+    res.forEach( r => {
+        const json = JSON.parse(r.message)
+        console.log(json['@ts'], json['@rec'], r.Created_Date);
+    })
+
+    const s = res.sort((a: any, b: any) => new Date(a.Created_Date).getTime() - new Date(b.Created_Date).getTime() )
+    return s;
+
 }
 
 

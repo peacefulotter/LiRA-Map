@@ -22,7 +22,7 @@ const Rides: FC = () => {
 
     // fetch the metadata of all the rides
     useEffect( () => {
-        get( '/rides', (data: any) => setMetas(data) )
+        get( '/rides', (data: any) => setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) )
     }, [] );
     
 
@@ -33,9 +33,9 @@ const Rides: FC = () => {
     }
 
     const updateChart = ( addData: boolean, dataName: string, data: number[] ) => {
-        addData 
-            ? addChartData(data, dataName)
-            : removeChartData(dataName)
+        // addData 
+        //     ? addChartData(data, dataName)
+        //     : removeChartData(dataName)
     }
 
     const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        

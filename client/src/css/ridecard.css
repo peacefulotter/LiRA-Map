@@ -12,6 +12,13 @@
 .ride-search-container {
     display: flex;
     height: 40px;
+    min-height: 40px;
+}
+
+.ride-search-date-input {
+    width: 50%;
+    background: none;
+    border: none;
 }
 
 .ride-search-input {
