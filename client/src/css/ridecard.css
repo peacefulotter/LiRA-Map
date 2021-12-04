@@ -44,7 +44,6 @@
     font-size: 1.1em !important;
     border-radius: 0px !important;
     padding: 10px 15px !important;
-    margin-bottom: 20px;
     background: var(--grey) !important;
 }
 
@@ -55,7 +54,17 @@
 
 .ride-card-container {
     width: 100%;
-    margin-bottom: 10px;
     padding: 15px 0px;
-    font-size: 1em !important;
+    font-size: 0.9em !important;
+    border-radius: 0px !important;
+    color: lightgrey;
+}
+
+.ride-card-container > .jsx-parser > b {
+    color: white;
+    font-size: 1.1em !important;
+}
+
+.ride-card-container:nth-child(even) {
+    margin: 1px 0px;
 }

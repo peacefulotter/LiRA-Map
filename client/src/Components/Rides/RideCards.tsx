@@ -1,14 +1,11 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useMemo, useCallback, ReactNode } from "react";
+import { List, ListRowRenderer, AutoSizer } from "react-virtualized";
 
 import Checkbox from '../Checkbox';
 
 import { RideMeta } from '../../assets/models'
 
 import '../../css/ridecard.css'
-
-const range = (n: number) => { 
-    return Array.from( {length: n}, (elt, i) => i);
-}
 
 interface Props {
     metas: RideMeta[];
@@ -19,67 +16,98 @@ const substring = (meta: RideMeta, search: string) => {
     return meta.TaskId.toString().includes( search )
 }
 
-const compareMeta = ( a: RideMeta, b: RideMeta ) => {
-    return b.TaskId < a.TaskId ? -1 : 1
+const range = (n: number) => { 
+    return Array.from( {length: n}, (elt, i) => i);
 }
 
-const RideCards: FC<Props> = ( { metas, onClick } ) => {            
-    const [ reverseSorted, setReverseSorted ] = useState<boolean>(false)
+interface CardsProps {
+    metas: RideMeta[]
+    showMetas: number[]
+    onClick: (i: number, isChecked: boolean) => void; 
+}
+
+const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {    
+
+    const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
+        const n = showMetas[index];
+        const meta = metas[n];
+        return <div key={key} style={style}>
+            <Checkbox 
+                className="ride-card-container"
+                content={`<b>${meta.TaskId}</b><br></br>${new Date(meta.Created_Date).toLocaleDateString()}`}
+                onClick={(isChecked) => onClick(n, isChecked)} />
+        </div>
+    }
+
+    return <List
+        width={150}
+        height={2500}
+        rowHeight={61}
+        rowRenderer={renderRow}
+        rowCount={showMetas.length} /> 
+}
+
+interface InputProps {
+    min: number, max: number, current: number;
+}
+
+const useInput = ( { min, max, current }: InputProps ) => {
+    const [value, setValue] = useState<number>(current);
+    const input = <input 
+        type='number' min={min} max={max} value={value} 
+        onChange={(e: any) => setValue(e.target.value as number)} 
+        className="ride-search-input ride-search-date-input" />;
+    return [value, input];
+  }
+
+const RideCards: FC<Props> = ( { metas, onClick } ) => {                
     const [ searched, setSearched ] = useState<boolean>(false)
+    const [ sorted, setSorted ] = useState<boolean>(true)
 
-    const [ startMonth, setStartMonth ] = useState<number>(1);
-    const [ startYear, setStartYear ] = useState<number>(2020);
-    const [ endMonth, setEndMonth ] = useState<number>(12);
-    const [ endYear, setEndYear ] = useState<number>(2021);
+    const [ startMonth, startMonthInput ] = useInput( { min: 1, max: 12, current: 1 } )
+    const [ startYear, startYearInput ] = useInput( { min: 2019, max: 2050, current: 2019 } )
+    const [ endMonth, endMonthInput ] = useInput( { min: 1, max: 12, current: 12 } )
+    const [ endYear, endYearInput ] = useInput( { min: 2019, max: 2050, current: 2021 } )
 
-    const [ showMetas, setShowMetas ] = useState<RideMeta[]>(metas);
+    const [ showMetas, setShowMetas ] = useState<number[]>([]);
     const [ search, setSearch ] = useState<string>("")
 
-    const sortMetas = (md: RideMeta[]) => {
-        return md.sort((a: RideMeta, b: RideMeta) => compareMeta(a, b))
+    const getOrderedMD = () => {
+        return sorted ? range(metas.length) : range(metas.length).reverse()
     }
 
-    const reverseSortMetas = (md: RideMeta[]) => {
-        return md.sort((a: RideMeta, b: RideMeta) => compareMeta(a, b))
-    }
+    const filterDate = () => {
+        const before = new Date(startYear as number, startMonth as number - 1).getTime()
+        const after = new Date(endYear as number, endMonth as number - 1).getTime()
 
-    // avoid too much computation to make the website faster
-    const sortedMetas: RideMeta[] = sortMetas(metas)
-    const reverseSortedMetas: RideMeta[] = reverseSortMetas(metas)
-
-    const getSortedInitMetas = (): RideMeta[] => {
-        return reverseSorted ? reverseSortedMetas : sortedMetas 
-    }
-
-    const filterDate = (curMetas: RideMeta[]) => {
-        return curMetas.filter( (meta: RideMeta) => {
-            const date = new Date(meta.Created_Date)
-            const month = date.getMonth() + 1
-            const year = date.getFullYear()
-            return month >= startMonth && year >= startYear && month <= endMonth && year <= endYear
+        return getOrderedMD().filter( (n: number) => {
+            const date = new Date(metas[n].Created_Date).getTime()
+            return date >= before && date <= after 
         })
     }
 
-    const filterSearch = (curMetas: RideMeta[]) => {
-        return searched ? curMetas.filter( (meta: RideMeta) => substring(meta, search) ) : curMetas
+    const filterSearch = () => {
+        return searched 
+            ? getOrderedMD().filter( (n: number) => substring(metas[n], search) ) 
+            : getOrderedMD()
     }
-
-    const filterSort = (curMetas: RideMeta[]) => {
-        return reverseSorted 
-            ? sortMetas(curMetas)
-            : reverseSortMetas(curMetas)
-    }
+    
 
     useEffect( () => {
-        setShowMetas(filterSort(showMetas))
-    }, [reverseSorted] )
+        setShowMetas(range(metas.length))
+    }, [metas])
 
-    useEffect( () => {
-        setShowMetas(filterSearch(getSortedInitMetas()))
+    const changeOrder = (isChecked: boolean) => {
+        setSorted(!isChecked)
+        setShowMetas([...showMetas].reverse())
+    }
+
+    useEffect( () => {        
+        setShowMetas(filterSearch())
     }, [searched, search] )
 
     useEffect( () => {
-        setShowMetas(filterDate(getSortedInitMetas()))
+        setShowMetas(filterDate())
     }, [startMonth, endMonth, startYear, endYear])
 
 
@@ -98,11 +126,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         setSearched(true)
     }
 
-    const changeStartMonth = (e: any) => setStartMonth(e.target.value);        
-    const changeStartYear = (e: any) => setStartYear(e.target.value);
-    const changeEndMonth = (e: any) => setEndMonth(e.target.value)
-    const changeEndYear = (e: any) => setEndYear(e.target.value)
-
     return (
         <div className="ride-list">
 
@@ -117,27 +140,20 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                     onClick={clearFilter}>X</div>
             </div>
             <div className="ride-search-container">
-                <input type='number' min="1" max="12" value={startMonth} onChange={changeStartMonth} className="ride-search-input ride-search-date-input"></input>
-                <input type='number' min="2010" max="2100" value={startYear} onChange={changeStartYear} className="ride-search-input ride-search-date-input"></input>
+                { startMonthInput }
+                { startYearInput }
             </div>
             <div className="ride-search-container">
-                <input type='number' min="1" max="12" value={endMonth} onChange={changeEndMonth} className="ride-search-input ride-search-date-input"></input>
-                <input type='number' min="2010" max="2100" value={endYear} onChange={changeEndYear} className="ride-search-input ride-search-date-input"></input>
+                { endMonthInput }
+                { endYearInput }
             </div>
 
             <Checkbox 
                 className="ride-sort-cb"
-                content={`Sort ${reverseSorted ? '▼' : '▲'}`}
-                onClick={setReverseSorted}/>
+                content={`Sort ${sorted ? '▲' : '▼'}`}
+                onClick={changeOrder}/>
 
-            { showMetas.map( (meta: RideMeta, i: number) => {
-                return <Checkbox 
-                        key={`ride${i}`}
-                        className="ride-card-container"
-                        content={`<b>${meta.TaskId}<b><br/>${meta.Created_Date}`}
-                        onClick={(isChecked) => onClick(i, isChecked)} />
-            } )
-            }
+            <Cards metas={metas} showMetas={showMetas} onClick={onClick} />            
         </div>
     )
 }

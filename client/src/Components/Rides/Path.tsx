@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect, useState } from "react";
 import L, { LatLng, LatLngBounds, LineCapShape } from 'leaflet'
-import { Rectangle, Circle, Polyline } from 'react-leaflet'
+import { Rectangle, Circle, Polyline, LayerGroup } from 'react-leaflet'
 import 'leaflet-hotline'
 
 import { MeasurementProperty, Measurements, MEASUREMENTS, RideData, PointData } from '../../assets/models'
@@ -15,16 +15,10 @@ type Props = {
 
 
 const getWeight = (n: number): number => { return n < 17 ? (n <= 15 ? 3 : 2) : 1 }
-const getColor = (val: any, type: string | undefined, defaultColor: string): string => {
-    if ( type === undefined ) 
-        return defaultColor;
-    else if ( type === 'number' ) {
-        const red: number = Math.min(val * 2, 1) * 255;                          // 0 -> 0, 0.5 -> 1, >0.5 -> 1
-        const green: number = val < 0.5 ? 255 : Math.max(2 - val * 2, 0) * 255;  // 0 -> 1, 0.5 -> 1, 1 -> 0                 
-        return `rgb(${red}, ${green}, 0)`
-    }
-    else
-        return '#000000'
+const getColor = (val: any): string => {    
+    const red: number = Math.min(val * 2, 1) * 255;    // 0 -> 0, 0.5 -> 1, >0.5 -> 1
+    const green: number = (val < 0.5 ? val +  0.5 : 2 - val * 2) * 255;  // 0 -> 1, 0.5 -> 1, 1 -> 0                 
+    return `rgb(${Math.round(red)}, ${Math.round(green)}, 0)`
 }
 
 type createPointFunc = (pos: LatLng, i: number, weight: number, properties: MeasurementProperty) => ReactElement;
@@ -62,27 +56,44 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
 }
 
 
-const createHotline = (way: RideData, properties: MeasurementProperty, map: any ): any => {
-    // the Z value determines the color
-    const coords: [number, number, number][] = way
-        .map((point: PointData, i: number) => [point.pos.lat, point.pos.lng, point.value || 0])
+// const createHotline = (way: RideData, properties: MeasurementProperty, map: any ): any => {
+//     // the Z value determines the color
+//     const coords: [number, number, number][] = way
+//         .map((point: PointData, i: number) => [point.pos.lat, point.pos.lng, point.value || 0])
 
-    return L.hotline(coords, {
-        weight: 4,
-        outlineWidth: 1,
-        palette: {
-            0.0: 'green',
-            0.5: 'yellow',
-            1.0: 'red'
-        },
-        min: properties.minValue || 0,
-        max: properties.maxValue || 1
-    }).addTo(map);
+//     return L.hotline(coords, {
+//         weight: 4,
+//         outlineWidth: 1,
+//         palette: {
+//             0.0: 'green',
+//             0.5: 'yellow',
+//             1.0: 'red'
+//         },
+//         min: properties.minValue || 0,
+//         max: properties.maxValue || 1
+//     }).addTo(map);
+// }
+
+// export const createHotlines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
+//     return ( path.length > 0 )
+//         ? createHotline( path, properties, map )
+//         : <></>
+// }
+
+const createHotline = (way: RideData, weight: number, properties: MeasurementProperty, map: any ): any => {
+    console.log("creating hotline");
+    
+    return <LayerGroup children={way.map((p: PointData, i: number) => 
+        <Circle 
+            center={[p.pos.lat, p.pos.lng]} 
+            radius={1} 
+            key={`${p.pos.lat};${p.pos.lng};circle;${i}`}
+            pathOptions={{ color: getColor(p.value || 0), weight: weight }}/>)}/> 
 }
 
 export const createHotlines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
     return ( path.length > 0 )
-        ? createHotline( path, properties, map )
+        ? createHotline( path, weight, properties, map )
         : <></>
 }
 

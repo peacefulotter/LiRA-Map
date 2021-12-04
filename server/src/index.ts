@@ -62,7 +62,11 @@ app.post("/trip_data", async (req: any, res: any) => {
 app.get("/rides", async (req: any, res: any) => {
   console.log("[GET /rides]");
   const data: RideMeta[] = await databaseQuery<RideMeta[]>(getRides, '')
-  res.json( data )
+  const time = (md: RideMeta) => new Date(md.Created_Date).getTime()
+  const sortedData = data
+    .filter((a: RideMeta) => a.TaskId !== 0)
+    .sort((a: RideMeta, b: RideMeta) => time(a) - time(b))
+  res.json( sortedData )
 } )
 
 app.get("/test", async (req: any, res: any) => {

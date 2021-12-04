@@ -69,6 +69,7 @@ const Rides: FC = () => {
             
             <div className="map-container">
                 <MapContainer 
+                    preferCanvas={true}
                     center={[55.6720619937223, 12.558746337890627]} 
                     zoom={11} 
                     scrollWheelZoom={true}>
