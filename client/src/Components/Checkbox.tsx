@@ -11,13 +11,14 @@ interface Props {
 const Checkbox = (props: Props) => {
 	const { forceState, className, content, onClick } = props;
   	const [ isChecked, setChecked ] = useState<boolean>(forceState || false)
-  
+
   	return (
         <div 
-            className={`${className} btn ${isChecked ? 'btn-checked' : ''}`} 
-            onClick={() => { 
-				onClick(!isChecked); 
-				setChecked(prev => !prev); 
+            className={`${className} btn ${(forceState === undefined ? isChecked : forceState) ? 'btn-checked' : ''}`} 
+            onClick={() => { 	
+				const update = forceState === undefined ? !isChecked : !forceState								
+				onClick( update ); 
+				setChecked( update ); 
 			}}>
             <JsxParser jsx={content}></JsxParser>
         </div>

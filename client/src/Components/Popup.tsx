@@ -1,26 +1,14 @@
-import Swal from 'sweetalert2'
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+
+import '@sweetalert2/theme-dark';
 
 const swal = withReactContent(Swal)
 
-
-
 const usePopup = () => {
-
-    const fire = ( title: string, footer: string ) => {
-        swal.fire({
-            title: <p>{title}</p>,
-            footer: footer,
-            didOpen: () => {
-                // swal.clickConfirm()
-            }
-        })
-        // }).then(() => {
-        //     return swal.fire(<p>Shorthand works too</p>)
-        // })
+    return ( options: SweetAlertOptions<any, any> ): Promise<SweetAlertResult<any>> => {
+        return swal.fire( { ...options, customClass: { popup: 'sweetalert-popup', title: 'sweetalert-title'} } )
     }
-    
-    return { fire }
 }
 
 export default usePopup

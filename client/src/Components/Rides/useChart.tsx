@@ -17,25 +17,17 @@ export type ChartData = ChartPoint[]
 const useChart = ( ) => {
     const [series, setSeries] = useState<any[]>([])
 
-    const addFirstLine = (data: ChartData, dataName: string) => {
-        setSeries([{
-            name: dataName,
-            data: data
-        }])
-    }
-
     const addChartData = (dataName: string, data: ChartData) => { 
-        if ( series.length === 0 )
-            addFirstLine(data, dataName)       
-        
-        else
-        {
-            const updated = [...series]
-            updated.push( { name: dataName, data: data } )
-            setSeries( updated )
-            console.log(updated);
-            
-        }
+        const MAX_NB_POINTS = 5_000
+        const threshold = Math.ceil(data.length / MAX_NB_POINTS)
+        const chartData = data.filter((val: ChartPoint, i: number) => i % threshold === 0 )
+
+        console.log(threshold, data.length, chartData.length);
+
+        const updated = [...series]
+        updated.push( { name: dataName, data: chartData } )
+        setSeries( updated )
+        console.log(updated);
     }
 
     const removeChartData = (dataName: string) => {
@@ -45,7 +37,10 @@ const useChart = ( ) => {
 
     const options = {
         chart: {
-            id: "basic-bar"
+            id: "basic-bar",
+            animations: {
+                enabled: false,
+            }
         },
         stroke: {
             width: 3,

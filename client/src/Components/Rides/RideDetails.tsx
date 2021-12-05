@@ -6,6 +6,7 @@ import Checkbox from "../Checkbox";
 import { MEASUREMENTS, RideMeta, Measurements } from '../../assets/models'
 
 import '../../css/ridedetails.css'
+import AddMeasBtn from "./AddMeasBtn";
 
 type Props = {
     metas: RideMeta[],
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
+
     return (
 		<div className="meta-data">
 			{
@@ -24,6 +26,8 @@ const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
 						onClick={(isChecked) => measurementClick(key as keyof Measurements, isChecked)} />
 				)
 			}
+
+			<AddMeasBtn />
 			
 			{ metas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`ride-md-${meta.TaskId}-${i}`}></MetaData>

@@ -5,7 +5,7 @@ import databaseQuery from './database'
 import osrmQuery from './osrm';
 
 import { PointData, RideData, RideMeta } from "./models";
-import { getRides, getTrackPositions, getInterpolatedData, getRPMS, getTest, getMeasurementData } from './queries'
+import { getRides, getTrackPositions, getInterpolatedData, getTest, getMeasurementData } from './queries'
 
 const PORT = process.env.PORT || 3001;
 
@@ -43,17 +43,11 @@ app.post("/map_match", async (req: any, res: any) => {
     res.json( data );
 } )
 
-app.post("/rpms", async (req: any, res: any) => {
-  const tripID = req.body.tripID;
-  console.log("[POST /rpms] Requested ride ", tripID);
-  const data: RideData = await databaseQuery<RideData>(getRPMS, tripID)
-  res.json( data );
-} )
 
-app.post("/trip_data", async (req: any, res: any) => {
+app.post("/trip_measurement", async (req: any, res: any) => {
   const tripID = req.body.tripID
   const measurement = req.body.measurement
-  console.log("[POST /trip_data] Requested measurement ", measurement, " for id", tripID);
+  console.log("[POST /trip_measurement] Requested measurement ", measurement, " for id", tripID);
   const data: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, measurement)
   res.json( data );
 } )

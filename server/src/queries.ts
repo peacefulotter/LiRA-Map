@@ -47,12 +47,37 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [
     } )
 }
 
-export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
+export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
 {
+    tripId = '2857262b-71db-49df-8db6-a042987bf0eb' // '004098a1-5146-4516-a8b7-ff98c13950aa'
+    // const tag = 'acc.xyz'
+    const res = await db
+            .select( '*' )
+            .from( { public: 'Measurements' } )
+            .where( { 'FK_Trip': tripId } )
+            .whereNot( { "T": 'acc.xyz' })
+            .limit(100_000)
+    console.log(res);
+    
+    return res;
+}
+
+
+export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<RideData> =>
+{
+    // obd.spd
+    // obd.rpm_rl
+    // obd.acc_yaw
+    // obd.acc_trans
+    // obd.bat
+    // obd.rpm
+    // track.pos (1493)
+    // rpi.temp (1493)
+
     const res = await db
             .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
             .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId, 'T': 'obd.rpm' } );
+            .where( { 'FK_Trip': tripId, 'T': measurement } );
 
     let minVal = Number.MAX_VALUE;
     let maxVal = -Number.MAX_VALUE;
@@ -80,48 +105,24 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
         maxTime
     }
 
-}
 
-export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
-{
-    tripId = 'b861b069-da00-4d02-b756-4031a9ec302e' // '004098a1-5146-4516-a8b7-ff98c13950aa'
-    // const tag = 'acc.xyz'
-    const res = await db
-            .select( ['lon', 'lat', 'message', 'Created_Date'] )
-            .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId } )
+    // const res = await db
+    //         .select( [ 'lon', 'lat', 'message' ] )
+    //         .from( { public: 'Measurements' } )
+    //         .where( { 'FK_Trip': tripId, 'T': measurement } );
 
-    return res;
-}
-
-
-export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<RideData> =>
-{
-    // obd.spd
-    // obd.rpm_rl
-    // obd.acc_yaw
-    // obd.acc_trans
-    // obd.bat
-    // obd.rpm
-    // track.pos (1493)
-    // rpi.temp (1493)
-    const res = await db
-            .select( [ 'lon', 'lat', 'message' ] )
-            .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId, 'T': measurement } );
-
-    return {
-        data: res.map( (msg: any) => {
-            const data = JSON.parse(msg.message)
-            const tag = data['@t']
-            const obj: any = {}
-            for (const key in data) {
-                if (!key.startsWith(tag)) continue;
-                obj[key.replace(tag, '').substring(1)] = data[key];
-            }
-            return { pos: { lat: msg.lat, lon: msg.lon }, value: obj }
-        } )
-    }
+    // return {
+    //     data: res.map( (msg: any) => {
+    //         const data = JSON.parse(msg.message)
+    //         const tag = data['@t']
+    //         const obj: any = {}
+    //         for (const key in data) {
+    //             if (!key.startsWith(tag)) continue;
+    //             obj[key.replace(tag, '').substring(1)] = data[key];
+    //         }
+    //         return { pos: { lat: msg.lat, lon: msg.lon }, value: obj }
+    //     } )
+    // }
 }
 
 

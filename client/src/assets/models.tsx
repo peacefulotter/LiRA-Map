@@ -56,12 +56,11 @@ export interface RideModel {
 export type MeasurementProperty = {
 	createElements: ( path: RideData, weight: number, properties: MeasurementProperty, map?: any ) => ReactElement | ReactElement[];
 	query: string;
+	queryMeasurement?: string,
 	name: string;
 	color: string;
 	size: number;
 	value?: string;
-	minValue?: number;
-	maxValue?: number;
 }
 
 export type Measurements = {
@@ -98,13 +97,12 @@ export const MEASUREMENTS: Measurements = {
 	},
 	'Engine_RPM': { 
 		createElements: createHotlines,
-		query: '/rpms', 
+		query: '/trip_measurement', 
+		queryMeasurement: 'obd.rpm',
 		name: 'Engine RPM',    
 		color: "#FF00FF", 
 		size: 1, 
 		value: 'number', 
-		minValue: 2000, 
-		maxValue: 6000 
 	}
 }
 
