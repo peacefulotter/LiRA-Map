@@ -2,42 +2,28 @@
 
 .rides-wrapper {
     display: grid;
-    grid-template-columns: 150px 270px auto;
-    grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-    height: calc(100% - 8vh);
-    padding: 0px 10px;
+    grid-template-columns: 170px 270px auto;
+    height: calc(100% - 6vh);
 }
 
 
 .map-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 60% 40%;
     height: 100%;
 }
 
 .map-container .leaflet-container {
     width: 100%;
-    height: calc(100% - 30vh - 50px);
-    border-radius: 10px;
+    height: 100%;
     overflow: hidden;
 }
 
-.chart-container {
-    max-height: 30vh;
-    padding: 10px;
-}
-
-.recharts-wrapper {
-    
-    height: 100% !important;
-    margin-left: -25px;
-}
-
-.recharts-legend-wrapper {
-    bottom: -15px !important;
+.chart-wrapper {
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    margin: auto;
 }
 
 /* .leaflet-interactive {

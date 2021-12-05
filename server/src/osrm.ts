@@ -25,8 +25,8 @@ const getOSRM = (path: string) => new Promise( (resolve, reject) => {
 } )
 
 const osrmQuery = async (path: RideData): Promise<any> => {
-    console.log(path.length);
-    const filteredPath = path.filter((p, i) => i % 10 === 0 )
+    console.log(path.data.length);
+    const filteredPath = path.data.filter((p, i) => i % 10 === 0 )
     console.log(filteredPath.length);
 
     const THRESHOLD = 100; // max number of points osrm can treat
@@ -37,7 +37,7 @@ const osrmQuery = async (path: RideData): Promise<any> => {
     {
         const query: string = filteredPath
             .slice(i, i + chunkSize)
-            .map( (point: PointData) => point.pos.lat + ',' + point.pos.lng )
+            .map( (point: PointData) => point.pos.lat + ',' + point.pos.lon )
             .join(";")
         console.log(i, chunkSize);
         const data = await getOSRM(query)

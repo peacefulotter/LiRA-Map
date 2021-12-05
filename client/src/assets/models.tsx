@@ -36,10 +36,17 @@ export type RidePos = LatLng[];
 
 export interface PointData {
   pos: LatLng;
-  value?: number | undefined;   // using this field depending on the measurement
+  value?: number;   	// using this field depending on the measurement
+  timestamp?: number;   // using this field depending on the measurement
 }
 
-export type RideData = PointData[]
+export interface RideData {
+    data: PointData[]
+    minValue?: number;
+    maxValue?: number; 
+    minTime?: number;
+    maxTime?: number;
+} 
 
 export interface RideModel {
   pos: RidePos,

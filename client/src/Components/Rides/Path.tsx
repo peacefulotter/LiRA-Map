@@ -46,9 +46,9 @@ export const createCircle = ( pos: LatLng, i: number, weight: number, properties
 
 export const createPoints = ( path: RideData, weight: number, properties: MeasurementProperty, createPoint: createPointFunc): ReactElement[] => {
     const elementPath: ReactElement[] = [];
-    for ( let i = 0; i < path.length; i++ ) 
+    for ( let i = 0; i < path.data.length; i++ ) 
     {
-        const point: PointData = path[i];        
+        const point: PointData = path.data[i];        
         const elt = createPoint( point.pos, i, weight, properties )
         elementPath.push( elt )
     }
@@ -83,7 +83,7 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
 const createHotline = (way: RideData, weight: number, properties: MeasurementProperty, map: any ): any => {
     console.log("creating hotline");
     
-    return <LayerGroup children={way.map((p: PointData, i: number) => 
+    return <LayerGroup children={way.data.map((p: PointData, i: number) => 
         <Circle 
             center={[p.pos.lat, p.pos.lng]} 
             radius={1} 
@@ -92,7 +92,7 @@ const createHotline = (way: RideData, weight: number, properties: MeasurementPro
 }
 
 export const createHotlines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {
-    return ( path.length > 0 )
+    return ( path.data.length > 0 )
         ? createHotline( path, weight, properties, map )
         : <></>
 }
@@ -109,7 +109,7 @@ const createLine = ( way: LatLng[], values: number[], properties: MeasurementPro
 
 export const createLines = ( path: RideData, weight: number, properties: MeasurementProperty ): ReactElement => {
     const values: number[] = [0]
-    const way = path.map((p: PointData) =>  p.pos ) 
+    const way = path.data.map((p: PointData) =>  p.pos ) 
     
     return way.length > 0 
         ? createLine( way, values, properties)

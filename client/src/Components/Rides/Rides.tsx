@@ -4,7 +4,7 @@ import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
-import useChart from "./useChart";
+import useChart, { ChartData } from "./useChart";
 import Ride from "./Ride";
 
 import { get } from '../../assets/fetch'
@@ -17,7 +17,7 @@ const Rides: FC = () => {
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
     const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
-    const [ zoom, setZoom ] = useState<number>(11);
+    const [ zoom, setZoom ] = useState<number>(11); // TODO: remove this?
     const { addChartData, removeChartData, chart } = useChart()
 
     // fetch the metadata of all the rides
@@ -32,33 +32,11 @@ const Rides: FC = () => {
             : setSelectedRides( selectedRides.filter(r => r != i) )  
     }
 
-    const updateChart = ( addData: boolean, dataName: string, data: number[] ) => {
-        // addData 
-        //     ? addChartData(data, dataName)
-        //     : removeChartData(dataName)
-    }
-
     const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        
         isChecked 
             ? setMeasurementTypes( prev => [...prev, measurement])
             : setMeasurementTypes( prev => prev.filter(value => value != measurement))
     }
-
-    // TODO: remove this later
-    function LocationMarker() {
-        const map = useMapEvents( {
-          click: (e: LeafletMouseEvent) => {
-            console.log(e);
-          },
-          zoom : (e: any) => {
-              setZoom(e.target._animateToZoom);
-          }
-        } )
-      
-        return null;
-    }
-
-
 
     // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
     return (
@@ -77,11 +55,10 @@ const Rides: FC = () => {
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <LocationMarker />
                     { metas.map( (meta: RideMeta, i: number) =>
                         !selectedRides.includes(i) 
                             ? <div key={`ride-road-${i}`}></div>
-                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} updateChart={updateChart}></Ride>
+                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} addChartData={addChartData} removeChartData={removeChartData}></Ride>
                     ) }
                 </MapContainer>
                 { chart }

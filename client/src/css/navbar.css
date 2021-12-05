@@ -5,7 +5,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 8vh;
+    height: 6vh;
     background-color: var(--background);
     z-index: 99999;
 }
@@ -21,7 +21,7 @@
 }
 
 .nav-tab {
-    font-size: 2.5vh;
+    font-size: 2.2vh;
     color: white;
     text-decoration: none;
     margin: 0px 3vw;

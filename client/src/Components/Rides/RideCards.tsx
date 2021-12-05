@@ -40,7 +40,7 @@ const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {
     }
 
     return <List
-        width={150}
+        width={170}
         height={2500}
         rowHeight={61}
         rowRenderer={renderRow}

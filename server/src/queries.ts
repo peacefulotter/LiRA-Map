@@ -2,19 +2,15 @@
 import { RideMeta, Position3D, RideData, PointData } from './models'
 import { Knex } from 'knex'
 
-const TRACK_POS = 'a69d9fe0-7896-49e2-9e8d-e36f0d54f286'
-const ACC_XYZ = '666607b6-0baa-4eb7-b395-21d3ea654159'
-
-const TASKID1 = 1608
-const TASKID2 = 4032
 
 const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promise<RideData> =>
 {
-    const res: {lat: number, lon: number}[] = await db
-        .select( [ 'lat', 'lon' ] )
-        .from( { public: 'Measurements' } )
-        .where( query )
-    return res.map( (pos: {lat: number, lon: number}) => { return {pos: {lat: pos.lat, lng: pos.lon} } } )
+    return {
+        data: await db
+            .select( [ 'lat', 'lon' ] )
+            .from( { public: 'Measurements' } )
+            .where( query )
+    }
 }
 
 export const getMeasurements = async ( db: Knex<any, unknown[]> ): Promise<object[]> => {
@@ -26,7 +22,7 @@ export const getTrackPositions = async ( db: Knex<any, unknown[]>, [tripId]: [st
 {
     return await fetchPositions( db, {
         'FK_Trip': tripId,
-        'T': 'track.pos' // NOT WORKING ANYMORE
+        'T': 'track.pos'
     } )
 }
 
@@ -50,7 +46,6 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [
     } )
 }
 
-// TODO get timestamp for each coord
 export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
 {
     const res = await db
@@ -58,15 +53,32 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId, 'T': 'obd.rpm' } );
 
-    let max = -999999;
-    let min = 9999999;
-    return res.map( (msg: any) => {
+    let minVal = -Number.MAX_VALUE;
+    let maxVal = Number.MAX_VALUE;
+    let minTime = -Number.MAX_VALUE;
+    let maxTime = Number.MAX_VALUE;
+
+    const data = res.map( (msg: any) => {
         const json = JSON.parse(msg.message)
         const value = json['obd.rpm.value'];
-        max = Math.max(max, value);
-        min = Math.min(min, value);
-        return { pos: { lat: msg.lat, lng: msg.lon }, value, timestamp: new Date(msg.Created_Date).getTime() } as PointData
-    } ).map( (p: PointData) => { return { pos: p.pos, value: (p.value - min) / (max - min), timestamp: p.timestamp} } )
+        const time = new Date(msg.Created_Date).getTime()
+
+        minVal = Math.min(minVal, value);
+        maxVal = Math.max(maxVal, value);
+        minTime = Math.min(minTime, time)
+        maxTime = Math.min(maxTime, time)
+
+        return { pos: { lat: msg.lat, lon: msg.lon }, value, timestamp: time } as PointData
+    } )
+
+    return {
+        data,
+        minValue: minVal,
+        maxValue: maxVal,
+        minTime,
+        maxTime
+    }
+
 }
 
 export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
@@ -97,16 +109,18 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId, 'T': measurement } );
 
-    return res.map( (msg: any) => {
-        const data = JSON.parse(msg.message)
-        const tag = data['@t']
-        const obj: any = {}
-        for (const key in data) {
-            if (!key.startsWith(tag)) continue;
-            obj[key.replace(tag, '').substring(1)] = data[key];
-        }
-        return { pos: {lat: msg.lat, lng: msg.lon }, value: obj }
-    } )
+    return {
+        data: res.map( (msg: any) => {
+            const data = JSON.parse(msg.message)
+            const tag = data['@t']
+            const obj: any = {}
+            for (const key in data) {
+                if (!key.startsWith(tag)) continue;
+                obj[key.replace(tag, '').substring(1)] = data[key];
+            }
+            return { pos: { lat: msg.lat, lon: msg.lon }, value: obj }
+        } )
+    }
 }
 
 
@@ -121,14 +135,6 @@ export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> =>
     return res
         .filter((a: RideMeta) => a.TaskId !== 0)
         .sort((a: RideMeta, b: RideMeta) => time(a) - time(b))
-}
-
-export const getInterpolatedRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
-    return await db
-        .select( '*' )
-        .from( { public: 'Trips' } )
-        .where( { 'TaskId': TASKID1 } )
-        .limit( 50 );
 }
 
 // 3c2c473c-9b2f-4a07-8521-7ce21683c446
