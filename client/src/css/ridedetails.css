@@ -11,16 +11,17 @@
 }
 
 .ride-metadata-list {
-    width: calc(100% - 40px);
+    max-width: 230px;
     padding: 0px 20px 100px 20px;
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 
 .ride-metadata-separation {
     width: 80%;
-    height: 2px;
+    min-height: 1px;
     background: white;
-    margin: 20px 0px 30px 0px;
+    margin: 10px 0px 10px 0px;
 }
 
 .ride-metadata-elt {

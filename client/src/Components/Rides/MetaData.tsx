@@ -85,7 +85,7 @@ const MetaData: FC<Props> = ( { md } ) => {
 
     return (
         <>
-		<div className="ride-metadata-separation"></div>
+        <div className="ride-metadata-separation"></div>
         <div className="ride-metadata-list" >
             { elts.map( (elt) => getMDelt(elt)) }
         </div>

@@ -16,8 +16,12 @@ const substring = (meta: RideMeta, search: string) => {
     return meta.TaskId.toString().includes( search )
 }
 
-const range = (n: number) => { 
+const range = (n: number): number[] => { 
     return Array.from( {length: n}, (elt, i) => i);
+}
+
+const rangeBool = (n: number): boolean[] => { 
+    return Array.from( {length: n}, () => false );
 }
 
 interface CardsProps {
@@ -26,16 +30,25 @@ interface CardsProps {
     onClick: (i: number, isChecked: boolean) => void; 
 }
 
-const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {    
+const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {  
+    
+    // necessary because react-virtualized doesn't save the state of the elements that are not rendered
+    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(metas.length))
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
         const meta = metas[n];
         return <div key={key} style={style}>
             <Checkbox 
+                forceState={checked[n]}
                 className="ride-card-container"
                 content={`<b>${meta.TaskId}</b><br></br>${new Date(meta.Created_Date).toLocaleDateString()}`}
-                onClick={(isChecked) => onClick(n, isChecked)} />
+                onClick={(isChecked) => {
+                    const updated = [...checked]
+                    updated[n] = isChecked;
+                    setChecked(updated)
+                    onClick(n, isChecked) 
+                }} />
         </div>
     }
 

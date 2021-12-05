@@ -80,15 +80,15 @@ export const createPoints = ( path: RideData, weight: number, properties: Measur
 //         : <></>
 // }
 
-const createHotline = (way: RideData, weight: number, properties: MeasurementProperty, map: any ): any => {
-    console.log("creating hotline");
-    
-    return <LayerGroup children={way.data.map((p: PointData, i: number) => 
-        <Circle 
+const createHotline = (way: RideData, weight: number, properties: MeasurementProperty, map: any ): any => {    
+    return <LayerGroup children={way.data.map((p: PointData, i: number) => {
+        const mappedValue: number = ((p.value || 0) - (way.minValue || 0)) / ((way.maxValue || 1) - (way.minValue || 0))
+        return <Circle 
             center={[p.pos.lat, p.pos.lng]} 
             radius={1} 
             key={`${p.pos.lat};${p.pos.lng};circle;${i}`}
-            pathOptions={{ color: getColor(p.value || 0), weight: weight }}/>)}/> 
+            pathOptions={{ color: getColor(mappedValue), weight: weight }}/>
+        })} /> 
 }
 
 export const createHotlines = (path: RideData, weight: number, properties: MeasurementProperty, map: any): any => {

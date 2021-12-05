@@ -5,11 +5,12 @@ import { Knex } from 'knex'
 
 const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promise<RideData> =>
 {
+    const res = await db
+        .select( [ 'lat', 'lon' ] )
+        .from( { public: 'Measurements' } )
+        .where( query )
     return {
-        data: await db
-            .select( [ 'lat', 'lon' ] )
-            .from( { public: 'Measurements' } )
-            .where( query )
+        data: res.map( (msg: any) => { return { pos: {lat: msg.lat, lon: msg.lon } } } )
     }
 }
 
@@ -53,10 +54,10 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
             .from( { public: 'Measurements' } )
             .where( { 'FK_Trip': tripId, 'T': 'obd.rpm' } );
 
-    let minVal = -Number.MAX_VALUE;
-    let maxVal = Number.MAX_VALUE;
-    let minTime = -Number.MAX_VALUE;
-    let maxTime = Number.MAX_VALUE;
+    let minVal = Number.MAX_VALUE;
+    let maxVal = -Number.MAX_VALUE;
+    let minTime = Number.MAX_VALUE;
+    let maxTime = -Number.MAX_VALUE;
 
     const data = res.map( (msg: any) => {
         const json = JSON.parse(msg.message)
@@ -66,10 +67,10 @@ export const getRPMS = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
         minVal = Math.min(minVal, value);
         maxVal = Math.max(maxVal, value);
         minTime = Math.min(minTime, time)
-        maxTime = Math.min(maxTime, time)
+        maxTime = Math.max(maxTime, time)
 
         return { pos: { lat: msg.lat, lon: msg.lon }, value, timestamp: time } as PointData
-    } )
+    } ).sort( (a: PointData, b: PointData) => a.timestamp - b.timestamp )
 
     return {
         data,

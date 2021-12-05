@@ -24,7 +24,7 @@ const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
 						onClick={(isChecked) => measurementClick(key as keyof Measurements, isChecked)} />
 				)
 			}
-
+			
 			{ metas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`ride-md-${meta.TaskId}-${i}`}></MetaData>
 			) }

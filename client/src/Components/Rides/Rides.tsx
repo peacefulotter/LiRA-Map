@@ -8,7 +8,7 @@ import useChart, { ChartData } from "./useChart";
 import Ride from "./Ride";
 
 import { get } from '../../assets/fetch'
-import { RideMeta, Measurements } from '../../assets/models'
+import { RideMeta, Measurements, MEASUREMENTS } from '../../assets/models'
 
 import '../../css/rides.css'
 
@@ -26,10 +26,20 @@ const Rides: FC = () => {
     }, [] );
     
 
-    const showRide = (i: number, isChecked: boolean) => {         
-        isChecked
-            ? setSelectedRides( prev => [...prev, i] ) 
-            : setSelectedRides( selectedRides.filter(r => r != i) )  
+    const showRide = (i: number, isChecked: boolean) => {   
+        if ( isChecked )      
+            setSelectedRides( prev => [...prev, i] ) 
+        else
+        {
+            let removed = 0;
+            setSelectedRides( selectedRides.filter(r => { 
+                if ( r === i )
+                    removed = i;
+                return r != i
+            } ) ) 
+
+            removeChartData(metas[removed].TaskId.toString())
+        } 
     }
 
     const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        

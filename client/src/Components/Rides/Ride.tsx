@@ -3,6 +3,7 @@ import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
 import { Measurements, MEASUREMENTS, MeasurementProperty, RideData } from '../../assets/models'
+import usePopup from '../Popup'
 import { ChartData } from './useChart';
 
 import RoutingMachine from "../RoutingMachine";
@@ -40,11 +41,13 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
         }
         return res;
     } )())   
+
+    const popup = usePopup()
     
     const map = useMapEvents({})
     
     const getDataName = (measurement: MeasurementProperty): string => {
-        return measurement.name + '-' + taskId
+        return taskId.toString()
     }
     
     const requestMeasurement = (measurement: keyof Measurements) => {     
@@ -63,17 +66,22 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
             pathsCopy[measurement].path = path;
             setPaths(pathsCopy)
 
+            console.log("Got data for ride: ", tripId, ", length: ", path.data.length); 
+            console.log("Min value", path.minValue, "Max Value", path.maxValue);
+            console.log("Min time", path.minTime, "Max Time", path.maxTime);
+
             if ( meas.value )
             {
+                console.log(meas.value);
+                console.log(path.data);
+                if ( path.data.length === 0 )
+                    return popup.fire(`The measurement ${meas.name} doesn't contain data for this trip`, `TripId: ${tripId} | TaskId: ${taskId}`);
+                
                 const min = path.data[0].timestamp || 0
                 addChartData( getDataName(meas), res.data.map( (d: any) => { 
                     return { x: d.timestamp as number - min, y: d.value as number } 
                 } ) )
             }
-                
-            console.log("Got data for ride: ", tripId, ", length: ", path.data.length); 
-            console.log("Min value", path.minValue, "Max Value", path.maxValue);
-            console.log("Min time", path.minTime, "Max Time", path.maxTime);
         })
     }
 

@@ -14,19 +14,8 @@ interface ChartPoint {
 
 export type ChartData = ChartPoint[]
 
-const useChart = () => {
+const useChart = ( ) => {
     const [series, setSeries] = useState<any[]>([])
-
-    // const series = [
-    //     {
-    //         name: "series-1",
-    //         data: [[1324508400000, 34], [1324594800000, 54] , [1326236400000, 43]]
-    //     },
-    //     {
-    //         name: "series-2",
-    //         data: [[1324508500000, 24],   [1324594899900, 74] , [1326236400000, 63]]
-    //     }
-    // ]
 
     const addFirstLine = (data: ChartData, dataName: string) => {
         setSeries([{
@@ -44,14 +33,13 @@ const useChart = () => {
             const updated = [...series]
             updated.push( { name: dataName, data: data } )
             setSeries( updated )
+            console.log(updated);
+            
         }
     }
 
     const removeChartData = (dataName: string) => {
-        console.log("removing", dataName);
-        
-        const updated = [...series]
-        updated.filter((p: any) => p.name !== dataName )
+        const updated = [...series].filter((p: any) => p.name !== dataName )        
         setSeries(updated)
     }
 
@@ -63,11 +51,19 @@ const useChart = () => {
             width: 3,
             curve: "smooth" as any
         },
+        toolTip: {
+            shared: true
+        },
         xaxis: {
-            type: 'datetime' as any,
+            type: 'number' as any,
             position: 'bottom',
+            tickAmount: 10,
             labels: {
-                // formatter?(value: string, timestamp?: number, opts?:any): string | string[]
+                formatter: (value: string, timestamp?: number, opts?:any) => {
+                    const date = new Date(Math.round(Number.parseFloat(value)))
+                    const time = date.getHours() + "h" + date.getMinutes();
+                    return time;
+                }
             }
         },
         theme: {
