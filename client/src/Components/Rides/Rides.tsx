@@ -1,14 +1,13 @@
 import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvents, Marker, useMap } from 'react-leaflet'
-import { LeafletMouseEvent, LatLngBounds, LatLng } from 'leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
-import useChart, { ChartData } from "./useChart";
+import useChart from "./useChart";
 import Ride from "./Ride";
 
 import { get } from '../../assets/fetch'
-import { RideMeta, Measurements, MEASUREMENTS } from '../../assets/models'
+import { RideMeta } from '../../assets/models'
 
 import '../../css/rides.css'
 
@@ -16,7 +15,7 @@ import '../../css/rides.css'
 const Rides: FC = () => {
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const [ measurementTypes, setMeasurementTypes ] = useState<(keyof Measurements)[]>([]);
+    const [ measIndices, setMeasurementTypes ] = useState<number[]>([]);
     const [ zoom, setZoom ] = useState<number>(11); // TODO: remove this?
     const { addChartData, removeChartData, chart } = useChart()
 
@@ -42,7 +41,7 @@ const Rides: FC = () => {
         } 
     }
 
-    const measurementClicked = (measurement: keyof Measurements, isChecked: boolean) => {        
+    const measurementClicked = (measurement: number, isChecked: boolean) => {        
         isChecked 
             ? setMeasurementTypes( prev => [...prev, measurement])
             : setMeasurementTypes( prev => prev.filter(value => value != measurement))
@@ -68,7 +67,7 @@ const Rides: FC = () => {
                     { metas.map( (meta: RideMeta, i: number) =>
                         !selectedRides.includes(i) 
                             ? <div key={`ride-road-${i}`}></div>
-                            : <Ride measKeys={measurementTypes} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} addChartData={addChartData} removeChartData={removeChartData}></Ride>
+                            : <Ride measIndices={measIndices} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} addChartData={addChartData} removeChartData={removeChartData}></Ride>
                     ) }
                 </MapContainer>
                 { chart }

@@ -1,5 +1,4 @@
-import { FC, useState } from "react";
-import L, { ControlOptions, LatLng } from 'leaflet';
+import L, { ControlOptions } from 'leaflet';
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 

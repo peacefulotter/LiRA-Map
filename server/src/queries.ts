@@ -14,26 +14,6 @@ const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promis
     }
 }
 
-export const getMeasurements = async ( db: Knex<any, unknown[]> ): Promise<object[]> => {
-    return await db.select( [ 'MeasurementTypeId', 'type' ] ).from( { public: 'MeasurementTypes' } )
-}
-
-
-export const getTrackPositions = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
-{
-    return await fetchPositions( db, {
-        'FK_Trip': tripId,
-        'T': 'track.pos'
-    } )
-}
-
-export const getInterpolatedData = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<RideData> =>
-{
-    return await fetchPositions(db, {
-        'FK_Trip': tripId,
-    } );
-}
-
 export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<Position3D[]> =>
 {
     const res = await db
@@ -58,7 +38,7 @@ export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
             .whereNot( { "T": 'acc.xyz' })
             .limit(100_000)
     console.log(res);
-    
+
     return res;
 }
 

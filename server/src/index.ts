@@ -4,8 +4,8 @@ import express, { Express } from "express";
 import databaseQuery from './database'
 import osrmQuery from './osrm';
 
-import { PointData, RideData, RideMeta } from "./models";
-import { getRides, getTrackPositions, getInterpolatedData, getTest, getMeasurementData } from './queries'
+import { RideData, RideMeta } from "./models";
+import { getRides, getTest, getMeasurementData } from './queries'
 
 const PORT = process.env.PORT || 3001;
 
@@ -20,29 +20,13 @@ app.use(express.json({
 }))
 
 
-// RIDE-DATA
-app.post("/trackpos", async (req: any, res: any) => {
-    const tripID = req.body.tripID; // '7f67425e-26e6-4af3-9a6f-f72ff35a7b1a';
-    console.log("[POST /trackpos] Requested ride ", tripID);
-    const data: RideData = await databaseQuery<RideData>(getTrackPositions, tripID)
-    res.json( data );
-} )
-
-app.post("/interpolation", async (req: any, res: any) => {
-    const tripID = req.body.tripID;
-    console.log("[POST /interpolation] Requested ride ", tripID);
-    const data: RideData = await databaseQuery<RideData>(getInterpolatedData, tripID)
-    res.json( data );
-} )
-
 app.post("/map_match", async (req: any, res: any) => {
 	const tripID = req.body.tripID;
-	const path: RideData = await databaseQuery<RideData>(getInterpolatedData, tripID)
+	const path: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, 'track.pos')
     console.log("[POST /map_match] Requested ride", tripID, "path ", path);
     const data: any = await osrmQuery(path);
     res.json( data );
 } )
-
 
 app.post("/trip_measurement", async (req: any, res: any) => {
   const tripID = req.body.tripID

@@ -2,11 +2,11 @@ import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
-import { Measurements, MEASUREMENTS, MeasurementProperty, RideData, PointData } from '../../assets/models'
+import { RideData, PointData } from '../../assets/models'
+import { Measurements, Measurement } from '../../assets/measurements'
 import usePopup from '../Popup'
 import { ChartData } from './useChart';
 
-import RoutingMachine from "../RoutingMachine";
 import Path from "./Path";
 
 import { post } from '../../assets/fetch'
@@ -16,31 +16,29 @@ import '../../css/road.css'
 type Props = {
 	tripId: string;
     taskId: number; 
-    measKeys: (keyof Measurements)[];
     mapZoom: number;
+    measIndices: number[];
     addChartData: (dataName: string, data: ChartData) => void;
     removeChartData: (dataName: string) => void;
 };
 
-type Ride = {
-    measurement: keyof Measurements
+type Path = {
+    loaded: boolean;
+    path: RideData | undefined
+    fullPath: RideData | undefined
 }
 
-const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, removeChartData } ) => {
+const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, removeChartData } ) => {
     // TODO: define types for the state
-    const [paths, setPaths] = useState<any>( (function()  {
-        const keys = Object.keys(MEASUREMENTS)
-        const res: {[key: string]: any} = {}
-        for ( const i in keys )
-        {
-            res[keys[i]] = {
+    const [paths, setPaths] = useState<Path[]>(
+        Measurements.map((m: Measurement) => {
+            return {
                 loaded: false,
                 path: undefined,
                 fullPath: undefined,
             }
-        }
-        return res;
-    } )())   
+        })
+    )    
 
     const popup = usePopup()
     
@@ -104,13 +102,12 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
     const calcPerformancePath = () => {
         const precisionLength = getMinLength()
 
-        const pathsCopy: any = {...paths}        
+        const pathsCopy: any = [...paths]        
 
-        Object.keys(paths).forEach( (key: string) => {
-            const k = key as keyof Measurements;
-            if ( !pathsCopy[k].loaded )
+        paths.forEach( (p: any, k: number) => {
+            if ( !p.loaded || p.fullPath === undefined )
                 return;
-            const performancePath: RideData = getPerformancePath(paths[k].fullPath, precisionLength)
+            const performancePath: RideData = getPerformancePath(p.fullPath, precisionLength)
             pathsCopy[k].path = performancePath;
         } )
 
@@ -119,29 +116,30 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
     
 
     
-    const getDataName = (measurement: MeasurementProperty): string => {
+    const getDataName = (measurement: Measurement): string => {
         return taskId.toString()
     }
     
-    const requestMeasurement = (measurement: keyof Measurements) => {     
-        if ( paths[measurement].loaded ) return;
+    const requestMeasurement = (measIndex: number) => {     
+        if ( paths[measIndex].loaded ) return;
 
-        const meas: MeasurementProperty = MEASUREMENTS[measurement]
-        console.log(meas);
+        const meas: Measurement = Measurements[measIndex]
         
         post( meas.query, { tripID: tripId, measurement: meas.queryMeasurement }, (res: any) => {
+            console.log(res);
+            
             const latLngData = res.data.map( (d: any) => { 
                 return { pos: new LatLng(d.pos.lat, d.pos.lon), value: d.value, timestamp: d.timestamp } 
             } )
             const path: RideData = { data: latLngData, minValue: res.minValue, maxValue: res.maxValue, minTime: res.minTime, maxTime: res.maxTime }
             
-            const pathsCopy: any = {...paths}
+            const pathsCopy: any = [...paths]
             const precisionLength = getMinLength()
             const performancePath = getPerformancePath(path, precisionLength)
             
-            pathsCopy[measurement].loaded = true;
-            pathsCopy[measurement].path = performancePath;
-            pathsCopy[measurement].fullPath = path;
+            pathsCopy[measIndex].loaded = true;
+            pathsCopy[measIndex].path = performancePath;
+            pathsCopy[measIndex].fullPath = path;
 
             setPaths(pathsCopy)
 
@@ -168,9 +166,8 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
 
     
     useEffect( () => {
-        Object.keys(paths).forEach( (key: string) => {
-            const k = key as keyof Measurements;
-            const include = measKeys.includes(k)
+        paths.forEach( (p: any, k: number) => {
+            const include = measIndices.includes(k)
             // load
             if ( include && !paths[k].loaded )
                 requestMeasurement(k)
@@ -178,29 +175,29 @@ const Ride: FC<Props> = ( { tripId, taskId, measKeys, mapZoom, addChartData, rem
             // unload
             else if ( !include && paths[k].loaded )
             {
-                const pathsCopy: any = {...paths}
+                const pathsCopy: any = [...paths]
                 pathsCopy[k].loaded = false;
                 pathsCopy[k].path = undefined;
                 pathsCopy[k].fullPath = undefined;
                 setPaths(pathsCopy)
 
-                removeChartData( getDataName(MEASUREMENTS[k]) )
+                removeChartData( getDataName(Measurements[k]) )
             }
         })        
-    }, [measKeys] );
+    }, [measIndices] );
 
 
     return (<> 
         {
-        Object.keys(paths).map( (key: string, i: number) => 
-            ( !paths[key].loaded ) 
+        paths.map( (p: any, i: number) => 
+            ( !p.loaded ) 
                 ? <div key={`${tripId}-path-${i}`}></div> 
                 : <Path 
-                path={paths[key].path} 
-                zoom={mapZoom} 
-                measurement={key as keyof Measurements} 
-                map={map}
-                key={`${tripId}-path-${i}`}></Path>     
+                    path={p.path} 
+                    zoom={mapZoom} 
+                    measIndex={i} 
+                    map={map}
+                    key={`${tripId}-path-${i}`}></Path>     
         )
         }
         {/* { <RoutingMachine path={rmPath}></RoutingMachine> } */}

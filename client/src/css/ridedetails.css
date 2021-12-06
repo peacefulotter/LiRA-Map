@@ -51,3 +51,24 @@
     margin-bottom: 5px;
     font-size: 1.1em !important;
 }
+
+.md-checkbox-add {
+    margin-top: 5px;
+    background: rgba(85, 85, 97, 0.5) !important;
+}
+
+.md-checkbox-add:hover {
+    background: rgba(85, 85, 97, 0.8) !important;
+}
+
+.ride-metadata-checkbox .jsx-parser {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox-subtitle {
+    color: grey;
+    font-size: 0.7em;
+    margin: 0px 10px;
+}

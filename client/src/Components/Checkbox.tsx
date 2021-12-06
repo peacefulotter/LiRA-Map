@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import JsxParser from 'react-jsx-parser'; 
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const Checkbox = (props: Props) => {
 	const { forceState, className, content, onClick } = props;
-  	const [ isChecked, setChecked ] = useState<boolean>(forceState || false)
+  	const [ isChecked, setChecked ] = useState<boolean>(forceState || false)	
 
   	return (
         <div 

@@ -1,5 +1,5 @@
-import { FC, useEffect, useState, useMemo, useCallback, ReactNode } from "react";
-import { List, ListRowRenderer, AutoSizer } from "react-virtualized";
+import { FC, useEffect, useState, ReactNode } from "react";
+import { List, ListRowRenderer } from "react-virtualized";
 
 import Checkbox from '../Checkbox';
 
@@ -89,37 +89,37 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         return sorted ? range(metas.length) : range(metas.length).reverse()
     }
 
-    const filterDate = () => {
-        const before = new Date(startYear as number, startMonth as number - 1).getTime()
-        const after = new Date(endYear as number, endMonth as number - 1).getTime()
-
-        return getOrderedMD().filter( (n: number) => {
-            const date = new Date(metas[n].Created_Date).getTime()
-            return date >= before && date <= after 
-        })
-    }
-
-    const filterSearch = () => {
-        return searched 
-            ? getOrderedMD().filter( (n: number) => substring(metas[n], search) ) 
-            : getOrderedMD()
-    }
-    
-
-    useEffect( () => {
-        setShowMetas(range(metas.length))
-    }, [metas])
-
     const changeOrder = (isChecked: boolean) => {
         setSorted(!isChecked)
         setShowMetas([...showMetas].reverse())
     }
+    
+    
+    useEffect( () => {
+        setShowMetas(range(metas.length))
+    }, [metas])
 
-    useEffect( () => {        
+    useEffect( () => {  
+        const filterSearch = (): number[] => {
+            return searched 
+                ? getOrderedMD().filter( (n: number) => substring(metas[n], search) ) 
+                : getOrderedMD()
+        }
+
         setShowMetas(filterSearch())
     }, [searched, search] )
 
     useEffect( () => {
+        const filterDate = () => {
+            const before = new Date(startYear as number, startMonth as number - 1).getTime()
+            const after = new Date(endYear as number, endMonth as number - 1).getTime()
+    
+            return getOrderedMD().filter( (n: number) => {
+                const date = new Date(metas[n].Created_Date).getTime()
+                return date >= before && date <= after 
+            })
+        }
+
         setShowMetas(filterDate())
     }, [startMonth, endMonth, startYear, endYear])
 

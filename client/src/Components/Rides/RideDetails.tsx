@@ -3,14 +3,16 @@ import { FC } from "react";
 import MetaData from "./MetaData";
 import Checkbox from "../Checkbox";
 
-import { MEASUREMENTS, RideMeta, Measurements } from '../../assets/models'
+import { RideMeta } from '../../assets/models'
+import { Measurements, Measurement } from '../../assets/measurements'
 
 import '../../css/ridedetails.css'
 import AddMeasBtn from "./AddMeasBtn";
+import Renderers from "../../assets/renderers";
 
 type Props = {
     metas: RideMeta[],
-	measurementClick: (measurement: keyof Measurements, isChecked: boolean) => void
+	measurementClick: (measIndex: number, isChecked: boolean) => void
 };
 
 const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
@@ -18,12 +20,12 @@ const RideDetails: FC<Props> = ( { metas, measurementClick } ) => {
     return (
 		<div className="meta-data">
 			{
-				Object.keys(MEASUREMENTS).map( (key: string, i: number) =>
+				Measurements.map( (m: Measurement, i: number) =>
 					<Checkbox 
 						key={`ride-md-checkbox-${i}`}
 						className='ride-metadata-checkbox'
-						content={MEASUREMENTS[key as keyof Measurements].name}
-						onClick={(isChecked) => measurementClick(key as keyof Measurements, isChecked)} />
+						content={`${m.name} <p className="checkbox-subtitle">- ${Renderers[m.rendererIndex].name}</p>`}
+						onClick={(isChecked) => measurementClick(i, isChecked)} />
 				)
 			}
 

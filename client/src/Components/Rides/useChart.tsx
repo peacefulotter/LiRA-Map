@@ -1,11 +1,6 @@
 import { useState, FC } from 'react' 
 import Chart from "react-apexcharts";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-// const colors = [
-//     "#8884d8",
-//     "#82ca9d"
-// ]
 
 interface ChartPoint {
     x: number;
