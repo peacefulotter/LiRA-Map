@@ -5,7 +5,7 @@ import { FC, useState, useEffect } from "react";
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
 import Renderers, { Renderer } from "../../assets/renderers";
-import { Measurements, Measurement } from "../../assets/measurements";
+import { addMeasurement, Measurement } from "./Measurements";
 
 interface PopupWrapperProps {
     updateName: (val: string) => void;
@@ -47,8 +47,11 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected }: PopupWrapperPr
     </div>
 }
 
+interface AddMeasBtnProps {
+    setMeasurements: React.Dispatch<React.SetStateAction<Measurement[]>>;
+}
 
-const AddMeasBtn: FC = () => {
+const AddMeasBtn: FC<AddMeasBtnProps> = ( { setMeasurements } ) => {
 
     const [ checked, setChecked ] = useState<boolean>(false)
 
@@ -83,11 +86,15 @@ const AddMeasBtn: FC = () => {
                 query: '/trip_measurement',
                 queryMeasurement: tag,
                 name: name,
-                defaultColor: '#aaaadd',
+                defaultColor: '#bb55dd',
                 size: 1,
                 value: 'number'
             }
-            Measurements.push(newMeasurement)
+            
+            // update the state in RideDetails
+            setMeasurements( prev => [...prev, newMeasurement])
+            // and add the measurement to the measurements.json file
+            addMeasurement(newMeasurement);
     
             popup( {
                 title: <p>Measurement <b>{name}</b> added</p>,

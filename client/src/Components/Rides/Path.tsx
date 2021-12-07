@@ -1,13 +1,13 @@
 import { FC, ReactElement, useEffect, useState } from "react";
 
 import {  RideData } from '../../assets/models'
-import { Measurements, Measurement } from '../../assets/measurements'
+import { Measurement } from './Measurements'
 import Renderers from "../../assets/renderers";
 
 
 type Props = {
 	path: RideData;
-    measIndex: number;
+    properties: Measurement;
     zoom: number;
     map: any;
 };
@@ -17,14 +17,11 @@ const getWeight = (n: number): number => { return n < 17 ? (n <= 15 ? 3 : 2) : 1
 
 
 // FIXME: remove the useEffect and the useState
-const Path: FC<Props> = ( { path, measIndex, zoom, map } ) => {
+const Path: FC<Props> = ( { properties, path, zoom, map } ) => {
 
     const [p, setP] = useState<ReactElement | ReactElement[]>([]);
 
     useEffect( () => {
-        if ( measIndex === undefined ) return;
-
-        const properties: Measurement = Measurements[measIndex]; 
         const weight = getWeight(zoom) 
         const renderer = Renderers[properties.rendererIndex] 
         const elements: any = renderer.func(path, weight, properties, map)
@@ -38,7 +35,7 @@ const Path: FC<Props> = ( { path, measIndex, zoom, map } ) => {
                 elements.remove(map)
         }
 
-    }, [path, measIndex])  
+    }, [path, properties])  
 
     return ( <> { p } </> )
 }

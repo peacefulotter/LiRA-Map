@@ -16,6 +16,7 @@
     "@types/react-virtualized": "^9.21.15",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "apexcharts": "^3.31.0",
+    "axios": "^0.24.0",
     "chart.js": "^3.6.0",
     "leaflet": "^1.7.1",
     "leaflet-hotline": "^0.4.0",

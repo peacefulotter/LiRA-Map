@@ -1,6 +1,7 @@
-import React from 'react';
-import { FC, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
+
+import { post } from '../../assets/fetch'
 import '../../css/signUpForm.css';
 
 interface State {
@@ -9,8 +10,8 @@ interface State {
     password : string,
   }
 
-function SignUp (){
-    
+const SignUpForm = () => 
+{ 
     const [ state, setState ] = useState<State>({
         username : "",
         email : "",
@@ -24,54 +25,41 @@ function SignUp (){
             ...prevState,
             [name]: value,
         }))
-        console.log(state) ;
     }
     
     
     let history = useHistory();
      
     const redirect = () => {
-        let fetchCredential = {
-            method:'POST',
-            body: JSON.stringify(state),
-            headers: new Headers()
-        }
-        
-        fetch("/login", fetchCredential)
-            .then((res) => res.json())
-            .then((data) => {
-                 if ( data.status === "ok")
-                     history.push("/rides");
-            })
+        post('/login', state, (data) => {
+            if ( data.status === "ok")
+                history.push("/rides");
+        })
     }
 
-    
-        return(
-            <div className='signup-wrapper'>
-                <h2>Sign Up</h2>
-                <div>
-                    <div className='signup-input-container'>
-                        <label htmlFor="username">Username</label>
-                        <input type='text' name='username' onChange={handleChange} />
-                    </div>
-                    <div className='signup-input-container'>
-                        <label htmlFor="email">Email</label>
-                        <input type='email' name='email' onChange={handleChange} />
-                        
-                    </div>
-                    <div className='signup-input-container'>
-                        <label htmlFor="password">Password</label>
-                        <input type='password' name='password' onChange={handleChange}/>
-                        
-                    </div>
-                    <div className='btn signup-btn' onClick={redirect}>Register Me</div>
+    return (
+        <div className='signup-wrapper'>
+            <h2>Sign Up</h2>
+            <div>
+                <div className='signup-input-container'>
+                    <label htmlFor="username">Username</label>
+                    <input type='text' name='username' onChange={handleChange} />
                 </div>
+                <div className='signup-input-container'>
+                    <label htmlFor="email">Email</label>
+                    <input type='email' name='email' onChange={handleChange} />
+                    
+                </div>
+                <div className='signup-input-container'>
+                    <label htmlFor="password">Password</label>
+                    <input type='password' name='password' onChange={handleChange}/>
+                    
+                </div>
+                <div className='btn signup-btn' onClick={redirect}>Register Me</div>
             </div>
-        )
-
-             
-   
-    }
+        </div>
+    )
+}
 
 
-export default SignUp
+export default SignUpForm;

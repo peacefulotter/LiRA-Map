@@ -5,7 +5,7 @@ import { Rectangle, Circle, Polyline, LayerGroup } from 'react-leaflet'
 import 'leaflet-hotline'
 
 import { RideData, PointData } from './models'
-import { Measurement } from './measurements'
+import { Measurement } from '../Components/Rides/Measurements'
 
 const getColor = (val: any, defaultColor: string): string => {
     if ( val < 0 )
@@ -67,7 +67,7 @@ const createHotline = (way: RideData, properties: Measurement, map: any ): any =
         .map( (point: PointData) => [point.pos.lat, point.pos.lng, point.value || 0])
 
     return L.hotline(coords, {
-        weight: 3,
+        weight: 4,
         outlineWidth: 0,
         palette: {
             0.0: 'green',

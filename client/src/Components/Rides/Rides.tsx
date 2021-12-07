@@ -10,12 +10,14 @@ import { get } from '../../assets/fetch'
 import { RideMeta } from '../../assets/models'
 
 import '../../css/rides.css'
+import useMeasurements from "./Measurements";
 
 
 const Rides: FC = () => {
+    const [ measurements, setMeasurements ] = useMeasurements();
+    const [ activeMeasurements, setActiveMeasurements ] = useState<number[]>([]);
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const [ measIndices, setMeasurementTypes ] = useState<number[]>([]);
     const [ zoom, setZoom ] = useState<number>(11); // TODO: remove this?
     const { addChartData, removeChartData, chart } = useChart()
 
@@ -43,8 +45,8 @@ const Rides: FC = () => {
 
     const measurementClicked = (measurement: number, isChecked: boolean) => {        
         isChecked 
-            ? setMeasurementTypes( prev => [...prev, measurement])
-            : setMeasurementTypes( prev => prev.filter(value => value != measurement))
+            ? setActiveMeasurements( prev => [...prev, measurement])
+            : setActiveMeasurements( prev => prev.filter(value => value != measurement))
     }
 
     // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
@@ -52,7 +54,9 @@ const Rides: FC = () => {
         <div className="rides-wrapper">
             <RideCards metas={metas} onClick={showRide}/>
             
-            <RideDetails measurementClick={measurementClicked} metas={selectedRides.map(i => metas[i])} ></RideDetails>
+            <RideDetails 
+                measurements={measurements} setMeasurements={setMeasurements} measurementClick={measurementClicked}
+                metas={selectedRides.map(i => metas[i])} />
             
             <div className="map-container">
                 <MapContainer 
@@ -67,7 +71,10 @@ const Rides: FC = () => {
                     { metas.map( (meta: RideMeta, i: number) =>
                         !selectedRides.includes(i) 
                             ? <div key={`ride-road-${i}`}></div>
-                            : <Ride measIndices={measIndices} tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} key={`ride-road-${i}`} addChartData={addChartData} removeChartData={removeChartData}></Ride>
+                            : <Ride key={`ride-road-${i}`} 
+                                measurements={measurements} activeMeasurements={activeMeasurements} 
+                                tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} 
+                                addChartData={addChartData} removeChartData={removeChartData} />
                     ) }
                 </MapContainer>
                 { chart }

@@ -3,7 +3,7 @@ import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
 import { RideData, PointData } from '../../assets/models'
-import { Measurements, Measurement } from '../../assets/measurements'
+import { Measurement } from './Measurements'
 import usePopup from '../Popup'
 import { ChartData } from './useChart';
 
@@ -14,10 +14,11 @@ import '../../css/road.css'
 
 
 type Props = {
+    measurements: Measurement[];
+    activeMeasurements: number[];
 	tripId: string;
     taskId: number; 
     mapZoom: number;
-    measIndices: number[];
     addChartData: (dataName: string, data: ChartData) => void;
     removeChartData: (dataName: string) => void;
 };
@@ -28,10 +29,10 @@ type Path = {
     fullPath: RideData | undefined
 }
 
-const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, removeChartData } ) => {
+const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, mapZoom, addChartData, removeChartData } ) => {
     // TODO: define types for the state
     const [paths, setPaths] = useState<Path[]>(
-        Measurements.map((m: Measurement) => {
+        measurements.map((m: Measurement) => {
             return {
                 loaded: false,
                 path: undefined,
@@ -44,8 +45,11 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
     
     const map = useMapEvents({
         zoom: (e: any) => {
-            console.log(map.getZoom());
-            calcPerformancePath()
+            console.log(map.getZoom());            
+            calcPerformancePaths()
+        },
+        dragend: (e: any) => {
+            calcPerformancePaths()
         }
     })
 
@@ -54,28 +58,46 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
         return [bounds.getNorthWest(), bounds.getSouthEast()]
     }
 
+    const ZOOMS: { [key: number]: number } = {
+        12: 3_000,
+        13: 5_000,
+        14: 10_000,
+        15: 15_000,
+        16: 30_000,
+    }
+
+    // 12 -> 3_000
+    // 13 -> 5_000
+    // 14 -> 10_000
+    // 15 -> 15_000
+    // 16 -> 30_000
+
     const getMinLength = () => {
         const [northWest, southEast] = getMapBounds();
 
         let deltaLat = northWest.lat - southEast.lat
         let deltaLng = southEast.lng - northWest.lng
-        const PRECISION = 1000;
-        return Math.sqrt( deltaLat * deltaLat + deltaLng * deltaLng ) / PRECISION;
+        const mappedZoom = Math.min(Math.max(map.getZoom(), 12), 16)
+        const precision = ZOOMS[mappedZoom];
+        console.log(precision);
+        
+        return Math.sqrt( deltaLat * deltaLat + deltaLng * deltaLng ) / precision;
     }
 
     const outOfBounds = (point: PointData): boolean => {
         const [northWest, southEast] = getMapBounds();
         const p = point.pos;
-        return p.lat < northWest.lat || p.lng < northWest.lng || p.lat > southEast.lat || p.lng > southEast.lng
+        return p.lat > northWest.lat || p.lng < northWest.lng || p.lat < southEast.lat || p.lng > southEast.lng
     }
 
     const getPerformancePath = (path: RideData, precisionLength: number): RideData => {
-        const NB_POINTS_THRESHOLD = 10_000;
+        const NB_POINTS_THRESHOLD = 1_000;
         if ( path.data.length <= NB_POINTS_THRESHOLD )
-            return path;
+             return path;
 
         let currentPoint: PointData = path.data[0]
         const updated: PointData[] = [currentPoint]
+        let oob = false;
 
         for (let i = 1; i < path.data.length; i++) 
         {
@@ -83,11 +105,24 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
             const distLat = point.pos.lat - currentPoint.pos.lat; 
             const distLng = point.pos.lng - currentPoint.pos.lng; 
             const length = Math.sqrt( distLat * distLat + distLng * distLng )
-
             if ( outOfBounds(point) )
-                currentPoint = point;
+            {
+                if ( !oob )
+                {
+                    updated.push(point)
+                    oob = true;
+                }
+                
+                currentPoint = point;                
+            }
+            else if ( length <= precisionLength )
+                oob = false
             else if ( length > precisionLength )
             {
+                if ( oob )
+                    updated.push(path.data[i - 1])
+                oob = false
+
                 currentPoint = point;
                 updated.push(point)
             }
@@ -99,7 +134,7 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
     }
 
 
-    const calcPerformancePath = () => {
+    const calcPerformancePaths = () => {
         const precisionLength = getMinLength()
 
         const pathsCopy: any = [...paths]        
@@ -115,7 +150,6 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
     }
     
 
-    
     const getDataName = (measurement: Measurement): string => {
         return taskId.toString()
     }
@@ -123,7 +157,7 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
     const requestMeasurement = (measIndex: number) => {     
         if ( paths[measIndex].loaded ) return;
 
-        const meas: Measurement = Measurements[measIndex]
+        const meas: Measurement = measurements[measIndex]
         
         post( meas.query, { tripID: tripId, measurement: meas.queryMeasurement }, (res: any) => {
             console.log(res);
@@ -155,7 +189,7 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
                         title: `This trip doesn't contain data for ${meas.name}`,
                         footer: `TripId: ${tripId} | TaskId: ${taskId}`
                     } );
-                
+
                 const min = path.data[0].timestamp || 0
                 addChartData( getDataName(meas), res.data.map( (d: any) => { 
                     return { x: d.timestamp as number - min, y: d.value as number } 
@@ -165,9 +199,9 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
     }
 
     
-    useEffect( () => {
+    useEffect( () => {        
         paths.forEach( (p: any, k: number) => {
-            const include = measIndices.includes(k)
+            const include = activeMeasurements.includes(k)
             // load
             if ( include && !paths[k].loaded )
                 requestMeasurement(k)
@@ -181,10 +215,10 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
                 pathsCopy[k].fullPath = undefined;
                 setPaths(pathsCopy)
 
-                removeChartData( getDataName(Measurements[k]) )
+                removeChartData( getDataName(measurements[k]) )
             }
         })        
-    }, [measIndices] );
+    }, [activeMeasurements] );
 
 
     return (<> 
@@ -195,7 +229,7 @@ const Ride: FC<Props> = ( { tripId, taskId, measIndices, mapZoom, addChartData, 
                 : <Path 
                     path={p.path} 
                     zoom={mapZoom} 
-                    measIndex={i} 
+                    properties={measurements[i]} 
                     map={map}
                     key={`${tripId}-path-${i}`}></Path>     
         )
