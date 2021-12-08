@@ -42,7 +42,7 @@ const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {
             <Checkbox 
                 forceState={checked[n]}
                 className="ride-card-container"
-                content={`<b>${meta.TaskId}</b><br></br>${new Date(meta.Created_Date).toLocaleDateString()}`}
+                html={<div><b>{meta.TaskId}</b><br></br>{new Date(meta.Created_Date).toLocaleDateString()}</div>}
                 onClick={(isChecked) => {
                     const updated = [...checked]
                     updated[n] = isChecked;
@@ -163,7 +163,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
 
             <Checkbox 
                 className="ride-sort-cb"
-                content={`Sort ${sorted ? '▲' : '▼'}`}
+                html={<div>Sort {sorted ? '▲' : '▼'}</div>}
                 onClick={changeOrder}/>
 
             <Cards metas={metas} showMetas={showMetas} onClick={onClick} />            

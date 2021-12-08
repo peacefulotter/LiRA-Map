@@ -46,10 +46,53 @@
     margin-bottom: 7px;
 }
 
+.popup-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
 .ride-metadata-checkbox {
     width: 85%;
     margin-bottom: 5px;
     font-size: 1.1em !important;
+    padding: 10px 10px !important;
+}
+
+.checkbox-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 5px
+}
+
+.checkbox-title {
+    display: flex;
+    align-items: center;
+}
+
+.edit-meas-btn {
+    width: 23px;
+    height: 23px;
+    margin-right: 3px;
+    padding: 0px !important;
+    border-radius: 100px !important;
+    background: rgba(85, 85, 97, 0.5) !important;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.edit-meas-btn:hover {
+    stroke-width: 2;
+}
+
+.edit-meas-btn:active {
+    width: 20px;
+    height: 20px;
+    padding: 1.5px 0px !important;
 }
 
 .md-checkbox-add {

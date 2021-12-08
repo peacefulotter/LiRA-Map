@@ -64,7 +64,7 @@ app.get("/test", async (req: any, res: any) => {
 
 app.get("/login",(req,res) => {
   console.log("[GET /login]");
-  const body = req.query;  
+  const body = req.query;
   const user = body.username;
   const email = body.email;
   const pass = body.password;

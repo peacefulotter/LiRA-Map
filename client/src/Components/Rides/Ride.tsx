@@ -11,6 +11,7 @@ import Path from "./Path";
 
 import { post } from '../../assets/fetch'
 import '../../css/road.css'
+import { request } from "https";
 
 
 type Props = {
@@ -29,17 +30,26 @@ type Path = {
     fullPath: RideData | undefined
 }
 
+const ZOOMS: { [key: number]: number } = {
+    12: 3_000,
+    13: 5_000,
+    14: 10_000,
+    15: 15_000,
+    16: 30_000,
+}
+
+const getEmptyPath = (): Path => {
+    return {
+        loaded: false,
+        path: undefined,
+        fullPath: undefined,
+    }
+}
+
 const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, mapZoom, addChartData, removeChartData } ) => {
-    // TODO: define types for the state
     const [paths, setPaths] = useState<Path[]>(
-        measurements.map((m: Measurement) => {
-            return {
-                loaded: false,
-                path: undefined,
-                fullPath: undefined,
-            }
-        })
-    )    
+        measurements.map(getEmptyPath)
+    )  
 
     const popup = usePopup()
     
@@ -57,20 +67,6 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         const bounds = map.getBounds();
         return [bounds.getNorthWest(), bounds.getSouthEast()]
     }
-
-    const ZOOMS: { [key: number]: number } = {
-        12: 3_000,
-        13: 5_000,
-        14: 10_000,
-        15: 15_000,
-        16: 30_000,
-    }
-
-    // 12 -> 3_000
-    // 13 -> 5_000
-    // 14 -> 10_000
-    // 15 -> 15_000
-    // 16 -> 30_000
 
     const getMinLength = () => {
         const [northWest, southEast] = getMapBounds();
@@ -154,8 +150,8 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         return taskId.toString()
     }
     
-    const requestMeasurement = (measIndex: number) => {     
-        if ( paths[measIndex].loaded ) return;
+    const requestMeasurement = (pathsCopy: any[], measIndex: number) => {     
+        if ( paths[measIndex] !== undefined && paths[measIndex].loaded ) return;
 
         const meas: Measurement = measurements[measIndex]
         
@@ -167,7 +163,6 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
             } )
             const path: RideData = { data: latLngData, minValue: res.minValue, maxValue: res.maxValue, minTime: res.minTime, maxTime: res.maxTime }
             
-            const pathsCopy: any = [...paths]
             const precisionLength = getMinLength()
             const performancePath = getPerformancePath(path, precisionLength)
             
@@ -199,12 +194,18 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
     }
 
     
-    useEffect( () => {        
+    useEffect( () => {
+        // when adding a new measurement
+        console.log(measurements.length, paths.length);
+        
+        if ( measurements.length > paths.length )
+            requestMeasurement([...paths, getEmptyPath()], paths.length)
+                  
         paths.forEach( (p: any, k: number) => {
             const include = activeMeasurements.includes(k)
             // load
             if ( include && !paths[k].loaded )
-                requestMeasurement(k)
+                requestMeasurement([...paths], k)
                 
             // unload
             else if ( !include && paths[k].loaded )

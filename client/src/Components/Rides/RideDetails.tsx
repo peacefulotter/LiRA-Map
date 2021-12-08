@@ -1,14 +1,16 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import { FiSettings } from 'react-icons/fi'
 
-import MetaData from "./MetaData";
+import { Measurement, addMeasurement } from './Measurements'
+import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
+import MetaData from "./MetaData";
 
 import { RideMeta } from '../../assets/models'
-import { Measurement } from './Measurements'
+import Renderers from "../../assets/renderers";
 
 import '../../css/ridedetails.css'
-import AddMeasBtn from "./AddMeasBtn";
-import Renderers from "../../assets/renderers";
+
 
 type Props = {
 	measurements: Measurement[];
@@ -19,6 +21,41 @@ type Props = {
 
 const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measurementClick } ) => {
 
+	const [ addChecked, setAddChecked ] = useState<boolean>(false)
+	
+	const popup = useMeasPopup()
+
+	const openEditMeasurement = (e: any, i: number) => {
+		e.preventDefault()
+		e.stopPropagation()	
+
+		popup.fire( (newMeasurement: Measurement | undefined ) => {
+			console.log(i, newMeasurement);
+		} )
+	}
+
+	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
+		return <div className="checkbox-container">
+			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {Renderers[m.rendererIndex].name}</p></div>
+			<FiSettings className="edit-meas-btn btn" onClick={(e) => openEditMeasurement(e, i)} strokeWidth={1}/>
+		</div>
+	}
+
+	const showAddMeasurement = () => {
+		setAddChecked(true) 
+		popup.fire( (newMeasurement: Measurement | undefined ) => {
+			setAddChecked(false) 
+
+			if ( newMeasurement === undefined ) return;
+
+			// update the state in RideDetails
+			setMeasurements( prev => [...prev, newMeasurement])
+			// and add the measurement to the measurements.json file
+			addMeasurement(newMeasurement);
+
+		} )
+	}
+
     return (
 		<div className="meta-data">
 			{
@@ -26,12 +63,17 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 					<Checkbox 
 						key={`ride-md-checkbox-${i}`}
 						className='ride-metadata-checkbox'
-						content={`${m.name} <p className="checkbox-subtitle">- ${Renderers[m.rendererIndex].name}</p>`}
+						html={getMeasurementsContent(m, i)}
 						onClick={(isChecked) => measurementClick(i, isChecked)} />
 				)
 			}
 
-			<AddMeasBtn setMeasurements={setMeasurements}/>
+			<Checkbox 
+				className='ride-metadata-checkbox md-checkbox-add'
+				html={<div>+</div>}
+				forceState={addChecked}
+				onClick={showAddMeasurement} />
+			
 			
 			{ metas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`ride-md-${meta.TaskId}-${i}`}></MetaData>

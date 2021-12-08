@@ -4,14 +4,14 @@ import JsxParser from 'react-jsx-parser';
 interface Props {
 	forceState?: boolean;
 	className: string;
-	content: any;
+	html: JSX.Element;
   	onClick: (isChecked: boolean) => void;
 }
 
 const Checkbox = (props: Props) => {
-	const { forceState, className, content, onClick } = props;
+	const { forceState, className, html, onClick } = props;
   	const [ isChecked, setChecked ] = useState<boolean>(forceState || false)	
-
+	  	
   	return (
         <div 
             className={`${className} btn ${(forceState === undefined ? isChecked : forceState) ? 'btn-checked' : ''}`} 
@@ -20,7 +20,7 @@ const Checkbox = (props: Props) => {
 				onClick( update ); 
 				setChecked( update ); 
 			}}>
-            <JsxParser jsx={content}></JsxParser>
+			{html}
         </div>
   	);
 };

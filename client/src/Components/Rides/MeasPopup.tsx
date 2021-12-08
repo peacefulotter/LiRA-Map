@@ -6,15 +6,18 @@ import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
 import Renderers, { Renderer } from "../../assets/renderers";
 import { addMeasurement, Measurement } from "./Measurements";
+import { TwitterPicker, Color, ColorResult } from 'react-color';
 
 interface PopupWrapperProps {
     updateName: (val: string) => void;
     updateTag: (val: string) => void;
     updateSelected: (val: number) => void;
+    updateColor: (val: string) => void;
 }
 
-const PopupWrapper = ( { updateName, updateTag, updateSelected }: PopupWrapperProps ) => {
+const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor }: PopupWrapperProps ) => {
 
+    const [ color, setColor ] = useState<Color>()
     const [selected, setSelected] = useState<number>(-1);
 
     const changeName = (e: any) => {                
@@ -31,7 +34,12 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected }: PopupWrapperPr
         updateSelected( update )  
     }
 
-    return <div>    
+    const changeColor = (color: ColorResult) => {
+        setColor(color.hex);
+        updateColor(color.hex);
+    }
+
+    return <div className="popup-wrapper">    
         <input className="sweetalert-input" placeholder="Name.." type='text' onChange={changeName}/>
         <input className="sweetalert-input" placeholder="Tag.." type='text' onChange={changeTag}/>
         <div className="sweetalert-checkboxes">
@@ -39,62 +47,51 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected }: PopupWrapperPr
                 <Checkbox 
                     key={`sweetalert-checkbox-${i}`}
                     className='ride-metadata-checkbox'
-                    content={val.name}
+                    html={<div>{val.name}</div>}
                     forceState={selected === i}
                     onClick={(isChecked) => changeSelect(i, isChecked)} />
             ) }
         </div>
+        <TwitterPicker color={color} onChangeComplete={changeColor} triangle={"hide"}/>
     </div>
 }
 
-interface AddMeasBtnProps {
-    setMeasurements: React.Dispatch<React.SetStateAction<Measurement[]>>;
-}
-
-const AddMeasBtn: FC<AddMeasBtnProps> = ( { setMeasurements } ) => {
-
-    const [ checked, setChecked ] = useState<boolean>(false)
+const useMeasPopup = () => {
 
     const popup = usePopup()
 
-    useEffect( () => {
-        if ( !checked )
-            return;
-
+    return { fire: ( callback: (measurement: Measurement | undefined) => void ) => {
         let name = ''
         let tag = ''
         let selected = -1;
+        let color: string | undefined = undefined
 
         popup( {
             title: <p>Enter the name of your measurement and its tag<br/>(ex: obd.rpm, acc.xyz)</p>,
             html: <PopupWrapper 
                 updateName={(val: string) => (name = val)}
                 updateTag={(val: string) => (tag = val)}
-                updateSelected={(val: number) => (selected = val)} />,
+                updateSelected={(val: number) => (selected = val)} 
+                updateColor={(val: string) => (color = val)}/>,
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Add',
         } )
         .then( (result: any) => {
-            setChecked(false)
-
             if ( !result.isConfirmed )
-                return
+                return callback( undefined )
 
             const newMeasurement: Measurement = {
                 rendererIndex: selected,
                 query: '/trip_measurement',
                 queryMeasurement: tag,
                 name: name,
-                defaultColor: '#bb55dd',
+                defaultColor: color || '#bb55dd',
                 size: 1,
                 value: 'number'
             }
-            
-            // update the state in RideDetails
-            setMeasurements( prev => [...prev, newMeasurement])
-            // and add the measurement to the measurements.json file
-            addMeasurement(newMeasurement);
+
+            callback(newMeasurement)
     
             popup( {
                 title: <p>Measurement <b>{name}</b> added</p>,
@@ -104,16 +101,9 @@ const AddMeasBtn: FC<AddMeasBtnProps> = ( { setMeasurements } ) => {
                 timerProgressBar: true,
             } )
         })
-        
-    }, [checked] )
-    
-    
-    return <Checkbox 
-        className='ride-metadata-checkbox md-checkbox-add'
-        content={'+'}
-        forceState={checked}
-        onClick={setChecked} />
+
+    } }
 }
 
-export default AddMeasBtn;
+export default useMeasPopup;
 

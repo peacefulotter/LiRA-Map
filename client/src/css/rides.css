@@ -45,10 +45,16 @@
 }
 
 .sweetalert-checkboxes {
+    width: 110%;
     display: grid;
-    grid-template-columns: 30% 30% 30%;
-    justify-content: center;
+    grid-template-columns: 25% 25% 25%;
+    justify-content: space-evenly;
     justify-items: center;
+    margin: 20px 0px;
+}
+
+.twitter-picker {
+    background:rgba(0, 0, 0, 0.1) !important;
 }
 
 /* .leaflet-interactive {
