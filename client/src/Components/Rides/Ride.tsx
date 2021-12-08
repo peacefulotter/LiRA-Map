@@ -1,8 +1,9 @@
+
 import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
-import { RideData, PointData } from '../../assets/models'
+import { RideData, PointData, PathModel } from '../../assets/models'
 import { Measurement } from './Measurements'
 import usePopup from '../Popup'
 import { ChartData } from './useChart';
@@ -11,7 +12,10 @@ import Path from "./Path";
 
 import { post } from '../../assets/fetch'
 import '../../css/road.css'
-import { request } from "https";
+import path from "path/posix";
+
+
+const worker = new Worker('/thread.worker.js');
 
 
 type Props = {
@@ -24,21 +28,7 @@ type Props = {
     removeChartData: (dataName: string) => void;
 };
 
-type Path = {
-    loaded: boolean;
-    path: RideData | undefined
-    fullPath: RideData | undefined
-}
-
-const ZOOMS: { [key: number]: number } = {
-    12: 3_000,
-    13: 5_000,
-    14: 10_000,
-    15: 15_000,
-    16: 30_000,
-}
-
-const getEmptyPath = (): Path => {
+const getEmptyPath = (): PathModel => {
     return {
         loaded: false,
         path: undefined,
@@ -46,31 +36,66 @@ const getEmptyPath = (): Path => {
     }
 }
 
+const ZOOMS: {[key: number]: number}= {
+    12: 3_000,
+    13: 5_000,
+    14: 10_000,
+    15: 15_000,
+    16: 30_000,
+}
+
+
+interface Request {
+    type: string;
+    minLength: number;
+    bounds: object;
+}
+ 
 const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, mapZoom, addChartData, removeChartData } ) => {
-    const [paths, setPaths] = useState<Path[]>(
-        measurements.map(getEmptyPath)
-    )  
+    const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
+    const [ request, setRequest ] = useState<Request | undefined>(undefined)
 
     const popup = usePopup()
     
     const map = useMapEvents({
         zoom: (e: any) => {
-            console.log(map.getZoom());            
-            calcPerformancePaths()
+            pushRequestForAll()
         },
-        dragend: (e: any) => {
-            calcPerformancePaths()
+        dragend: (e: any) => {            
+            pushRequestForAll()
         }
     })
 
+    const submitWork = (type: string, minLength: number, bounds: object, paths: PathModel[] | undefined, path: RideData | undefined, i: number | undefined ) => {
+        worker.postMessage( { type: type, minLength: minLength, bounds: bounds, paths: paths, path: path, i: i } );
+
+    }
+
+    const pushRequest = (type: string, paths: PathModel[] | undefined, path: RideData | undefined, i: number | undefined ) => {
+        const req: Request = { type: type, minLength: getMinLength(), bounds: getMapBounds() }
+
+        if ( request === undefined )
+            submitWork(req.type, req.minLength, req.bounds, paths, path, i)
+        else
+            setRequest(req)
+    }
+
+    const pushRequestForOne = (path: RideData, i: number) => {
+        pushRequest( 'ONE', undefined, path, i )
+    }
+
+    const pushRequestForAll = () => {
+        pushRequest( 'ALL', [...paths], undefined, undefined )
+    }
+    
     const getMapBounds = () => {
         const bounds = map.getBounds();
         return [bounds.getNorthWest(), bounds.getSouthEast()]
     }
-
+    
     const getMinLength = () => {
         const [northWest, southEast] = getMapBounds();
-
+    
         let deltaLat = northWest.lat - southEast.lat
         let deltaLng = southEast.lng - northWest.lng
         const mappedZoom = Math.min(Math.max(map.getZoom(), 12), 16)
@@ -80,77 +105,49 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         return Math.sqrt( deltaLat * deltaLat + deltaLng * deltaLng ) / precision;
     }
 
-    const outOfBounds = (point: PointData): boolean => {
-        const [northWest, southEast] = getMapBounds();
-        const p = point.pos;
-        return p.lat > northWest.lat || p.lng < northWest.lng || p.lat < southEast.lat || p.lng > southEast.lng
-    }
-
-    const getPerformancePath = (path: RideData, precisionLength: number): RideData => {
-        const NB_POINTS_THRESHOLD = 1_000;
-        if ( path.data.length <= NB_POINTS_THRESHOLD )
-             return path;
-
-        let currentPoint: PointData = path.data[0]
-        const updated: PointData[] = [currentPoint]
-        let oob = false;
-
-        for (let i = 1; i < path.data.length; i++) 
-        {
-            const point = path.data[i]
-            const distLat = point.pos.lat - currentPoint.pos.lat; 
-            const distLng = point.pos.lng - currentPoint.pos.lng; 
-            const length = Math.sqrt( distLat * distLat + distLng * distLng )
-            if ( outOfBounds(point) )
-            {
-                if ( !oob )
-                {
-                    updated.push(point)
-                    oob = true;
-                }
-                
-                currentPoint = point;                
-            }
-            else if ( length <= precisionLength )
-                oob = false
-            else if ( length > precisionLength )
-            {
-                if ( oob )
-                    updated.push(path.data[i - 1])
-                oob = false
-
-                currentPoint = point;
-                updated.push(point)
-            }
-                
-        }
-
-        console.log(path.data.length, updated.length);
-        return { data: updated, minValue: path.minValue, maxValue: path.maxValue, minTime: path.minTime, maxTime: path.maxTime };
-    }
-
-
-    const calcPerformancePaths = () => {
-        const precisionLength = getMinLength()
-
-        const pathsCopy: any = [...paths]        
-
-        paths.forEach( (p: any, k: number) => {
-            if ( !p.loaded || p.fullPath === undefined )
-                return;
-            const performancePath: RideData = getPerformancePath(p.fullPath, precisionLength)
-            pathsCopy[k].path = performancePath;
-        } )
-
-        setPaths(pathsCopy)
-    }
     
-
     const getDataName = (measurement: Measurement): string => {
         return taskId.toString()
     }
     
-    const requestMeasurement = (pathsCopy: any[], measIndex: number) => {     
+
+    useEffect(() => {
+        const listener = ( { data: { type, pathsCopy, path, performancePath, index } }: any ) => {
+            console.log("here", type, pathsCopy, path, performancePath, index );
+            if ( type === 'ONE' )
+            {
+                const pathsCp = [...paths]
+                const newPath: PathModel = {
+                    loaded: true,
+                    path: performancePath,
+                    fullPath: path
+                }
+
+                if ( index < paths.length )
+                    pathsCp[index] = newPath
+                else
+                    pathsCp.push( newPath )
+
+                setPaths(pathsCp)
+            }
+            else if ( type === 'ALL')
+                setPaths(pathsCopy);
+
+            if ( request )
+            {
+                if ( request.type === 'ONE' )
+                    submitWork(request.type, request.minLength, request.bounds, undefined, undefined, undefined )
+                else if ( request.type === 'ALL' )
+                    submitWork(request.type, request.minLength, request.bounds, [...paths], undefined, undefined )
+            }
+        };
+
+        worker.addEventListener('message', listener);
+
+        return () => worker.removeEventListener('message', listener);
+    }, []);
+
+    const requestMeasurement = ( measIndex: number ) => {     
         if ( paths[measIndex] !== undefined && paths[measIndex].loaded ) return;
 
         const meas: Measurement = measurements[measIndex]
@@ -163,14 +160,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
             } )
             const path: RideData = { data: latLngData, minValue: res.minValue, maxValue: res.maxValue, minTime: res.minTime, maxTime: res.maxTime }
             
-            const precisionLength = getMinLength()
-            const performancePath = getPerformancePath(path, precisionLength)
-            
-            pathsCopy[measIndex].loaded = true;
-            pathsCopy[measIndex].path = performancePath;
-            pathsCopy[measIndex].fullPath = path;
-
-            setPaths(pathsCopy)
+            pushRequestForOne( path, measIndex )
 
             console.log("Got data for ride: ", tripId, ", length: ", path.data.length); 
             console.log("Min value", path.minValue, "Max Value", path.maxValue);
@@ -199,13 +189,13 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         console.log(measurements.length, paths.length);
         
         if ( measurements.length > paths.length )
-            requestMeasurement([...paths, getEmptyPath()], paths.length)
+            requestMeasurement(paths.length)
                   
         paths.forEach( (p: any, k: number) => {
             const include = activeMeasurements.includes(k)
             // load
             if ( include && !paths[k].loaded )
-                requestMeasurement([...paths], k)
+                requestMeasurement(k)
                 
             // unload
             else if ( !include && paths[k].loaded )

@@ -47,3 +47,9 @@ export interface RideModel {
   meta: RideMeta
 }
 
+export type PathModel = {
+  loaded: boolean;
+  path: RideData | undefined
+  fullPath: RideData | undefined
+}
+

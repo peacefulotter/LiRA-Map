@@ -8,17 +8,32 @@ import Renderers, { Renderer } from "../../assets/renderers";
 import { addMeasurement, Measurement } from "./Measurements";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
 
+interface PopupOptions {
+    name?: string,
+    tag?: string,
+    selected?: number
+    color?: string
+}
+
+interface ValidatedPopupOptions {
+    name: string,
+    tag: string,
+    selected: number
+    color: string
+}
+
 interface PopupWrapperProps {
     updateName: (val: string) => void;
     updateTag: (val: string) => void;
     updateSelected: (val: number) => void;
     updateColor: (val: string) => void;
+    defaultOptions: ValidatedPopupOptions;
 }
 
-const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor }: PopupWrapperProps ) => {
+const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, defaultOptions }: PopupWrapperProps ) => {
 
-    const [ color, setColor ] = useState<Color>()
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number>(defaultOptions.selected);
+    const [ color, setColor ] = useState<Color>(defaultOptions.color)
 
     const changeName = (e: any) => {                
         updateName(e.target.value) 
@@ -40,8 +55,8 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor }: P
     }
 
     return <div className="popup-wrapper">    
-        <input className="sweetalert-input" placeholder="Name.." type='text' onChange={changeName}/>
-        <input className="sweetalert-input" placeholder="Tag.." type='text' onChange={changeTag}/>
+        <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={defaultOptions.name} onChange={changeName}/>
+        <input className="sweetalert-input" placeholder="Tag.." type='text' defaultValue={defaultOptions.tag} onChange={changeTag}/>
         <div className="sweetalert-checkboxes">
             { Renderers.map((val: Renderer, i: number) => 
                 <Checkbox 
@@ -56,23 +71,30 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor }: P
     </div>
 }
 
+const DEFAULT_COLOR = '#bb55dd'
+
+
 const useMeasPopup = () => {
 
     const popup = usePopup()
 
-    return { fire: ( callback: (measurement: Measurement | undefined) => void ) => {
-        let name = ''
-        let tag = ''
-        let selected = -1;
-        let color: string | undefined = undefined
+    return { fire: ( callback: (measurement: Measurement | undefined) => void, options?: PopupOptions ) => {
 
+        const validatedOptions: ValidatedPopupOptions = {
+            name: options?.name || '',
+            tag: options?.tag || '',
+            selected: options?.selected || 0,
+            color: options?.color || DEFAULT_COLOR    
+        }
+        
         popup( {
             title: <p>Enter the name of your measurement and its tag<br/>(ex: obd.rpm, acc.xyz)</p>,
             html: <PopupWrapper 
-                updateName={(val: string) => (name = val)}
-                updateTag={(val: string) => (tag = val)}
-                updateSelected={(val: number) => (selected = val)} 
-                updateColor={(val: string) => (color = val)}/>,
+                defaultOptions={validatedOptions}
+                updateName={(val: string) => (validatedOptions.name = val)}
+                updateTag={(val: string) => (validatedOptions.tag = val)}
+                updateSelected={(val: number) => (validatedOptions.selected = val)} 
+                updateColor={(val: string) => (validatedOptions.color = val)}/>,
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Add',
@@ -82,11 +104,11 @@ const useMeasPopup = () => {
                 return callback( undefined )
 
             const newMeasurement: Measurement = {
-                rendererIndex: selected,
+                rendererIndex: validatedOptions.selected,
                 query: '/trip_measurement',
-                queryMeasurement: tag,
-                name: name,
-                defaultColor: color || '#bb55dd',
+                queryMeasurement: validatedOptions.tag,
+                name: validatedOptions.name,
+                defaultColor: validatedOptions.color,
                 size: 1,
                 value: 'number'
             }
@@ -94,8 +116,8 @@ const useMeasPopup = () => {
             callback(newMeasurement)
     
             popup( {
-                title: <p>Measurement <b>{name}</b> added</p>,
-                footer: `Will be drawn as ${selected}`,
+                title: <p>Measurement <b>{validatedOptions.name}</b> added / modified</p>,
+                footer: `Will be drawn as ${Renderers[validatedOptions.selected].name}`,
                 icon: 'success',
                 timer: 1500,
                 timerProgressBar: true,

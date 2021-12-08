@@ -27,11 +27,17 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 
 	const openEditMeasurement = (e: any, i: number) => {
 		e.preventDefault()
-		e.stopPropagation()	
+		e.stopPropagation()
+		
+		const m = measurements[i]
 
-		popup.fire( (newMeasurement: Measurement | undefined ) => {
-			console.log(i, newMeasurement);
-		} )
+		popup.fire( 
+			(newMeasurement: Measurement | undefined ) => {
+				if ( newMeasurement === undefined ) return;
+				setMeasurements( prev => prev.map( (m: Measurement, j: number) => i === j ? newMeasurement : m ) )
+			}, 
+			{ name: m.name, tag: m.queryMeasurement, selected: m.rendererIndex, color: m.defaultColor } 
+		)
 	}
 
 	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
