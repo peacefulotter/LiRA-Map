@@ -17,12 +17,9 @@ const useChart = ( ) => {
         const threshold = Math.ceil(data.length / MAX_NB_POINTS)
         const chartData = data.filter((val: ChartPoint, i: number) => i % threshold === 0 )
 
-        console.log(threshold, data.length, chartData.length);
-
         const updated = [...series]
         updated.push( { name: dataName, data: chartData } )
         setSeries( updated )
-        console.log(updated);
     }
 
     const removeChartData = (dataName: string) => {

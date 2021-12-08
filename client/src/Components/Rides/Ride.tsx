@@ -3,19 +3,15 @@ import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
-import { RideData, PointData, PathModel } from '../../assets/models'
 import { Measurement } from './Measurements'
-import usePopup from '../Popup'
 import { ChartData } from './useChart';
-
+import usePopup from '../Popup'
 import Path from "./Path";
 
+import { RideData, PointData, PathModel } from '../../assets/models'
 import { post } from '../../assets/fetch'
+
 import '../../css/road.css'
-import path from "path/posix";
-
-
-const worker = new Worker('/thread.worker.js');
 
 
 type Props = {
@@ -39,8 +35,8 @@ const getEmptyPath = (): PathModel => {
 const ZOOMS: {[key: number]: number}= {
     12: 3_000,
     13: 5_000,
-    14: 10_000,
-    15: 15_000,
+    14: 30_000,
+    15: 35_000,
     16: 30_000,
 }
 
@@ -53,7 +49,7 @@ interface Request {
  
 const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, mapZoom, addChartData, removeChartData } ) => {
     const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
-    const [ request, setRequest ] = useState<Request | undefined>(undefined)
+    const [request, setRequest] = useState<Request | undefined>(undefined)
 
     const popup = usePopup()
     
@@ -66,18 +62,22 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         }
     })
 
+    const worker = new Worker('/thread.worker.js');    
+
     const submitWork = (type: string, minLength: number, bounds: object, paths: PathModel[] | undefined, path: RideData | undefined, i: number | undefined ) => {
         worker.postMessage( { type: type, minLength: minLength, bounds: bounds, paths: paths, path: path, i: i } );
-
     }
 
     const pushRequest = (type: string, paths: PathModel[] | undefined, path: RideData | undefined, i: number | undefined ) => {
         const req: Request = { type: type, minLength: getMinLength(), bounds: getMapBounds() }
-
+        
         if ( request === undefined )
             submitWork(req.type, req.minLength, req.bounds, paths, path, i)
         else
+        {
             setRequest(req)
+            console.log('Queue request');
+        }
     }
 
     const pushRequestForOne = (path: RideData, i: number) => {
@@ -100,10 +100,10 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
         let deltaLng = southEast.lng - northWest.lng
         const mappedZoom = Math.min(Math.max(map.getZoom(), 12), 16)
         const precision = ZOOMS[mappedZoom];
-        console.log(precision);
         
         return Math.sqrt( deltaLat * deltaLat + deltaLng * deltaLng ) / precision;
     }
+
 
     
     const getDataName = (measurement: Measurement): string => {
@@ -111,11 +111,10 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
     }
     
 
-    useEffect(() => {
-        const listener = ( { data: { type, pathsCopy, path, performancePath, index } }: any ) => {
-            console.log("here", type, pathsCopy, path, performancePath, index );
+    useEffect(() => {        
+        worker.onmessage = ( { data: { type, pathsCopy, path, performancePath, index } }: any ) => {
             if ( type === 'ONE' )
-            {
+            {                
                 const pathsCp = [...paths]
                 const newPath: PathModel = {
                     loaded: true,
@@ -126,35 +125,30 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
                 if ( index < paths.length )
                     pathsCp[index] = newPath
                 else
-                    pathsCp.push( newPath )
+                    pathsCp.push( newPath )                
 
                 setPaths(pathsCp)
             }
-            else if ( type === 'ALL')
+            else if ( type === 'ALL') {
                 setPaths(pathsCopy);
+            }
 
             if ( request )
-            {
+            {                
                 if ( request.type === 'ONE' )
                     submitWork(request.type, request.minLength, request.bounds, undefined, undefined, undefined )
                 else if ( request.type === 'ALL' )
                     submitWork(request.type, request.minLength, request.bounds, [...paths], undefined, undefined )
             }
         };
-
-        worker.addEventListener('message', listener);
-
-        return () => worker.removeEventListener('message', listener);
-    }, []);
+    }, [worker]);
 
     const requestMeasurement = ( measIndex: number ) => {     
         if ( paths[measIndex] !== undefined && paths[measIndex].loaded ) return;
 
         const meas: Measurement = measurements[measIndex]
         
-        post( meas.query, { tripID: tripId, measurement: meas.queryMeasurement }, (res: any) => {
-            console.log(res);
-            
+        post( meas.query, { tripID: tripId, measurement: meas.queryMeasurement }, (res: any) => {            
             const latLngData = res.data.map( (d: any) => { 
                 return { pos: new LatLng(d.pos.lat, d.pos.lon), value: d.value, timestamp: d.timestamp } 
             } )
@@ -185,14 +179,13 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
 
     
     useEffect( () => {
-        // when adding a new measurement
-        console.log(measurements.length, paths.length);
-        
+        // when adding a new measurement                
         if ( measurements.length > paths.length )
             requestMeasurement(paths.length)
                   
         paths.forEach( (p: any, k: number) => {
             const include = activeMeasurements.includes(k)
+            
             // load
             if ( include && !paths[k].loaded )
                 requestMeasurement(k)

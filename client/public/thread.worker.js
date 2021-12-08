@@ -1,6 +1,5 @@
 
 
-
 const outOfBounds = (bounds, point) => {
     const [northWest, southEast] = bounds;
     const p = point.pos;
@@ -14,6 +13,8 @@ const getPerformancePath = (bounds, path, precisionLength) => {
 
     let currentPoint = path.data[0]
     const updated = [currentPoint]
+    let accValue = 0;
+    let accAmount = 0;
     let oob = false;
 
     for (let i = 1; i < path.data.length; i++) 
@@ -22,6 +23,10 @@ const getPerformancePath = (bounds, path, precisionLength) => {
         const distLat = point.pos.lat - currentPoint.pos.lat; 
         const distLng = point.pos.lng - currentPoint.pos.lng; 
         const length = Math.sqrt( distLat * distLat + distLng * distLng )
+
+        accAmount += 1;
+        accValue += point.value;
+
         if ( outOfBounds(bounds, point) )
         {
             if ( !oob )
@@ -30,10 +35,14 @@ const getPerformancePath = (bounds, path, precisionLength) => {
                 oob = true;
             }
             
-            currentPoint = point;                
+            currentPoint = point;
+            accAmount = 0;
+            accValue = 0;                
         }
         else if ( length <= precisionLength )
+        {
             oob = false
+        }
         else if ( length > precisionLength )
         {
             if ( oob )
@@ -41,7 +50,9 @@ const getPerformancePath = (bounds, path, precisionLength) => {
             oob = false
 
             currentPoint = point;
-            updated.push(point)
+            updated.push( { pos: point.pos, value: accValue / accAmount, timestamp: point.timestamp } )
+            accValue = 0;
+            accAmount = 0;
         }
             
     }
@@ -70,23 +81,20 @@ const calcPerformancePaths = (bounds, paths, precisionLength) => {
 self.addEventListener('message', ({ data }) => {
 
     let { type, paths, path, i, bounds, minLength} = data;
-    console.log(type, paths, path, i, bounds, minLength);
+
+    console.log("[worker] received", type, " for index", i);
+    console.log(type, type ==="ONE", paths, path, i, bounds, minLength);
 
     if ( type === 'ONE')
     {
-        const performancePath = getPerformancePath(bounds, path, minLength)                
+        const performancePath = getPerformancePath(bounds, path, minLength) 
+        console.log("FINISHED ONE");
         self.postMessage( { type: type, pathsCopy: paths, path: path, performancePath: performancePath, index: i } );
     }
     else if ( type === 'ALL')
     {
-        const pathsCopy = calcPerformancePaths(bounds, paths, minLength);        
+        const pathsCopy = calcPerformancePaths(bounds, paths, minLength);
+        console.log("[worker] done", type, pathsCopy);        
         self.postMessage( { type: type, pathsCopy: pathsCopy, path: undefined, performancePath: undefined, index: undefined } );
     }
 });
-
-
-self.addEventListener('exit', () => {
-    console.log('worker exiting');
-    
-    // process.exit(0);
-}, false );
