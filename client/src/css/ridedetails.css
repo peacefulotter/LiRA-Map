@@ -25,8 +25,8 @@
 }
 
 .ride-metadata-elt {
-    font-size: 1em;
-    margin-top: 13px;
+    font-size: 0.9em;
+    margin-top: 10px;
     overflow-x: hidden;
     text-overflow: ellipsis;
 }

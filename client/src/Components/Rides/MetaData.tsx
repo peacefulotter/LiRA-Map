@@ -48,7 +48,7 @@ const MetaData: FC<Props> = ( { md } ) => {
 
     const getMDelt = ( { key, title, value, isSublist }: Elt) => {                
         return <div className={`ride-metadata-elt ${isSublist ? 'sublist-elt' : ''}`} key={`metadata-${key}`}>
-            <b>{title}</b><br></br>{value} 
+            <b>{title}:</b> {value} 
         </div>
     }
 
