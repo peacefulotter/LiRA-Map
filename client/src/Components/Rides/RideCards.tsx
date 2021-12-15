@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, ReactNode } from "react";
+import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { List, ListRowRenderer } from "react-virtualized";
 
 import Checkbox from '../Checkbox';
@@ -21,7 +22,7 @@ const range = (n: number): number[] => {
 }
 
 const rangeBool = (n: number): boolean[] => { 
-    return Array.from( {length: n}, () => false );
+    return new Array(n).fill(false);
 }
 
 interface CardsProps {
@@ -33,10 +34,16 @@ interface CardsProps {
 const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {  
     
     // necessary because react-virtualized doesn't save the state of the elements that are not rendered
-    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(metas.length))
+    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(showMetas.length))
+
+    useEffect( () => {
+        if ( checked.length === 0 )
+            setChecked(rangeBool(showMetas.length))  
+    }, [showMetas])    
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
+        
         const meta = metas[n];
         return <div key={key} style={style}>
             <Checkbox 
