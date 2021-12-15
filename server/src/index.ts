@@ -30,18 +30,20 @@ app.get('/measurements', async (req: any, res: any) => {
 
 app.put('/addmeasurement', async (req: any, res: any) => {
 	const measurement = req.body.params;
-	console.log("[PUT /addmeasurement]", measurement );
   const updatedFile = [...measurements, measurement]
-  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8', () => {});
+  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
+    () => console.log('[PUT /addmeasurement] Added Measurement to the json file')
+  );
 	res.json()
 })
 
 app.put('/editmeasurement', async (req: any, res: any) => {
 	const params = req.body.params;
-	console.log("[PUT /editmeasurement]", params );
   const updatedFile = [...measurements]
-  updatedFile[params.index] = params.measurement  
-  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8', () => {});
+  updatedFile[params.index] = params.measurement
+  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
+    () => console.log('[PUT /editmeasurement] Edtited Measurement to the json file')
+  );
 	res.json()
 })
 

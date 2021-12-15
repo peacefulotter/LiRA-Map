@@ -33,7 +33,7 @@
         "rendererIndex": 3,
         "query": "/trip_measurement",
         "queryMeasurement": "orhum",
-        "name": "baba",
+        "name": "Custom",
         "defaultColor": "#f78da7",
         "size": 1,
         "value": "number"
