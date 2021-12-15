@@ -1,11 +1,11 @@
 
 
-import { FC, useState, useEffect } from "react";
+import { useState } from "react";
 
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
 import Renderers, { Renderer } from "../../assets/renderers";
-import { addMeasurement, Measurement } from "./Measurements";
+import { Measurement } from "./Measurements";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
 
 interface PopupOptions {

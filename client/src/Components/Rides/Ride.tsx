@@ -8,7 +8,7 @@ import { ChartData } from './useChart';
 import usePopup from '../Popup'
 import Path from "./Path";
 
-import { RideData, PointData, PathModel } from '../../assets/models'
+import { RideData, PathModel } from '../../assets/models'
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
@@ -19,7 +19,6 @@ type Props = {
     activeMeasurements: number[];
 	tripId: string;
     taskId: number; 
-    mapZoom: number;
     addChartData: (dataName: string, data: ChartData) => void;
     removeChartData: (dataName: string) => void;
 };
@@ -47,7 +46,7 @@ interface Request {
     bounds: object;
 }
  
-const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, mapZoom, addChartData, removeChartData } ) => {
+const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, addChartData, removeChartData } ) => {
     const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
     const [request, setRequest] = useState<Request | undefined>(undefined)
 
@@ -212,7 +211,6 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ma
                 ? <div key={`${tripId}-path-${i}`}></div> 
                 : <Path 
                     path={p.path} 
-                    zoom={mapZoom} 
                     properties={measurements[i]} 
                     map={map}
                     key={`${tripId}-path-${i}`}></Path>     

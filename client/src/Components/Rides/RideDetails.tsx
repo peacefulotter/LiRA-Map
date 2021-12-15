@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { FiSettings } from 'react-icons/fi'
 
-import { Measurement, addMeasurement } from './Measurements'
+import { Measurement, addMeasurement, editMeasurement } from './Measurements'
 import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
@@ -35,6 +35,7 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 			(newMeasurement: Measurement | undefined ) => {
 				if ( newMeasurement === undefined ) return;
 				setMeasurements( prev => prev.map( (m: Measurement, j: number) => i === j ? newMeasurement : m ) )
+				editMeasurement(newMeasurement, i)
 			}, 
 			{ name: m.name, tag: m.queryMeasurement, selected: m.rendererIndex, color: m.defaultColor } 
 		)
@@ -58,7 +59,6 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 			setMeasurements( prev => [...prev, newMeasurement])
 			// and add the measurement to the measurements.json file
 			addMeasurement(newMeasurement);
-
 		} )
 	}
 

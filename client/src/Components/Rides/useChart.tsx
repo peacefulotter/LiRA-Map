@@ -1,4 +1,4 @@
-import { useState, FC } from 'react' 
+import { useState } from 'react' 
 import Chart from "react-apexcharts";
 
 

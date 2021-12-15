@@ -72,7 +72,6 @@ const MetaData: FC<Props> = ( { md } ) => {
                             return { key: key + '-' + j, title: pos[0], value: pos[1], isSublist: true }
                         } )
                     return [ baseElt, ...mappedPos];
-                    
                 }
                 else if ( DATE_MD.includes(title))
                     return { key: key, title: title, value: formatDate(value) }

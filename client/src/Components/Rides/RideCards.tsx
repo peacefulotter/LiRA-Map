@@ -1,5 +1,4 @@
 import { FC, useEffect, useState, ReactNode } from "react";
-import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { List, ListRowRenderer } from "react-virtualized";
 
 import Checkbox from '../Checkbox';
@@ -11,10 +10,6 @@ import '../../css/ridecard.css'
 interface Props {
     metas: RideMeta[];
     onClick: (i: number, isChecked: boolean) => void;
-}
-
-const substring = (meta: RideMeta, search: string) => {
-    return meta.TaskId.toString().includes( search )
 }
 
 const range = (n: number): number[] => { 
@@ -43,7 +38,6 @@ const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
-        
         const meta = metas[n];
         return <div key={key} style={style}>
             <Checkbox 
@@ -109,7 +103,17 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     useEffect( () => {  
         const filterSearch = (): number[] => {
             return searched 
-                ? getOrderedMD().filter( (n: number) => substring(metas[n], search) ) 
+                ? getOrderedMD().filter( (n: number) => {
+                    const startStreetName: string = JSON.parse(metas[n].StartPositionDisplay).street_name
+                    const endStreetName: string = JSON.parse(metas[n].EndPositionDisplay).street_name
+                    
+                    return isNaN(parseInt(search))
+                        ? (
+                            (startStreetName !== undefined && startStreetName.includes(search)) ||
+                            (endStreetName   !== undefined && endStreetName.includes(search))
+                        )
+                        : metas[n].TaskId.toString().includes(search)
+                 } ) 
                 : getOrderedMD()
         }
 
@@ -137,8 +141,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     }
     
     const onFilterInput = (e: any) => {
-        console.log('filter rides', e.target.value);
-        
         if ( e.target.value === '')
             return clearFilter()
 

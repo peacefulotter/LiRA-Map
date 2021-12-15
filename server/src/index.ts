@@ -8,6 +8,7 @@ import { RideData, RideMeta } from "./models";
 import { getRides, getTest, getMeasurementData } from './queries'
 
 import measurements from './measurements.json';
+import fs from 'fs'
 
 const PORT = process.env.PORT || 3001;
 
@@ -27,9 +28,20 @@ app.get('/measurements', async (req: any, res: any) => {
     res.json( measurements );
 } )
 
-app.put('/measurements', async (req: any, res: any) => {
+app.put('/addmeasurement', async (req: any, res: any) => {
 	const measurement = req.body.params;
-	console.log("[PUT /measurements]", measurement );
+	console.log("[PUT /addmeasurement]", measurement );
+  const updatedFile = [...measurements, measurement]
+  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8', () => {});
+	res.json()
+})
+
+app.put('/editmeasurement', async (req: any, res: any) => {
+	const params = req.body.params;
+	console.log("[PUT /editmeasurement]", params );
+  const updatedFile = [...measurements]
+  updatedFile[params.index] = params.measurement  
+  fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8', () => {});
 	res.json()
 })
 
