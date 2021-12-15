@@ -48,7 +48,7 @@ const MetaData: FC<Props> = ( { md } ) => {
 
     const getMDelt = ( { key, title, value, isSublist }: Elt) => {                
         return <div className={`ride-metadata-elt ${isSublist ? 'sublist-elt' : ''}`} key={`metadata-${key}`}>
-            <b>{title}</b><br></br>{value} 
+            <b>{title}:</b> {value} 
         </div>
     }
 
@@ -72,7 +72,6 @@ const MetaData: FC<Props> = ( { md } ) => {
                             return { key: key + '-' + j, title: pos[0], value: pos[1], isSublist: true }
                         } )
                     return [ baseElt, ...mappedPos];
-                    
                 }
                 else if ( DATE_MD.includes(title))
                     return { key: key, title: title, value: formatDate(value) }

@@ -8,21 +8,16 @@ import Renderers from "../../assets/renderers";
 type Props = {
 	path: RideData;
     properties: Measurement;
-    zoom: number;
     map: any;
 };
 
 
-// const getWeight = (n: number): number => { return n < 17 ? (n <= 15 ? 3 : 2) : 1 }
-
-
 // FIXME: remove the useEffect and the useState
-const Path: FC<Props> = ( { properties, path, zoom, map } ) => {
+const Path: FC<Props> = ( { properties, path, map } ) => {
 
     const [p, setP] = useState<ReactElement | ReactElement[]>([]);
 
     useEffect( () => {
-        // const weight = getWeight(zoom) 
         const renderer = Renderers[properties.rendererIndex] 
         const elements: any = renderer.func(path, properties, map)
 

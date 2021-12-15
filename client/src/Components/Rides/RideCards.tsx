@@ -12,16 +12,12 @@ interface Props {
     onClick: (i: number, isChecked: boolean) => void;
 }
 
-const substring = (meta: RideMeta, search: string) => {
-    return meta.TaskId.toString().includes( search )
-}
-
 const range = (n: number): number[] => { 
     return Array.from( {length: n}, (elt, i) => i);
 }
 
 const rangeBool = (n: number): boolean[] => { 
-    return Array.from( {length: n}, () => false );
+    return new Array(n).fill(false);
 }
 
 interface CardsProps {
@@ -33,7 +29,12 @@ interface CardsProps {
 const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {  
     
     // necessary because react-virtualized doesn't save the state of the elements that are not rendered
-    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(metas.length))
+    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(showMetas.length))
+
+    useEffect( () => {
+        if ( checked.length === 0 )
+            setChecked(rangeBool(showMetas.length))  
+    }, [showMetas])    
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
@@ -102,7 +103,17 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     useEffect( () => {  
         const filterSearch = (): number[] => {
             return searched 
-                ? getOrderedMD().filter( (n: number) => substring(metas[n], search) ) 
+                ? getOrderedMD().filter( (n: number) => {
+                    const startStreetName: string = JSON.parse(metas[n].StartPositionDisplay).street_name
+                    const endStreetName: string = JSON.parse(metas[n].EndPositionDisplay).street_name
+                    
+                    return isNaN(parseInt(search))
+                        ? (
+                            (startStreetName !== undefined && startStreetName.includes(search)) ||
+                            (endStreetName   !== undefined && endStreetName.includes(search))
+                        )
+                        : metas[n].TaskId.toString().includes(search)
+                 } ) 
                 : getOrderedMD()
         }
 
@@ -130,8 +141,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     }
     
     const onFilterInput = (e: any) => {
-        console.log('filter rides', e.target.value);
-        
         if ( e.target.value === '')
             return clearFilter()
 

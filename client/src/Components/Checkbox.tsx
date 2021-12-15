@@ -1,5 +1,4 @@
 import { useState } from "react";
-import JsxParser from 'react-jsx-parser'; 
 
 interface Props {
 	forceState?: boolean;

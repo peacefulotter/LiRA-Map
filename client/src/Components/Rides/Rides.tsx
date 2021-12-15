@@ -18,8 +18,7 @@ const Rides: FC = () => {
     const [ activeMeasurements, setActiveMeasurements ] = useState<number[]>([]);
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const [ zoom, setZoom ] = useState<number>(11); // TODO: remove this?
-    const { addChartData, removeChartData, chart } = useChart()
+    const { addChartData, removeChartData, chart } = useChart()    
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -36,7 +35,7 @@ const Rides: FC = () => {
             setSelectedRides( selectedRides.filter(r => { 
                 if ( r === i )
                     removed = i;
-                return r != i
+                return r !== i
             } ) ) 
 
             removeChartData(metas[removed].TaskId.toString())
@@ -46,7 +45,7 @@ const Rides: FC = () => {
     const measurementClicked = (measurement: number, isChecked: boolean) => {        
         isChecked 
             ? setActiveMeasurements( prev => [...prev, measurement])
-            : setActiveMeasurements( prev => prev.filter(value => value != measurement))
+            : setActiveMeasurements( prev => prev.filter(value => value !== measurement))
     }
 
     // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
@@ -73,7 +72,7 @@ const Rides: FC = () => {
                             ? <div key={`ride-road-${i}`}></div>
                             : <Ride key={`ride-road-${i}`} 
                                 measurements={measurements} activeMeasurements={activeMeasurements} 
-                                tripId={meta.TripId} taskId={meta.TaskId} mapZoom={zoom} 
+                                tripId={meta.TripId} taskId={meta.TaskId}
                                 addChartData={addChartData} removeChartData={removeChartData} />
                     ) }
                 </MapContainer>

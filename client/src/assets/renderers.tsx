@@ -1,5 +1,5 @@
 
-import { FC, ReactElement } from "react";
+import { ReactElement } from "react";
 import L, { LatLng, LatLngBounds } from 'leaflet'
 import { Rectangle, Circle, Polyline, LayerGroup } from 'react-leaflet'
 import 'leaflet-hotline'

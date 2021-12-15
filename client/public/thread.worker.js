@@ -82,19 +82,16 @@ self.addEventListener('message', ({ data }) => {
 
     let { type, paths, path, i, bounds, minLength} = data;
 
-    console.log("[worker] received", type, " for index", i);
-    console.log(type, type ==="ONE", paths, path, i, bounds, minLength);
-
+    console.log("[Worker] received", type);
     if ( type === 'ONE')
     {
         const performancePath = getPerformancePath(bounds, path, minLength) 
-        console.log("FINISHED ONE");
         self.postMessage( { type: type, pathsCopy: paths, path: path, performancePath: performancePath, index: i } );
     }
     else if ( type === 'ALL')
     {
         const pathsCopy = calcPerformancePaths(bounds, paths, minLength);
-        console.log("[worker] done", type, pathsCopy);        
+        console.log("[Worker] done for ", type);        
         self.postMessage( { type: type, pathsCopy: pathsCopy, path: undefined, performancePath: undefined, index: undefined } );
     }
 });

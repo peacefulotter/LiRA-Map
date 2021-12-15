@@ -25,7 +25,11 @@ export const useMeasurements = (): [Measurement[], React.Dispatch<React.SetState
 }
 
 export const addMeasurement = (measurement: Measurement) => {
-	put('/measurements', measurement)	
+	put('/addmeasurement', measurement)	
+}
+
+export const editMeasurement = (measurement: Measurement, index: number) => {
+	put('/editmeasurement', { measurement: measurement, index: index } )	
 }
 
 export default useMeasurements;
