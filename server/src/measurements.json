@@ -37,5 +37,23 @@
         "defaultColor": "#f78da7",
         "size": 1,
         "value": "number"
+    },
+    {
+        "rendererIndex": 1,
+        "query": "/trip_measurement",
+        "queryMeasurement": "acc.xyz",
+        "name": "Abc",
+        "defaultColor": "#00d084",
+        "size": 1,
+        "value": "number"
+    },
+    {
+        "rendererIndex": 4,
+        "query": "/trip_measurement",
+        "queryMeasurement": "abc",
+        "name": "Bcd",
+        "defaultColor": "#bb55dd",
+        "size": 1,
+        "value": "number"
     }
 ]

@@ -1,31 +1,35 @@
 import { FC } from "react";
 import { MapContainer, TileLayer } from 'react-leaflet'
 
-import { RidePos } from '../assets/models'
-// import { roadStatusToCoords } from "../assets/road_utils";
+import { PathProps } from "../assets/models";
 
 import '../css/map.css'
+import Path from "./Renderers/Path";
 
 
 type Props = {
-  ridePos: RidePos;
+	paths: PathProps[]; // rides or paths
 };
 
-// TODO: remove this?
-// TODO: or generalize this: props: [CallComponent1, ...]
+const getKey = () => `path${Math.random()}`
 
-const MapWrapper: FC<Props> = ( { ridePos } ) => {    
-  return (
-    <MapContainer 
-      center={ridePos[ridePos.length / 2]} 
-      zoom={6} 
-      scrollWheelZoom={true}>
-      <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-    </MapContainer>
-  )
+const MapWrapper: FC<Props> = ( { paths } ) => { 
+	
+	console.log(paths);
+   
+	return (
+		<MapContainer 
+			preferCanvas={true}
+			center={[55.6720619937223, 12.558746337890627]} 
+			zoom={11} 
+			scrollWheelZoom={true}>
+			<TileLayer
+				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+			/>
+			{ paths.map( p => <Path key={getKey()} path={p.path} properties={p.properties} />) }
+		</MapContainer>
+  	)
 }
 
 export default MapWrapper;

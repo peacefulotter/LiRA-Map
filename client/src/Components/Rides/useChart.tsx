@@ -1,13 +1,8 @@
 import { useState } from 'react' 
 import Chart from "react-apexcharts";
+import { ChartData, ChartPoint } from '../../assets/models';
 
 
-interface ChartPoint {
-    x: number;
-    y: number;
-}
-
-export type ChartData = ChartPoint[]
 
 const useChart = ( ) => {
     const [series, setSeries] = useState<any[]>([])

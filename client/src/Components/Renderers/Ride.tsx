@@ -3,30 +3,19 @@ import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
-import { Measurement } from './Measurements'
-import { ChartData } from './useChart';
 import usePopup from '../Popup'
 import Path from "./Path";
 
-import { RideData, PathModel } from '../../assets/models'
+import { RideData, PathModel, ChartData, Measurement, PathProps } from '../../assets/models'
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
 
 
-type Props = {
-    measurements: Measurement[];
-    activeMeasurements: number[];
-	tripId: string;
-    taskId: number; 
-    addChartData: (dataName: string, data: ChartData) => void;
-    removeChartData: (dataName: string) => void;
-};
-
 const getEmptyPath = (): PathModel => {
     return {
         loaded: false,
-        path: undefined,
+        path: { data: [] },
         fullPath: undefined,
     }
 }
@@ -39,14 +28,21 @@ const ZOOMS: {[key: number]: number}= {
     16: 30_000,
 }
 
-
 interface Request {
     type: string;
     minLength: number;
     bounds: object;
 }
  
-const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, addChartData, removeChartData } ) => {
+const Ride = ( 
+    measurements: Measurement[], 
+    activeMeasurements: number[], 
+    tripId: string, 
+    taskId: number, 
+    addChartData: (dataName: string, data: ChartData) => void,
+    removeChartData: (dataName: string) => void
+): PathProps[] => {
+    
     const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
     const [request, setRequest] = useState<Request | undefined>(undefined)
 
@@ -168,7 +164,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
                         footer: `TripId: ${tripId} | TaskId: ${taskId}`
                     } );
 
-                const min = path.data[0].timestamp || 0
+                const min = path.data[0].timestamp || 0                
                 addChartData( getDataName(meas), res.data.map( (d: any) => { 
                     return { x: d.timestamp as number - min, y: d.value as number } 
                 } ) )
@@ -204,20 +200,9 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
     }, [activeMeasurements] );
 
 
-    return (<> 
-        {
-        paths.map( (p: any, i: number) => 
-            ( !p.loaded ) 
-                ? <div key={`${tripId}-path-${i}`}></div> 
-                : <Path 
-                    path={p.path} 
-                    properties={measurements[i]} 
-                    map={map}
-                    key={`${tripId}-path-${i}`}></Path>     
-        )
-        }
-        {/* { <RoutingMachine path={rmPath}></RoutingMachine> } */}
-        </>)
+    return paths
+        .filter( p => p.loaded )
+        .map( (p,i) => { return { path: p.path, properties: measurements[i] } } )
 }
 
 export default Ride;

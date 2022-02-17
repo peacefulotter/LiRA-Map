@@ -1,15 +1,15 @@
 import { FC, useState } from "react";
 import { FiSettings } from 'react-icons/fi'
 
-import { Measurement, addMeasurement, editMeasurement } from './Measurements'
 import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
-import { RideMeta } from '../../assets/models'
-import Renderers from "../../assets/renderers";
+import { Measurement, RideMeta } from '../../assets/models'
+import Renderers from "../Renderers/renderers";
 
 import '../../css/ridedetails.css'
+import { addMeasurement, editMeasurement } from "../Renderers/Measurements";
 
 
 type Props = {

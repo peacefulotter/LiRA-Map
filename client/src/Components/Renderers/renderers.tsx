@@ -2,10 +2,10 @@
 import { ReactElement } from "react";
 import L, { LatLng, LatLngBounds } from 'leaflet'
 import { Rectangle, Circle, Polyline, LayerGroup } from 'react-leaflet'
-import 'leaflet-hotline'
 
-import { RideData, PointData } from './models'
-import { Measurement } from '../Components/Rides/Measurements'
+import { RideData, PointData, createPointFunc, rendererFunc, Renderer, Measurement } from '../../assets/models'
+
+import 'leaflet-hotline'
 
 const getColor = (val: any, defaultColor: string): string => {
     if ( val < 0 )
@@ -16,11 +16,8 @@ const getColor = (val: any, defaultColor: string): string => {
     return `rgb(${Math.round(red)}, ${Math.round(green)}, 0)`
 }
 
-export type rendererFunc = (path: RideData, properties: Measurement, map: any) => any;
-type createPointFunc = (pos: LatLng, i: number, properties: Measurement) => any;
 
 /** ===== Utils Functions for the Renderers ===== **/
-
 const createPoints = ( path: RideData, properties: Measurement, func: createPointFunc ) => {
     const elementPath: ReactElement[] = [];
     for ( let i = 0; i < path.data.length; i++ ) 
@@ -120,10 +117,6 @@ const createHotpoints: rendererFunc = (path: RideData, properties: Measurement, 
         : <></>
 }
 
-export interface Renderer {
-    name: string;
-    func: rendererFunc
-}
 
 const Renderers: Renderer[] = [
     {

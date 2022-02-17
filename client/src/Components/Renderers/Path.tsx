@@ -1,21 +1,17 @@
 import { FC, ReactElement, useEffect, useState } from "react";
 
-import {  RideData } from '../../assets/models'
-import { Measurement } from './Measurements'
-import Renderers from "../../assets/renderers";
 
-
-type Props = {
-	path: RideData;
-    properties: Measurement;
-    map: any;
-};
+import Renderers from "./renderers";
+import { PathProps } from '../../assets/models'
+import { useMap } from "react-leaflet";
 
 
 // FIXME: remove the useEffect and the useState
-const Path: FC<Props> = ( { properties, path, map } ) => {
+const Path: FC<PathProps> = ( { properties, path } ) => {
 
     const [p, setP] = useState<ReactElement | ReactElement[]>([]);
+
+    const map = useMap()
 
     useEffect( () => {
         const renderer = Renderers[properties.rendererIndex] 
@@ -30,7 +26,7 @@ const Path: FC<Props> = ( { properties, path, map } ) => {
                 elements.remove(map)
         }
 
-    }, [path, properties])  
+    }, [properties, path])  
 
     return ( <> { p } </> )
 }

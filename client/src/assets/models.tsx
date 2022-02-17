@@ -2,7 +2,6 @@
 
 import { LatLng } from 'leaflet';
 
-// represents the metadata of a ride
 export interface RideMeta {
   TripId: string,
   TaskId: number, 
@@ -19,11 +18,6 @@ export interface RideMeta {
   FK_Device: string, //	"d25574dd-e9a4-4296-ae00-7dcef3aa8278"
   Created_Date: string, //		"2021-07-30T07:52:47.969Z"
   Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
-
-  // Fully_Imported: boolean, //		true
-  // Fully_RouteAnnotated: object|null, //	null
-  // Description	: string|null, //	null
-  // ChangeLog: string|null, //	null
 }
 
 export type RidePos = LatLng[];
@@ -49,7 +43,41 @@ export interface RideModel {
 
 export type PathModel = {
   loaded: boolean;
-  path: RideData | undefined
+  path: RideData
   fullPath: RideData | undefined
 }
+
+/* ==================== MEASUREMENT ==================== */
+export type Measurement = {
+	rendererIndex: number;
+	query: string;
+	queryMeasurement?: string,
+	name: string;
+	defaultColor: string;
+	size?: number;
+	value?: string;
+}
+
+/* ==================== RENDERERS ==================== */
+export type rendererFunc = (path: RideData, properties: Measurement, map: any) => any;
+export type createPointFunc = (pos: LatLng, i: number, properties: Measurement) => any;
+
+export interface Renderer {
+  name: string;
+  func: rendererFunc
+}
+
+/* ==================== PATH ==================== */
+export interface PathProps {
+  path: RideData;
+  properties: Measurement
+}
+
+/* ==================== CHART ==================== */
+export interface ChartPoint {
+  x: number;
+  y: number;
+}
+
+export type ChartData = ChartPoint[]
 

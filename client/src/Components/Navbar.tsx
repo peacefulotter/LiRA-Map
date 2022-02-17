@@ -13,7 +13,7 @@ const Rides: FC = () => {
             <div className="nav-container">
                 <div className="nav-block">
                     <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/rides">RIDES</NavLink>
-                    <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/other">OTHER</NavLink>
+                    <NavLink className="nav-tab" activeClassName="nav-tab-active" to="/ml">Machine</NavLink>
                 </div>
                 <div className="nav-block">
                     <NavLink className="nav-tab right-tab" activeClassName="nav-tab-active" to="/login">LOGIN</NavLink>

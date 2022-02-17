@@ -4,13 +4,14 @@ import { MapContainer, TileLayer } from 'react-leaflet'
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
 import useChart from "./useChart";
-import Ride from "./Ride";
+import Ride from "../Renderers/Ride";
 
 import { get } from '../../assets/fetch'
 import { RideMeta } from '../../assets/models'
 
 import '../../css/rides.css'
-import useMeasurements from "./Measurements";
+import useMeasurements from "../Renderers/Measurements";
+import MapWrapper from "../Map";
 
 
 const Rides: FC = () => {
@@ -58,24 +59,13 @@ const Rides: FC = () => {
                 metas={selectedRides.map(i => metas[i])} />
             
             <div className="map-container">
-                <MapContainer 
-                    preferCanvas={true}
-                    center={[55.6720619937223, 12.558746337890627]} 
-                    zoom={11} 
-                    scrollWheelZoom={true}>
-                    <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    { metas.map( (meta: RideMeta, i: number) =>
-                        !selectedRides.includes(i) 
-                            ? <div key={`ride-road-${i}`}></div>
-                            : <Ride key={`ride-road-${i}`} 
-                                measurements={measurements} activeMeasurements={activeMeasurements} 
-                                tripId={meta.TripId} taskId={meta.TaskId}
-                                addChartData={addChartData} removeChartData={removeChartData} />
-                    ) }
-                </MapContainer>
+                <MapWrapper paths={
+                    metas
+                        .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
+                        .flatMap( (meta: RideMeta) => Ride(
+                            measurements, activeMeasurements, meta.TripId, meta.TaskId, addChartData, removeChartData
+                        ))
+                    }/>
                 { chart }
             </div>
       </div>
