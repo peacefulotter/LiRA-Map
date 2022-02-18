@@ -45,7 +45,7 @@ const createRectangle = ( pos: LatLng, i: number, properties: Measurement ): Rea
 const createCircle = ( pos: LatLng, i: number, properties: Measurement ): ReactElement =>  {    
     return <Circle 
         center={[pos.lat, pos.lng]} 
-        radius={5} 
+        radius={properties.size ? properties.size : 4} 
         key={`${pos.lat};${pos.lng};circle;${i}`}
         pathOptions={{ color: properties.defaultColor, weight: 1 }}/>
 }

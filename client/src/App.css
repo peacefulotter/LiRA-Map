@@ -45,7 +45,7 @@ html, body {
 }
 
 .btn-checked {
-  background: var(--highlight-background) !important;
+  background: var(--highlight-background);
   color: var(--highlight-text);
 }
 

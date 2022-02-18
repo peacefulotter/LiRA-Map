@@ -1,6 +1,7 @@
 
 import express from 'express';
 import * as http from 'http';
+import fs from 'fs'
 
 import databaseQuery from './database'
 import osrmQuery from './osrm';
@@ -8,9 +9,11 @@ import osrmQuery from './osrm';
 import { RideData, RideMeta } from "./models";
 import { getRides, getTest, getMeasurementData } from './queries'
 
-import measurements from './measurements.json';
-import fs from 'fs'
 import initWebsockets from './websockets';
+import measurements from './measurements.json';
+import { writeJsonFile } from './file';
+
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -25,6 +28,14 @@ app.use(express.json({
 }))
 
 
+app.post('/push_file', async (req: any, res: any) => {
+	const { filename, content } = req.body;
+	await writeJsonFile(filename, content);
+	res.json({})
+})
+
+
+// test
 app.get('/a', async (req: any, res: any) => {
 	const r = await databaseQuery<any>( async (db: any, args: any) => {
 		const tripid = '2857262b-71db-49df-8db6-a042987bf0eb'

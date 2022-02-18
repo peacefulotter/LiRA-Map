@@ -1,20 +1,23 @@
 import { FC, useEffect, useState } from "react";
 import { PathProps } from "../../assets/models";
-import { Client } from '@stomp/stompjs';
 
 import MapWrapper from "../Map";
+import Checkbox from "../Checkbox";
 
 import "../../css/ml.css";
-import Checkbox from "../Checkbox";
 
 const brokerURL = "ws://localhost:3001/ws"
 
+
+const range = (n: number): boolean[] => { 
+    return Array.from( {length: n}, (elt, i) => true);
+}
 
 type PathsMap = {[key: string]: PathProps}
 
 const ML: FC = () => {
     const [paths, setPaths] = useState<PathsMap>({});
-    const [selectedPaths, setSelectedPaths] = useState<number[]>([])
+    const [selectedPaths, setSelectedPaths] = useState<boolean[]>([])
 
     useEffect(() => {
         const ws = new WebSocket(brokerURL);
@@ -28,28 +31,47 @@ const ML: FC = () => {
             const notif = JSON.parse(payload.data);
             console.log('received:', notif);
             
-            if ( notif.type === 'filechange' )
+            if ( notif.type === 'renamed' || notif.type === 'changed' )
             {
+                const pathProps = JSON.parse(notif.data)
                 const temp = {...paths}
-                temp[notif.filename] = notif.data
+                temp[notif.filename] = pathProps
                 setPaths(temp);
+            }
+            else if ( notif.type === 'CONNECTED' )
+            {
+                const temp: any = {}
+                for ( const file of notif.files )
+                {
+                    temp[file.filename] = file.data;
+                }
+                setPaths(temp);
+                setSelectedPaths(range(notif.files.length))
+                console.log(temp);
+                
             }
         };
     }, [])
 
     const onClick = (i: number) => () => {
-        console.log(i);
-        
-        // add or remove
-        // setSelectedPaths(  )
+        const temp = [...selectedPaths]
+        temp[i] = !temp[i]
+        setSelectedPaths(temp)
     }
 
     return (
         <div className="ml-wrapper">
-            {/* <MapWrapper paths={Object.values(paths)} /> */}
-            { Object.keys(paths).map( (filename, i) => 
-                <Checkbox className="filename-checkbox" html={<div>{filename}</div>} onClick={onClick(i)}/>
-            ) }
+            <MapWrapper paths={Object.values(paths).filter((elt, i) => selectedPaths[i])} />
+            <div className="ml-checkboxes">
+                { Object.keys(paths).map( (filename, i) => 
+                    <Checkbox 
+                        key={`ml-${Math.random()}`} 
+                        forceState={selectedPaths[i]}
+                        className="btn ml-checkbox" 
+                        html={<div>{filename}</div>} 
+                        onClick={onClick(i)}/>
+                ) }
+            </div>
         </div>
     );
 }

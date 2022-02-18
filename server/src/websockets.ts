@@ -1,51 +1,29 @@
-import fs, { watch } from 'fs'
-import { readFile } from 'fs/promises'
-import { promisify } from 'util';
 import { WebSocketServer } from 'ws';
+import { readJsonDir, watchJsonDir } from './file';
 
-const readdir = promisify( require( 'fs' ).readdir )
-const watchDir = './json/'
-
-const readAllFiles = async () => {
-    const res = []
-    const files = await readdir( watchDir )
-    for ( const filename of files )
-    {
-        const buffer = await readFile(watchDir + filename)
-        const data = JSON.parse(buffer.toString('utf8', 0, buffer.length))
-        res.push( { filename, data } )
-    }
-    console.log(res);
-    
-    return res;
-}
 
 const initWebsockets = async (server: any) => {
 
     const wss = new WebSocketServer( { server } );
 
     wss.on('connection', async ws => {
-        
+
         ws.on('message', data => {
             console.log('received: ', data);
         });
-      
+
         const payload = JSON.stringify( {
-            type: 'CONNECTED', 
-            files: await readAllFiles()
+            type: 'CONNECTED',
+            files: await readJsonDir()
         } )
         ws.send( payload );
     });
 
 
-    fs.watch(watchDir, (eventType, filename) => {
-        console.log(filename);
-
-        fs.readFile( watchDir + filename, 'utf8' , (err, data) => {
-            if (err) return console.error(err)
-            const notif = JSON.stringify( { type: 'filechange', filename, data } )
-            wss.clients.forEach( client => client.send(notif))
-        })
+    watchJsonDir( (eventType: string, filename: string, data: string) => {
+        console.log(eventType);
+        const notif = JSON.stringify( { type: eventType, filename, data } )
+        wss.clients.forEach( client => client.send(notif))
     })
 
 }
