@@ -6,12 +6,15 @@
 
 .ml-checkboxes {
     position: absolute;
-    top: 100px;
-    left: 50px;
+    top: 140px;
+    left: 20px;
     display: flex;
     flex-direction: column;
-    row-gap: 30px;
+    row-gap: 10px;
     z-index: 999999;
+    width: 200px;
+    max-height: 83vh;
+    overflow-y: scroll;
 }
 
 .ml-checkbox {

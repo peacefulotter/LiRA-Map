@@ -1,12 +1,11 @@
 
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
 import usePopup from '../Popup'
-import Path from "./Path";
 
-import { RideData, PathModel, ChartData, Measurement, PathProps } from '../../assets/models'
+import { RideData, PathModel, ChartData, Measurement } from '../../assets/models'
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
@@ -34,14 +33,16 @@ interface Request {
     bounds: object;
 }
  
-const Ride = ( 
+const Ride = ( {
+    measurements, activeMeasurements, tripId, taskId, addChartData, removeChartData 
+}: {
     measurements: Measurement[], 
     activeMeasurements: number[], 
     tripId: string, 
     taskId: number, 
     addChartData: (dataName: string, data: ChartData) => void,
     removeChartData: (dataName: string) => void
-): PathProps[] => {
+} ) => {
     
     const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
     const [request, setRequest] = useState<Request | undefined>(undefined)
@@ -197,12 +198,12 @@ const Ride = (
                 removeChartData( getDataName(measurements[k]) )
             }
         })        
-    }, [activeMeasurements] );
+    }, [measurements, activeMeasurements, getDataName, paths, removeChartData, requestMeasurement] );
 
 
     return paths
-        .filter( p => p.loaded )
-        .map( (p,i) => { return { path: p.path, properties: measurements[i] } } )
+            .filter( p => p.loaded )
+            .map( (p,i) => { return { path: p.path, properties: measurements[i] } } )
 }
 
 export default Ride;

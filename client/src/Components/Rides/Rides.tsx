@@ -1,17 +1,16 @@
 import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer } from 'react-leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
 import useChart from "./useChart";
-import Ride from "../Renderers/Ride";
 
+import Ride from "../Renderers/Ride";
 import { get } from '../../assets/fetch'
 import { RideMeta } from '../../assets/models'
-
-import '../../css/rides.css'
 import useMeasurements from "../Renderers/Measurements";
 import MapWrapper from "../Map";
+
+import '../../css/rides.css'
 
 
 const Rides: FC = () => {
@@ -59,13 +58,22 @@ const Rides: FC = () => {
                 metas={selectedRides.map(i => metas[i])} />
             
             <div className="map-container">
-                <MapWrapper paths={
-                    metas
-                        .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
-                        .flatMap( (meta: RideMeta) => Ride(
-                            measurements, activeMeasurements, meta.TripId, meta.TaskId, addChartData, removeChartData
-                        ))
-                    }/>
+                <MapWrapper>
+                    {
+                        metas
+                            .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
+                            .flatMap( (meta: RideMeta) => Ride( {
+                                measurements: measurements,
+                                activeMeasurements: activeMeasurements,
+                                tripId: meta.TripId,
+                                taskId: meta.TaskId,
+                                addChartData: addChartData,
+                                removeChartData: removeChartData
+                            } )
+                        )
+                    }
+                </MapWrapper>
+                    
                 { chart }
             </div>
       </div>

@@ -6,17 +6,11 @@ import { PathProps } from "../assets/models";
 import '../css/map.css'
 import Path from "./Renderers/Path";
 
+const MapWrapper = ( props : any ) => { 
 
-type Props = {
-	paths: PathProps[]; // rides or paths
-};
-
-const getKey = () => `path${Math.random()}`
-
-const MapWrapper: FC<Props> = ( { paths } ) => { 
+	const { children } = props;
+	console.log(children);
 	
-	console.log(paths);
-   
 	return (
 		<MapContainer 
 			preferCanvas={true}
@@ -27,7 +21,7 @@ const MapWrapper: FC<Props> = ( { paths } ) => {
 				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			{ paths.map( p => <Path key={getKey()} path={p.path} properties={p.properties} />) }
+			{ children.map( (child: PathProps) => <Path key={`path${Math.random()}`} path={child.path} properties={child.properties}/>) }
 		</MapContainer>
   	)
 }

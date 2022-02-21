@@ -14,14 +14,14 @@ const initWebsockets = async (server: any) => {
 
         const payload = JSON.stringify( {
             type: 'CONNECTED',
-            files: await readJsonDir()
+            data: await readJsonDir()
         } )
         ws.send( payload );
     });
 
 
     watchJsonDir( (eventType: string, filename: string, data: string) => {
-        console.log(eventType);
+        console.log('Sending notif', eventType, 'from', filename, 'to all clients');
         const notif = JSON.stringify( { type: eventType, filename, data } )
         wss.clients.forEach( client => client.send(notif))
     })

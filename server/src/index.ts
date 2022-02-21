@@ -31,7 +31,7 @@ app.use(express.json({
 app.post('/push_file', async (req: any, res: any) => {
 	const { filename, content } = req.body;
 	await writeJsonFile(filename, content);
-	res.json({})
+	res.json({status: 'ok'})
 })
 
 

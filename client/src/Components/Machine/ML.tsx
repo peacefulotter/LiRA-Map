@@ -5,6 +5,7 @@ import MapWrapper from "../Map";
 import Checkbox from "../Checkbox";
 
 import "../../css/ml.css";
+import Path from "../Renderers/Path";
 
 const brokerURL = "ws://localhost:3001/ws"
 
@@ -28,25 +29,25 @@ const ML: FC = () => {
         };
 
         ws.onmessage = payload => {
-            const notif = JSON.parse(payload.data);
-            console.log('received:', notif);
+            console.log(payload);
+            const { type, filename, data } = JSON.parse(payload.data);
+            console.log('received:', type, filename, data);
             
-            if ( notif.type === 'renamed' || notif.type === 'changed' )
+            if ( type === 'rename' || type === 'change' )
             {
-                const pathProps = JSON.parse(notif.data)
-                const temp = {...paths}
-                temp[notif.filename] = pathProps
+                const pathProps = JSON.parse(data)
+                const temp = { ...paths, [filename]: pathProps }
                 setPaths(temp);
             }
-            else if ( notif.type === 'CONNECTED' )
+            else if ( type === 'CONNECTED' )
             {
                 const temp: any = {}
-                for ( const file of notif.files )
+                for ( const file of data )
                 {
                     temp[file.filename] = file.data;
                 }
                 setPaths(temp);
-                setSelectedPaths(range(notif.files.length))
+                setSelectedPaths(range(data.length))
                 console.log(temp);
                 
             }
@@ -61,7 +62,9 @@ const ML: FC = () => {
 
     return (
         <div className="ml-wrapper">
-            <MapWrapper paths={Object.values(paths).filter((elt, i) => selectedPaths[i])} />
+            <MapWrapper>
+                { Object.values(paths).filter((elt, i) => selectedPaths[i]) }
+            </MapWrapper>
             <div className="ml-checkboxes">
                 { Object.keys(paths).map( (filename, i) => 
                     <Checkbox 

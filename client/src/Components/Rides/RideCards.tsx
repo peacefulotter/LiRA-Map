@@ -34,7 +34,7 @@ const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {
     useEffect( () => {
         if ( checked.length === 0 )
             setChecked(rangeBool(showMetas.length))  
-    }, [showMetas])    
+    }, [showMetas, checked.length])    
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
@@ -118,7 +118,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         }
 
         setShowMetas(filterSearch())
-    }, [searched, search] )
+    }, [searched, search, getOrderedMD, metas] )
 
     useEffect( () => {
         const filterDate = () => {
@@ -132,7 +132,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         }
 
         setShowMetas(filterDate())
-    }, [startMonth, endMonth, startYear, endYear])
+    }, [startMonth, endMonth, startYear, endYear, getOrderedMD, metas])
 
 
     const clearFilter = () => {

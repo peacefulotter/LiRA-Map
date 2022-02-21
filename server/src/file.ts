@@ -1,18 +1,46 @@
 import fs, { readdir } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
+import { file } from 'tmp';
 import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 
 const jsonFolder = './json/'
 
-export const watchJsonDir = async (cb: (eventType: string, filename: string, data: string) => void) => {
-    fs.watch( jsonFolder, (eventType: string, filename: string) => {
-        console.log(eventType, filename);
+interface FileChange {
+    eventType: string;
+    filename: string;
+} 
 
-        fs.readFile( jsonFolder + filename, 'utf8' , (err, data) => {
-            if (err) return cb('deleted', filename, '')
-            cb(eventType, filename, JSON.parse(data))
-        })
+type Callback = (eventType: string, filename: string, data: string) => void
+
+
+let busyWriting = false;
+const queue: FileChange[] = []
+let callCallback: (eventType: string, filename: string) => Promise<void>;
+
+const watchDirCallback = (cb: Callback) => async (eventType: string, filename: string) => {
+    const json = await readJsonFile(filename)
+    if ( json === null )
+        cb('deleted', filename, null)
+    else
+        cb(eventType, filename, json)
+}
+
+
+
+export const watchJsonDir = async (cb: Callback) => {
+    callCallback = watchDirCallback(cb);
+
+    fs.watch( jsonFolder, async (eventType: string, filename: string) => {
+        console.log('[watchJsonDir - cb]', eventType, 'from', filename)
+
+        if ( busyWriting )
+        {
+            console.log('BUSY - ADDING TO QUEUE')
+            queue.push( { eventType, filename } )
+        }
+        else
+            await callCallback(eventType, filename)
     })
 }
 
@@ -30,11 +58,28 @@ export const readJsonDir = async () => {
     return res;
 }
 
-// export const readJsonFile = async (filename: string) => {
-//     console.log('[file] Read', filename)
-// }
+export const readJsonFile = async (filename: string) => {
+    try {
+        const data = await readFile( jsonFolder + filename, 'utf8') 
+        console.log('[readJsonFile]', filename)
+        const json = JSON.parse(data)
+        return json;
+    }
+    catch {
+        return null
+    }
+}
 
 export const writeJsonFile = async (filename: string, data: any) => {
+    busyWriting = true;
     await writeFile(jsonFolder + filename, JSON.stringify(data, null, 4), 'utf8' )
-    console.log('[file] Wrote to', filename)
+    console.log(queue)
+    while ( queue.length > 0 )
+    {
+        const { eventType, filename } = queue.pop()
+        callCallback(eventType, filename)
+    }
+
+    busyWriting = false
+    console.log('[writeJsonFile]', filename)
 }
