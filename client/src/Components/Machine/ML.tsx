@@ -35,9 +35,17 @@ const ML: FC = () => {
             
             if ( type === 'rename' || type === 'change' )
             {
-                const pathProps = JSON.parse(data)
-                const temp = { ...paths, [filename]: pathProps }
+                console.log(typeof data);
+                
+                // const pathProps = typeof data === 'string' ? JSON.parse(data) : data
+                const temp = { ...paths, [filename]: data }
                 setPaths(temp);
+            }
+            else if ( type === 'deleted' )
+            {
+                const temp = { ...paths }
+                delete temp[filename];
+                setPaths(temp)
             }
             else if ( type === 'CONNECTED' )
             {

@@ -9,7 +9,7 @@ const jsonFolder = './json/'
 interface FileChange {
     eventType: string;
     filename: string;
-} 
+}
 
 type Callback = (eventType: string, filename: string, data: string) => void
 
@@ -60,7 +60,7 @@ export const readJsonDir = async () => {
 
 export const readJsonFile = async (filename: string) => {
     try {
-        const data = await readFile( jsonFolder + filename, 'utf8') 
+        const data = await readFile( jsonFolder + filename, 'utf8')
         console.log('[readJsonFile]', filename)
         const json = JSON.parse(data)
         return json;
@@ -70,9 +70,9 @@ export const readJsonFile = async (filename: string) => {
     }
 }
 
-export const writeJsonFile = async (filename: string, data: any) => {
+export const writeJsonFile = async (fn: string, data: any) => {
     busyWriting = true;
-    await writeFile(jsonFolder + filename, JSON.stringify(data, null, 4), 'utf8' )
+    await writeFile(jsonFolder + fn, JSON.stringify(data, null, 4), 'utf8' )
     console.log(queue)
     while ( queue.length > 0 )
     {
@@ -81,5 +81,5 @@ export const writeJsonFile = async (filename: string, data: any) => {
     }
 
     busyWriting = false
-    console.log('[writeJsonFile]', filename)
+    console.log('[writeJsonFile]', fn)
 }
