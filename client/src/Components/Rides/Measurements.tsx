@@ -16,9 +16,9 @@ export const useMeasurements = (): [Measurement[], React.Dispatch<React.SetState
 	const [ measurements, setMeasurements ] = useState<Measurement[]>([])
 
 	useEffect( () => {
-		get('/measurements', (data) => {
+		/*get('/measurements', (data) => {
 			setMeasurements(data);
-		})
+		})*/
 	}, [])
 
 	return [measurements, setMeasurements];

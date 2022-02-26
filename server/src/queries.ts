@@ -1,10 +1,13 @@
 
 import { RideMeta, Position3D, RideData, PointData } from './models'
-import { Knex } from 'knex'
+import knex, { Knex } from 'knex'
+import {DATABASE_CONFIG} from './database';
 
 
-const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promise<RideData> =>
+
+const fetchPositions = async (query: object ): Promise<RideData> =>
 {
+    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res = await db
         .select( [ 'lat', 'lon' ] )
         .from( { public: 'Measurements' } )
@@ -14,8 +17,9 @@ const fetchPositions = async ( db: Knex<any, unknown[]>, query: object ): Promis
     }
 }
 
-export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<Position3D[]> =>
+export const getAccelerationData = async ( [tripId]: [string] ): Promise<Position3D[]> =>
 {
+    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res = await db
             .select( [ 'message' ] )
             .from( { public: 'Measurements' } )
@@ -27,8 +31,9 @@ export const getAccelerationData = async ( db: Knex<any, unknown[]>, [tripId]: [
     } )
 }
 
-export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> =>
+export const getTest = async ([tripId]: [string] ): Promise<any> =>
 {
+    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     tripId = '2857262b-71db-49df-8db6-a042987bf0eb' // '004098a1-5146-4516-a8b7-ff98c13950aa'
     // const tag = 'acc.xyz'
     const res = await db
@@ -43,7 +48,7 @@ export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
 }
 
 
-export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<RideData> =>
+export const getMeasurementData = async ( [tripId, measurement]: [string, string] ): Promise<RideData> =>
 {
     // obd.spd
     // obd.rpm_rl
@@ -53,7 +58,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
     // obd.rpm
     // track.pos (1493)
     // rpi.temp (1493)
-
+    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res = await db
             .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
             .from( { public: 'Measurements' } )
@@ -107,7 +112,8 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
 
 
 
-export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
+export const getRides = async (): Promise<RideMeta[]> => {
+    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res: RideMeta[] = await db
         .select( '*' )
         .from( { public: 'Trips' } );

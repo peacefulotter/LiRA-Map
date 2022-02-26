@@ -26,6 +26,13 @@ export interface RideMeta {
   // ChangeLog: string|null, //	null
 }
 
+export interface MeasurementData{
+  T: string,
+  lat: number,
+  lon: number,
+  message: string
+}
+
 export type RidePos = LatLng[];
 
 export interface PointData {

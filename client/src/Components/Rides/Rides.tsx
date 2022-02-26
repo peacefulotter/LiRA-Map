@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer, useMapEvent,  } from 'react-leaflet'
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
@@ -11,6 +11,8 @@ import { RideMeta } from '../../assets/models'
 
 import '../../css/rides.css'
 import useMeasurements from "./Measurements";
+import { isPropertySignature } from "typescript";
+
 
 
 const Rides: FC = () => {
@@ -21,10 +23,13 @@ const Rides: FC = () => {
     const { addChartData, removeChartData, chart } = useChart()    
 
     // fetch the metadata of all the rides
-    useEffect( () => {
+    /*useEffect( () => {
         get( '/rides', (data: any) => setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) )
-    }, [] );
-    
+    }, [] );*/
+
+    function changeMetas(value: any){
+        setMetas(value);
+    }
 
     const showRide = (i: number, isChecked: boolean) => {   
         if ( isChecked )      
@@ -58,10 +63,10 @@ const Rides: FC = () => {
                 metas={selectedRides.map(i => metas[i])} />
             
             <div className="map-container">
-                <MapContainer 
+                <MapContainer
                     preferCanvas={true}
                     center={[55.6720619937223, 12.558746337890627]} 
-                    zoom={11} 
+                    zoom={18} 
                     scrollWheelZoom={true}>
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
