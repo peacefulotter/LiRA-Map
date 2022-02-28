@@ -59,6 +59,8 @@ const createLine = ( way: LatLng[], properties: Measurement ): ReactElement => {
 }
 
 const createHotline = (way: RideData, properties: Measurement, map: any ): any => {
+    console.log('createHotline');
+    
     // the Z value determines the color
     const coords: [number, number, number][] = way.data
         .map( (point: PointData) => [point.pos.lat, point.pos.lng, point.value || 0])

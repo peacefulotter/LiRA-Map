@@ -75,8 +75,6 @@ const Rides: FC = () => {
                         metas
                             .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
                             .flatMap( (meta: RideMeta) => {
-                                console.log('fm rides');
-                                
                                 return <Ride
                                     key={`Ride${Math.random()}`}
                                     measurements={measurements}

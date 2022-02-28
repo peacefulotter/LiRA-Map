@@ -5,6 +5,7 @@ import MapWrapper from "../Map/MapWrapper";
 import Checkbox from "../Checkbox";
 
 import "../../css/ml.css";
+import Path from "../Map/Path";
 
 const brokerURL = "ws://localhost:3001/ws"
 
@@ -66,7 +67,10 @@ const ML: FC = () => {
     return (
         <div className="ml-wrapper">
             <MapWrapper>
-                { Object.values(paths).filter((elt, i) => selectedPaths[i]) }
+                { Object.values(paths)
+                    .filter((elt, i) => selectedPaths[i])
+                    .map( p => <Path key={`MLPath${Math.random()}`} path={p.path} properties={p.properties} />) 
+                }
             </MapWrapper>
             <div className="ml-checkboxes">
                 { Object.keys(paths).map( (filename, i) => 

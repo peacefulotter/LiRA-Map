@@ -76,9 +76,10 @@ app.put('/addmeasurement', async (req: any, res: any) => {
 })
 
 app.put('/editmeasurement', async (req: any, res: any) => {
-	const params = req.body.params;
+	const { index, measurement } = req.body.params;
+	console.log("[PUT /editmeasurement] Editing measurement ", measurement, " - index", index);
 	const updatedFile = [...measurements]
-	updatedFile[params.index] = params.measurement
+	updatedFile[index] = measurement
 	fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
 		() => console.log('[PUT /editmeasurement] Edtited Measurement to the json file')
 	);

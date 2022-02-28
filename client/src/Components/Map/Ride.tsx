@@ -207,7 +207,12 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
         {
             paths
             .filter( p => p.loaded )
-            .map( (p,i) => <Path key={`path${Math.random()}`} path={p.path} properties={measurements[i]}/> )
+            .map( (p,i) => 
+                <Path 
+                    key={`path${Math.random()}`} 
+                    path={p.path} 
+                    properties={measurements[activeMeasurements[i]]}/> 
+            )
         }
         </>
     )

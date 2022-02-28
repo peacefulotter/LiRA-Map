@@ -10,7 +10,6 @@ import '../../css/map.css'
 const MapWrapper = ( props : any ) => { 
 
 	const { children } = props;
-	console.log(children);
 	
 	return (
 		<MapContainer 
