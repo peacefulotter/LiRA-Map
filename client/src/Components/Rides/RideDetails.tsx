@@ -6,10 +6,10 @@ import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
 import { Measurement, RideMeta } from '../../assets/models'
-import Renderers from "../Renderers/renderers";
+import Renderers from "../Map/renderers";
 
 import '../../css/ridedetails.css'
-import { addMeasurement, editMeasurement } from "../Renderers/Measurements";
+import { addMeasurement, editMeasurement } from "../Map/Measurements";
 
 
 type Props = {

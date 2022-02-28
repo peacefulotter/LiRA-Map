@@ -1,18 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { PathProps } from "../../assets/models";
 
-import MapWrapper from "../Map";
+import MapWrapper from "../Map/MapWrapper";
 import Checkbox from "../Checkbox";
 
 import "../../css/ml.css";
-import Path from "../Renderers/Path";
 
 const brokerURL = "ws://localhost:3001/ws"
-
-
-const range = (n: number): boolean[] => { 
-    return Array.from( {length: n}, (elt, i) => true);
-}
 
 type PathsMap = {[key: string]: PathProps}
 
@@ -29,7 +23,6 @@ const ML: FC = () => {
         };
 
         ws.onmessage = payload => {
-            console.log(payload);
             const { type, filename, data } = JSON.parse(payload.data);
             console.log('received:', type, filename, data);
             
@@ -39,6 +32,9 @@ const ML: FC = () => {
                 
                 // const pathProps = typeof data === 'string' ? JSON.parse(data) : data
                 const temp = { ...paths, [filename]: data }
+                console.log(paths);
+                
+                console.log(temp)
                 setPaths(temp);
             }
             else if ( type === 'deleted' )
@@ -55,7 +51,6 @@ const ML: FC = () => {
                     temp[file.filename] = file.data;
                 }
                 setPaths(temp);
-                setSelectedPaths(range(data.length))
                 console.log(temp);
                 
             }

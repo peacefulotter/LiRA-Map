@@ -31,10 +31,10 @@ const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {
     // necessary because react-virtualized doesn't save the state of the elements that are not rendered
     const [ checked, setChecked ] = useState<boolean[]>(rangeBool(showMetas.length))
 
-    useEffect( () => {
+    useEffect( () => {        
         if ( checked.length === 0 )
             setChecked(rangeBool(showMetas.length))  
-    }, [showMetas, checked.length])    
+    }, [checked.length])    
 
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
@@ -118,7 +118,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         }
 
         setShowMetas(filterSearch())
-    }, [searched, search, getOrderedMD, metas] )
+    }, [searched, search, metas] )
 
     useEffect( () => {
         const filterDate = () => {
@@ -132,7 +132,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         }
 
         setShowMetas(filterDate())
-    }, [startMonth, endMonth, startYear, endYear, getOrderedMD, metas])
+    }, [startMonth, endMonth, startYear, endYear, metas])
 
 
     const clearFilter = () => {

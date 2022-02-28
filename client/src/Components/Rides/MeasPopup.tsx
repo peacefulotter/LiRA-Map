@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
-import Renderers from "../Renderers/renderers";
+import Renderers from "../Map/renderers";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
 import { Measurement, Renderer } from "../../assets/models";
 

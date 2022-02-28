@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
@@ -9,6 +9,7 @@ import { RideData, PathModel, ChartData, Measurement } from '../../assets/models
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
+import Path from "./Path";
 
 
 const getEmptyPath = (): PathModel => {
@@ -32,17 +33,17 @@ interface Request {
     minLength: number;
     bounds: object;
 }
- 
-const Ride = ( {
-    measurements, activeMeasurements, tripId, taskId, addChartData, removeChartData 
-}: {
+
+interface Props {
     measurements: Measurement[], 
     activeMeasurements: number[], 
     tripId: string, 
     taskId: number, 
     addChartData: (dataName: string, data: ChartData) => void,
     removeChartData: (dataName: string) => void
-} ) => {
+}
+ 
+const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, addChartData, removeChartData } ) => {
     
     const [paths, setPaths] = useState<PathModel[]>(measurements.map(getEmptyPath))  
     const [request, setRequest] = useState<Request | undefined>(undefined)
@@ -105,9 +106,8 @@ const Ride = ( {
     const getDataName = (measurement: Measurement): string => {
         return taskId.toString()
     }
-    
 
-    useEffect(() => {        
+    useEffect(() => {      
         worker.onmessage = ( { data: { type, pathsCopy, path, performancePath, index } }: any ) => {
             if ( type === 'ONE' )
             {                
@@ -148,13 +148,14 @@ const Ride = ( {
             const latLngData = res.data.map( (d: any) => { 
                 return { pos: new LatLng(d.pos.lat, d.pos.lon), value: d.value, timestamp: d.timestamp } 
             } )
-            const path: RideData = { data: latLngData, minValue: res.minValue, maxValue: res.maxValue, minTime: res.minTime, maxTime: res.maxTime }
+            const { minValue, maxValue, minTime, maxTime } = res;
+            const path: RideData = { data: latLngData, minValue, maxValue, minTime, maxTime }
             
             pushRequestForOne( path, measIndex )
 
-            console.log("Got data for ride: ", tripId, ", length: ", path.data.length); 
-            console.log("Min value", path.minValue, "Max Value", path.maxValue);
-            console.log("Min time", path.minTime, "Max Time", path.maxTime);
+            console.log("Got data for ride: ", tripId, ", length: ", latLngData.length); 
+            console.log("Min value", minValue, "Max Value", maxValue);
+            console.log("Min time", minTime, "Max Time", maxTime);
 
             if ( meas.value )
             {
@@ -174,7 +175,7 @@ const Ride = ( {
     }
 
     
-    useEffect( () => {
+    useEffect( () => {    
         // when adding a new measurement                
         if ( measurements.length > paths.length )
             requestMeasurement(paths.length)
@@ -198,12 +199,18 @@ const Ride = ( {
                 removeChartData( getDataName(measurements[k]) )
             }
         })        
-    }, [measurements, activeMeasurements, getDataName, paths, removeChartData, requestMeasurement] );
+    }, [measurements, activeMeasurements, paths] );
 
 
-    return paths
+    return (
+        <>
+        {
+            paths
             .filter( p => p.loaded )
-            .map( (p,i) => { return { path: p.path, properties: measurements[i] } } )
+            .map( (p,i) => <Path key={`path${Math.random()}`} path={p.path} properties={measurements[i]}/> )
+        }
+        </>
+    )
 }
 
 export default Ride;

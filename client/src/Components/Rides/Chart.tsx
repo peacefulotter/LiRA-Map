@@ -1,13 +1,22 @@
-import { useState } from 'react' 
-import Chart from "react-apexcharts";
+import { FC, useEffect, useState } from 'react' 
+import { default as ApexChart } from "react-apexcharts";
 import { ChartData, ChartPoint } from '../../assets/models';
 
+export type ChartAddFunc = (dataName: string, data: ChartData) => void
+export type ChartRemFunc = (dataName: string) => void
 
+interface Props {
+    setAddChartData: React.Dispatch<React.SetStateAction<ChartAddFunc>>;
+    setRemChartData: React.Dispatch<React.SetStateAction<ChartRemFunc>>;
+}
 
-const useChart = ( ) => {
+const Chart: FC<Props> = ( { setAddChartData, setRemChartData } ) => {
     const [series, setSeries] = useState<any[]>([])
 
+
     const addChartData = (dataName: string, data: ChartData) => { 
+        console.log('adding ' + dataName);
+        
         const MAX_NB_POINTS = 5_000
         const threshold = Math.ceil(data.length / MAX_NB_POINTS)
         const chartData = data.filter((val: ChartPoint, i: number) => i % threshold === 0 )
@@ -21,6 +30,15 @@ const useChart = ( ) => {
         const updated = [...series].filter((p: any) => p.name !== dataName )        
         setSeries(updated)
     }
+
+    useEffect( () => {
+        console.log('before');
+        
+        setAddChartData(() => addChartData)
+        setRemChartData(() => removeChartData)
+        console.log('after');
+        
+    }, [])
 
     const options = {
         chart: {
@@ -55,34 +73,16 @@ const useChart = ( ) => {
     }
 
     
-    return {
-        addChartData, removeChartData,
-        chart:
-            <div className="chart-wrapper">
-                <Chart 
-                    options={options}
-                    series={series}
-                    type="line"
-                    height={'100%'} />
-            </div> 
-            
-            // <ResponsiveContainer className="chart-container" width="95%">
-            //     <LineChart data={chartData} >
-            //         <Tooltip />
-            //         <Legend />
-            //         <CartesianGrid strokeWidth="0.5" strokeDasharray="3 3"/>
-            //         <XAxis dataKey={'x'} stroke="white"/>
-            //         <YAxis stroke="white"/>
-            //         { linesData.map( (dataName: string, i: number) => {
-            //             const stroke = colors[i % colors.length]
-            //             console.log(dataName);
-            //             return <Line type="monotone" dataKey={dataName} stroke={stroke} key={`linechart-${i}`}/>
-            //         })
-            //         }
-            //     </LineChart>
-            // </ResponsiveContainer>
-    }
+    return (
+        <div className="chart-wrapper">
+            <ApexChart 
+                options={options}
+                series={series}
+                type="line"
+                height={'100%'} />
+        </div> 
+    )
 }
 
 
-export default useChart;       
+export default Chart;      

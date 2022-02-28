@@ -2,13 +2,13 @@ import { FC, useState, useEffect } from "react";
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
-import useChart from "./useChart";
+import Chart, { ChartAddFunc, ChartRemFunc } from "./Chart";
 
-import Ride from "../Renderers/Ride";
+import Ride from "../Map/Ride";
 import { get } from '../../assets/fetch'
 import { RideMeta } from '../../assets/models'
-import useMeasurements from "../Renderers/Measurements";
-import MapWrapper from "../Map";
+import useMeasurements from "../Map/Measurements";
+import MapWrapper from "../Map/MapWrapper";
 
 import '../../css/rides.css'
 
@@ -18,7 +18,9 @@ const Rides: FC = () => {
     const [ activeMeasurements, setActiveMeasurements ] = useState<number[]>([]);
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-    const { addChartData, removeChartData, chart } = useChart()    
+
+    const [addChartData, setAddChartData] = useState<ChartAddFunc>(() => {});
+    const [remChartData, setRemChartData] = useState<ChartRemFunc>(() => {});
 
     // fetch the metadata of all the rides
     useEffect( () => {
@@ -38,7 +40,7 @@ const Rides: FC = () => {
                 return r !== i
             } ) ) 
 
-            removeChartData(metas[removed].TaskId.toString())
+            remChartData(metas[removed].TaskId.toString())
         } 
     }
 
@@ -48,7 +50,17 @@ const Rides: FC = () => {
             : setActiveMeasurements( prev => prev.filter(value => value !== measurement))
     }
 
+
+    // Ride( {
+    //     measurements: measurements,
+    //     activeMeasurements: activeMeasurements,
+    //     tripId: meta.TripId,
+    //     taskId: meta.TaskId,
+    //     addChartData: addChartData,
+    //     removeChartData: removeChartData
+    // } )
     // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
+    
     return (
         <div className="rides-wrapper">
             <RideCards metas={metas} onClick={showRide}/>
@@ -62,19 +74,25 @@ const Rides: FC = () => {
                     {
                         metas
                             .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
-                            .flatMap( (meta: RideMeta) => Ride( {
-                                measurements: measurements,
-                                activeMeasurements: activeMeasurements,
-                                tripId: meta.TripId,
-                                taskId: meta.TaskId,
-                                addChartData: addChartData,
-                                removeChartData: removeChartData
+                            .flatMap( (meta: RideMeta) => {
+                                console.log('fm rides');
+                                
+                                return <Ride
+                                    key={`Ride${Math.random()}`}
+                                    measurements={measurements}
+                                    activeMeasurements={activeMeasurements}
+                                    tripId={meta.TripId}
+                                    taskId={meta.TaskId}
+                                    addChartData={addChartData}
+                                    removeChartData={remChartData} />
                             } )
-                        )
                     }
                 </MapWrapper>
                     
-                { chart }
+                <Chart 
+                    setAddChartData={setAddChartData}
+                    setRemChartData={setRemChartData}
+                    />
             </div>
       </div>
     

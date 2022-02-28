@@ -25,7 +25,7 @@ app.use(express.urlencoded({
 
 app.use(express.json({
 	type: ['application/json', 'text/plain'],
-	limit: '200mb' 
+	limit: '200mb'
 }))
 
 

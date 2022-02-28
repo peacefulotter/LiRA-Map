@@ -1,10 +1,11 @@
-import { FC } from "react";
 import { MapContainer, TileLayer } from 'react-leaflet'
 
-import { PathProps } from "../assets/models";
+import Path from "./Path";
 
-import '../css/map.css'
-import Path from "./Renderers/Path";
+import { PathProps } from "../../assets/models";
+
+import '../../css/map.css'
+
 
 const MapWrapper = ( props : any ) => { 
 
@@ -21,7 +22,7 @@ const MapWrapper = ( props : any ) => {
 				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			{ children.map( (child: PathProps) => <Path key={`path${Math.random()}`} path={child.path} properties={child.properties}/>) }
+			{ children }
 		</MapContainer>
   	)
 }

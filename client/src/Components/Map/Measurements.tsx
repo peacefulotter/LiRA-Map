@@ -5,7 +5,7 @@ import { Measurement } from '../../assets/models'
 	
 export const useMeasurements = (): [Measurement[], React.Dispatch<React.SetStateAction<Measurement[]>>] => {
 	const [ measurements, setMeasurements ] = useState<Measurement[]>([])
-
+	
 	useEffect( () => {
 		get('/measurements', (data) => {
 			setMeasurements(data);

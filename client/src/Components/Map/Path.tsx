@@ -13,7 +13,7 @@ const Path: FC<PathProps> = ( { properties, path } ) => {
 
     const map = useMap()
 
-    useEffect( () => {
+    useEffect( () => {        
         const renderer = Renderers[properties.rendererIndex] 
         const elements: any = renderer.func(path, properties, map)
 

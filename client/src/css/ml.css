@@ -19,6 +19,7 @@
 
 .ml-checkbox {
     padding: 10px !important;
+    background-color: rgba(50, 50, 50, 0.6) !important;
 }
 
 .ml-checkbox.btn-checked {
