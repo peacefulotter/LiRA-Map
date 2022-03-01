@@ -3,29 +3,29 @@
 import { LatLng } from 'leaflet';
 
 export interface RideMeta {
-  TripId: string,
-  TaskId: number, 
-  StartTimeUtc: string,	// "2021-04-27T18:11:02.223Z"
-  EndTimeUtc: string, //	"2021-04-27T18:57:18.551Z"
-  StartPositionLat: string, //	"55.683240"
-  StartPositionLng: string, //	"12.584890"
-  StartPositionDisplay: string, //	"{\"ntk_geocode_time\":48…2,\"type\":\"geocode\"}"
-  EndPositionLat: string, //	"55.711580"
-  EndPositionLng: string, //		"12.570990"
-  EndPositionDisplay: string, //		"{\"ntk_geocode_time\":31…"house_number\":\"37\"}"
-  Duration: string, //		"2021-07-30T00:46:16.327Z"
-  DistanceKm: number, //		86.0269352289332
-  FK_Device: string, //	"d25574dd-e9a4-4296-ae00-7dcef3aa8278"
-  Created_Date: string, //		"2021-07-30T07:52:47.969Z"
-  Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
+	TripId: string,
+	TaskId: number, 
+	StartTimeUtc: string,	// "2021-04-27T18:11:02.223Z"
+	EndTimeUtc: string, //	"2021-04-27T18:57:18.551Z"
+	StartPositionLat: string, //	"55.683240"
+	StartPositionLng: string, //	"12.584890"
+	StartPositionDisplay: string, //	"{\"ntk_geocode_time\":48…2,\"type\":\"geocode\"}"
+	EndPositionLat: string, //	"55.711580"
+	EndPositionLng: string, //		"12.570990"
+	EndPositionDisplay: string, //		"{\"ntk_geocode_time\":31…"house_number\":\"37\"}"
+	Duration: string, //		"2021-07-30T00:46:16.327Z"
+	DistanceKm: number, //		86.0269352289332
+	FK_Device: string, //	"d25574dd-e9a4-4296-ae00-7dcef3aa8278"
+	Created_Date: string, //		"2021-07-30T07:52:47.969Z"
+	Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
 }
 
 export type RidePos = LatLng[];
 
 export interface PointData {
-  pos: LatLng;
-  value?: number;   	// using this field depending on the measurement
-  timestamp?: number;   // using this field depending on the measurement
+	pos: LatLng;
+	value?: number;   	// using this field depending on the measurement
+	timestamp?: number;   // using this field depending on the measurement
 }
 
 export interface RideData {
@@ -37,14 +37,14 @@ export interface RideData {
 } 
 
 export interface RideModel {
-  pos: RidePos,
-  meta: RideMeta
+	pos: RidePos,
+	meta: RideMeta
 }
 
 export type PathModel = {
-  loaded: boolean;
-  path: RideData
-  fullPath: RideData | undefined
+	loaded: boolean;
+	path: RideData
+	fullPath: RideData | undefined
 }
 
 /* ==================== MEASUREMENT ==================== */
@@ -59,24 +59,36 @@ export type Measurement = {
 }
 
 /* ==================== RENDERERS ==================== */
-export type rendererFunc = (path: RideData, properties: Measurement, map: any) => any;
-export type createPointFunc = (pos: LatLng, i: number, properties: Measurement) => any;
+export type rendererFunc = (
+	path: RideData, 
+	properties: Measurement, 
+	setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+	map: any
+) => any;
+
+export type createPointFunc = (
+	pos: LatLng, 
+	i: number, 
+	properties: Measurement, 
+	setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+) => any;
 
 export interface Renderer {
-  name: string;
-  func: rendererFunc
+	name: string;
+	func: rendererFunc
 }
 
 /* ==================== PATH ==================== */
 export interface PathProps {
-  path: RideData;
-  properties: Measurement
+	path: RideData;
+	properties: Measurement
+	metadata?: {[key: string]: any}
 }
 
 /* ==================== CHART ==================== */
 export interface ChartPoint {
-  x: number;
-  y: number;
+	x: number;
+	y: number;
 }
 
 export type ChartData = ChartPoint[]

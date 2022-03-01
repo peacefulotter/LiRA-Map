@@ -18,18 +18,28 @@ const getColor = (val: any, defaultColor: string): string => {
 
 
 /** ===== Utils Functions for the Renderers ===== **/
-const createPoints = ( path: RideData, properties: Measurement, func: createPointFunc ) => {
+const createPoints = ( 
+    path: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+    func: createPointFunc 
+) => {
     const elementPath: ReactElement[] = [];
     for ( let i = 0; i < path.data.length; i++ ) 
     {
         const point: PointData = path.data[i];        
-        const elt = func( point.pos, i, properties )
+        const elt = func( point.pos, i, properties, setMarker )
         elementPath.push( elt )
     }
     return elementPath;
 }
 
-const createRectangle = ( pos: LatLng, i: number, properties: Measurement ): ReactElement => {
+const createRectangle = (
+    pos: LatLng, 
+    i: number, 
+    properties: Measurement,
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+): ReactElement => {
     const size: number = (properties.size || 1) / 10_000;
     const bounds: LatLngBounds = new LatLngBounds(
         [pos.lat - size / 2, pos.lng - size / 2],
@@ -39,26 +49,43 @@ const createRectangle = ( pos: LatLng, i: number, properties: Measurement ): Rea
     return <Rectangle 
         bounds={bounds} 
         key={`${pos.lat};${pos.lng};rectangle;${i}`}
-        pathOptions={{ color: properties.defaultColor, weight: 4 }}/>
+        pathOptions={{ color: properties.defaultColor, weight: 4 }}
+        eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}}/>
 }
 
-const createCircle = ( pos: LatLng, i: number, properties: Measurement ): ReactElement =>  {    
+const createCircle = ( 
+    pos: LatLng, 
+    i: number, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>> 
+): ReactElement =>  {    
     return <Circle 
         center={[pos.lat, pos.lng]} 
         radius={properties.size ? properties.size : 4} 
         key={`${pos.lat};${pos.lng};circle;${i}`}
-        pathOptions={{ color: properties.defaultColor, weight: 1 }}/>
+        pathOptions={{ color: properties.defaultColor, weight: 1 }}
+        eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}}/>
 }
 
-const createLine = ( way: LatLng[], properties: Measurement ): ReactElement => {
+const createLine = (
+    way: LatLng[], 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+): ReactElement => {
     const color = { color: properties.defaultColor };
     return <Polyline 
         positions={way} 
         key={`${Math.random()}-line`}
-        pathOptions={color} />
+        pathOptions={color} 
+        eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}} />
 }
 
-const createHotline = (way: RideData, properties: Measurement, map: any ): any => {
+const createHotline = (
+    way: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+    map: any
+): any => {
     console.log('createHotline');
     
     // the Z value determines the color
@@ -74,48 +101,73 @@ const createHotline = (way: RideData, properties: Measurement, map: any ): any =
             1.0: 'red'
         },
         min: way.minValue || 0,
-        max: way.maxValue || 1
+        max: way.maxValue || 1,
+        onclick: (e: any) => console.log(e.target)
     }).addTo(map);
 }
 
-const createHotpoint = (way: RideData, properties: Measurement, map: any ): any => {    
+const createHotpoint = (
+    way: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+    map: any 
+): any => {    
     return <LayerGroup children={way.data.map((p: PointData, i: number) => {
         const mappedValue: number = ((p.value || -9999) - (way.minValue || 0)) / ((way.maxValue || 1) - (way.minValue || 0))
         return <Circle 
             center={[p.pos.lat, p.pos.lng]} 
             radius={5} 
             key={`${p.pos.lat};${p.pos.lng};circle;${i}`}
-            pathOptions={{ color: getColor(mappedValue, properties.defaultColor) }}/>
+            pathOptions={{ color: getColor(mappedValue, properties.defaultColor) }}
+            eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}}  />
         })} /> 
 }
 
 
 /** ===== Renderers Function ===== **/
 
-const createCircles: rendererFunc = ( path: RideData,  properties: Measurement): ReactElement[] => {
-    return createPoints(path, properties, createCircle)
+const createCircles: rendererFunc = ( path: RideData,  properties: Measurement, setMarker: React.Dispatch<React.SetStateAction<[number, number]>>): ReactElement[] => {
+    return createPoints(path, properties, setMarker, createCircle)
 }
 
-const createRectangles: rendererFunc = ( path: RideData, properties: Measurement): ReactElement[] => {
-    return createPoints(path, properties, createRectangle)
+const createRectangles: rendererFunc = ( 
+    path: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+): ReactElement[] => {
+    return createPoints(path, properties, setMarker, createRectangle)
 }
 
-const createLines: rendererFunc = ( path: RideData, properties: Measurement ): ReactElement => {
+const createLines: rendererFunc = ( 
+    path: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>> 
+): ReactElement => {
     const way = path.data.map((p: PointData) =>  p.pos ) 
     return way.length > 0 
-        ? createLine( way, properties)
+        ? createLine(way, properties, setMarker)
         : <></>
 }
 
-const createHotlines: rendererFunc = (path: RideData, properties: Measurement, map: any): any => {
+const createHotlines: rendererFunc = (
+    path: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+    map: any
+): any => {
     return ( path.data.length > 0 )
-        ? createHotline( path, properties, map )
+        ? createHotline( path, properties, setMarker, map )
         : <></>
 }
 
-const createHotpoints: rendererFunc = (path: RideData, properties: Measurement, map: any): any => {
+const createHotpoints: rendererFunc = (
+    path: RideData, 
+    properties: Measurement, 
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
+    map: any
+): any => {
     return ( path.data.length > 0 )
-        ? createHotpoint( path, properties, map )
+        ? createHotpoint( path, properties, setMarker, map )
         : <></>
 }
 

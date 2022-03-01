@@ -11,6 +11,10 @@ const brokerURL = "ws://localhost:3001/ws"
 
 type PathsMap = {[key: string]: PathProps}
 
+const range = (n: number): boolean[] => { 
+    return Array.from( {length: n}, (elt, i) => true);
+}
+
 const ML: FC = () => {
     const [paths, setPaths] = useState<PathsMap>({});
     const [selectedPaths, setSelectedPaths] = useState<boolean[]>([])
@@ -53,7 +57,7 @@ const ML: FC = () => {
                 }
                 setPaths(temp);
                 console.log(temp);
-                
+                setSelectedPaths(range(data.length))
             }
         };
     }, [])
@@ -69,7 +73,7 @@ const ML: FC = () => {
             <MapWrapper>
                 { Object.values(paths)
                     .filter((elt, i) => selectedPaths[i])
-                    .map( p => <Path key={`MLPath${Math.random()}`} path={p.path} properties={p.properties} />) 
+                    .map( p => <Path key={`MLPath${Math.random()}`} path={p.path} properties={p.properties} metadata={p.metadata}/>) 
                 }
             </MapWrapper>
             <div className="ml-checkboxes">

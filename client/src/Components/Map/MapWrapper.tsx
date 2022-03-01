@@ -1,8 +1,5 @@
+
 import { MapContainer, TileLayer } from 'react-leaflet'
-
-import Path from "./Path";
-
-import { PathProps } from "../../assets/models";
 
 import '../../css/map.css'
 
