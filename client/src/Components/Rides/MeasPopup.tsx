@@ -4,35 +4,29 @@ import { useState } from "react";
 
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
-import Renderers from "../Map/renderers";
+import Renderers, { RendererName } from "../../assets/renderers";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
 import { Measurement, Renderer } from "../../assets/models";
+import renderers from "../../assets/renderers";
 
 interface PopupOptions {
-    name?: string,
-    tag?: string,
-    selected?: number
-    color?: string
-}
-
-interface ValidatedPopupOptions {
     name: string,
     tag: string,
-    selected: number
+    renderer: RendererName,
     color: string
 }
 
 interface PopupWrapperProps {
     updateName: (val: string) => void;
     updateTag: (val: string) => void;
-    updateSelected: (val: number) => void;
+    updateSelected: (val: RendererName) => void;
     updateColor: (val: string) => void;
-    defaultOptions: ValidatedPopupOptions;
+    defaultOptions: PopupOptions;
 }
 
 const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, defaultOptions }: PopupWrapperProps ) => {
 
-    const [selected, setSelected] = useState<number>(defaultOptions.selected);
+    const [renderer, setRenderer] = useState<RendererName>(defaultOptions.renderer);
     const [ color, setColor ] = useState<Color>(defaultOptions.color)
 
     const changeName = (e: any) => {                
@@ -43,10 +37,9 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, def
         updateTag(e.target.value) 
     } 
 
-    const changeSelect = (i: number, isChecked: boolean) => { 
-        const update = isChecked ? i : -1  
-        setSelected( update );
-        updateSelected( update )  
+    const changeSelect = (rendererName: RendererName) => (isChecked: boolean) => { 
+        setRenderer( rendererName );
+        updateSelected( rendererName )  
     }
 
     const changeColor = (color: ColorResult) => {
@@ -58,13 +51,13 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, def
         <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={defaultOptions.name} onChange={changeName}/>
         <input className="sweetalert-input" placeholder="Tag.." type='text' defaultValue={defaultOptions.tag} onChange={changeTag}/>
         <div className="sweetalert-checkboxes">
-            { Renderers.map((val: Renderer, i: number) => 
+            { Object.keys(renderers).map( (rendererName: string, i: number) => 
                 <Checkbox 
                     key={`sweetalert-checkbox-${i}`}
                     className='ride-metadata-checkbox'
-                    html={<div>{val.name}</div>}
-                    forceState={selected === i}
-                    onClick={(isChecked) => changeSelect(i, isChecked)} />
+                    html={<div style={{textTransform: "capitalize"}}>{rendererName}</div>}
+                    forceState={renderer === rendererName}
+                    onClick={changeSelect(rendererName as RendererName)} />
             ) }
         </div>
         <TwitterPicker color={color} onChangeComplete={changeColor} triangle={"hide"}/>
@@ -78,37 +71,30 @@ const useMeasPopup = () => {
 
     const popup = usePopup()
 
-    return { fire: ( callback: (measurement: Measurement | undefined) => void, options?: PopupOptions ) => {
+    return { fire: ( callback: (measurement: Measurement | undefined) => void, options: PopupOptions) => {
 
-        const validatedOptions: ValidatedPopupOptions = {
-            name: options?.name || '',
-            tag: options?.tag || '',
-            selected: options?.selected || 0,
-            color: options?.color || DEFAULT_COLOR    
-        }
-        
         popup( {
             title: <p>Enter the name of your measurement and its tag<br/>(ex: obd.rpm, acc.xyz)</p>,
-            html: <PopupWrapper 
-                defaultOptions={validatedOptions}
-                updateName={(val: string) => (validatedOptions.name = val)}
-                updateTag={(val: string) => (validatedOptions.tag = val)}
-                updateSelected={(val: number) => (validatedOptions.selected = val)} 
-                updateColor={(val: string) => (validatedOptions.color = val)}/>,
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Add',
+            html: <PopupWrapper 
+                defaultOptions={options}
+                updateName={(val: string) => (options.name = val)}
+                updateTag={(val: string) => (options.tag = val)}
+                updateSelected={(val: RendererName) => (options.renderer = val)} 
+                updateColor={(val: string) => (options.color = val)}/>,
         } )
         .then( (result: any) => {
             if ( !result.isConfirmed )
                 return callback( undefined )
 
             const newMeasurement: Measurement = {
-                rendererIndex: validatedOptions.selected,
+                renderer: options.renderer,
                 query: '/trip_measurement',
-                queryMeasurement: validatedOptions.tag,
-                name: validatedOptions.name,
-                defaultColor: validatedOptions.color,
+                queryMeasurement: options.tag,
+                name: options.name,
+                color: options.color,
                 size: 1,
                 value: 'number'
             }
@@ -116,8 +102,8 @@ const useMeasPopup = () => {
             callback(newMeasurement)
     
             popup( {
-                title: <p>Measurement <b>{validatedOptions.name}</b> added / modified</p>,
-                footer: `Will be drawn as ${Renderers[validatedOptions.selected].name}`,
+                title: <p>Measurement <b>{newMeasurement.name}</b> added / modified</p>,
+                footer: `Will be drawn as ${newMeasurement.renderer}`,
                 icon: 'success',
                 timer: 1500,
                 timerProgressBar: true,

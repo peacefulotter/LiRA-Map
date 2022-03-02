@@ -36,7 +36,9 @@ const ML: FC = () => {
                 console.log(typeof data);
                 
                 // const pathProps = typeof data === 'string' ? JSON.parse(data) : data
-                const temp = { ...paths, [filename]: data }
+                const tripName = filename.replace('.json', '')
+                
+                const temp = { ...paths, [tripName]: data }
                 console.log(paths);
                 
                 console.log(temp)
@@ -45,7 +47,8 @@ const ML: FC = () => {
             else if ( type === 'deleted' )
             {
                 const temp = { ...paths }
-                delete temp[filename];
+                const tripName = filename.replace('.json', '')
+                delete temp[tripName];
                 setPaths(temp)
             }
             else if ( type === 'CONNECTED' )
@@ -53,7 +56,8 @@ const ML: FC = () => {
                 const temp: any = {}
                 for ( const file of data )
                 {
-                    temp[file.filename] = file.data;
+                    const tripName = file.filename.replace('.json', '')
+                    temp[tripName] = file.data;
                 }
                 setPaths(temp);
                 console.log(temp);
@@ -73,7 +77,11 @@ const ML: FC = () => {
             <MapWrapper>
                 { Object.values(paths)
                     .filter((elt, i) => selectedPaths[i])
-                    .map( p => <Path key={`MLPath${Math.random()}`} path={p.path} properties={p.properties} metadata={p.metadata}/>) 
+                    .map( p => <Path 
+                        key={`MLPath${Math.random()}`} 
+                        path={p.path} 
+                        properties={p.properties} 
+                        metadata={p.metadata} />) 
                 }
             </MapWrapper>
             <div className="ml-checkboxes">

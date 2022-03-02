@@ -1,9 +1,9 @@
-import { FC, ReactElement, useEffect, useState } from "react";
+import { FC, useState } from "react";
 
 
-import Renderers from "./renderers";
 import { PathProps } from '../../assets/models'
-import { Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
+import renderers from "../../assets/renderers";
 
 
 const parseMD = (md: any) => {
@@ -18,33 +18,19 @@ const parseMD = (md: any) => {
     return md
 }
 
-// FIXME: remove the useEffect and the useState
-const Path: FC<PathProps> = ( { properties, path, metadata } ) => {
 
-    const [p, setP] = useState<ReactElement | ReactElement[]>([]);
+const Path: FC<PathProps> = ( { path, properties, metadata } ) => {
+
     const [marker, setMarker] = useState<[number, number]>([0, 0]); // marker showing metadata
-    
-    const map = useMap()
 
     const md = metadata || {}
+    const Renderer = renderers[properties.renderer]
 
-    useEffect( () => {        
-        const renderer = Renderers[properties.rendererIndex] 
-        const elements: any = renderer.func(path, properties, setMarker, map)
-
-        // use elements.remove to distinguish ReactElement(s) and leaflet object(s)        
-        if ( !elements.remove )
-            setP(elements);
-
-        return () => {
-            if ( elements.remove )
-                elements.remove(map)
-        }
-
-    }, [properties, path])  
+    if ( path.data.length === 0 || Renderer === undefined ) 
+        return <></>
 
     return ( <> 
-        { p }
+        <Renderer path={path} properties={properties} setMarker={setMarker} />
         <Marker position={marker}>
             <Popup>
                 { Object.keys(md).map(key => <><div>{key}: {parseMD(md[key])}</div><br/></> ) }

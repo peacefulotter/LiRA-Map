@@ -6,7 +6,7 @@ import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
 import { Measurement, RideMeta } from '../../assets/models'
-import Renderers from "../Map/renderers";
+import Renderers, { RendererName } from "../../assets/renderers";
 
 import '../../css/ridedetails.css'
 import { addMeasurement, editMeasurement } from "../Map/Measurements";
@@ -37,29 +37,32 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 				setMeasurements( prev => prev.map( (m: Measurement, j: number) => i === j ? newMeasurement : m ) )
 				editMeasurement(newMeasurement, i)
 			}, 
-			{ name: m.name, tag: m.queryMeasurement, selected: m.rendererIndex, color: m.defaultColor } 
+			{ name: m.name, tag: m.queryMeasurement, renderer: m.renderer, color: m.color } 
 		)
 	}
 
 	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
 		return <div className="checkbox-container">
-			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {Renderers[m.rendererIndex].name}</p></div>
+			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {m.renderer}</p></div>
 			<FiSettings className="edit-meas-btn btn" onClick={(e) => openEditMeasurement(e, i)} strokeWidth={1}/>
 		</div>
 	}
 
 	const showAddMeasurement = () => {
 		setAddChecked(true) 
-		popup.fire( (newMeasurement: Measurement | undefined ) => {
-			setAddChecked(false) 
+		popup.fire( 
+			(newMeasurement: Measurement | undefined ) => {
+				setAddChecked(false) 
 
-			if ( newMeasurement === undefined ) return;
+				if ( newMeasurement === undefined ) return;
 
-			// update the state in RideDetails
-			setMeasurements( prev => [...prev, newMeasurement])
-			// and add the measurement to the measurements.json file
-			addMeasurement(newMeasurement);
-		} )
+				// update the state in RideDetails
+				setMeasurements( prev => [...prev, newMeasurement])
+				// and add the measurement to the measurements.json file
+				addMeasurement(newMeasurement);
+			},
+			{ name: '', tag: '', renderer: RendererName.circles, color: '#bb55dd' } 
+		)
 	}
 
     return (

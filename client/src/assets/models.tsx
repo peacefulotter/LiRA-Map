@@ -1,6 +1,8 @@
 
 
 import { LatLng } from 'leaflet';
+import { FC } from 'react';
+import { RendererName } from './renderers';
 
 export interface RideMeta {
 	TripId: string,
@@ -47,41 +49,38 @@ export type PathModel = {
 	fullPath: RideData | undefined
 }
 
-/* ==================== MEASUREMENT ==================== */
-export type Measurement = {
-	rendererIndex: number;
-	query: string;
-	queryMeasurement?: string,
-	name: string;
-	defaultColor: string;
-	size?: number;
+export interface PathProperties {
+	renderer: RendererName;
+	color: string;
+	size: number;
 	value?: string;
 }
 
-/* ==================== RENDERERS ==================== */
-export type rendererFunc = (
-	path: RideData, 
-	properties: Measurement, 
-	setMarker: React.Dispatch<React.SetStateAction<[number, number]>>, 
-	map: any
-) => any;
-
-export type createPointFunc = (
-	pos: LatLng, 
-	i: number, 
-	properties: Measurement, 
-	setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
-) => any;
-
-export interface Renderer {
+export interface Measurement extends PathProperties {
+	query: string;
+	queryMeasurement: string,
 	name: string;
-	func: rendererFunc
+}
+
+/* ==================== RENDERERS ==================== */
+export type Renderer = FC<RendererProps>
+
+export interface RendererProps {
+    path: RideData, 
+    properties: PathProperties,
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+}
+
+export interface PointProps {
+    pos: LatLng, 
+    properties: PathProperties,
+    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
 }
 
 /* ==================== PATH ==================== */
 export interface PathProps {
 	path: RideData;
-	properties: Measurement
+	properties: PathProperties
 	metadata?: {[key: string]: any}
 }
 
