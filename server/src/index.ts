@@ -81,7 +81,7 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 	const updatedFile = [...measurements]
 	updatedFile[index] = measurement
 	fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
-		() => console.log('[PUT /editmeasurement] Edtited Measurement to the json file')
+		() => console.log('[PUT /editmeasurement] Edited Measurement', measurement,'to the json file')
 	);
 	res.json()
 })

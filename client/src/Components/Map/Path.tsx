@@ -25,9 +25,10 @@ const Path: FC<PathProps> = ( { path, properties, metadata } ) => {
 
     const md = metadata || {}
     const Renderer = renderers[properties.renderer]
+    console.log(Renderer)
 
     if ( path.data.length === 0 || Renderer === undefined ) 
-        return <></>
+         return <></>
 
     return ( <> 
         <Renderer path={path} properties={properties} setMarker={setMarker} />

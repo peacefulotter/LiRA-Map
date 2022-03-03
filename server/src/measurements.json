@@ -1,41 +1,41 @@
 [
     {
-        "rendererIndex": 0,
+        "renderer": "circles",
         "query": "/trip_measurement",
         "queryMeasurement": "track.pos",
         "name": "Track Pos",
-        "defaultColor": "#AA00CC"
+        "color": "#AA00CC"
     },
     {
-        "rendererIndex": 2,
+        "renderer": "line",
         "query": "/trip_measurement",
         "queryMeasurement": "acc.xyz",
         "name": "Interpolation",
-        "defaultColor": "#2288DD"
+        "color": "#2288DD"
     },
     {
-        "rendererIndex": 2,
+        "renderer": "line",
         "query": "/map_match",
         "name": "Map Matching",
-        "defaultColor": "#0000FF",
+        "color": "#0000FF",
         "size": 0.00003,
         "value": "object"
     },
     {
-        "rendererIndex": 3,
+        "renderer": "hotpoints",
         "query": "/trip_measurement",
         "queryMeasurement": "obd.rpm",
         "name": "Engine RPM",
-        "defaultColor": "#7bdcb5",
+        "color": "#7bdcb5",
         "size": 1,
         "value": "number"
     },
     {
-        "rendererIndex": 3,
+        "renderer": "hotline",
         "query": "/trip_measurement",
         "queryMeasurement": "orhum",
         "name": "Custom",
-        "defaultColor": "#f78da7",
+        "color": "#f78da7",
         "size": 1,
         "value": "number"
     }

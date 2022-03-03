@@ -94,7 +94,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
         const [northWest, southEast] = getMapBounds();
     
         let deltaLat = northWest.lat - southEast.lat
-        let deltaLng = southEast.lng - northWest.lng
+        let deltaLng = southEast.lng - northWest.lng;
         const mappedZoom = Math.min(Math.max(map.getZoom(), 12), 16)
         const precision = ZOOMS[mappedZoom];
         
@@ -121,7 +121,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
                 if ( index < paths.length )
                     pathsCp[index] = newPath
                 else
-                    pathsCp.push( newPath )                
+                    pathsCp.push( newPath )
 
                 setPaths(pathsCp)
             }

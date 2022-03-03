@@ -110,4 +110,5 @@
     color: grey;
     font-size: 0.7em;
     margin: 0px 10px;
+    text-transform: capitalize;
 }
