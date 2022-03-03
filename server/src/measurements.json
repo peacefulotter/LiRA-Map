@@ -11,13 +11,7 @@
         "query": "/trip_measurement",
         "queryMeasurement": "acc.xyz",
         "name": "Interpolation",
-<<<<<<< HEAD
         "color": "#2288DD"
-=======
-        "defaultColor": "#0693e3",
-        "size": 1,
-        "value": "number"
->>>>>>> a1e79705bdc0559cc59cb779be2aaf9b1cd022b1
     },
     {
         "renderer": "line",
@@ -46,11 +40,11 @@
         "value": "number"
     },
     {
-        "rendererIndex": 3,
+        "renderer": "hotline",
         "query": "/trip_measurement",
         "queryMeasurement": "obd.trac_cons",
         "name": "Traction Instant Consumption",
-        "defaultColor": "#00d084",
+        "color": "#00d084",
         "size": 1,
         "value": "number"
     }

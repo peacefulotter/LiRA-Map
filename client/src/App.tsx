@@ -5,9 +5,9 @@ import Navbar from './Components/Navbar'
 import Rides from './Components/Rides/Rides'
 import SignUpForm from './Components/Login/SignUpForm'
 import LiRAMain from './Components/Pages/LiraMain/LiRAMain'
+import ML from "./Components/Machine/ML";
 
 import "./App.css";
-import ML from "./Components/Machine/ML";
 
 
 
