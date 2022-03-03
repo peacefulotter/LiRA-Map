@@ -1,23 +1,21 @@
-
-
 import { FC } from "react";
-import { Circle } from 'react-leaflet'
+import { Circle } from "react-leaflet";
+import { Renderer } from "../../../assets/models";
 
-import { PointProps, RendererProps } from "../../../assets/models";
-import Points from "./Points";
+/*
+    Circle as Renderer 
+*/
 
-const Circles: FC<RendererProps> = ( props ) => {
-    return <Points {...props} PointElt={CCircle} />
-}
+const RCircle: Renderer = ( { path, properties, setSelected } ) =>  {   
+    
+    const { lat, lng } = path.data[0].pos
 
-const CCircle: FC<PointProps> = ( { pos, properties, setMarker } ) =>  {    
-    return <Circle 
-        center={[pos.lat, pos.lng]} 
+    return <Circle
+        center={[lat, lng]} 
         radius={properties.size ? properties.size : 4} 
         key={`Circle${Math.random()}`}
         pathOptions={{ color: properties.color, weight: 1 }}
-        eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}}/>
+        eventHandlers={{click: () => setSelected(0)}}/>
 }
 
-export default Circles;
-
+export default RCircle;

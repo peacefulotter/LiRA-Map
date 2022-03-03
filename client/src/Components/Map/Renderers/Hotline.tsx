@@ -6,7 +6,18 @@ import { useMap } from 'react-leaflet';
 
 import { PointData, RendererProps } from "../../../assets/models";
 
-const Hotline: FC<RendererProps> = ( { path } ) => {
+interface HotlineProps extends RendererProps {
+    palette?: any
+}
+
+
+const Hotline: FC<HotlineProps> = ( { path, palette } ) => {
+
+    const p = palette || {
+        0.0: 'green',
+        0.5: 'yellow',
+        1.0: 'red'
+    }
 
     const map = useMap()
     
@@ -17,11 +28,7 @@ const Hotline: FC<RendererProps> = ( { path } ) => {
     const hotline = L.hotline( coords, {
         weight: 4,
         outlineWidth: 0,
-        palette: {
-            0.0: 'green',
-            0.5: 'yellow',
-            1.0: 'red'
-        },
+        palette: p,
         min: path.minValue || 0,
         max: path.maxValue || 1,
         onclick: (e: any) => console.log(e.target)

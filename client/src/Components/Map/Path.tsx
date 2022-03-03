@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 
 
-import { PathProps } from '../../assets/models'
+import { PathProps, PointData } from '../../assets/models'
 import { Marker, Popup } from "react-leaflet";
 import renderers from "../../assets/renderers";
 
@@ -18,10 +18,13 @@ const parseMD = (md: any) => {
     return md
 }
 
+const getPopupLine = (key: string, value: string | number) => {
+    return <><div>{key}: {value}</div><br/></>
+}
 
 const Path: FC<PathProps> = ( { path, properties, metadata } ) => {
 
-    const [marker, setMarker] = useState<[number, number]>([0, 0]); // marker showing metadata
+    const [selected, setSelected] = useState<number>(-1);
 
     const md = metadata || {}
     const Renderer = renderers[properties.renderer]
@@ -30,11 +33,16 @@ const Path: FC<PathProps> = ( { path, properties, metadata } ) => {
     if ( path.data.length === 0 || Renderer === undefined ) 
          return <></>
 
+    const clickedPoint: PointData = selected === -1 
+        ? ({ pos: { lat: 0, lng: 0 } } as PointData)
+        : path.data[selected]
+
     return ( <> 
-        <Renderer path={path} properties={properties} setMarker={setMarker} />
-        <Marker position={marker}>
+        <Renderer path={path} properties={properties} setSelected={setSelected} />
+        <Marker position={clickedPoint.pos}>
             <Popup>
-                { Object.keys(md).map(key => <><div>{key}: {parseMD(md[key])}</div><br/></> ) }
+                { clickedPoint.value === undefined ? <></> : getPopupLine('Value', clickedPoint.value) }
+                { Object.keys(md).map(key =>  getPopupLine(key, parseMD(md[key]))) }
             </Popup>
         </Marker> 
     </> )

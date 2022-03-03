@@ -1,9 +1,8 @@
 
 
-import { FC } from 'react';
 import { Circle, LayerGroup } from 'react-leaflet'
 
-import { PointData, RendererProps } from "../../../assets/models";
+import { PointData, Renderer } from "../../../assets/models";
 
 const getColor = (val: any, defaultColor: string): string => {
     if ( val < 0 )
@@ -14,7 +13,7 @@ const getColor = (val: any, defaultColor: string): string => {
     return `rgb(${Math.round(red)}, ${Math.round(green)}, 0)`
 }
 
-const Hotpoints: FC<RendererProps> = ( { path, properties, setMarker }) => { 
+const Hotpoints: Renderer = ( { path, properties, setSelected } ) => { 
     
     const circles = path.data.map( (p: PointData, i: number) => {
         
@@ -25,7 +24,7 @@ const Hotpoints: FC<RendererProps> = ( { path, properties, setMarker }) => {
             radius={5} 
             key={`${p.pos.lat};${p.pos.lng};circle;${i}`}
             pathOptions={{ color: getColor(mappedValue, properties.color) }}
-            eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}}  />
+            eventHandlers={{click: () => setSelected(i)}}  />
     } )
     
     return <LayerGroup children={circles} /> 

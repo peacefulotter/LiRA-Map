@@ -6,12 +6,14 @@ import MapEvents from "./MapEvents"
 
 import '../../../../css/rides.css'
 import { isPropertySignature } from "typescript";
-import {MeasurementData} from '../../../../assets/models';
+import {MeasurementData, PathProperties} from '../../../../assets/models';
 import { map } from "leaflet";
+import Path from "../../../Map/Path";
 
 const Map: FC = () => {
 
     const [ measurements, setMeasurements ] = useState<MeasurementData[]>([]);
+
     
     return (
         <div className="rides-wrapper">

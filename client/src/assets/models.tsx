@@ -75,13 +75,14 @@ export type Renderer = FC<RendererProps>
 export interface RendererProps {
     path: RideData, 
     properties: PathProperties,
-    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+    setSelected: React.Dispatch<React.SetStateAction<number>>,
 }
 
 export interface PointProps {
     pos: LatLng, 
     properties: PathProperties,
-    setMarker: React.Dispatch<React.SetStateAction<[number, number]>>
+    setSelected: React.Dispatch<React.SetStateAction<number>>,
+	i: number
 }
 
 /* ==================== PATH ==================== */

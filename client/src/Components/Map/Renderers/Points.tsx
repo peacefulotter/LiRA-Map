@@ -10,7 +10,7 @@ interface Props extends RendererProps {
 /*
     Used to render Rectangles and Circles
 */
-const Points: FC<Props> = ( { path, properties, setMarker, PointElt } ) => {
+const Points: FC<Props> = ( { path, properties, setSelected, PointElt } ) => {
     return (
         <>
         {
@@ -19,7 +19,8 @@ const Points: FC<Props> = ( { path, properties, setMarker, PointElt } ) => {
                     key={`PointElt${Math.random()}`}
                     pos={point.pos} 
                     properties={properties} 
-                    setMarker={setMarker} />
+                    setSelected={setSelected}
+                    i={i} />
             } )
         }
         </>
