@@ -1,11 +1,10 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 
 import RideCards from "./RideCards";
 import RideDetails from "./RideDetails";
 import Chart, { ChartAddFunc, ChartRemFunc } from "./Chart";
 
 import Ride from "../Map/Ride";
-import { get } from '../../assets/fetch'
 import { RideMeta } from '../../assets/models'
 import useMeasurements from "../Map/Measurements";
 import MapWrapper from "../Map/MapWrapper";
@@ -23,10 +22,13 @@ const Rides: FC = () => {
     const [remChartData, setRemChartData] = useState<ChartRemFunc>(() => {});
 
     // fetch the metadata of all the rides
-    useEffect( () => {
+    /*useEffect( () => {
         get( '/rides', (data: any) => setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) )
-    }, [] );
-    
+    }, [] );*/
+
+    function changeMetas(value: any){
+        setMetas(value);
+    }
 
     const showRide = (i: number, isChecked: boolean) => {   
         if ( isChecked )      

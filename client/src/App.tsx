@@ -4,9 +4,10 @@ import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import Navbar from './Components/Navbar'
 import Rides from './Components/Rides/Rides'
 import SignUpForm from './Components/Login/SignUpForm'
-import ML from './Components/Machine/ML'
+import LiRAMain from './Components/Pages/LiraMain/LiRAMain'
 
 import "./App.css";
+import ML from "./Components/Machine/ML";
 
 
 
@@ -16,6 +17,7 @@ const App: FC = () => {
             <Router>
                 <Navbar />
                 <Switch>
+                    <Route exact path="/" component={() => <LiRAMain />} />
                     <Route exact path="/rides" component={() => <Rides />} />
                     <Route exact path="/ml"    component={() => <ML />} />
                     <Route exact path="/login" component={() => <SignUpForm />} />

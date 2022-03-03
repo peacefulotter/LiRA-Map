@@ -22,6 +22,13 @@ export interface RideMeta {
 	Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
 }
 
+export interface MeasurementData{
+  T: string,
+  lat: number,
+  lon: number,
+  message: string
+}
+
 export type RidePos = LatLng[];
 
 export interface PointData {

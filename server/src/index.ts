@@ -15,6 +15,9 @@ import { writeJsonFile } from './file';
 
 
 
+import tripsRoutes from "./routes/tripsRoutes";
+import measurementsRoutes from "./routes/measurementsRoutes";
+
 const PORT = process.env.PORT || 3001;
 
 const app = express();
@@ -22,6 +25,9 @@ const app = express();
 app.use(express.urlencoded({
 	extended: true
 }))
+
+app.use('/trips', tripsRoutes);
+app.use('/measurements', measurementsRoutes);
 
 app.use(express.json({
 	type: ['application/json', 'text/plain'],
