@@ -2,14 +2,14 @@
 
 .rides-wrapper {
     display: grid;
-    grid-template-columns: 50% auto;
+    grid-template-columns: 170px 270px auto;
     height: calc(100% - 6vh);
 }
 
 
 .map-container {
     display: grid;
-    grid-template-rows: 80% auto;
+    grid-template-rows: 65% auto;
     height: 100%;
 }
 
