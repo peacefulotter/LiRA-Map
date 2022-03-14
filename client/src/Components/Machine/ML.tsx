@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from "react";
-import { PathProps } from "../../assets/models";
 
 import MapWrapper from "../Map/MapWrapper";
+import EventPath from "../Map/EventPath";
 import Checkbox from "../Checkbox";
 
+import { PathProps } from "../../assets/models";
+
 import "../../css/ml.css";
-import Path from "../Map/Path";
 
 const brokerURL = "ws://localhost:3001/ws"
 
@@ -77,7 +78,7 @@ const ML: FC = () => {
             <MapWrapper>
                 { Object.values(paths)
                     .filter((elt, i) => selectedPaths[i])
-                    .map( p => <Path 
+                    .map( p => <EventPath 
                         key={`MLPath${Math.random()}`} 
                         path={p.path} 
                         properties={p.properties} 

@@ -1,14 +1,12 @@
-import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvent,  } from 'react-leaflet'
+import { FC, useState } from "react";
+import { MapContainer, TileLayer } from 'react-leaflet'
 
 import Measurements from "./Measurements";
 import MapEvents from "./MapEvents"
 
+import { MeasurementData } from '../../../../assets/models';
+
 import '../../../../css/rides.css'
-import { isPropertySignature } from "typescript";
-import {MeasurementData, PathProperties} from '../../../../assets/models';
-import { map } from "leaflet";
-import Path from "../../../Map/Path";
 
 const Map: FC = () => {
 

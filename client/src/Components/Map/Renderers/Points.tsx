@@ -1,16 +1,16 @@
 
 import { FC } from "react";
 
-import { PointData, RendererProps, PointProps } from "../../../assets/models";
+import { PointData, PointProps, EventRendererProps } from "../../../assets/models";
 
-interface Props extends RendererProps {
+interface Props extends EventRendererProps {
     PointElt: FC<PointProps>
 }
 
 /*
     Used to render Rectangles and Circles
 */
-const Points: FC<Props> = ( { path, properties, setSelected, PointElt } ) => {
+const Points: FC<Props> = ( { path, properties, onClick, PointElt } ) => {
     return (
         <>
         {
@@ -19,7 +19,7 @@ const Points: FC<Props> = ( { path, properties, setSelected, PointElt } ) => {
                     key={`PointElt${Math.random()}`}
                     pos={point.pos} 
                     properties={properties} 
-                    setSelected={setSelected}
+                    onClick={onClick}
                     i={i} />
             } )
         }

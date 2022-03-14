@@ -2,10 +2,10 @@
 import { FC } from "react";
 import { Polyline } from 'react-leaflet'
 
-import { PointData, RendererProps } from "../../../assets/models";
+import { EventRenderer, PointData, RendererProps } from "../../../assets/models";
 
 
-const Line: FC<RendererProps> = ( { path, properties, setSelected } ) => {
+const Line: EventRenderer = ( { path, properties, onClick } ) => {
     
     const way = path.data.map((p: PointData) =>  p.pos ) 
     const color = { color: properties.color };
@@ -14,7 +14,7 @@ const Line: FC<RendererProps> = ( { path, properties, setSelected } ) => {
         positions={way} 
         key={`${Math.random()}-line`}
         pathOptions={color} 
-        eventHandlers={{click: () => setSelected(0)}} />
+        eventHandlers={onClick(0)} />
 }
 
 

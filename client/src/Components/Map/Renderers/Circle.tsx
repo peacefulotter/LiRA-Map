@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Circle } from "react-leaflet";
-import { Renderer } from "../../../assets/models";
+import { EventRenderer, Renderer } from "../../../assets/models";
 
 /*
     Circle as Renderer 
 */
 
-const RCircle: Renderer = ( { path, properties, setSelected } ) =>  {   
+const RCircle: EventRenderer = ( { path, properties, onClick } ) =>  {   
     
     const { lat, lng } = path.data[0].pos
 
@@ -15,7 +15,7 @@ const RCircle: Renderer = ( { path, properties, setSelected } ) =>  {
         radius={properties.size ? properties.size : 4} 
         key={`Circle${Math.random()}`}
         pathOptions={{ color: properties.color, weight: 1 }}
-        eventHandlers={{click: () => setSelected(0)}}/>
+        eventHandlers={onClick(0)}/>
 }
 
 export default RCircle;

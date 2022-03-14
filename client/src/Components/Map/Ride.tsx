@@ -3,14 +3,13 @@ import { FC, useState, useEffect } from "react";
 import { useMapEvents } from 'react-leaflet'
 import { LatLng } from 'leaflet'
 
+import EventPath from "./EventPath";
 import usePopup from '../Popup'
 
 import { RideData, PathModel, ChartData, Measurement } from '../../assets/models'
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
-import Path from "./Path";
-
 
 const getEmptyPath = (): PathModel => {
     return {
@@ -208,7 +207,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
             paths
             .filter( p => p.loaded )
             .map( (p,i) => 
-                <Path 
+                <EventPath 
                     key={`path${Math.random()}`} 
                     path={p.path} 
                     properties={measurements[activeMeasurements[i]]}/> 

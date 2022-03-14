@@ -1,5 +1,5 @@
 
-import { Renderer } from './models'
+import { EventRenderer, Renderer } from './models'
 import Circles from '../Components/Map/Renderers/Circles';
 import Hotline from '../Components/Map/Renderers/Hotline';
 import Hotpoints from '../Components/Map/Renderers/Hotpoints';
@@ -16,7 +16,7 @@ export enum RendererName {
     hotpoints = 'hotpoints'
 }
 
-const renderers: Partial<Record<RendererName, Renderer>> = {
+const renderers: Partial<Record<RendererName, Renderer | EventRenderer>> = {
     'circle': CCircle,
     'circles': Circles,
     'rectangles': Rectangles,

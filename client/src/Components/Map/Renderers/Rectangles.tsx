@@ -3,15 +3,15 @@ import { FC } from "react";
 import { Rectangle } from "react-leaflet";
 import { LatLngBounds } from 'leaflet'
 
-import { PointProps, Renderer } from "../../../assets/models";
+import { EventRenderer, PointProps, Renderer } from "../../../assets/models";
 import Points from "./Points";
 
 
-const Rectangles: Renderer = ( props ) => {
+const Rectangles: EventRenderer = ( props ) => {
     return <Points {...props} PointElt={CRectangle}/>
 }
 
-const CRectangle: FC<PointProps> = ( { pos, properties, setSelected, i } ) => {
+const CRectangle: FC<PointProps> = ( { pos, properties, onClick, i } ) => {
 
     const size: number = (properties.size || 1) / 10_000;
     const bounds: LatLngBounds = new LatLngBounds(
@@ -22,7 +22,7 @@ const CRectangle: FC<PointProps> = ( { pos, properties, setSelected, i } ) => {
     return <Rectangle
         bounds={bounds} 
         pathOptions={{ color: properties.color, weight: 4 }}
-        eventHandlers={{click: () => setSelected(i)}}/>
+        eventHandlers={onClick(i)}/>
 }
 
 export default Rectangles
