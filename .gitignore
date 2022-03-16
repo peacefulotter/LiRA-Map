@@ -104,4 +104,4 @@ dist
 .tern-port
 
 /server/osrm/
-/server/json/
+/server/backup/
