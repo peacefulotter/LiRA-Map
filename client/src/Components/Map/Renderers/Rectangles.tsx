@@ -21,7 +21,10 @@ const CRectangle: FC<PointProps> = ( { pos, properties, onClick, i } ) => {
         
     return <Rectangle
         bounds={bounds} 
-        pathOptions={{ color: properties.color, weight: 4 }}
+        pathOptions={{ 
+            color: properties.color, 
+            weight: properties.size || 4,
+        }}
         eventHandlers={onClick(i)}/>
 }
 

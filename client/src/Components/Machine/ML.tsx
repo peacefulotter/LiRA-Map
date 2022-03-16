@@ -54,6 +54,8 @@ const ML: FC = () => {
             }
             else if ( type === 'CONNECTED' )
             {
+                setSelectedPaths(range(data.length))
+
                 const temp: any = {}
                 for ( const file of data )
                 {
@@ -62,7 +64,6 @@ const ML: FC = () => {
                 }
                 setPaths(temp);
                 console.log(temp);
-                setSelectedPaths(range(data.length))
             }
         };
     }, [])
@@ -76,19 +77,21 @@ const ML: FC = () => {
     return (
         <div className="ml-wrapper">
             <MapWrapper>
-                { Object.values(paths)
-                    .filter((elt, i) => selectedPaths[i])
-                    .map( p => <EventPath 
-                        key={`MLPath${Math.random()}`} 
-                        path={p.path} 
-                        properties={p.properties} 
-                        metadata={p.metadata} />) 
+                { Object.keys(paths)
+                    .map( (k, i) => selectedPaths[i] 
+                        ? <EventPath 
+                            key={`ml-path-${i}`}
+                            tripName={k} 
+                            path={paths[k].path}
+                            properties={paths[k].properties}
+                            metadata={paths[k].metadata} /> 
+                        : <></>) 
                 }
             </MapWrapper>
             <div className="ml-checkboxes">
                 { Object.keys(paths).map( (filename, i) => 
                     <Checkbox 
-                        key={`ml-${Math.random()}`} 
+                        key={`ml-${i}`} 
                         forceState={selectedPaths[i]}
                         className="btn ml-checkbox" 
                         html={<div>{filename}</div>} 

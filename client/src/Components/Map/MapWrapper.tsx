@@ -1,5 +1,5 @@
 
-import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 
 import '../../css/map.css'
 import MapEvents from './MapEvents';

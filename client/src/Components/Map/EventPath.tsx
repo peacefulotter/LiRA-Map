@@ -23,7 +23,7 @@ const getPopupLine = (key: string, value: string | number) => {
     return <><div>{key}: {value}</div><br/></>
 }
 
-const EventPath: FC<EventPathProps> = ( { path, properties, metadata } ) => {
+const EventPath: FC<EventPathProps> = ( { tripName, path, properties, metadata } ) => {
 
     const [selected, setSelected] = useState<number | undefined>(undefined);
 
@@ -31,10 +31,15 @@ const EventPath: FC<EventPathProps> = ( { path, properties, metadata } ) => {
     const EventRenderer = renderers[properties.renderer] as EventRenderer
 
     return ( <> 
-        <EventRenderer path={path} properties={properties} onClick={(i: number) => {return {click: () => setSelected(i)}}} />
+        <EventRenderer 
+            path={path} 
+            properties={properties} 
+            onClick={(i: number) => {return {click: () => setSelected(i)}}} 
+        />
         { selected && 
             <Marker position={path.data[selected].pos}>
                 <Popup>
+                    { tripName && getPopupLine('Trip', tripName) }
                     { path.data[selected].value && getPopupLine('Value', path.data[selected].value as number) }
                     { Object.keys(md).map(key =>  getPopupLine(key, parseMD(md[key]))) }
                 </Popup>

@@ -72,13 +72,14 @@ export interface Measurement extends PathProperties {
 
 /* ==================== RENDERERS ==================== */
 export interface RendererProps {
-    path: RideData, 
-    properties: PathProperties
+    path: RideData;
+    properties: PathProperties;
 }
 
 type EventHandler = (i: number) => object;
+
 export interface EventRendererProps extends RendererProps {
-	onClick: EventHandler
+	onClick: EventHandler;
 }
 
 export type Renderer = FC<RendererProps>
@@ -95,12 +96,12 @@ export interface PointProps {
 /* ==================== PATH ==================== */
 export interface PathProps {
 	path: RideData;
-	properties: PathProperties
+	properties: PathProperties;
 	metadata?: {[key: string]: any}
 }
 
 export interface EventPathProps extends PathProps {
-	metadata?: {[key: string]: any}
+	tripName?: string; // TODO: move this to metadata
 }
 
 /* ==================== CHART ==================== */

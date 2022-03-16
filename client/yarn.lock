@@ -7647,6 +7647,18 @@
     "lodash" "^4.17.5"
     "webpack-sources" "^1.1.0"
 
+"leaflet-canvas-marker@^0.1.3":
+  "integrity" "sha512-1TT33dCgZtg5ceAj+Ay4d5kGr7PI4QV45rgkAlQ5UtX2natpNKVgM4gR4dahP/JgskDF+m7GbS5bLth6kOX6rQ=="
+  "resolved" "https://registry.npmjs.org/leaflet-canvas-marker/-/leaflet-canvas-marker-0.1.3.tgz"
+  "version" "0.1.3"
+
+"leaflet-canvas-marker@^0.2.0":
+  "integrity" "sha512-BKVcBT+sndtN3SId+fe1+kNJHmpLOxCnQX7GNCQ6COmTWiEmmiZ0S1FmH87I0DIR1TqFBzVYVEFCWWHmpeYWyw=="
+  "resolved" "https://registry.npmjs.org/leaflet-canvas-marker/-/leaflet-canvas-marker-0.2.0.tgz"
+  "version" "0.2.0"
+  dependencies:
+    "rbush" "^2.0.2"
+
 "leaflet-hotline@^0.4.0":
   "integrity" "sha1-4BBpg2qdLix4sfodsgE70DyP+Nk="
   "resolved" "https://registry.npmjs.org/leaflet-hotline/-/leaflet-hotline-0.4.0.tgz"
@@ -7845,7 +7857,7 @@
   "resolved" "https://registry.npmjs.org/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   "version" "4.5.0"
 
-"lodash@^4.0.1", "lodash@^4.17.11", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.5", "lodash@^4.7.0", "lodash@>=3.5 <5":
+"lodash@^4.0.1", "lodash@^4.17.10", "lodash@^4.17.11", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.5", "lodash@^4.7.0", "lodash@>=3.5 <5":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -9937,6 +9949,11 @@
   "resolved" "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   "version" "1.2.3"
 
+"quickselect@^1.0.1":
+  "integrity" "sha512-qN0Gqdw4c4KGPsBOQafj6yj/PA6c/L63f6CaZ/DCF/xF4Esu3jVmKLUDYxghFx8Kb/O7y9tI7x2RjTSXwdK1iQ=="
+  "resolved" "https://registry.npmjs.org/quickselect/-/quickselect-1.1.1.tgz"
+  "version" "1.1.1"
+
 "raf@^3.4.0", "raf@^3.4.1":
   "integrity" "sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA=="
   "resolved" "https://registry.npmjs.org/raf/-/raf-3.4.1.tgz"
@@ -9973,6 +9990,13 @@
     "http-errors" "1.7.2"
     "iconv-lite" "0.4.24"
     "unpipe" "1.0.0"
+
+"rbush@^2.0.2":
+  "integrity" "sha512-XBOuALcTm+O/H8G90b6pzu6nX6v2zCKiFG4BJho8a+bY6AER6t8uQUZdi5bomQc0AprCWhEGa7ncAbbRap0bRA=="
+  "resolved" "https://registry.npmjs.org/rbush/-/rbush-2.0.2.tgz"
+  "version" "2.0.2"
+  dependencies:
+    "quickselect" "^1.0.1"
 
 "react-apexcharts@^1.3.9":
   "integrity" "sha512-KPonT5uQPHOHSVgTNEzpB0HhCkZtoicQYGjR9P+3DRDSgTsC+DM2vDUfo/B2Fn1m+wdgVeDXWL0VJYDc6JD/tw=="
@@ -10059,7 +10083,7 @@
     "strip-ansi" "6.0.0"
     "text-table" "0.2.0"
 
-"react-dom@*", "react-dom@^15.0.0 || ^16.0.0 || ^17.0.0", "react-dom@^15.3.0 || ^16.0.0-alpha", "react-dom@^16.0.0 || ^17.0.0", "react-dom@^16.8.6", "react-dom@^17.0.1", "react-dom@^17.0.2", "react-dom@>=15.0.0", "react-dom@>=16.3.0", "react-dom@>=17":
+"react-dom@*", "react-dom@^15.0.0 || ^16.0.0 || ^17.0.0", "react-dom@^15.3.0 || ^16.0.0-alpha", "react-dom@^16.0.0 || ^17.0.0", "react-dom@^16.8.0  || ^17.0.0", "react-dom@^16.8.6", "react-dom@^17.0.1", "react-dom@^17.0.2", "react-dom@>=15.0.0", "react-dom@>=16.3.0", "react-dom@>=17":
   "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
@@ -10068,7 +10092,7 @@
     "object-assign" "^4.1.1"
     "scheduler" "^0.20.2"
 
-"react-dom@^16.11.0", "react-dom@^16.8.0  || ^17.0.0":
+"react-dom@^16.11.0":
   "integrity" "sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-16.14.0.tgz"
   "version" "16.14.0"
@@ -10136,6 +10160,21 @@
     "@types/react" "^17.0.1"
     "@types/react-dom" "^17.0.0"
 
+"react-leaflet-canvas-markers@^1.0.1":
+  "integrity" "sha512-59Nt25jC3cu1xZ9iFKjXMFPpCiXmdjqhanTFM83xiBhhcaoOdIek13g3hiRxBPXmNLbEkoZ60FiJZazXbvhzNA=="
+  "resolved" "https://registry.npmjs.org/react-leaflet-canvas-markers/-/react-leaflet-canvas-markers-1.0.1.tgz"
+  "version" "1.0.1"
+  dependencies:
+    "leaflet" "^1.6.0"
+    "leaflet-canvas-marker" "^0.1.3"
+    "lodash" "^4.17.10"
+    "react-leaflet" "^2.6.1"
+
+"react-leaflet-canvas-overlay@^0.1.3":
+  "integrity" "sha512-aeihJnc/I7XRppNUtZMLGU577VU4KMyNfn5BQ70GNA+/xzQRmr9v7G22trmV2c4ZKqapwguivXNuaMYhb3rIPw=="
+  "resolved" "https://registry.npmjs.org/react-leaflet-canvas-overlay/-/react-leaflet-canvas-overlay-0.1.3.tgz"
+  "version" "0.1.3"
+
 "react-leaflet-multi-options-polyline@^2.0.3":
   "integrity" "sha512-BvblcYwdPc/6Js046oQDpqM26rgR9IMzAJL+UZJ4kSp9NxXKBQQKQ+YTWePLsPV0T9hNDP3U5tMPAhA3oSL8Pw=="
   "resolved" "https://registry.npmjs.org/react-leaflet-multi-options-polyline/-/react-leaflet-multi-options-polyline-2.0.3.tgz"
@@ -10163,7 +10202,17 @@
     "hoist-non-react-statics" "^3.3.2"
     "warning" "^4.0.3"
 
-"react-leaflet@^3.2.1":
+"react-leaflet@^2.6.1":
+  "integrity" "sha512-Y7oHtNrrlRH8muDttXf+jZ2Ga/X7jneSGi1GN8uEdeCfLProTqgG2Zoa5TfloS3ZnY20v7w+DIenMG59beFsQw=="
+  "resolved" "https://registry.npmjs.org/react-leaflet/-/react-leaflet-2.8.0.tgz"
+  "version" "2.8.0"
+  dependencies:
+    "@babel/runtime" "^7.12.1"
+    "fast-deep-equal" "^3.1.3"
+    "hoist-non-react-statics" "^3.3.2"
+    "warning" "^4.0.3"
+
+"react-leaflet@^3.0.5", "react-leaflet@^3.2.1":
   "integrity" "sha512-3iS1fpOO+uaRpbuq68Euw9kgaoM9oIGBiDfeFtVb/C9PWBQvXdrv1n946Z8GrbQEhrT+hM9ND6NLLF9fGxTGRw=="
   "resolved" "https://registry.npmjs.org/react-leaflet/-/react-leaflet-3.2.1.tgz"
   "version" "3.2.1"
