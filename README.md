@@ -1,22 +1,28 @@
 # LiRA-Map
 
+## Development
+#### Client
+ - cd client
+ - npm i
+ - npm start
 
 #### Server
  - cd server
  - npm i
  - npm start
+ 
+## Production
+ - `npm i -g pm2`
+ - `npm i -g serve`
 
 #### Client
  - cd client
  - npm i
- - npm start
- 
- ### SSH Commands
-  - sudo ufw status verbose
-  - sudo ufw allow ssh
+ - npm run build
+ - pm2 serve build 3000 --spa
 
-
-years for one point
-year for all points
-
-  > generic map of energy (instant traction consumption - estimated wheel torque => heatmap)
+#### Server
+ - cd server
+ - npm i
+ - npm run build
+ - pm2 serve dist 3001 --spa
