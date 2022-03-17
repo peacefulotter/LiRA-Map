@@ -15,7 +15,7 @@ const RCircle: EventRenderer = ( { path, properties, onClick } ) =>  {
         radius={properties.size ? properties.size : 4} 
         key={`Circle${Math.random()}`}
         pathOptions={{ color: properties.color, weight: 1 }}
-        eventHandlers={onClick(0)}/>
+        eventHandlers={{'click': onClick(0)}}/>
 }
 
 export default RCircle;

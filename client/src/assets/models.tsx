@@ -3,7 +3,6 @@
 import { LatLng } from 'leaflet';
 import { FC } from 'react';
 import { RendererName } from './renderers';
-import { EventedProps } from '@react-leaflet/core/types/events'
 
 export interface RideMeta {
 	TripId: string,
@@ -35,7 +34,8 @@ export type RidePos = LatLng[];
 export interface PointData {
 	pos: LatLng;
 	value?: number;   	// using this field depending on the measurement
-	timestamp?: number;   // using this field depending on the measurement
+	timestamp?: number | string;   // using this field depending on the measurement
+	metadata?: any;
 }
 
 export interface RideData {
@@ -76,7 +76,7 @@ export interface RendererProps {
     properties: PathProperties;
 }
 
-type EventHandler = (i: number) => object;
+type EventHandler = (i: number) => (e: any) => void;
 
 export interface EventRendererProps extends RendererProps {
 	onClick: EventHandler;
@@ -98,10 +98,6 @@ export interface PathProps {
 	path: RideData;
 	properties: PathProperties;
 	metadata?: {[key: string]: any}
-}
-
-export interface EventPathProps extends PathProps {
-	tripName?: string; // TODO: move this to metadata
 }
 
 /* ==================== CHART ==================== */

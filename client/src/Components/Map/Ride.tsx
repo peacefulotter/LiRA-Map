@@ -167,7 +167,7 @@ const Ride: FC<Props> = ( { measurements, activeMeasurements, tripId, taskId, ad
 
                 const min = path.data[0].timestamp || 0                
                 addChartData( getDataName(meas), res.data.map( (d: any) => { 
-                    return { x: d.timestamp as number - min, y: d.value as number } 
+                    return { x: d.timestamp as number - (min as number), y: d.value as number } 
                 } ) )
             }
         })

@@ -81,7 +81,6 @@ const ML: FC = () => {
                     .map( (k, i) => selectedPaths[i] 
                         ? <EventPath 
                             key={`ml-path-${i}`}
-                            tripName={k} 
                             path={paths[k].path}
                             properties={paths[k].properties}
                             metadata={paths[k].metadata} /> 

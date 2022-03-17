@@ -2,46 +2,68 @@
 import { FC, useState } from "react";
 
 
-import { EventPathProps, EventRenderer } from '../../assets/models'
+import { EventRenderer, PathProps } from '../../assets/models'
 import { Marker, Popup } from "react-leaflet";
 import renderers from "../../assets/renderers";
 
 
-const parseMD = (md: any) => {
-    if ( typeof md === 'object' )
-    {
-        const res = []
-        for ( const smth of md )
-            res.push( <><div>{parseMD(smth)}</div></> )
-        return res
-    }
+const parseMD = (mds: any) => {
+    console.log(mds, typeof mds === 'object');
     
-    return md
+    if ( typeof mds === 'object' && Array.isArray(mds) )
+    {
+        return <div key={`md-${Math.random()}`}>{mds.map(md => parseMD(md)).join(', ')}</div>
+    }
+    else if ( typeof mds === 'object' )
+    {
+        return Object.keys(mds).map(k => 
+            <div key={`md-${Math.random()}`}> {' > '} {k}: {parseMD(mds[k])}</div>
+        )
+    }
+
+    return mds
 }
 
-const getPopupLine = (key: string, value: string | number) => {
-    return <><div>{key}: {value}</div><br/></>
+const getPopupLine = (key: string, value: any) => {
+    if ( value === undefined || value === null )
+        return <></>
+
+    else if ( typeof value === 'object' )
+        return <div key={`md-${Math.random()}`}>{key}:{parseMD(value)}</div>
+    
+    return <div key={`md-${Math.random()}`}>{key}: {value}</div>
 }
 
-const EventPath: FC<EventPathProps> = ( { tripName, path, properties, metadata } ) => {
+const EventPath: FC<PathProps> = ( { path, properties, metadata } ) => {
 
+    const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
     const [selected, setSelected] = useState<number | undefined>(undefined);
 
     const md = metadata || {}
     const EventRenderer = renderers[properties.renderer] as EventRenderer
 
+    const onClick = (i: number) => (e: any) => {
+        const { lat, lng } = e.latlng
+        setMarkerPos([lat, lng])
+        setSelected(i)
+    }
+    
+    const point = path.data[selected || 0]
+    
     return ( <> 
         <EventRenderer 
             path={path} 
             properties={properties} 
-            onClick={(i: number) => {return {click: () => setSelected(i)}}} 
+            onClick={onClick} 
         />
-        { selected && 
-            <Marker position={path.data[selected].pos}>
+        { selected !== undefined && 
+            <Marker position={markerPos}>
                 <Popup>
-                    { tripName && getPopupLine('Trip', tripName) }
-                    { path.data[selected].value && getPopupLine('Value', path.data[selected].value as number) }
-                    { Object.keys(md).map(key =>  getPopupLine(key, parseMD(md[key]))) }
+                    { getPopupLine('Properties', properties) }
+                    { getPopupLine('Value', point.value) }
+                    { getPopupLine('Timestamp', point.timestamp) }
+                    { Object.keys(point.metadata || {}).map(key => getPopupLine(key, point.metadata[key]))}
+                    { Object.keys(md).map(key => getPopupLine(key, md[key]))}
                 </Popup>
             </Marker> 
         }

@@ -4,14 +4,14 @@ import 'leaflet-hotline'
 import { FC, useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 
-import { PointData, RendererProps } from "../../../assets/models";
+import { EventRendererProps, PointData } from "../../../assets/models";
 
-interface HotlineProps extends RendererProps {
+interface HotlineProps extends EventRendererProps {
     palette?: any
 }
 
 
-const Hotline: FC<HotlineProps> = ( { path, palette } ) => {
+const Hotline: FC<HotlineProps> = ( { path, palette, onClick } ) => {
 
     const p = palette || {
         0.0: 'green',
@@ -31,7 +31,7 @@ const Hotline: FC<HotlineProps> = ( { path, palette } ) => {
         palette: p,
         min: path.minValue || 0,
         max: path.maxValue || 1,
-        onclick: (e: any) => console.log(e.target)
+        onclick: onClick(0)
     } ).addTo(map);
 
     // remove from map when unload

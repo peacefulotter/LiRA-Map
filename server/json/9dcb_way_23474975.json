@@ -1,0 +1,31 @@
+{
+    "properties": {
+        "renderer": "line",
+        "name": "9dcb_way_23474975",
+        "color": "yellow",
+        "size": 1
+    },
+    "path": {
+        "data": [
+            {
+                "pos": {
+                    "lat": 55.8040251,
+                    "lng": 12.3801355
+                }
+            },
+            {
+                "pos": {
+                    "lat": 55.8067962,
+                    "lng": 12.3810687
+                }
+            }
+        ]
+    },
+    "metadata": {
+        "way_id": 23474975,
+        "nodes": [
+            31462966,
+            31462967
+        ]
+    }
+}

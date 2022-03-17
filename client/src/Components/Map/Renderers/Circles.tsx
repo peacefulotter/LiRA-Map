@@ -16,7 +16,7 @@ const CCircle: FC<PointProps> = ( { pos, properties, onClick, i } ) =>  {
         radius={properties.size ? properties.size : 4} 
         key={`Circle${Math.random()}`}
         pathOptions={{ color: properties.color, weight: 1 }}
-        eventHandlers={onClick(i)}/>
+        eventHandlers={{'click': onClick(i)}}/>
 }
 
 export default Circles;

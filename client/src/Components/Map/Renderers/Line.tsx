@@ -15,7 +15,7 @@ const Line: EventRenderer = ( { path, properties, onClick } ) => {
         pathOptions={{ 
             color: properties.color,
         }} 
-        eventHandlers={onClick(0)} />
+        eventHandlers={{'click': onClick(0)}} />
 }
 
 

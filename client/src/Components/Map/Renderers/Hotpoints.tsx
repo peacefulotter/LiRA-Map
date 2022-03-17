@@ -22,12 +22,11 @@ const Hotpoints: EventRenderer = ( { path, properties, onClick } ) => {
     useEffect(() => {
         path.data.forEach( (p: PointData, i: number) => {
             const mappedValue: number = ((p.value || -9999) - (path.minValue || 0)) / ((path.maxValue || 1) - (path.minValue || 0))
-            
             return L.circle( [p.pos.lat, p.pos.lng], { 
                 renderer: canvas, 
                 radius: properties.size,
                 color: getColor(mappedValue, properties.color, i / path.data.length),
-            } ).on("click", () => {}).addTo(map);
+            } ).on("click", onClick(i)).addTo(map);
         } )
     }, [])
 

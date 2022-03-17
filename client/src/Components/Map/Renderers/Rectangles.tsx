@@ -25,7 +25,7 @@ const CRectangle: FC<PointProps> = ( { pos, properties, onClick, i } ) => {
             color: properties.color, 
             weight: properties.size || 4,
         }}
-        eventHandlers={onClick(i)}/>
+        eventHandlers={{'click': onClick(i)}}/>
 }
 
 export default Rectangles
