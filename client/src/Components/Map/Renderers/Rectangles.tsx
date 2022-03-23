@@ -13,7 +13,7 @@ const Rectangles: EventRenderer = ( props ) => {
 
 const CRectangle: FC<PointProps> = ( { pos, properties, onClick, i } ) => {
 
-    const size: number = (properties.size || 1) / 10_000;
+    const size: number = properties.size / 10_000;
     const bounds: LatLngBounds = new LatLngBounds(
         [pos.lat - size / 2, pos.lng - size / 2],
         [pos.lat + size / 3, pos.lng + size / 1.2]
@@ -21,10 +21,9 @@ const CRectangle: FC<PointProps> = ( { pos, properties, onClick, i } ) => {
         
     return <Rectangle
         bounds={bounds} 
-        pathOptions={{ 
-            color: properties.color, 
-            weight: properties.size || 4,
-        }}
+        color={properties.color}
+        weight={properties.boldness || 4}
+        opacity={properties.opacity || 1.0}
         eventHandlers={{'click': onClick(i)}}/>
 }
 

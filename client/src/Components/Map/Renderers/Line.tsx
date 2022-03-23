@@ -14,6 +14,8 @@ const Line: EventRenderer = ( { path, properties, onClick } ) => {
         key={`${Math.random()}-line`}
         pathOptions={{ 
             color: properties.color,
+            weight: properties.boldness || properties.size,
+            opacity: properties.opacity || 1.0
         }} 
         eventHandlers={{'click': onClick(0)}} />
 }

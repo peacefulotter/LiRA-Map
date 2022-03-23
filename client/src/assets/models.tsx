@@ -22,7 +22,7 @@ export interface RideMeta {
 	Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
 }
 
-export interface MeasurementData{
+export interface MeasurementData {
   T: string,
   lat: number,
   lon: number,
@@ -33,8 +33,8 @@ export type RidePos = LatLng[];
 
 export interface PointData {
 	pos: LatLng;
-	value?: number;   	// using this field depending on the measurement
-	timestamp?: number | string;   // using this field depending on the measurement
+	value?: number;   	   			
+	timestamp?: number | string;   
 	metadata?: any;
 }
 
@@ -61,7 +61,10 @@ export interface PathProperties {
 	renderer: RendererName;
 	color: string;
 	size: number;
-	value?: string;
+	value?: number | string;
+	boldness?: number;
+	opacity?: number;
+	dilatation?: number
 }
 
 export interface Measurement extends PathProperties {
@@ -76,10 +79,10 @@ export interface RendererProps {
     properties: PathProperties;
 }
 
-type EventHandler = (i: number) => (e: any) => void;
+export type PathEventHandler = (i: number) => (e: any) => void;
 
 export interface EventRendererProps extends RendererProps {
-	onClick: EventHandler;
+	onClick: PathEventHandler;
 }
 
 export type Renderer = FC<RendererProps>
@@ -89,7 +92,7 @@ export type EventRenderer = FC<EventRendererProps>
 export interface PointProps {
     pos: LatLng;
     properties: PathProperties;
-	onClick: EventHandler;
+	onClick: PathEventHandler;
 	i: number;
 }
 

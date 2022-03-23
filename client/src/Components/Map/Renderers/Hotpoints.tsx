@@ -26,6 +26,8 @@ const Hotpoints: EventRenderer = ( { path, properties, onClick } ) => {
                 renderer: canvas, 
                 radius: properties.size,
                 color: getColor(mappedValue, properties.color, i / path.data.length),
+                weight: properties.boldness || 4,
+                opacity: properties.opacity || 1.0
             } ).on("click", onClick(i)).addTo(map);
         } )
     }, [])

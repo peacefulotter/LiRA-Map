@@ -29,9 +29,9 @@ const getPopupLine = (key: string, value: any) => {
         return <></>
 
     else if ( typeof value === 'object' )
-        return <div key={`md-${Math.random()}`}>{key}:{parseMD(value)}</div>
+        return <div key={`popupline-${Math.random()}`}>{key}:{parseMD(value)}</div>
     
-    return <div key={`md-${Math.random()}`}>{key}: {value}</div>
+    return <div key={`popupline-${Math.random()}`}>{key}: {value}</div>
 }
 
 const EventPath: FC<PathProps> = ( { path, properties, metadata } ) => {

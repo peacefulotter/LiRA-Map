@@ -22,7 +22,7 @@ const renderers: Partial<Record<RendererName, Renderer | EventRenderer>> = {
     'rectangles': Rectangles,
     'line': Line,
     'hotline': Hotline,
-    'hotpoints': Hotpoints,
+    'hotpoints': Hotline,
 }
 
 export default renderers;

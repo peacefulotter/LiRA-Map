@@ -105,3 +105,6 @@ dist
 
 /server/osrm/
 /server/backup/
+
+.DS_Store
+
