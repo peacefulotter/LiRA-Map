@@ -55,7 +55,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pm2-restart": "pm2 startOrRestart ecosystem.config.js",
-    "pm2-deploy": "pm2 deploy ecosystem.config.js production",
+    "pm2-deploy": "pm2 deploy ecosystem.config.js production --force",
     "pm2-logs": "pm2 deploy ecosystem.config.js production exec \"pm2 logs\"",
     "pm2-ls": "pm2 deploy ecosystem.config.js production exec \"pm2 ls\"",
     "pm2-flush": "pm2 deploy ecosystem.config.js production exec \"pm2 flush\"",

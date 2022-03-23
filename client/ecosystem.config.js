@@ -41,7 +41,7 @@ deploy: {
     repo: 'git@github.com:PeacefulOtter/LiRA-Map.git',
     path: '/home/s212180/LiRA-Map',
     'post-deploy':
-      "cp ~/.env ~/LiRA-Map/source/.env && npm install && pm2 startOrRestart ecosystem.config.js",
+      "cp ~/LiRA-Map/client/.env ~/LiRA-Map/source/.env && npm install && pm2 startOrRestart client/ecosystem.config.js",
   },
 },
 };
