@@ -6,6 +6,8 @@
 import L from 'leaflet'
 
 L.Hotline = function (latlngs, options) {
+
+	let projectedData = undefined
 	// Plugin is already added to Leaflet
 	// if (L.Hotline) {
 	// 	return L;
@@ -241,7 +243,7 @@ L.Hotline = function (latlngs, options) {
 
 			for (i = 0, dataLength = this._data.length; i < dataLength; i++) {
 				path = this._data[i];
-				console.log(path);
+				// console.log(path);
 
 				for (j = 1, pathLength = path.length; j < pathLength; j++) {
 					pointStart = path[j - 1];
@@ -288,10 +290,14 @@ L.Hotline = function (latlngs, options) {
 
 			this._updateOptions(layer);
 
-			console.log(parts, layer);
+			// console.log(this._hotline);
+			// console.log(this._hotline._data);
+			// console.log(parts);
+
+			console.log(parts, projectedData);
 
 			this._hotline
-				.data(parts)
+				.data(projectedData)
 				.draw();
 		},
 
@@ -366,7 +372,7 @@ L.Hotline = function (latlngs, options) {
 	};
 
 
-	return L.Polyline.extend({
+	const _hotline = L.Polyline.extend({
 		statics: {
 			Renderer: Renderer,
 			renderer: renderer
@@ -412,6 +418,8 @@ L.Hotline = function (latlngs, options) {
 					this._projectLatlngs(latlngs[i], result, projectedBounds);
 				}
 			}
+			
+			projectedData = [...result];
 		},
 
 		/**
@@ -453,6 +461,8 @@ L.Hotline = function (latlngs, options) {
 			return this.options.weight / 2 + this.options.outlineWidth + (L.Browser.touch ? 10 : 0);
 		}
 	});
+
+	return new _hotline(latlngs, options)
 
 	// L.hotline = function (latlngs, options) {
 	// 	return new L.Hotline(latlngs, options);

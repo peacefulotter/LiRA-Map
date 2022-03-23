@@ -1,0 +1,2 @@
+HOST="lirase2.compute.dtu.dk"
+KEY_PATH="~/.ssh/id_rsa"

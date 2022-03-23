@@ -26,22 +26,22 @@
 require('dotenv').config();
 
 module.exports = {
-apps: [
-  {
-    name: 'LiRA-Map client',
-    script: './index.js',
-  },
-],
-deploy: {
-  production: {
-    user: 's212180',
-    host: process.env.HOST,
-    key: process.env.KEY_PATH,
-    ref: 'origin/ml',
-    repo: 'git@github.com:PeacefulOtter/LiRA-Map.git',
-    path: '/home/s212180/LiRA-Map',
-    'post-deploy':
-      "cp ~/LiRA-Map/client/.env ~/LiRA-Map/source/.env && npm install && pm2 startOrRestart client/ecosystem.config.js",
-  },
-},
+  // apps: [
+  //   {
+  //     name: 'LiRA-Map client',
+  //     script: './index.js',
+  //   },
+  // ],
+  // deploy: {
+  //   production: {
+  //     user: 's212180',
+  //     host: process.env.HOST,
+  //     key: process.env.KEY_PATH,
+  //     ref: 'origin/ml',
+  //     repo: 'git@github.com:PeacefulOtter/LiRA-Map.git',
+  //     path: '/home/s212180/LiRA-Map',
+  //     'post-deploy':
+  //       "cp ~/LiRA-Map/client/.env ~/LiRA-Map/source/.env && npm install && pm2 startOrRestart client/ecosystem.config.js",
+  //   },
+  // },
 };

@@ -54,37 +54,23 @@ const Hotline: FC<HotlineProps> = ( { path, properties, palette, onClick } ) => 
 
         // the Z value determines the color
         const coords: [number, number, number][] = path.data
-            .map( (point: PointData) => [point.pos.lat, point.pos.lng, point.value || 0])
+            .map( (point: PointData, i: number) => [point.pos.lat, point.pos.lng,  point.value || 0]) //
 
-        console.log(L.Hotline);
-
-        const hl = L.Hotline( coords, {
+        const options = {
             weight: 4,
             weightFunc: (i: number) => {
-                const formula = ((i * 3) / coords.length) + 4
-                // console.log(i, formula);
+                const formula = ((i * 10) / coords.length) + 4
                 return formula
             },
             outlineWidth: 0,
             palette: p,
-            min: path.minValue || 0,
-            max: path.maxValue || 1,
+            min: path.minValue || 0,// 0,// path.minValue || 0,
+            max: path.maxValue || 1, // coords.length - 1,// path.maxValue || 1,
             onclick: onClick(0)
-        } )
-        const hl2 = new hl( coords, {
-            weight: 4,
-            weightFunc: (i: number) => {
-                const formula = ((i * 3) / coords.length) + 4
-                // console.log(i, formula);
-                return formula
-            },
-            outlineWidth: 0,
-            palette: p,
-            min: path.minValue || 0,
-            max: path.maxValue || 1,
-            onclick: onClick(0)
-        } );
-        hl2.addTo(map)
+        }
+
+        const hl = L.Hotline( coords, options )
+        hl.addTo(map)
         // hl.addTo(map);
         
         // L.multiOptionsPolyline( path.data.map( p => p.pos ), {
