@@ -13,8 +13,6 @@ import initWebsockets from './websockets';
 import measurements from './measurements.json';
 import { writeJsonFile } from './file';
 
-
-
 import tripsRoutes from "./routes/tripsRoutes";
 import measurementsRoutes from "./routes/measurementsRoutes";
 
@@ -26,8 +24,13 @@ app.use(express.urlencoded({
 	extended: true
 }))
 
+app.use( (req, res, next) => {
+	console.log(`[${req.method}] ${req.path}`, req.query, req.body);
+	next()
+})
+
 app.use('/trips', tripsRoutes);
-app.use('/measurements', measurementsRoutes);
+// app.use('/measurements', measurementsRoutes);
 
 app.use(express.json({
 	type: ['application/json', 'text/plain'],
@@ -68,7 +71,6 @@ app.get('/a', async (req: any, res: any) => {
 
 
 app.get('/measurements', async (req: any, res: any) => {
-	console.log("[GET /measurements]" );
 	res.json( measurements );
 } )
 
@@ -93,9 +95,8 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 })
 
 app.get("/map_match", async (req: any, res: any) => {
-	const tripID = req.query.tripID;
+	const { tripID } = req.query;
 	const path: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, 'track.pos')
-	console.log("[GET /map_match] Requested ride", tripID, "path ", path);
 	const data: any = await osrmQuery(path);
 	res.json( data );
 } )
@@ -103,7 +104,6 @@ app.get("/map_match", async (req: any, res: any) => {
 app.get("/trip_measurement", async (req: any, res: any) => {
 	const tripID = req.query.tripID
 	const measurement = req.query.measurement
-	console.log("[GET /trip_measurement] Requested measurement ", measurement, " for id", tripID);
 	const data: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, measurement)
 	res.json( data );
 } )
@@ -115,19 +115,13 @@ app.get("/rides", async (req: any, res: any) => {
 } )
 
 app.get("/test", async (req: any, res: any) => {
-	console.log("[GET /test]");
 	const data: any[] = await databaseQuery<any[]>(getTest, '')
 	res.json( data )
 } )
 
 
 app.get("/login",(req,res) => {
-	console.log("[GET /login]");
-	const body = req.query;
-	const user = body.username;
-	const email = body.email;
-	const pass = body.password;
-	// do something with the credentials
+	const { user, email, pass } = req.body
 	res.json( { status: "ok" } );
 });
 

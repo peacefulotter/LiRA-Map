@@ -53,17 +53,6 @@ const Rides: FC = () => {
             : setActiveMeasurements( prev => prev.filter(value => value !== measurement))
     }
 
-
-    // Ride( {
-    //     measurements: measurements,
-    //     activeMeasurements: activeMeasurements,
-    //     tripId: meta.TripId,
-    //     taskId: meta.TaskId,
-    //     addChartData: addChartData,
-    //     removeChartData: removeChartData
-    // } )
-    // <RoutingMachine path={roadStatusToCoords(currentRide.segments)} />
-    
     return (
         <div className="rides-wrapper">
             <RideCards metas={metas} onClick={showRide}/>
