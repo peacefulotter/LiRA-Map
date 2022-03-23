@@ -6,9 +6,7 @@ COPY package.json /app-client/package.json
 
 ADD . /app-client
 
-EXPOSE 80
 EXPOSE 3000
-EXPOSE 3001
 
 RUN yarn --silent
 

@@ -49,9 +49,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:production": "npm run build && npm run start:prod",
+    "start:prod": "NODE_ENV=production node server",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "pm2-restart": "pm2 startOrRestart ecosystem.config.js",
+    "pm2-deploy": "pm2 deploy ecosystem.config.js production",
+    "pm2-logs": "pm2 deploy ecosystem.config.js production exec \"pm2 logs\"",
+    "pm2-ls": "pm2 deploy ecosystem.config.js production exec \"pm2 ls\"",
+    "pm2-flush": "pm2 deploy ecosystem.config.js production exec \"pm2 flush\"",
+    "pm2-init": "pm2 deploy ecosystem.config.js production setup"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
