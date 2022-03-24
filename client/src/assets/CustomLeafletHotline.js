@@ -281,6 +281,13 @@ L.Hotline = function (latlngs, zoom, options) {
 			this._hotline.height(this._container.height);
 		},
 
+		_optimize: function(zoom, first, last) {
+			const minZoom = 12;
+			const maxZoom = 17
+			const zoomIndex = (zoom - minZoom < 0 ? 0 : zoom - minZoom);
+			return projectedData[zoomIndex].slice(first, last)
+		},
+
 		_updatePoly: function (layer) {
 			if (!this._drawing) { return; }
 
@@ -295,9 +302,9 @@ L.Hotline = function (latlngs, zoom, options) {
 			const points = parts[0]
 			const first = points[0].i
 			const last = points[points.length - 1].i
-			console.log(zoom);
-			const dataOnView = projectedData[0].slice(first, last)
-			console.log(dataOnView.length);
+			const dataOnView = projectedData[zoomIndex].slice(first, last)
+			// this._optimize(zoom, first, last) 
+			console.log(zoom, dataOnView.length);
 
 			this._hotline
 				.data([dataOnView])

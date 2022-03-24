@@ -56,9 +56,11 @@ const Hotline: FC<HotlineProps> = ( { path, properties, palette, onClick } ) => 
         }
 
         // the Z value determines the color
-        const coords: [number, number, number][][] = [12, 13, 14, 15, 16]
+        const zooms = [1, 2, 3, 4, 5, 6]
+        const coords: [number, number, number][][] = zooms
             .map(zoom => {
                 return path.data
+                    .filter( (point: PointData, i: number) => (i % zoom === 1) )
                     .map( (point: PointData) => 
                         [point.pos.lat, point.pos.lng, point.value || 0] )
             } )
