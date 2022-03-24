@@ -5,7 +5,7 @@
 */
 import L from 'leaflet'
 
-L.Hotline = function (latlngs, options) {
+L.Hotline = function (latlngs, zoom, options) {
 
 	let projectedData = undefined
 	// Plugin is already added to Leaflet
@@ -290,14 +290,17 @@ L.Hotline = function (latlngs, options) {
 
 			this._updateOptions(layer);
 
-			// console.log(this._hotline);
-			// console.log(this._hotline._data);
-			// console.log(parts);
+			console.log('a');
 
-			console.log(parts, projectedData);
+			const points = parts[0]
+			const first = points[0].i
+			const last = points[points.length - 1].i
+			console.log(zoom);
+			const dataOnView = projectedData[0].slice(first, last)
+			console.log(dataOnView.length);
 
 			this._hotline
-				.data(projectedData)
+				.data([dataOnView])
 				.draw();
 		},
 
@@ -359,10 +362,12 @@ L.Hotline = function (latlngs, options) {
 
 					if (codeOut === codeA) {
 						p.z = a.z;
+						p.i = a.i
 						a = p;
 						codeA = newCode;
 					} else {
 						p.z = b.z;
+						p.i = b.i
 						b = p;
 						codeB = newCode;
 					}
@@ -410,6 +415,7 @@ L.Hotline = function (latlngs, options) {
 					ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
 					// Add the altitude of the latLng as the z coordinate to the point
 					ring[i].z = latlngs[i].alt;
+					ring[i].i = i
 					projectedBounds.extend(ring[i]);
 				}
 				result.push(ring);

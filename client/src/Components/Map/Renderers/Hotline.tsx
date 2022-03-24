@@ -4,10 +4,11 @@ import L from 'leaflet'
 import '../../../assets/CustomLeafletHotline';
 import 'Leaflet.MultiOptionsPolyline'
 import { PolylineOptions, PolylineOptionsFn } from 'Leaflet.MultiOptionsPolyline';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { EventRendererProps, PathProperties, PointData } from "../../../assets/models";
 import useCanvas from './useCanvas';
+import { useMapEvents } from 'react-leaflet';
 
 interface HotlineProps extends EventRendererProps {
     palette?: any
@@ -41,7 +42,11 @@ const getOptions = (length: number, properties: PathProperties): PolylineOptions
 
 const Hotline: FC<HotlineProps> = ( { path, properties, palette, onClick } ) => {
 
-    const [map, canvas] = useCanvas();
+    const [zoom, setZoom] = useState<number>(0)
+
+    const map = useMapEvents({
+        zoom: () => setZoom(map.getZoom())
+    })
 
     useEffect(() => {
         const p = palette || {
@@ -50,41 +55,33 @@ const Hotline: FC<HotlineProps> = ( { path, properties, palette, onClick } ) => 
             1.0: 'red'
         }
 
-        const colorThresholds = 50
-
         // the Z value determines the color
-        const coords: [number, number, number][] = path.data
-            .map( (point: PointData, i: number) => [point.pos.lat, point.pos.lng,  point.value || 0]) //
+        const coords: [number, number, number][][] = [12, 13, 14, 15, 16]
+            .map(zoom => {
+                return path.data
+                    .map( (point: PointData) => 
+                        [point.pos.lat, point.pos.lng, point.value || 0] )
+            } )
 
         const options = {
-            weight: 4,
+            weight: properties.boldness || properties.size,
             weightFunc: (i: number) => {
-                const formula = ((i * 10) / coords.length) + 4
-                return formula
+                console.log(zoom);
+                
+                // const formula = ((i * 10) / coords.length) + 4
+                return 4 + zoom - 12
             },
             outlineWidth: 0,
             palette: p,
-            min: path.minValue || 0,// 0,// path.minValue || 0,
-            max: path.maxValue || 1, // coords.length - 1,// path.maxValue || 1,
+            min: path.minValue || 0,
+            max: path.maxValue || 1,
             onclick: onClick(0)
         }
 
-        const hl = L.Hotline( coords, options )
+        const hl = L.Hotline( coords, zoom, options )
         hl.addTo(map)
-        // hl.addTo(map);
-        
-        // L.multiOptionsPolyline( path.data.map( p => p.pos ), {
-        //     multiOptions: {
-        //         optionIdxFn: function (latLng, prev, i) {
-        //             const mappedValue = ((path.data[i].value || -9999) - (path.minValue || 0)) / ((path.maxValue || 1) - (path.minValue || 0))
-        //             const a = Math.round(mappedValue * (colorThresholds - 1));
-        //             return a
-        //         },
-        //         options: getOptions(colorThresholds, properties),
-        //     },
-        //     opacity: properties.opacity || 1.0,
-        // }).addTo(map);
-    }, [])
+        return () => hl.remove()
+    }, [zoom]) 
 
     return <></>;
 }
