@@ -9,7 +9,6 @@ const Line: FC<RendererProps> = ( { path, properties, setMarker } ) => {
     
     const way = path.data.map((p: PointData) =>  p.pos ) 
     const color = { color: properties.color };
-
     return <Polyline 
         positions={way} 
         key={`${Math.random()}-line`}
