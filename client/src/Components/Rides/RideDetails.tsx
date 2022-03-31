@@ -10,17 +10,16 @@ import { Measurement, RideMeta, RendererName, RideMeasurement } from '../../asse
 import { DEFAULT_COLOR } from "../../assets/properties";
 
 import '../../css/ridedetails.css'
+import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 
 
 type Props = {
-	measurements: RideMeasurement[];
-	setMeasurements: React.Dispatch<React.SetStateAction<RideMeasurement[]>>;
     metas: RideMeta[];
-	measurementClick: (measIndex: number, isChecked: boolean) => void;
 };
 
-const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measurementClick } ) => {
+const RideDetails: FC<Props> = ( {metas } ) => {
 
+	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
 	
 	const popup = useMeasPopup()
@@ -63,6 +62,12 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 		)
 	}
 
+    const measurementClicked = (measIndex: number, isChecked: boolean) => {        
+        const temp = [...measurements]
+        temp[measIndex].isActive = isChecked
+        setMeasurements(temp)
+    }
+
     return (
 		<div className="meta-data">
 			{
@@ -71,7 +76,7 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 						key={`ride-md-checkbox-${i}`}
 						className='ride-metadata-checkbox'
 						html={getMeasurementsContent(m, i)}
-						onClick={(isChecked) => measurementClick(i, isChecked)} />
+						onClick={(isChecked) => measurementClicked(i, isChecked)} />
 				)
 			}
 

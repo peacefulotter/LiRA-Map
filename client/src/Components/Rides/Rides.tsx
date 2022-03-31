@@ -6,16 +6,15 @@ import Chart, { ChartAddFunc, ChartRemFunc } from "./Chart";
 
 import Ride from "../Map/Ride";
 import MapWrapper from "../Map/MapWrapper";
-import useMeasurements from "../Map/Measurements";
 
 import { RideMeta } from '../../assets/models'
 import { get } from "../../assets/fetch";
 
 import '../../css/rides.css'
+import { MeasurementsProvider } from "../../context/MeasurementsContext";
 
 
 const Rides: FC = () => {
-    const [ measurements, setMeasurements ] = useMeasurements();
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
 
@@ -45,42 +44,35 @@ const Rides: FC = () => {
         } 
     }
 
-    const measurementClicked = (measIndex: number, isChecked: boolean) => {        
-        const temp = [...measurements]
-        temp[measIndex].isActive = isChecked
-        setMeasurements(temp)
-    }
-
     return (
-        <div className="rides-wrapper">
-            <RideCards metas={metas} onClick={showRide}/>
-            
-            <RideDetails 
-                measurements={measurements} setMeasurements={setMeasurements} measurementClick={measurementClicked}
-                metas={selectedRides.map(i => metas[i])} />
-            
-            <div className="map-container">
-                <MapWrapper>
-                    {
-                        selectedRides.map( (i: number) => {
-                            return <Ride
-                                key={`Ride${Math.random()}`}
-                                measurements={measurements}
-                                tripId={metas[i].TripId}
-                                taskId={metas[i].TaskId}
-                                addChartData={addChartData}
-                                removeChartData={remChartData} />
-                        } )
-                    }
-                </MapWrapper>
-                    
-                <Chart 
-                    setAddChartData={setAddChartData}
-                    setRemChartData={setRemChartData}
-                    />
-            </div>
-      </div>
-    
+        <MeasurementsProvider>
+            <div className="rides-wrapper">
+                
+                <RideCards metas={metas} onClick={showRide}/>
+                
+                <RideDetails metas={selectedRides.map(i => metas[i])} />
+                
+                <div className="map-container">
+                    <MapWrapper>
+                        {
+                            selectedRides.map( (i: number) => {
+                                return <Ride
+                                    key={`Ride${Math.random()}`}
+                                    tripId={metas[i].TripId}
+                                    taskId={metas[i].TaskId}
+                                    addChartData={addChartData}
+                                    removeChartData={remChartData} />
+                            } )
+                        }
+                    </MapWrapper>
+                        
+                    <Chart 
+                        setAddChartData={setAddChartData}
+                        setRemChartData={setRemChartData}
+                        />
+                </div>
+        </div>
+    </MeasurementsProvider>
   )
 }
 

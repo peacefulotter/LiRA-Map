@@ -23,12 +23,14 @@
         "hasValue": true
     },
     {
-        "rendererName": "hotpoints",
+        "rendererName": "hotline",
         "query": "/trip_measurement",
         "queryMeasurement": "obd.rpm",
         "name": "Engine RPM",
         "color": "#7bdcb5",
-        "hasValue": true
+        "width": 1,
+        "hasValue": true,
+        "isActive": false
     },
     {
         "rendererName": "hotline",

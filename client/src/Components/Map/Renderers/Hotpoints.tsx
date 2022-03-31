@@ -1,6 +1,7 @@
 import L from 'leaflet'
 import { useEffect } from 'react';
 import { EventRenderer, PointData } from "../../../assets/models";
+import { opacity, weight, width } from '../../../assets/properties';
 import useCanvas from '../Hooks/useCanvas';
 
 const getColor = (val: any, defaultColor: string | undefined, i: number): string => {
@@ -23,10 +24,10 @@ const Hotpoints: EventRenderer = ( { path, properties, onClick, minValue, maxVal
             const mappedValue: number = ((p.value || -9999) - (minValue || 0)) / ((maxValue || 1) - (minValue || 0))
             return L.circle( [p.lat, p.lng], { 
                 renderer: canvas, 
-                radius: properties.width,
+                radius: width(p.properties, properties),
                 color: getColor(mappedValue, properties.color, i / path.length),
-                weight: properties.weight || 4,
-                opacity: properties.opacity || 1.0
+                weight: weight(p.properties, properties),
+                opacity: opacity(p.properties, properties)
             } ).on("click", onClick(i)).addTo(map);
         } )
     }, [])

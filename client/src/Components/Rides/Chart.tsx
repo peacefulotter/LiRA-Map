@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react' 
 import { default as ApexChart } from "react-apexcharts";
-import { ChartData, ChartPoint } from '../../assets/models';
+import { ChartData, Path, PointData } from '../../assets/models';
 
-export type ChartAddFunc = (dataName: string, data: ChartData) => void
+export type ChartAddFunc = (dataName: string, data: Path, minTime?: number) => void
 export type ChartRemFunc = (dataName: string) => void
 
 interface Props {
@@ -14,12 +14,19 @@ const Chart: FC<Props> = ( { setAddChartData, setRemChartData } ) => {
     const [series, setSeries] = useState<any[]>([])
 
 
-    const addChartData = (dataName: string, data: ChartData) => { 
+    const addChartData = (dataName: string, data: Path, minTime?: number) => { 
         console.log('adding ' + dataName);
-        
+
         const MAX_NB_POINTS = 5_000
         const threshold = Math.ceil(data.length / MAX_NB_POINTS)
-        const chartData = data.filter((val: ChartPoint, i: number) => i % threshold === 0 )
+        const chartData: ChartData = data
+            .filter((point: PointData, i: number) => i % threshold === 0 && point.metadata )
+            .map( (point: PointData) => { 
+                return { 
+                    x: point.metadata.timestamp as number - (minTime || 0), 
+                    y: point.value as number || 0
+                } 
+            } )
 
         const updated = [...series]
         updated.push( { name: dataName, data: chartData } )
@@ -32,12 +39,10 @@ const Chart: FC<Props> = ( { setAddChartData, setRemChartData } ) => {
     }
 
     useEffect( () => {
-        console.log('before');
-        
+        console.log('chart before');
         setAddChartData(() => addChartData)
         setRemChartData(() => removeChartData)
-        console.log('after');
-        
+        console.log('chart after');
     }, [])
 
     const options = {

@@ -4,35 +4,33 @@ import { FC, useState, useEffect } from "react";
 import EventPath from "./EventPath";
 import usePopup from '../Popup'
 
-import { ChartData, DataPath, Measurement, RideMeasurement } from '../../assets/models'
+import { DataPath, Measurement, Path } from '../../assets/models'
 import { post } from '../../assets/fetch'
 
 import '../../css/road.css'
+import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 
 
 
 interface Props {
-    measurements: RideMeasurement[], 
     tripId: string, 
     taskId: number, 
-    addChartData: (dataName: string, data: ChartData) => void,
+    addChartData: (dataName: string, path: Path, minTime?: number) => void,
     removeChartData: (dataName: string) => void
 }
 
 interface LoadablePath {
-    loaded: boolean;
     displayed: boolean;
     dataPath: DataPath | undefined
 }
 
 const getEmptyLoadablePath = () => {
-    return { loaded: false, displayed: false, dataPath: undefined }
+    return { displayed: false, dataPath: undefined }
 }
  
-const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeChartData } ) => {
-
-    console.log(measurements);
+const Ride: FC<Props> = ( { tripId, taskId, addChartData, removeChartData } ) => {
     
+    const { measurements } = useMeasurementsCtx()
     
     const [paths, setPaths] = useState<LoadablePath[]>(
         measurements.map(getEmptyLoadablePath)
@@ -44,7 +42,7 @@ const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeCh
     }
 
     const requestMeasurement = ( measIndex: number ) => {     
-        if ( paths[measIndex] !== undefined && paths[measIndex].loaded ) 
+        if ( paths[measIndex] !== undefined && paths[measIndex].dataPath !== undefined ) 
             return;
 
         const meas: Measurement = measurements[measIndex]
@@ -59,7 +57,6 @@ const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeCh
             // update paths
             const temp = [...paths]
             temp[measIndex].dataPath = data;
-            temp[measIndex].loaded = true;
             temp[measIndex].displayed = true;
             setPaths(temp)
             
@@ -78,10 +75,7 @@ const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeCh
                         footer: `TripId: ${tripId} | TaskId: ${taskId}`
                     } );
 
-                const chartData = path.map( (d: any) => { 
-                    return { x: d.timestamp as number - (minTime || 0), y: d.value as number } 
-                } )            
-                addChartData( getDataName(meas), chartData )
+                addChartData( getDataName(meas), path, minTime || 0 )
             }
         })
     }
@@ -92,27 +86,27 @@ const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeCh
         if ( measurements.length > paths.length )
             requestMeasurement(paths.length)
 
-        paths.forEach( (p: any, i: number) => {
+        paths.forEach( (p: LoadablePath, i: number) => {
             const meas = measurements[i]
 
-            console.log(i, meas.isActive, p.loaded, p.displayed);
+            console.log(i, meas.isActive, p.displayed);
             
 
             // load and show
-            if ( meas.isActive && !p.loaded )
+            if ( meas.isActive && p.dataPath === undefined )
                 requestMeasurement(i)
 
             // show without loading it again since it's already loaded
-            else if ( meas.isActive && p.loaded && !p.displayed )
+            else if ( meas.isActive && p.dataPath !== undefined && !p.displayed )
             {
-                const temp: any = [...paths]
+                const temp = [...paths]
                 temp[i].displayed = true;
                 setPaths(temp)
 
-                addChartData( getDataName(meas), temp[i] )
+                addChartData( getDataName(meas), p.dataPath.path, p.dataPath.minTime )
             }
             // hide but keep in memory 
-            else if ( !meas.isActive && p.loaded && p.displayed )
+            else if ( !meas.isActive && p.displayed )
             {
                 console.log('UNLOADING', i);
                 
@@ -129,7 +123,7 @@ const Ride: FC<Props> = ( { measurements, tripId, taskId, addChartData, removeCh
     return (
         <>
         { paths.map( (p: LoadablePath, i: number) => 
-            measurements[i].isActive && p.loaded && p.displayed && p.dataPath !== undefined 
+            measurements[i].isActive && p.displayed && p.dataPath !== undefined 
                 ? <EventPath 
                     key={`path${Math.random()}`} 
                     dataPath={p.dataPath} 

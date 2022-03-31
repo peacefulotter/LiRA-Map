@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from 'react';
 import { EventRendererProps, PointData } from "../../../assets/models";
 import '../../../assets/CustomHotline';
 import useZoom from '../Hooks/useZoom';
-import { width } from '../../../assets/properties';
+import { DEFAULT_WIDTH, width } from '../../../assets/properties';
 
 interface HotlineProps extends EventRendererProps {
     palette?: any
@@ -50,12 +50,12 @@ const Hotline: FC<HotlineProps> = ( {
 
     const options = {
         zoomRange: zoomRange || [12, 17],
-        weight: properties.width || 8,
+        weight: properties.width || DEFAULT_WIDTH,
         weightFunc: (i: number) => {
             // console.log(zoom);
             // const formula = ((i * 10) / coords.length) + 4
             // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
-            return width(path[i].properties, properties) + zoom
+            return width(path[i].properties, properties) + zoom - 7
         },
         outlineWidth: 0,
         palette: palette || {
