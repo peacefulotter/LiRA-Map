@@ -1,6 +1,5 @@
 import fs, { readdir } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
-import { file } from 'tmp';
 import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 

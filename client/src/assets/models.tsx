@@ -1,8 +1,5 @@
 
-
-import { LatLng } from 'leaflet';
 import { FC } from 'react';
-import { RendererName } from './renderers';
 
 export interface RideMeta {
 	TripId: string,
@@ -23,59 +20,101 @@ export interface RideMeta {
 }
 
 export interface MeasurementData {
-  T: string,
-  lat: number,
-  lon: number,
-  message: string
+	T: string,
+	lat: number,
+	lon: number,
+	message: string
 }
 
-export type RidePos = LatLng[];
-
-export interface PointData {
-	pos: LatLng;
-	value?: number;   	   			
-	timestamp?: number | string;   
-	metadata?: any;
+export interface LatLng {
+	lat: number;
+	lng: number;
 }
 
-export interface RideData {
-    data: PointData[]
-    minValue?: number;
-    maxValue?: number; 
-    minTime?: number;
-    maxTime?: number;
-} 
+/* ==================== PROPERTIES ==================== */
 
-export interface RideModel {
-	pos: RidePos,
-	meta: RideMeta
+export enum RendererName {
+    circle = 'circle',
+    circles = 'circles', 
+    rectangles = 'rectangles',
+    line = 'line',
+    hotline = 'hotline',
+    hotpoints = 'hotpoints'
 }
 
-export type PathModel = {
-	loaded: boolean;
-	path: RideData
-	fullPath: RideData | undefined
-}
-
-export interface PathProperties {
-	renderer: RendererName;
-	color: string;
-	size: number;
-	value?: number | string;
-	boldness?: number;
+// Rendering properties of a single point belonging to a Path
+// If an attribute is defined for a point, it overwrites the properties for the path
+export interface PointProperties {
+	// Color of a point or the entire path 
+	color?: string;
+	// Radius or largeness of a point or the entire path
+	width?: number;
+	// Weight (boldness) of a point or the entire path
+	weight?: number;
+	// Opacity (between 0 and 1) of a point or the entire path
 	opacity?: number;
-	dilatation?: number
+}
+
+// Rendering properties of an entire Path
+export interface PathProperties extends PointProperties {
+	// The name of the renderer to use - see ./renderers for the list of names
+	rendererName: RendererName;
+	// Weight will depend on the value - the dilatationFactor will control how big a weight
+	// grows depending on the value. 
+	// 	< 1 -> shrinks
+	//  > 1 -> grows
+	//  == 1 -> stays the same
+	dilatationFactor?: number;
 }
 
 export interface Measurement extends PathProperties {
+	rendererName: RendererName;
 	query: string;
 	queryMeasurement: string,
 	name: string;
+	// Needs to be specified if the points have a value attached to them 
+	hasValue?: boolean;
 }
 
+export interface RideMeasurement extends Measurement {
+	isActive: boolean; // true if measurement is displayed, false otherwise
+}
+
+/* =================================================== */
+
+// Represents a point containing (lat, lng) coordinates, 
+// rendering properties, and optionally, a value and some metadata (like timestamp)
+export interface PointData extends LatLng {
+	properties?: PointProperties;
+	value?: number;   	   			
+	metadata?: any;
+}
+
+// A Path is a collection of points
+export type Path = PointData[]
+
+// A DataPath is a Path with informations on the latter
+export interface DataPath {
+	path: Path;
+	minValue?: number;
+    maxValue?: number; 
+    minTime?: number;
+    maxTime?: number;
+}
+
+// Props passed to the Path and EventPath components
+// This interface can also be used as a type for server's response
+// for instance, JSON files follow this format
+export interface PathProps {
+	dataPath: DataPath
+	properties: PathProperties;
+	metadata?: {[key: string]: any}
+}
+
+
 /* ==================== RENDERERS ==================== */
-export interface RendererProps {
-    path: RideData;
+
+export interface RendererProps extends DataPath {
     properties: PathProperties;
 }
 
@@ -89,18 +128,11 @@ export type Renderer = FC<RendererProps>
 export type EventRenderer = FC<EventRendererProps>
 
 
-export interface PointProps {
-    pos: LatLng;
-    properties: PathProperties;
+export interface PointProps extends LatLng {
+	pointProperties: PointProperties | undefined;
+	pathProperties: PathProperties;
 	onClick: PathEventHandler;
 	i: number;
-}
-
-/* ==================== PATH ==================== */
-export interface PathProps {
-	path: RideData;
-	properties: PathProperties;
-	metadata?: {[key: string]: any}
 }
 
 /* ==================== CHART ==================== */

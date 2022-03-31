@@ -1,7 +1,6 @@
 
 
 import { FC } from "react";
-import { Circle } from 'react-leaflet'
 
 import { EventRenderer, PointProps } from "../../../assets/models";
 import { createCircle } from "./Circle";
@@ -11,8 +10,8 @@ const Circles: EventRenderer = ( props ) => {
     return <Points {...props} PointElt={CCircle} />
 }
 
-const CCircle: FC<PointProps> = ( { pos, properties, onClick, i } ) =>  {    
-    return createCircle(pos.lat, pos.lng, properties, onClick(i))
+const CCircle: FC<PointProps> = ( { lat, lng, pointProperties, pathProperties, onClick, i } ) =>  {    
+    return createCircle(lat, lng, pointProperties, pathProperties, onClick(i))
 }
 
 export default Circles;

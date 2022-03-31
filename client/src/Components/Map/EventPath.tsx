@@ -34,13 +34,13 @@ const getPopupLine = (key: string, value: any) => {
     return <div key={`popupline-${Math.random()}`}>{key}: {value}</div>
 }
 
-const EventPath: FC<PathProps> = ( { path, properties, metadata } ) => {
+const EventPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
 
     const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
     const [selected, setSelected] = useState<number | undefined>(undefined);
 
     const md = metadata || {}
-    const EventRenderer = renderers[properties.renderer] as EventRenderer
+    const EventRenderer = renderers[properties.rendererName] as EventRenderer
 
     const onClick = (i: number) => (e: any) => {
         const { lat, lng } = e.latlng
@@ -48,11 +48,11 @@ const EventPath: FC<PathProps> = ( { path, properties, metadata } ) => {
         setSelected(i)
     }
     
-    const point = path.data[selected || 0]
+    const point = dataPath.path[selected || 0]
     
     return ( <> 
         <EventRenderer 
-            path={path} 
+            {...dataPath}
             properties={properties} 
             onClick={onClick} 
         />
@@ -61,7 +61,6 @@ const EventPath: FC<PathProps> = ( { path, properties, metadata } ) => {
                 <Popup>
                     { getPopupLine('Properties', properties) }
                     { getPopupLine('Value', point.value) }
-                    { getPopupLine('Timestamp', point.timestamp) }
                     { Object.keys(point.metadata || {}).map(key => getPopupLine(key, point.metadata[key]))}
                     { Object.keys(md).map(key => getPopupLine(key, md[key]))}
                 </Popup>

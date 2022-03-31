@@ -4,9 +4,8 @@ import { useState } from "react";
 
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
-import Renderers, { RendererName } from "../../assets/renderers";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
-import { Measurement, Renderer } from "../../assets/models";
+import { RendererName, RideMeasurement } from "../../assets/models";
 import renderers from "../../assets/renderers";
 
 interface PopupOptions {
@@ -66,12 +65,11 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, def
 
 const DEFAULT_COLOR = '#bb55dd'
 
-
 const useMeasPopup = () => {
 
     const popup = usePopup()
 
-    return { fire: ( callback: (measurement: Measurement | undefined) => void, options: PopupOptions) => {
+    return { fire: ( callback: (measurement: RideMeasurement) => void, options: PopupOptions) => {
 
         popup( {
             title: <p>Enter the name of your measurement and its tag<br/>(ex: obd.rpm, acc.xyz)</p>,
@@ -87,23 +85,24 @@ const useMeasPopup = () => {
         } )
         .then( (result: any) => {
             if ( !result.isConfirmed )
-                return callback( undefined )
+                return
 
-            const newMeasurement: Measurement = {
-                renderer: options.renderer,
+            const newMeasurement: RideMeasurement = {
+                rendererName: options.renderer,
                 query: '/trip_measurement',
                 queryMeasurement: options.tag,
                 name: options.name,
                 color: options.color,
-                size: 1,
-                value: 'number'
+                width: 1,
+                hasValue: true,
+                isActive: false
             }
 
             callback(newMeasurement)
     
             popup( {
                 title: <p>Measurement <b>{newMeasurement.name}</b> added / modified</p>,
-                footer: `Will be drawn as ${newMeasurement.renderer}`,
+                footer: `Will be drawn as ${newMeasurement.rendererName}`,
                 icon: 'success',
                 timer: 1500,
                 timerProgressBar: true,

@@ -5,17 +5,17 @@ import RideDetails from "./RideDetails";
 import Chart, { ChartAddFunc, ChartRemFunc } from "./Chart";
 
 import Ride from "../Map/Ride";
-import { RideMeta } from '../../assets/models'
-import useMeasurements from "../Map/Measurements";
 import MapWrapper from "../Map/MapWrapper";
+import useMeasurements from "../Map/Measurements";
+
+import { RideMeta } from '../../assets/models'
+import { get } from "../../assets/fetch";
 
 import '../../css/rides.css'
-import { get } from "../../assets/fetch";
 
 
 const Rides: FC = () => {
     const [ measurements, setMeasurements ] = useMeasurements();
-    const [ activeMeasurements, setActiveMeasurements ] = useState<number[]>([]);
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
     const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
 
@@ -24,12 +24,10 @@ const Rides: FC = () => {
 
     // fetch the metadata of all the rides
     useEffect( () => {
-        get( '/rides', (data: any) => setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) )
+        get( '/rides', (data: any) => 
+            setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) 
+        )
     }, [] );
-
-    function changeMetas(value: any){
-        setMetas(value);
-    }
 
     const showRide = (i: number, isChecked: boolean) => {   
         if ( isChecked )      
@@ -47,10 +45,10 @@ const Rides: FC = () => {
         } 
     }
 
-    const measurementClicked = (measurement: number, isChecked: boolean) => {        
-        isChecked 
-            ? setActiveMeasurements( prev => [...prev, measurement])
-            : setActiveMeasurements( prev => prev.filter(value => value !== measurement))
+    const measurementClicked = (measIndex: number, isChecked: boolean) => {        
+        const temp = [...measurements]
+        temp[measIndex].isActive = isChecked
+        setMeasurements(temp)
     }
 
     return (
@@ -64,18 +62,15 @@ const Rides: FC = () => {
             <div className="map-container">
                 <MapWrapper>
                     {
-                        metas
-                            .filter( (meta: RideMeta, i: number) => selectedRides.includes(i) )
-                            .flatMap( (meta: RideMeta) => {
-                                return <Ride
-                                    key={`Ride${Math.random()}`}
-                                    measurements={measurements}
-                                    activeMeasurements={activeMeasurements}
-                                    tripId={meta.TripId}
-                                    taskId={meta.TaskId}
-                                    addChartData={addChartData}
-                                    removeChartData={remChartData} />
-                            } )
+                        selectedRides.map( (i: number) => {
+                            return <Ride
+                                key={`Ride${Math.random()}`}
+                                measurements={measurements}
+                                tripId={metas[i].TripId}
+                                taskId={metas[i].TaskId}
+                                addChartData={addChartData}
+                                removeChartData={remChartData} />
+                        } )
                     }
                 </MapWrapper>
                     

@@ -95,7 +95,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         setShowMetas([...showMetas].reverse())
     }
     
-    
     useEffect( () => {
         setShowMetas(range(metas.length))
     }, [metas])

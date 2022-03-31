@@ -3,14 +3,14 @@ import { FC } from "react";
 import { PathProps, Renderer } from '../../assets/models'
 import renderers from "../../assets/renderers";
 
-const Path: FC<PathProps> = ( { path, properties } ) => {
+const Path: FC<PathProps> = ( { dataPath, properties } ) => {
 
-    const Renderer = renderers[properties.renderer] as Renderer
+    const Renderer = renderers[properties.rendererName] as Renderer
 
-    if ( path.data.length === 0 || Renderer === undefined ) 
+    if ( dataPath.path.length === 0 || Renderer === undefined ) 
          return <></>
 
-    return <Renderer path={path} properties={properties} />
+    return <Renderer {...dataPath} properties={properties} />
 }
 
 export default Path;

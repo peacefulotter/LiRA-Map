@@ -14,11 +14,13 @@ const Points: FC<Props> = ( { path, properties, onClick, PointElt } ) => {
     return (
         <>
         {
-            path.data.map( (point: PointData, i: number) => {
+            path.map( (point: PointData, i: number) => {
                 return <PointElt 
                     key={`PointElt${Math.random()}`}
-                    pos={point.pos} 
-                    properties={properties} 
+                    lat={point.lat}
+                    lng={point.lng} 
+                    pointProperties={point.properties}
+                    pathProperties={properties} 
                     onClick={onClick}
                     i={i} />
             } )

@@ -1,7 +1,6 @@
 import knex, { Knex } from 'knex';
 
 import * as dotenv from "dotenv";
-import { any } from 'nconf';
 dotenv.config( { path: __dirname + '/.env' } );
 
 const { DB_USER, DB_PASSWORD } = process.env;

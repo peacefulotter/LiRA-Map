@@ -2,7 +2,6 @@
 import { MapContainer, TileLayer } from 'react-leaflet'
 
 import '../../css/map.css'
-import MapEvents from './MapEvents';
 
 
 const MapWrapper = ( props : any ) => { 
@@ -19,7 +18,6 @@ const MapWrapper = ( props : any ) => {
 				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<MapEvents />
 			{ children }
 		</MapContainer>
   	)

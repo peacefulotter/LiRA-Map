@@ -1,14 +1,17 @@
 
 import { useEffect, useState } from 'react'
 import { get, put } from '../../assets/fetch'
-import { Measurement } from '../../assets/models'
+import { Measurement, RideMeasurement } from '../../assets/models'
 	
-export const useMeasurements = (): [Measurement[], React.Dispatch<React.SetStateAction<Measurement[]>>] => {
-	const [ measurements, setMeasurements ] = useState<Measurement[]>([])
+export const useMeasurements = (): [RideMeasurement[], React.Dispatch<React.SetStateAction<RideMeasurement[]>>] => {
+	const [ measurements, setMeasurements ] = useState<RideMeasurement[]>([])
 	
 	useEffect( () => {
-		get('/measurements', (data) => {
-			setMeasurements(data);
+		get('/measurements', (data: Measurement[]) => {
+			console.log(data);
+			setMeasurements( data.map(meas => {
+				return { ...meas, isActive: false }
+			} ) );
 		})
 	}, [])
 

@@ -1,8 +1,4 @@
-/*
- (c) 2017, iosphere GmbH
- Leaflet.hotline, a Leaflet plugin for drawing gradients along polylines.
- https://github.com/iosphere/Leaflet.hotline/
-*/
+
 import L from 'leaflet'
 
 L.Hotline = function (latlngs, zoom, options) {
@@ -281,13 +277,6 @@ L.Hotline = function (latlngs, zoom, options) {
 			this._hotline.height(this._container.height);
 		},
 
-		_optimize: function(zoom, first, last) {
-			const minZoom = 12;
-			const maxZoom = 17
-			const zoomIndex = (zoom - minZoom < 0 ? 0 : zoom - minZoom);
-			return projectedData[zoomIndex].slice(first, last)
-		},
-
 		_updatePoly: function (layer) {
 			if (!this._drawing) { return; }
 
@@ -302,7 +291,7 @@ L.Hotline = function (latlngs, zoom, options) {
 			const points = parts[0]
 			const first = points[0].i
 			const last = points[points.length - 1].i
-			const dataOnView = projectedData[zoomIndex].slice(first, last)
+			const dataOnView = projectedData[0].slice(first, last)
 			// this._optimize(zoom, first, last) 
 			console.log(zoom, dataOnView.length);
 
@@ -476,8 +465,4 @@ L.Hotline = function (latlngs, zoom, options) {
 	});
 
 	return new _hotline(latlngs, options)
-
-	// L.hotline = function (latlngs, options) {
-	// 	return new L.Hotline(latlngs, options);
-	// };
 };

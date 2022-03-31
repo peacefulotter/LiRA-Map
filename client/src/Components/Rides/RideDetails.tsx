@@ -1,20 +1,20 @@
 import { FC, useState } from "react";
 import { FiSettings } from 'react-icons/fi'
 
+import { addMeasurement, editMeasurement } from "../Map/Measurements";
 import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
-import { Measurement, RideMeta } from '../../assets/models'
-import Renderers, { RendererName } from "../../assets/renderers";
+import { Measurement, RideMeta, RendererName, RideMeasurement } from '../../assets/models'
+import { DEFAULT_COLOR } from "../../assets/properties";
 
 import '../../css/ridedetails.css'
-import { addMeasurement, editMeasurement } from "../Map/Measurements";
 
 
 type Props = {
-	measurements: Measurement[];
-	setMeasurements: React.Dispatch<React.SetStateAction<Measurement[]>>;
+	measurements: RideMeasurement[];
+	setMeasurements: React.Dispatch<React.SetStateAction<RideMeasurement[]>>;
     metas: RideMeta[];
 	measurementClick: (measIndex: number, isChecked: boolean) => void;
 };
@@ -32,18 +32,19 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 		const m = measurements[i]
 
 		popup.fire( 
-			(newMeasurement: Measurement | undefined ) => {
-				if ( newMeasurement === undefined ) return;
-				setMeasurements( prev => prev.map( (m: Measurement, j: number) => i === j ? newMeasurement : m ) )
+			(newMeasurement: RideMeasurement) => {
+				const temp = measurements
+					.map( (m: RideMeasurement, j: number) => i === j ? newMeasurement : m )
+				setMeasurements( temp )
 				editMeasurement(newMeasurement, i)
 			}, 
-			{ name: m.name, tag: m.queryMeasurement, renderer: m.renderer, color: m.color } 
+			{ name: m.name, tag: m.queryMeasurement, renderer: m.rendererName, color: m.color || DEFAULT_COLOR } 
 		)
 	}
 
 	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
 		return <div className="checkbox-container">
-			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {m.renderer}</p></div>
+			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {m.rendererName}</p></div>
 			<FiSettings className="edit-meas-btn btn" onClick={(e) => openEditMeasurement(e, i)} strokeWidth={1}/>
 		</div>
 	}
@@ -51,11 +52,8 @@ const RideDetails: FC<Props> = ( { measurements, setMeasurements, metas, measure
 	const showAddMeasurement = () => {
 		setAddChecked(true) 
 		popup.fire( 
-			(newMeasurement: Measurement | undefined ) => {
+			(newMeasurement: RideMeasurement ) => {
 				setAddChecked(false) 
-
-				if ( newMeasurement === undefined ) return;
-
 				// update the state in RideDetails
 				setMeasurements( prev => [...prev, newMeasurement])
 				// and add the measurement to the measurements.json file

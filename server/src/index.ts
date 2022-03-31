@@ -6,7 +6,7 @@ import fs from 'fs'
 import databaseQuery from './database'
 import osrmQuery from './osrm';
 
-import { RideData, RideMeta } from "./models";
+import { DataPath, RideMeta } from "./models";
 import { getRides, getTest, getMeasurementData } from './queries'
 
 import initWebsockets from './websockets';
@@ -96,7 +96,7 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 
 app.get("/map_match", async (req: any, res: any) => {
 	const { tripID } = req.query;
-	const path: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, 'track.pos')
+	const path: DataPath = await databaseQuery<DataPath>(getMeasurementData, tripID, 'track.pos')
 	const data: any = await osrmQuery(path);
 	res.json( data );
 } )
@@ -104,7 +104,7 @@ app.get("/map_match", async (req: any, res: any) => {
 app.get("/trip_measurement", async (req: any, res: any) => {
 	const tripID = req.query.tripID
 	const measurement = req.query.measurement
-	const data: RideData = await databaseQuery<RideData>(getMeasurementData, tripID, measurement)
+	const data: DataPath = await databaseQuery<DataPath>(getMeasurementData, tripID, measurement)
 	res.json( data );
 } )
 

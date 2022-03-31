@@ -1,24 +1,29 @@
-import { FC } from "react";
 import { Circle } from "react-leaflet";
-import { EventRenderer, PathEventHandler, PathProperties, Renderer } from "../../../assets/models";
+import { EventRenderer, PathProperties, PointProperties } from "../../../assets/models";
+import { color, opacity, weight, width } from "../../../assets/properties";
 
 /*
     Circle as Renderer 
 */
 
-export const createCircle = (lat: number, lng: number, properties: PathProperties, onClick: (e: any) => void) => {
+export const createCircle = (
+    lat: number, lng: number, 
+    pointProperties: PointProperties | undefined, 
+    pathProperties: PathProperties, 
+    onClick: (e: any) => void
+) => {
     return <Circle
         center={[lat, lng]} 
-        radius={properties.size} 
-        weight={properties.boldness || 4}
-        opacity={properties.opacity || 1.0}
-        color={properties.color}
+        radius={width(pointProperties, pathProperties)} 
+        weight={weight(pointProperties, pathProperties)}
+        opacity={opacity(pointProperties, pathProperties)}
+        color={color(pointProperties, pathProperties)}
         eventHandlers={{'click': onClick}}/>
 }
 
 const RCircle: EventRenderer = ( { path, properties, onClick } ) =>  {   
-    const { lat, lng } = path.data[0].pos
-    return createCircle(lat, lng, properties, onClick(0))
+    const { lat, lng } = path[0]
+    return createCircle(lat, lng, path[0].properties, properties, onClick(0))
 }
 
 export default RCircle;
