@@ -10,7 +10,8 @@ const Line: FC<RendererProps> = ( { path, properties, setMarker } ) => {
     const way = path.data.map((p: PointData) =>  p.pos ) 
     const color = { color: properties.color };
     return <Polyline 
-        positions={way} 
+        positions={way}
+        weight={4}
         key={`${Math.random()}-line`}
         pathOptions={color} 
         eventHandlers={{click: ({latlng}) => setMarker([latlng.lat, latlng.lng])}} />

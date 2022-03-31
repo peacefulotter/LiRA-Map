@@ -37,6 +37,18 @@ export interface PointData {
 	timestamp?: number;   // using this field depending on the measurement
 }
 
+export interface SegmentProps extends PathProps{
+	id: number;
+	length: number;
+	avg: number;
+	count:number;
+	max:number;
+	min:number;
+	way:number;
+}
+
+
+
 export interface RideData {
     data: PointData[]
     minValue?: number;

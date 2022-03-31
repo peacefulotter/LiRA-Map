@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { MeasurementData, PathProps } from "../../assets/models";
+import { MeasurementData, PathProps, SegmentProps } from "../../assets/models";
 
 import MapWrapper from "../Map/MapWrapper";
 import MapEvents from "./MapEvents";
@@ -9,7 +9,7 @@ import Segments from "./Segments";
 const CarData: FC = () => {
 
     const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
-    const [segments, setSegments] = useState<PathProps[]>([]);
+    const [segments, setSegments] = useState<SegmentProps[]>([]);
 
     return (
         <div className="ml-wrapper">

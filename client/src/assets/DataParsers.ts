@@ -1,21 +1,23 @@
 import { LatLng, Path, point, Point } from "leaflet";
-import { PathProps, RideData,PointData, PathProperties } from "./models";
+import { PathProps, RideData,PointData, PathProperties, SegmentProps } from "./models";
 import { RendererName } from "./renderers";
 
-export const ParseSegments = (data: any): PathProps[] => {
-    let segments:PathProps[] = [];
+export const ParseSegments = (data: any): SegmentProps[] => {
+    let segments:SegmentProps[] = [];
     let rows = data.rows;
-
     //EXAMPLE OF ROW
-    // Id: 1201
-    // Length: 0.01520165
-    // PositionA: "0101000000BEE4DAABEAD94B40E42032F66F202940"
-    // PositionB: "0101000000667D6F78E6D94B40C1AFECDD7A202940"
-    // Way: 934286720
+    // Average: 160.13115
+    // Count: 61
+    // Id: 31
+    // Length: 0.02968711
+    // Max: 164
+    // Min: 159
+    // Variance: 1.4491804
+    // Way: 3546485
     // lata: 55.7024741
+    // latb: 55.7024885
     // lona: 12.5633542
-    // latb: 55.7024741
-    // lonb: 12.5633542
+    // lonb: 12.5628827
 
     rows.forEach((row:any) => {
         let pointA:PointData = <PointData>{pos:new LatLng(row.lata, row.lona)}
@@ -23,9 +25,10 @@ export const ParseSegments = (data: any): PathProps[] => {
         let rideData:PointData[] = [pointA, pointB];
         let ride:RideData = <RideData>{data:rideData};
 
-        let properties:PathProperties = <PathProperties>{renderer:RendererName.line, color:"#00000", size:1}
+        let properties:PathProperties = <PathProperties>{renderer:RendererName.line, color:"#00000", size:4}
 
-        let path:PathProps = <PathProps>{path:ride, properties:properties};
+        let path:SegmentProps = <SegmentProps>{path:ride, properties:properties, id:row.Id, length: row.Length,
+        avg:row.Average, count: row.Count, max: row.Max, min: row.Min, way: row.Way};
 
         segments.push(path);
     });

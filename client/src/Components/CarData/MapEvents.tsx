@@ -1,11 +1,11 @@
 import { FC, useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, PathProps} from '../../assets/models';
-import {GetSegmentsInAPolygon} from '../../assets/DataRequests';
+import {MeasurementData, PathProps, SegmentProps} from '../../assets/models';
+import {GetSegmentsAndAggregatedDataInAPolygon} from '../../assets/DataRequests';
 
 interface MapEventsProps {
     setMeasurements: (measurements: MeasurementData[]) => void;
-    setSegments: (segments: PathProps[]) => void;
+    setSegments: (segments: SegmentProps[]) => void;
 }
 
 const MapEvents: FC<MapEventsProps> = (props) => {
@@ -22,8 +22,8 @@ const MapEvents: FC<MapEventsProps> = (props) => {
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
-            await GetSegmentsInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
-                 bounds.getNorthEast(), bounds.getNorthWest()])
+            await GetSegmentsAndAggregatedDataInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
+                 bounds.getNorthEast(), bounds.getNorthWest()], 'obd.trac_cons')
                  .then(res => {
                    props.setSegments(res);
                  });
