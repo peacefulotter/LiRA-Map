@@ -1,6 +1,6 @@
 import { LatLng } from "leaflet";
-import { ParseSegments } from "./DataParsers";
-import { PathProps, SegmentProps } from "./models";
+import { parseSegments } from "./DataParsers";
+import { SegmentProps } from "./models";
 
 
 export const GetSegmentsAndAggregatedDataInAPolygon = async (points: LatLng[], measurementType:String): Promise<SegmentProps[]> => {
@@ -14,5 +14,5 @@ export const GetSegmentsAndAggregatedDataInAPolygon = async (points: LatLng[], m
     console.log(path)
     let res = await fetch(path)
     let data = await res.json();
-    return ParseSegments(data);
+    return parseSegments(data);
 }

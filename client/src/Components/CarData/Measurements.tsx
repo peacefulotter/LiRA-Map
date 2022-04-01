@@ -1,10 +1,9 @@
-import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvent,  } from 'react-leaflet'
+import { FC } from "react";
 
-import '../../css/rides.css'
-import { isPropertySignature } from "typescript";
 import Measurement from './Measurement'
 import {MeasurementData} from '../../assets/models';
+
+import '../../css/rides.css'
 
 interface MeasurementsProps {
     measurements: MeasurementData[] 

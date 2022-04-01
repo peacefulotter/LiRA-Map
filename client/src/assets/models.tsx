@@ -31,7 +31,7 @@ export interface LatLng {
 	lng: number;
 }
 
-export interface SegmentProps extends PathProps{
+export interface SegmentProps extends PathProps {
 	id: number;
 	length: number;
 	avg: number;
@@ -41,7 +41,9 @@ export interface SegmentProps extends PathProps{
 	way:number;
 }
 
-
+export interface SegmentsProps {
+	segments: SegmentProps[] 
+}
 
 export interface RideData {
     data: PointData[]
@@ -86,7 +88,6 @@ export interface PathProperties extends PointProperties {
 }
 
 export interface Measurement extends PathProperties {
-	rendererName: RendererName;
 	query: string;
 	queryMeasurement: string,
 	name: string;

@@ -7,7 +7,7 @@ import Line from '../Components/Map/Renderers/Line';
 import Rectangles from '../Components/Map/Renderers/Rectangles';
 import CCircle from '../Components/Map/Renderers/Circle';
 
-const renderers: Partial<Record<RendererName, Renderer | EventRenderer>> = {
+const renderers: Record<RendererName, Renderer | EventRenderer> = {
     'circle': CCircle,
     'circles': Circles,
     'rectangles': Rectangles,

@@ -1,13 +1,10 @@
-import { FC, useState, useEffect } from "react";
+import { FC } from "react";
 
-import '../../css/rides.css'
-import {PathProps, SegmentProps} from '../../assets/models';
+import { SegmentsProps } from '../../assets/models';
 import Path from "../Map/Path";
 
+import '../../css/rides.css'
 
-interface SegmentsProps {
-    segments: SegmentProps[] 
-}
 
 const Segments: FC<SegmentsProps> = (props) => {
 
@@ -30,19 +27,16 @@ const Segments: FC<SegmentsProps> = (props) => {
 
 
     return (
-        <div>
-            { props.segments.map( segment =>{
-
-                segment.properties.color=getColor(segment.avg, 203, 126);
-
-                return(<Path 
-                    key={`Segment${Math.random()}`} 
-                    path={segment.path} 
-                    properties={segment.properties} 
-                    />)      
-                }
-            )}
-        </div>
+        <>
+        { props.segments.map( segment =>{
+            segment.properties.color= getColor(segment.avg, 203, 126);
+            return <Path 
+                key={`Segment${Math.random()}`} 
+                dataPath={segment.dataPath} 
+                properties={segment.properties} 
+            />     
+        } ) }
+        </>
   )
 }
 

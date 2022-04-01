@@ -1,10 +1,6 @@
-import { LatLng, Path, point, Point } from "leaflet";
-import { PathProps, RideData,PointData, PathProperties, SegmentProps } from "./models";
-import { RendererName } from "./renderers";
+import { PointData, PathProperties, SegmentProps, DataPath, RendererName } from "./models";
 
-export const ParseSegments = (data: any): SegmentProps[] => {
-    let segments:SegmentProps[] = [];
-    let rows = data.rows;
+export const parseSegments = (data: any): SegmentProps[] => {
     //EXAMPLE OF ROW
     // Average: 160.13115
     // Count: 61
@@ -19,19 +15,14 @@ export const ParseSegments = (data: any): SegmentProps[] => {
     // lona: 12.5633542
     // lonb: 12.5628827
 
-    rows.forEach((row:any) => {
-        let pointA:PointData = <PointData>{pos:new LatLng(row.lata, row.lona)}
-        let pointB:PointData = <PointData>{pos:new LatLng(row.latb, row.lonb)}
-        let rideData:PointData[] = [pointA, pointB];
-        let ride:RideData = <RideData>{data:rideData};
-
-        let properties:PathProperties = <PathProperties>{renderer:RendererName.line, color:"#00000", size:4}
-
-        let path:SegmentProps = <SegmentProps>{path:ride, properties:properties, id:row.Id, length: row.Length,
-        avg:row.Average, count: row.Count, max: row.Max, min: row.Min, way: row.Way};
-
-        segments.push(path);
+    return data.rows.map( (row:any) => {
+        const pointA: PointData = { lat: row.lata, lng: row.lona }
+        const pointB: PointData = { lat: row.latb, lng: row.lonb }
+        const dataPath: DataPath = { path: [pointA, pointB] };
+        const properties: PathProperties = { rendererName: RendererName.line, color:"#00000", width: 4 }
+        return { 
+            dataPath, properties, id: row.Id, length: row.Length,
+            avg: row.Average, count: row.Count, max: row.Max, min: row.Min, way: row.Way
+        };
     });
-
-    return segments;
 }

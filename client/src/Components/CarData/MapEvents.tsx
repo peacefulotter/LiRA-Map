@@ -1,6 +1,6 @@
-import { FC, useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, PathProps, SegmentProps} from '../../assets/models';
+import { FC } from "react";
+import { useMapEvents,  } from 'react-leaflet';
+import {MeasurementData, SegmentProps} from '../../assets/models';
 import {GetSegmentsAndAggregatedDataInAPolygon} from '../../assets/DataRequests';
 
 interface MapEventsProps {
