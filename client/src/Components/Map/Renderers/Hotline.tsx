@@ -3,10 +3,11 @@ import L from 'leaflet'
 import 'Leaflet.MultiOptionsPolyline'
 import { FC, useEffect, useState } from 'react';
 
-import { EventRendererProps, PointData } from "../../../models/models";
 import '../../../assets/CustomHotline';
 import useZoom from '../Hooks/useZoom';
 import { DEFAULT_WIDTH, width } from '../../../assets/properties';
+import { EventRendererProps } from '../../../models/renderers';
+import { PointData } from '../../../models/path';
 
 interface HotlineProps extends EventRendererProps {
     palette?: any

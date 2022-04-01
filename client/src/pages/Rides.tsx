@@ -9,6 +9,7 @@ import Ride from "../Components/Map/Ride";
 import { MeasurementsProvider } from "../context/MeasurementsContext";
 import { RideMeta } from "../models/models";
 import { get } from "../queries/fetch";
+import { getRides } from "../queries/rides";
 
 
 const Rides: FC = () => {
@@ -19,11 +20,7 @@ const Rides: FC = () => {
     const [remChartData, setRemChartData] = useState<ChartRemFunc>(() => {});
 
     // fetch the metadata of all the rides
-    useEffect( () => {
-        get( '/rides', (data: any) => 
-            setMetas(data.filter((d: RideMeta) => d.TaskId !== 0 )) 
-        )
-    }, [] );
+    useEffect( () => getRides(setMetas), [] );
 
     const showRide = (i: number, isChecked: boolean) => {   
         if ( isChecked )      

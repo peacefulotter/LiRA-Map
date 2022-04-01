@@ -4,8 +4,8 @@ import { Rectangle } from "react-leaflet";
 import { LatLngBounds } from 'leaflet'
 
 import Points from "./Points";
-import { EventRenderer, PointProps } from "../../../models/models";
 import { color, opacity, weight, width } from "../../../assets/properties";
+import { EventRenderer, PointProps } from "../../../models/renderers";
 
 
 const Rectangles: EventRenderer = ( props ) => {

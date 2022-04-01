@@ -2,9 +2,10 @@
 import { FC, useState } from "react";
 
 
-import { EventRenderer, PathProps } from '../../models/models'
 import { Marker, Popup } from "react-leaflet";
 import renderers from "../../assets/renderers";
+import { PathProps } from "../../models/path";
+import { EventRenderer } from "../../models/renderers";
 
 
 const parseMD = (mds: any) => {

@@ -1,16 +1,19 @@
 import { FC, useState } from "react";
 import { FiSettings } from 'react-icons/fi'
 
-import { addMeasurement, editMeasurement } from "../Map/Measurements";
 import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
-import { Measurement, RideMeta, RendererName, RideMeasurement } from '../../models/models'
 import { DEFAULT_COLOR } from "../../assets/properties";
 
-import '../../css/ridedetails.css'
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
+import { RideMeta } from "../../models/models";
+import { Measurement, RideMeasurement } from "../../models/properties";
+import { RendererName } from "../../models/renderers";
+import { addMeasurement, editMeasurement } from "../../queries/measurements";
+
+import '../../css/ridedetails.css'
 
 
 type Props = {

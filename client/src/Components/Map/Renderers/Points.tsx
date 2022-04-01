@@ -1,7 +1,8 @@
 
 import { FC } from "react";
+import { PointData } from "../../../models/path";
+import { EventRendererProps, PointProps } from "../../../models/renderers";
 
-import { PointData, PointProps, EventRendererProps } from "../../../models/models";
 
 interface Props extends EventRendererProps {
     PointElt: FC<PointProps>

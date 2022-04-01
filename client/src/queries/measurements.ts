@@ -1,8 +1,8 @@
-import { Measurement, RideMeasurement } from "../models/models";
-import { get } from "./fetch";
+import { Measurement, RideMeasurement } from "../models/properties";
+import { get, put } from "./fetch";
 
 
-const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeasurement[]>> ) => {
+export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeasurement[]>> ) => {
     get('/measurements', (data: Measurement[]) => {
         console.log(data);
         callback( data.map(meas => { 
@@ -11,4 +11,10 @@ const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeas
     })
 }
 
-export default getMeasurements;
+export const addMeasurement = (measurement: Measurement) => {
+	put('/addmeasurement', measurement)	
+}
+
+export const editMeasurement = (measurement: Measurement, index: number) => {
+	put('/editmeasurement', { measurement: measurement, index: index } )	
+}

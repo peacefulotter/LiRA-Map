@@ -4,12 +4,12 @@ import { FC, useState, useEffect } from "react";
 import EventPath from "./EventPath";
 import usePopup from '../Popup'
 
-import { DataPath, Measurement, Path } from '../../models/models'
-
-import '../../css/road.css'
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { post } from "../../queries/fetch";
 
+import '../../css/road.css'
+import { DataPath, Path } from "../../models/path";
+import { Measurement } from "../../models/properties";
 
 
 interface Props {

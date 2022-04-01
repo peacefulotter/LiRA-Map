@@ -1,9 +1,8 @@
 
 import { useEffect, useState } from 'react'
+import { RideMeasurement } from '../../models/properties'
 
-import { Measurement, RideMeasurement } from '../../models/models'
-import { get, put } from '../../queries/fetch'
-import getMeasurements from '../../queries/measurements'
+import { getMeasurements } from '../../queries/measurements'
 	
 export const useMeasurements = (): [RideMeasurement[], React.Dispatch<React.SetStateAction<RideMeasurement[]>>] => {
 	const [ measurements, setMeasurements ] = useState<RideMeasurement[]>([])
@@ -13,12 +12,5 @@ export const useMeasurements = (): [RideMeasurement[], React.Dispatch<React.SetS
 	return [measurements, setMeasurements];
 }
 
-export const addMeasurement = (measurement: Measurement) => {
-	put('/addmeasurement', measurement)	
-}
-
-export const editMeasurement = (measurement: Measurement, index: number) => {
-	put('/editmeasurement', { measurement: measurement, index: index } )	
-}
 
 export default useMeasurements;

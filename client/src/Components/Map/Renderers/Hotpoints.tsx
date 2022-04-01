@@ -1,7 +1,9 @@
 import L from 'leaflet'
 import { useEffect } from 'react';
-import { EventRenderer, PointData } from "../../../models/models";
+
 import { opacity, weight, width } from '../../../assets/properties';
+import { PointData } from '../../../models/path';
+import { EventRenderer } from '../../../models/renderers';
 import useCanvas from '../Hooks/useCanvas';
 
 const getColor = (val: any, defaultColor: string | undefined, i: number): string => {

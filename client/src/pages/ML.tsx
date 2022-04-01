@@ -4,9 +4,8 @@ import MapWrapper from "../Components/Map/MapWrapper";
 import EventPath from "../Components/Map/EventPath";
 import Checkbox from "../Components/Checkbox";
 
-import { PathProps } from "../models/models";
-
 import "../css/ml.css";
+import { PathProps } from "../models/path";
 
 const brokerURL = "ws://localhost:3001/ws"
 

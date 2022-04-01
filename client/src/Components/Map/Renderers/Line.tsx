@@ -2,8 +2,8 @@
 
 import { Polyline } from 'react-leaflet'
 
-import { EventRenderer } from "../../../models/models";
 import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
+import { EventRenderer } from '../../../models/renderers';
 
 
 const Line: EventRenderer = ( { path, properties, onClick } ) => {
