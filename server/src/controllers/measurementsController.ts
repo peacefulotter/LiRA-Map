@@ -17,9 +17,9 @@ class MeasurementsController {
         console.log("[GET /measurements]")
 
         const builder: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
-        const res =  await builder.select( [ 'T', 'message', 'lat', 'lon', 'Created_Date' ] )
-                     .from( { public: 'Measurements' } )
-                     .where(function(){
+        const res =  await builder.select('*')
+                     .from( { public: 'MeasurementTypes' } )
+                     /*.where(function(){
                         const queryArray = Object.entries(request.query);
                         queryArray.forEach(([key, value]) => {
                             switch(key){
@@ -44,7 +44,7 @@ class MeasurementsController {
                                     break;
                             }
                         });
-                     })
+                     })*/
         console.log(res);
         response.json(res);
 

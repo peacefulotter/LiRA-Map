@@ -11,8 +11,8 @@ const MapWrapper = ( props : any ) => {
 	return (
 		<MapContainer 
 			preferCanvas={true}
-			center={[55.6720619937223, 12.558746337890627]} 
-			zoom={11} 
+			center={[55.7009876,12.5652333]} 
+			zoom={18} 
 			scrollWheelZoom={true}>
 			<TileLayer
 				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

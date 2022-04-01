@@ -15,6 +15,7 @@ import { writeJsonFile } from './file';
 
 import tripsRoutes from "./routes/tripsRoutes";
 import measurementsRoutes from "./routes/measurementsRoutes";
+import segmentsRoutes from "./routes/segmentsRoutes";
 
 const PORT = process.env.PORT || 3001;
 
@@ -30,7 +31,7 @@ app.use( (req, res, next) => {
 })
 
 app.use('/trips', tripsRoutes);
-// app.use('/measurements', measurementsRoutes);
+app.use('/segments', segmentsRoutes);
 
 app.use(express.json({
 	type: ['application/json', 'text/plain'],

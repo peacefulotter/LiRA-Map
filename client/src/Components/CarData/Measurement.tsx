@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { Circle, MapContainer, TileLayer, useMapEvent,  } from 'react-leaflet'
 
-import '../../../../css/rides.css'
+import '../../css/rides.css'
 import { isPropertySignature } from "typescript";
 
 interface MeasurementProps {

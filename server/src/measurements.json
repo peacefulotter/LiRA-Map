@@ -2,9 +2,11 @@
     {
         "rendererName": "circles",
         "query": "/trip_measurement",
-        "queryMeasurement": "track.pos",
-        "name": "Track Pos",
-        "color": "#AA00CC"
+        "queryMeasurement": "",
+        "name": "acc.xyz",
+        "color": "#fcb900",
+        "size": 1,
+        "value": "number"
     },
     {
         "rendererName": "line",

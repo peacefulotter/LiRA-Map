@@ -7,12 +7,8 @@ import { EventRenderer, PointData } from "../../../assets/models";
 
 const Line: EventRenderer = ( { path, properties, onClick } ) => {
     
-    const way = path.map((p: PointData) =>  {
-        return { lat: p.lat, lng: p.lng } 
-    } ) 
-
     return <Polyline 
-        positions={way} 
+        positions={path}
         key={`${Math.random()}-line`}
         pathOptions={{
             color: properties.color,

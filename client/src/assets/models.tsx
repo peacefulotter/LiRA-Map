@@ -31,7 +31,25 @@ export interface LatLng {
 	lng: number;
 }
 
-/* ==================== PROPERTIES ==================== */
+export interface SegmentProps extends PathProps{
+	id: number;
+	length: number;
+	avg: number;
+	count:number;
+	max:number;
+	min:number;
+	way:number;
+}
+
+
+
+export interface RideData {
+    data: PointData[]
+    minValue?: number;
+    maxValue?: number; 
+    minTime?: number;
+    maxTime?: number;
+} 
 
 export enum RendererName {
     circle = 'circle',
