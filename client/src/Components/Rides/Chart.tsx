@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react' 
 import { default as ApexChart } from "react-apexcharts";
-import { ChartData, Path, PointData } from '../../assets/models';
+import { ChartData, Path, PointData } from '../../models/models';
 
 export type ChartAddFunc = (dataName: string, data: Path, minTime?: number) => void
 export type ChartRemFunc = (dataName: string) => void

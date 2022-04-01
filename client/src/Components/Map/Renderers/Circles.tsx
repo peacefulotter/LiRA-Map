@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 
-import { EventRenderer, PointProps } from "../../../assets/models";
+import { EventRenderer, PointProps } from "../../../models/models";
 import { createCircle } from "./Circle";
 import Points from "./Points";
 

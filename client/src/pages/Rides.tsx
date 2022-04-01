@@ -1,17 +1,14 @@
 import { FC, useEffect, useState } from "react";
 
-import RideCards from "./RideCards";
-import RideDetails from "./RideDetails";
-import Chart, { ChartAddFunc, ChartRemFunc } from "./Chart";
+import Chart, { ChartAddFunc, ChartRemFunc } from "../Components/Rides/Chart";
+import RideDetails from "../Components/Rides/RideDetails";
+import MapWrapper from "../Components/Map/MapWrapper";
+import RideCards from "../Components/Rides/RideCards";
+import Ride from "../Components/Map/Ride";
 
-import Ride from "../Map/Ride";
-import MapWrapper from "../Map/MapWrapper";
-
-import { RideMeta } from '../../assets/models'
-import { get } from "../../assets/fetch";
-
-import '../../css/rides.css'
-import { MeasurementsProvider } from "../../context/MeasurementsContext";
+import { MeasurementsProvider } from "../context/MeasurementsContext";
+import { RideMeta } from "../models/models";
+import { get } from "../queries/fetch";
 
 
 const Rides: FC = () => {
@@ -54,22 +51,20 @@ const Rides: FC = () => {
                 
                 <div className="map-container">
                     <MapWrapper>
-                        {
-                            selectedRides.map( (i: number) => {
-                                return <Ride
-                                    key={`Ride${Math.random()}`}
-                                    tripId={metas[i].TripId}
-                                    taskId={metas[i].TaskId}
-                                    addChartData={addChartData}
-                                    removeChartData={remChartData} />
-                            } )
-                        }
+                        { selectedRides.map( (i: number) => {
+                            return <Ride
+                                key={`Ride${Math.random()}`}
+                                tripId={metas[i].TripId}
+                                taskId={metas[i].TaskId}
+                                addChartData={addChartData}
+                                removeChartData={remChartData} />
+                        } ) }
                     </MapWrapper>
                         
                     <Chart 
                         setAddChartData={setAddChartData}
                         setRemChartData={setRemChartData}
-                        />
+                    />
                 </div>
         </div>
     </MeasurementsProvider>

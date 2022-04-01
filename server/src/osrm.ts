@@ -40,8 +40,8 @@ const osrmQuery = async (data: DataPath): Promise<any> => {
             .map( (point: PointData) => point.lat + ',' + point.lng )
             .join(";")
         console.log(i, chunkSize);
-        const data = await getOSRM(query)
-        res.push(data)
+        const osrmData = await getOSRM(query)
+        res.push(osrmData)
     }
 
     return res;

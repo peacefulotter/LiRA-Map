@@ -25,49 +25,26 @@ app.use(express.urlencoded({
 	extended: true
 }))
 
+app.use(express.json({
+	type: ['application/json', 'text/plain'],
+	limit: '200mb'
+}))
+
 app.use( (req, res, next) => {
 	console.log(`[${req.method}] ${req.path}`, req.query, req.body);
 	next()
 })
 
+
+
 app.use('/trips', tripsRoutes);
 app.use('/segments', segmentsRoutes);
-
-app.use(express.json({
-	type: ['application/json', 'text/plain'],
-	limit: '200mb'
-}))
 
 
 app.post('/push_file', async (req: any, res: any) => {
 	const { filename, content } = req.body;
 	await writeJsonFile(filename, content);
 	res.json({status: 'ok'})
-})
-
-
-// test
-app.get('/a', async (req: any, res: any) => {
-	const r = await databaseQuery<any>( async (db: any, args: any) => {
-		const tripid = '2857262b-71db-49df-8db6-a042987bf0eb'
-
-		const sql = db
-		.select( [ 'T', 'lat', 'lon', 'message' ] )
-		.from( { public: 'Measurements' } )
-		.where( { 'FK_Trip': tripid, 'T': ['acc.xyz', 'track.pos'] } )
-		.toString()
-
-		console.log(sql);
-
-		const q = await db
-		.select( [ 'T', 'lat', 'lon', 'message' ] )
-		.from( { public: 'Measurements' } )
-		.where( { 'FK_Trip': tripid, 'T': ['acc.xyz', 'track.pos'] } )
-
-		return q;
-	})
-
-	res.json(r)
 })
 
 
@@ -79,18 +56,17 @@ app.put('/addmeasurement', async (req: any, res: any) => {
 	const measurement = req.body.params;
 	const updatedFile = [...measurements, measurement]
 	fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
-		() => console.log('[PUT /addmeasurement] Added Measurement to the json file')
+		() => console.log('[PUT] /addmeasurement Added Measurement to the json file')
 	);
 	res.json()
 })
 
 app.put('/editmeasurement', async (req: any, res: any) => {
 	const { index, measurement } = req.body.params;
-	console.log("[PUT /editmeasurement] Editing measurement ", measurement, " - index", index);
 	const updatedFile = [...measurements]
 	updatedFile[index] = measurement
 	fs.writeFile('./src/measurements.json', JSON.stringify(updatedFile, null, 4), 'utf8',
-		() => console.log('[PUT /editmeasurement] Edited Measurement', measurement,'to the json file')
+		() => console.log('[PUT] /editmeasurement Edited Measurement', measurement,'to the json file')
 	);
 	res.json()
 })
@@ -110,7 +86,6 @@ app.get("/trip_measurement", async (req: any, res: any) => {
 } )
 
 app.get("/rides", async (req: any, res: any) => {
-	console.log("[GET /rides]");
 	const data: RideMeta[] = await databaseQuery<RideMeta[]>(getRides, '')
 	res.json( data )
 } )

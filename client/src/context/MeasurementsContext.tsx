@@ -6,7 +6,7 @@ import {
 } from "react";
 
 import useMeasurements from "../Components/Map/Measurements";
-import { RideMeasurement } from "../assets/models";
+import { RideMeasurement } from "../models/models";
 
 interface ContextProps {
 	measurements: RideMeasurement[];

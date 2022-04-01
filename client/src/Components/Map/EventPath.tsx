@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 
 
-import { EventRenderer, PathProps } from '../../assets/models'
+import { EventRenderer, PathProps } from '../../models/models'
 import { Marker, Popup } from "react-leaflet";
 import renderers from "../../assets/renderers";
 

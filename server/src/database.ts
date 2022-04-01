@@ -54,12 +54,17 @@ export const DATABASE_CONFIG = {
 
 
 // http://liradbdev.compute.dtu.dk:5000/match/v1/car/12.5639696,55.7066193;12.5639715,55.7066193;12.5639753,55.7066193
-type Func<T> = (...args: any[]) => Promise<T>;
+type Func<T> = (db: Knex<any, unknown[]>, ...args: any[]) => Promise<T>;
 
 const databaseQuery = async <T>(func: Func<T>, ...args: any[]): Promise<T> => {
     const database: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
-    const res: T = await func(args);
-    await database.destroy();
+    let res: T;
+    try {
+        res = await func(database, args);
+        await database.destroy();
+    } catch (error) {
+        console.error(error) 
+    }
     return res;
 }
 

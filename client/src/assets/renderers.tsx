@@ -1,5 +1,5 @@
 
-import { EventRenderer, Renderer, RendererName } from './models'
+import { EventRenderer, Renderer, RendererName } from '../models/models'
 import Circles from '../Components/Map/Renderers/Circles';
 import Hotline from '../Components/Map/Renderers/Hotline';
 import Hotpoints from '../Components/Map/Renderers/Hotpoints';

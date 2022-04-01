@@ -1,5 +1,5 @@
 import { Circle } from "react-leaflet";
-import { EventRenderer, PathProperties, PointProperties } from "../../../assets/models";
+import { EventRenderer, PathProperties, PointProperties } from "../../../models/models";
 import { color, opacity, weight, width } from "../../../assets/properties";
 
 /*

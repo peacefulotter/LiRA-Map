@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 
-import MapWrapper from "../Map/MapWrapper";
-import EventPath from "../Map/EventPath";
-import Checkbox from "../Checkbox";
+import MapWrapper from "../Components/Map/MapWrapper";
+import EventPath from "../Components/Map/EventPath";
+import Checkbox from "../Components/Checkbox";
 
-import { PathProps } from "../../assets/models";
+import { PathProps } from "../models/models";
 
-import "../../css/ml.css";
+import "../css/ml.css";
 
 const brokerURL = "ws://localhost:3001/ws"
 

@@ -1,34 +1,23 @@
 import { FC } from "react";
 
-import { SegmentsProps } from '../../assets/models';
+import { SegmentsProps } from '../../models/models';
 import Path from "../Map/Path";
 
 import '../../css/rides.css'
 
 
-const Segments: FC<SegmentsProps> = (props) => {
+const Segments: FC<SegmentsProps> = ( { segments } ) => {
 
     const getColor = (val: number, maxval: number, minval: number): string => {
-
-        if(val == undefined)
-            return `rgb(0, 0, 0)`
-
-        if(val > maxval)
-            val = maxval;
-        else if(val < minval)
-            val = minval;
-
-        val = (val - minval) * (1/(maxval-minval));
-
-        const green: number = Math.min(val * 2, 1) * 255;
-        const red: number = (val < 0.5 ? val +  0.5 : 2 - val * 2) * 255;                 
+        const v = Math.min(1, Math.max(0, (val - minval) / (maxval - minval))) 
+        const green: number = Math.min(v * 2, 1) * 255;
+        const red: number = (v < 0.5 ? v +  0.5 : 2 - v * 2) * 255;                 
         return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
     }
 
-
     return (
         <>
-        { props.segments.map( segment =>{
+        { segments.map( segment =>{
             segment.properties.color= getColor(segment.avg, 203, 126);
             return <Path 
                 key={`Segment${Math.random()}`} 

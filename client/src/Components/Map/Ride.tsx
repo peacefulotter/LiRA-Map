@@ -4,11 +4,11 @@ import { FC, useState, useEffect } from "react";
 import EventPath from "./EventPath";
 import usePopup from '../Popup'
 
-import { DataPath, Measurement, Path } from '../../assets/models'
-import { post } from '../../assets/fetch'
+import { DataPath, Measurement, Path } from '../../models/models'
 
 import '../../css/road.css'
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
+import { post } from "../../queries/fetch";
 
 
 
@@ -50,33 +50,27 @@ const Ride: FC<Props> = ( { tripId, taskId, addChartData, removeChartData } ) =>
         
         post( query, { tripID: tripId, measurement: queryMeasurement }, (data: DataPath) => {            
             
-            const { path, minValue, maxValue, minTime, maxTime } = data;
-
             console.log(data);
+            const { path, minValue, maxValue, minTime, maxTime } = data;
             
-            // update paths
             const temp = [...paths]
             temp[measIndex].dataPath = data;
             temp[measIndex].displayed = true;
             setPaths(temp)
             
-            // pushRequestForOne( path, measIndex )
-
             console.log("Got data for ride: ", tripId, ", length: ", path.length); 
             console.log("Min value", minValue, "Max Value", maxValue);
             console.log("Min time", minTime, "Max Time", maxTime);
 
-            if ( hasValue )
-            {
-                if ( path.length === 0 )
-                    return popup( {
-                        icon: "warning",
-                        title: `This trip doesn't contain data for ${name}`,
-                        footer: `TripId: ${tripId} | TaskId: ${taskId}`
-                    } );
+            if ( path.length === 0 )
+                return popup( {
+                    icon: "warning",
+                    title: `This trip doesn't contain data for ${name}`,
+                    footer: `TripId: ${tripId} | TaskId: ${taskId}`
+                } );
 
+            if ( hasValue )
                 addChartData( getDataName(meas), path, minTime || 0 )
-            }
         })
     }
 
@@ -108,8 +102,6 @@ const Ride: FC<Props> = ( { tripId, taskId, addChartData, removeChartData } ) =>
             // hide but keep in memory 
             else if ( !meas.isActive && p.displayed )
             {
-                console.log('UNLOADING', i);
-                
                 const temp: any = [...paths]
                 temp[i].displayed = false;
                 setPaths(temp)

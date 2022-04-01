@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import Measurement from './Measurement'
-import {MeasurementData} from '../../assets/models';
+import {MeasurementData} from '../../models/models';
 
 import '../../css/rides.css'
 

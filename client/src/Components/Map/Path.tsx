@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { PathProps, Renderer } from '../../assets/models'
+import { PathProps, Renderer } from '../../models/models'
 import renderers from "../../assets/renderers";
 
 const Path: FC<PathProps> = ( { dataPath, properties } ) => {

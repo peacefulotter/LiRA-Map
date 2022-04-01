@@ -3,7 +3,7 @@ import L from 'leaflet'
 import 'Leaflet.MultiOptionsPolyline'
 import { FC, useEffect, useState } from 'react';
 
-import { EventRendererProps, PointData } from "../../../assets/models";
+import { EventRendererProps, PointData } from "../../../models/models";
 import '../../../assets/CustomHotline';
 import useZoom from '../Hooks/useZoom';
 import { DEFAULT_WIDTH, width } from '../../../assets/properties';

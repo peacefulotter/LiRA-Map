@@ -2,7 +2,7 @@
 
 import { Polyline } from 'react-leaflet'
 
-import { EventRenderer } from "../../../assets/models";
+import { EventRenderer } from "../../../models/models";
 import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
 
 

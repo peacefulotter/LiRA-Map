@@ -1,6 +1,6 @@
 import L from 'leaflet'
 import { useEffect } from 'react';
-import { EventRenderer, PointData } from "../../../assets/models";
+import { EventRenderer, PointData } from "../../../models/models";
 import { opacity, weight, width } from '../../../assets/properties';
 import useCanvas from '../Hooks/useCanvas';
 

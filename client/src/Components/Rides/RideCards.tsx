@@ -3,7 +3,7 @@ import { List, ListRowRenderer } from "react-virtualized";
 
 import Checkbox from '../Checkbox';
 
-import { RideMeta } from '../../assets/models'
+import { RideMeta } from '../../models/models'
 
 import '../../css/ridecard.css'
 

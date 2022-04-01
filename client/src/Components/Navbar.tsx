@@ -16,25 +16,26 @@ const NavBtn: FC<NavBtnProps> = ( { to, name } ) => {
             activeClassName="nav-tab-active" 
             to={to}
         >
-            { name }
+            { name.toUpperCase() }
         </NavLink>
     )
 }
 
-const Rides: FC = () => {
+const Navbar: FC = () => {
     return (
         <div className="nav-wrapper">
             <div className="nav-container">
                 <div className="nav-block">
-                    <NavBtn  to='/rides' name='RIDES' />
-                    <NavBtn  to='/ml' name='ML' />
+                    <NavBtn  to='/rides' name='rides' />
+                    <NavBtn  to='/ml' name='ml' />
+                    <NavBtn  to='/cardata' name='cardata' />
                 </div>
                 <div className="nav-block">
-                    <NavBtn  to='/login' name='LOGIN' />
+                    <NavBtn  to='/login' name='login' />
                 </div>
             </div>
         </div>
     )
 }
 
-export default Rides;
+export default Navbar;

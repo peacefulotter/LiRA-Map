@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { post } from '../../assets/fetch'
-import '../../css/signUpForm.css';
+import { post } from "../queries/fetch";
+
+import '../css/login.css';
 
 interface State {
     username : string,
     email : string,
     password : string,
-  }
+}
 
-const SignUpForm = () => 
-{ 
+const Login = () => { 
     const [ state, setState ] = useState<State>({
         username : "",
         email : "",
@@ -31,7 +31,7 @@ const SignUpForm = () =>
     let history = useHistory();
      
     const redirect = () => {
-        post('/login', state, (data) => {
+        post('/login', state, (data: any) => {
             if ( data.status === "ok")
                 history.push("/rides");
         })
@@ -62,4 +62,4 @@ const SignUpForm = () =>
 }
 
 
-export default SignUpForm;
+export default Login;

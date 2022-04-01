@@ -6,7 +6,7 @@ import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
-import { Measurement, RideMeta, RendererName, RideMeasurement } from '../../assets/models'
+import { Measurement, RideMeta, RendererName, RideMeasurement } from '../../models/models'
 import { DEFAULT_COLOR } from "../../assets/properties";
 
 import '../../css/ridedetails.css'

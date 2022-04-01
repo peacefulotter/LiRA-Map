@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, SegmentProps} from '../../assets/models';
-import {GetSegmentsAndAggregatedDataInAPolygon} from '../../assets/DataRequests';
+import {MeasurementData, SegmentProps} from '../../models/models';
+import {GetSegmentsAndAggregatedDataInAPolygon} from '../../queries/DataRequests';
 
 interface MapEventsProps {
     setMeasurements: (measurements: MeasurementData[]) => void;

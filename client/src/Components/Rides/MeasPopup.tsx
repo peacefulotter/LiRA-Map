@@ -5,7 +5,7 @@ import { useState } from "react";
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
-import { RendererName, RideMeasurement } from "../../assets/models";
+import { RendererName, RideMeasurement } from "../../models/models";
 import renderers from "../../assets/renderers";
 
 interface PopupOptions {

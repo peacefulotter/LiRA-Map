@@ -11,14 +11,13 @@ import { DATABASE_CONFIG } from './database';
 //         .select( [ 'lat', 'lon' ] )
 //         .from( { public: 'Measurements' } )
 //         .where( query )
-//     return res.map( (msg: any) => { 
-//         return {lat: msg.lat, lng: msg.lon } 
+//     return res.map( (msg: any) => {
+//         return {lat: msg.lat, lng: msg.lon }
 //     } )
 // }
 
-export const getAccelerationData = async ( [tripId]: [string] ): Promise<Position3D[]> =>
+export const getAccelerationData = async (db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<Position3D[]> =>
 {
-    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res = await db
             .select( [ 'message' ] )
             .from( { public: 'Measurements' } )
@@ -30,9 +29,7 @@ export const getAccelerationData = async ( [tripId]: [string] ): Promise<Positio
     } )
 }
 
-export const getTest = async ([tripId]: [string] ): Promise<any> =>
-{
-    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
+export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): Promise<any> => {
     tripId = '2857262b-71db-49df-8db6-a042987bf0eb' // '004098a1-5146-4516-a8b7-ff98c13950aa'
     // const tag = 'acc.xyz'
     const res = await db
@@ -47,9 +44,8 @@ export const getTest = async ([tripId]: [string] ): Promise<any> =>
 }
 
 
-export const getMeasurementData = async ( [tripId, measurement]: [string, string] ): Promise<DataPath> =>
+export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<DataPath> =>
 {
-    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
     const res = await db
             .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
             .from( { public: 'Measurements' } )
@@ -73,18 +69,22 @@ export const getMeasurementData = async ( [tripId, measurement]: [string, string
 
             return { lat: msg.lat, lng: msg.lon, value, metadata: { timestamp: time } } as PointData
         } )
-        .sort( (a: PointData, b: PointData) => 
-            a.metadata.timestamp - b.metadata.timestamp 
+        .sort( (a: PointData, b: PointData) =>
+            a.metadata.timestamp - b.metadata.timestamp
         )
 
     return { path, minValue, maxValue, minTime, maxTime }
 }
 
-export const getRides = async (): Promise<RideMeta[]> => {
-    const db: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
+export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
+    console.log("before");
+
     const res: RideMeta[] = await db
         .select( '*' )
         .from( { public: 'Trips' } );
+
+    console.log("after");
+
 
     const time = (md: RideMeta) => new Date(md.Created_Date).getTime()
 
