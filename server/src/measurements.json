@@ -12,7 +12,6 @@
         "queryMeasurement": "acc.xyz",
         "name": "Interpolation",
         "color": "#9900ef",
-        "width": 1,
         "hasValue": true
     },
     {
@@ -28,9 +27,7 @@
         "queryMeasurement": "obd.rpm",
         "name": "Engine RPM",
         "color": "#7bdcb5",
-        "width": 1,
-        "hasValue": true,
-        "isActive": false
+        "hasValue": true
     },
     {
         "rendererName": "hotline",
