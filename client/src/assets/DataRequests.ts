@@ -13,9 +13,6 @@ export const GetSegmentsAndAggregatedDataInAPolygon = async (points: LatLng[], m
     let path = '/segments/'+ northEastString +';'+ southEastString +';'+ southWestString +';'+ northWestString + '?type=' + measurementType;
     console.log(path)
     let res = await fetch(path)
-    .then(res => {return res.json()})
-    .then(data => {
-        return ParseSegments(data);
-    });
-    return res;
+    let data = await res.json();
+    return ParseSegments(data);
 }

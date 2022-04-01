@@ -25,7 +25,7 @@ const Segments: FC<SegmentsProps> = (props) => {
 
         const green: number = Math.min(val * 2, 1) * 255;
         const red: number = (val < 0.5 ? val +  0.5 : 2 - val * 2) * 255;                 
-        return `rgb(${Math.round(red)}, ${Math.round(green)}, 0)`
+        return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
     }
 
 
@@ -33,7 +33,7 @@ const Segments: FC<SegmentsProps> = (props) => {
         <div>
             { props.segments.map( segment =>{
 
-                segment.properties.color=getColor(segment.avg, 175, 145);
+                segment.properties.color=getColor(segment.avg, 203, 126);
 
                 return(<Path 
                     key={`Segment${Math.random()}`} 
