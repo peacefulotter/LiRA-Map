@@ -2,22 +2,18 @@
 
 import { Polyline } from 'react-leaflet'
 
-import { EventRenderer, PointData } from "../../../assets/models";
+import { EventRenderer } from "../../../assets/models";
+import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
 
 
 const Line: EventRenderer = ( { path, properties, onClick } ) => {
-    
-    const way = path.map((p: PointData) =>  {
-        return { lat: p.lat, lng: p.lng } 
-    } ) 
-
     return <Polyline 
-        positions={way} 
+        positions={path} 
         key={`${Math.random()}-line`}
         pathOptions={{
-            color: properties.color,
-            weight: properties.width,
-            opacity: properties.opacity || 1.0
+            color: properties.color || DEFAULT_COLOR,
+            weight: properties.width || DEFAULT_WIDTH,
+            opacity: properties.opacity || DEFAULT_OPACITY
         }} 
         eventHandlers={{'click': onClick(0)}} />
 }
