@@ -286,7 +286,7 @@ L.Hotline = function (latlngs, zoom, options) {
 
 			this._updateOptions(layer);
 
-			const dataOnView = parts.flatMap(part => {
+			const dataOnView = parts.map(part => {
 				const first = part[0].i
 				const last = part[part.length - 1].i
 				return projectedData[0].slice(first, last + 1)
@@ -294,7 +294,7 @@ L.Hotline = function (latlngs, zoom, options) {
 			console.log(zoom, dataOnView.length);
 
 			this._hotline
-				.data([dataOnView])
+				.data(dataOnView)
 				.draw();
 		},
 
