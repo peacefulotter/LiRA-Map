@@ -1,8 +1,6 @@
 
 import { RideMeta, Position3D, DataPath, PointData } from './models'
-import knex, { Knex } from 'knex'
-import { DATABASE_CONFIG } from './database';
-
+import { Knex } from 'knex'
 
 // const fetchPositions = async (query: object ): Promise<Path> =>
 // {
@@ -77,18 +75,15 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
 }
 
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {
-    console.log("before");
-
     const res: RideMeta[] = await db
         .select( '*' )
-        .from( { public: 'Trips' } );
+        .from( { public: 'Trips' } )
+        .whereNot( 'TaskId', 0 )
 
-    console.log("after");
-
+    console.log(res.map( r => r.TaskId));
 
     const time = (md: RideMeta) => new Date(md.Created_Date).getTime()
 
     return res
-        .filter((a: RideMeta) => a.TaskId !== 0)
         .sort((a: RideMeta, b: RideMeta) => time(a) - time(b))
 }

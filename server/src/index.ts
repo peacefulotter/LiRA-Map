@@ -73,7 +73,7 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 
 app.get("/map_match", async (req: any, res: any) => {
 	const { tripID } = req.query;
-	const path: DataPath = await databaseQuery<DataPath>(getMeasurementData, tripID, 'track.pos')
+	const path: DataPath = await databaseQuery<DataPath>(getMeasurementData, 'liradb', tripID, 'track.pos')
 	const data: any = await osrmQuery(path);
 	res.json( data );
 } )
@@ -81,17 +81,17 @@ app.get("/map_match", async (req: any, res: any) => {
 app.get("/trip_measurement", async (req: any, res: any) => {
 	const tripID = req.query.tripID
 	const measurement = req.query.measurement
-	const data: DataPath = await databaseQuery<DataPath>(getMeasurementData, tripID, measurement)
+	const data: DataPath = await databaseQuery<DataPath>(getMeasurementData, 'liradb', tripID, measurement)
 	res.json( data );
 } )
 
 app.get("/rides", async (req: any, res: any) => {
-	const data: RideMeta[] = await databaseQuery<RideMeta[]>(getRides, '')
+	const data: RideMeta[] = await databaseQuery<RideMeta[]>(getRides, 'liradb', '')
 	res.json( data )
 } )
 
 app.get("/test", async (req: any, res: any) => {
-	const data: any[] = await databaseQuery<any[]>(getTest, '')
+	const data: any[] = await databaseQuery<any[]>(getTest, 'liradb', '')
 	res.json( data )
 } )
 

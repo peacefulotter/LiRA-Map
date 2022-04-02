@@ -2,11 +2,10 @@
     {
         "rendererName": "circles",
         "query": "/trip_measurement",
-        "queryMeasurement": "",
-        "name": "acc.xyz",
-        "color": "#fcb900",
-        "size": 1,
-        "value": "number"
+        "queryMeasurement": "track.pos",
+        "name": "Track Position",
+        "color": "#ff6900",
+        "hasValue": false
     },
     {
         "rendererName": "line",
@@ -14,7 +13,7 @@
         "queryMeasurement": "acc.xyz",
         "name": "Interpolation",
         "color": "#9900ef",
-        "hasValue": true
+        "hasValue": false
     },
     {
         "rendererName": "line",

@@ -1,6 +1,5 @@
-import { any, path } from 'nconf';
+import { errorMonitor } from 'events';
 import knex, { Knex } from 'knex';
-import {DATABASE_CONFIG} from '../database';
 
 class SegmentsController {
 
@@ -19,6 +18,8 @@ class SegmentsController {
         const pointsString = points[0] + ',' + points[1] + ',' + points[2] + ',' + points[3] + ',' + points[0];
         const makePolygon = "ST_MakePolygon( ST_GeomFromText('LINESTRING(" + pointsString + ")'))"
 
+        throw new Error('DATABASE_CONFIG NOT EXPORTED FROM database.ts ANYMORE\n\t=> Change this file so that it\'s generic (using databaseQuery() for instance)')
+        const DATABASE_CONFIG = {}
         const builder: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
 
         // SELECT table1.column1, table2.column2...
