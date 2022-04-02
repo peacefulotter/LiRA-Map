@@ -1,42 +1,41 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
-import Chart, { ChartAddFunc, ChartRemFunc } from "../Components/Rides/Chart";
+import Chart from "../Components/Rides/Chart";
 import RideDetails from "../Components/Rides/RideDetails";
 import MapWrapper from "../Components/Map/MapWrapper";
 import RideCards from "../Components/Rides/RideCards";
-import Ride from "../Components/Map/Ride";
 
 import { MeasurementsProvider } from "../context/MeasurementsContext";
 import { RideMeta } from "../models/models";
-import { get } from "../queries/fetch";
 import { getRides } from "../queries/rides";
+import Ride from "../Components/Rides/Ride";
+import { ChartProvider } from "../context/ChartContext";
 
 
 const Rides: FC = () => {
     const [ metas, setMetas ] = useState<RideMeta[]>([]);
-    const [ selectedRides, setSelectedRides ] = useState<number[]>([]);
-
-    const [addChartData, setAddChartData] = useState<ChartAddFunc>(() => {});
-    const [remChartData, setRemChartData] = useState<ChartRemFunc>(() => {});
+    const [ shownMetas, setShownMetas ] = useState<RideMeta[]>([]);
 
     // fetch the metadata of all the rides
     useEffect( () => getRides(setMetas), [] );
 
     const showRide = (i: number, isChecked: boolean) => {   
         if ( isChecked )      
-            setSelectedRides( prev => [...prev, i] ) 
+            setShownMetas( prev => [...prev, metas[i]] ) 
         else
         {
             let removed = 0;
-            setSelectedRides( selectedRides.filter(r => { 
-                if ( r === i )
+            setShownMetas( prev => prev.filter( (meta, j) => { 
+                if ( j === i )
                     removed = i;
-                return r !== i
+                return j !== i
             } ) ) 
-
-            remChartData(metas[removed].TaskId.toString())
         } 
     }
+
+    // const onChange = useCallback((id, value) => {
+    //     setRides(rides.map((i: number, index: number) => metas[i]))
+    // }, [rides])
 
     return (
         <MeasurementsProvider>
@@ -44,27 +43,26 @@ const Rides: FC = () => {
                 
                 <RideCards metas={metas} onClick={showRide}/>
                 
-                <RideDetails metas={selectedRides.map(i => metas[i])} />
+                <RideDetails metas={shownMetas} />
                 
-                <div className="map-container">
-                    <MapWrapper>
-                        { selectedRides.map( (i: number) => {
-                            return <Ride
-                                key={`Ride${Math.random()}`}
-                                tripId={metas[i].TripId}
-                                taskId={metas[i].TaskId}
-                                addChartData={addChartData}
-                                removeChartData={remChartData} />
-                        } ) }
-                    </MapWrapper>
-                        
-                    <Chart 
-                        setAddChartData={setAddChartData}
-                        setRemChartData={setRemChartData}
-                    />
-                </div>
-        </div>
-    </MeasurementsProvider>
+                <ChartProvider>
+                    <div className="map-container">
+                        <MapWrapper>
+                            
+                                { shownMetas.map( (meta: RideMeta) => {
+                                    return <Ride
+                                        key={`Ride${Math.random()}`}
+                                        tripId={meta.TripId}
+                                        taskId={meta.TaskId} />
+                                } ) }
+                            
+                        </MapWrapper>
+                            
+                        <Chart />
+                    </div>
+                </ChartProvider>
+            </div>
+        </MeasurementsProvider>
   )
 }
 

@@ -1,17 +1,17 @@
 import { FC, useEffect, useState } from 'react' 
 import { default as ApexChart } from "react-apexcharts";
+import { useChartCtx } from '../../context/ChartContext';
 import { ChartData } from '../../models/chart';
 import { Path, PointData } from '../../models/path';
 
 export type ChartAddFunc = (dataName: string, data: Path, minTime?: number) => void
 export type ChartRemFunc = (dataName: string) => void
 
-interface Props {
-    setAddChartData: React.Dispatch<React.SetStateAction<ChartAddFunc>>;
-    setRemChartData: React.Dispatch<React.SetStateAction<ChartRemFunc>>;
-}
 
-const Chart: FC<Props> = ( { setAddChartData, setRemChartData } ) => {
+const Chart: FC = () => {
+    
+    const { setAddChartData, setRemChartData } = useChartCtx()
+
     const [series, setSeries] = useState<any[]>([])
 
 

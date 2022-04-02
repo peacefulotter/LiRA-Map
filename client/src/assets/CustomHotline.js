@@ -286,13 +286,11 @@ L.Hotline = function (latlngs, zoom, options) {
 
 			this._updateOptions(layer);
 
-			console.log('a');
-
-			const points = parts[0]
-			const first = points[0].i
-			const last = points[points.length - 1].i
-			const dataOnView = projectedData[0].slice(first, last)
-			// this._optimize(zoom, first, last) 
+			const dataOnView = parts.flatMap(part => {
+				const first = part[0].i
+				const last = part[part.length - 1].i
+				return projectedData[0].slice(first, last + 1)
+			})
 			console.log(zoom, dataOnView.length);
 
 			this._hotline
