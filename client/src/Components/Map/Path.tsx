@@ -4,14 +4,15 @@ import renderers from "../../assets/renderers";
 import { PathProps } from "../../models/path";
 import { Renderer } from "../../models/renderers";
 
-const Path: FC<PathProps> = ( { dataPath, properties } ) => {
+const Path: FC<PathProps> = ( { dataPath, properties, onClick } ) => {
 
     const Renderer = renderers[properties.rendererName] as Renderer
 
-    if ( dataPath.path.length === 0 || Renderer === undefined ) 
-         return <></>
+    const onClickOrDefault = onClick ? onClick : (i: number) => (e: any) => {}
 
-    return <Renderer {...dataPath} properties={properties} />
+    return dataPath.path.length !== 0 && Renderer !== undefined
+        ? <Renderer {...dataPath} properties={properties} onClick={onClickOrDefault}/>
+        : null
 }
 
 export default Path;

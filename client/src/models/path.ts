@@ -2,6 +2,7 @@
 
 import { LatLng } from "./models";
 import { PathProperties, PointProperties } from "./properties";
+import { PathEventHandler } from "./renderers";
 
 // rendering properties, and optionally, a value and some metadata (like timestamp)
 export interface PointData extends LatLng {
@@ -29,4 +30,5 @@ export interface PathProps {
 	dataPath: DataPath
 	properties: PathProperties;
 	metadata?: {[key: string]: any}
+	onClick?: PathEventHandler
 }

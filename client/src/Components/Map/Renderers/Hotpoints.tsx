@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { opacity, weight, width } from '../../../assets/properties';
 import { PointData } from '../../../models/path';
-import { EventRenderer } from '../../../models/renderers';
+import { Renderer } from '../../../models/renderers';
 import useCanvas from '../Hooks/useCanvas';
 
 const getColor = (val: any, defaultColor: string | undefined, i: number): string => {
@@ -17,7 +17,7 @@ const getColor = (val: any, defaultColor: string | undefined, i: number): string
 }
 
 
-const Hotpoints: EventRenderer = ( { path, properties, onClick, minValue, maxValue } ) => { 
+const Hotpoints: Renderer = ( { path, properties, onClick, minValue, maxValue } ) => { 
 
     const [map, canvas] = useCanvas();
 

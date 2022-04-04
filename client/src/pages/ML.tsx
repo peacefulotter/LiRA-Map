@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 
 import MapWrapper from "../Components/Map/MapWrapper";
-import EventPath from "../Components/Map/EventPath";
+import MetadataPath from "../Components/Map/MetadataPath";
 import Checkbox from "../Components/Checkbox";
 
 import "../css/ml.css";
@@ -78,7 +78,7 @@ const ML: FC = () => {
             <MapWrapper>
                 { Object.keys(paths)
                     .map( (k, i) => selectedPaths[i] 
-                        ? <EventPath 
+                        ? <MetadataPath 
                             key={`ml-path-${i}`}
                             dataPath={paths[k].dataPath}
                             properties={paths[k].properties}

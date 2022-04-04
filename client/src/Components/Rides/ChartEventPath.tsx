@@ -4,7 +4,7 @@ import { useChartCtx } from "../../context/ChartContext";
 import { DataPath, PathProps } from "../../models/path";
 import { RideMeasurement } from "../../models/properties";
 import { post } from "../../queries/fetch";
-import EventPath from "../Map/EventPath";
+import MetadataPath from "../Map/MetadataPath";
 import Path from "../Map/Path";
 import usePopup from "../Popup";
 
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const MemoizedEventPath: FC<PathProps> = React.memo<PathProps>( ( { dataPath, properties } ) => {
-    return <Path dataPath={dataPath} properties={properties} />
+    return <MetadataPath dataPath={dataPath} properties={properties} />
 } )
 
 

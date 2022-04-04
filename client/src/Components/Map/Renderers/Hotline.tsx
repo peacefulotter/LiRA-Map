@@ -6,10 +6,9 @@ import { FC, useEffect, useState } from 'react';
 import '../../../assets/CustomHotline';
 import useZoom from '../Hooks/useZoom';
 import { DEFAULT_WIDTH, width } from '../../../assets/properties';
-import { EventRendererProps } from '../../../models/renderers';
-import { PointData } from '../../../models/path';
+import { RendererProps } from '../../../models/renderers';
 
-interface HotlineProps extends EventRendererProps {
+interface HotlineProps extends RendererProps {
     palette?: any
     zoomRange?: [number, number]
 }
@@ -92,7 +91,8 @@ const Hotline: FC<HotlineProps> = ( {
             const lng1 = path[i - 1].lng;
             const lat2 = path[i].lat;
             const lng2 = path[i].lng;
-            const dist = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1))
+            const dist = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1)) || 0
+            // console.log(i, dist, totalDist, lat1, lng1, lat2, lng2);
             totalDist += dist;
             addVal(i, totalDist)
         }

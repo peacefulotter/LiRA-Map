@@ -47,7 +47,8 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
     const res = await db
             .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
             .from( { public: 'Measurements' } )
-            .where( { 'FK_Trip': tripId, 'T': measurement } );
+            .where( { 'FK_Trip': tripId, 'T': measurement } )
+            .whereNot( { 'lat': null, 'lon': null } )
 
     let minValue = Number.MAX_VALUE;
     let maxValue = -Number.MAX_VALUE;

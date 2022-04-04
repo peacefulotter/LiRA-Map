@@ -5,10 +5,10 @@ import { LatLngBounds } from 'leaflet'
 
 import Points from "./Points";
 import { color, opacity, weight, width } from "../../../assets/properties";
-import { EventRenderer, PointProps } from "../../../models/renderers";
+import { Renderer, PointProps } from "../../../models/renderers";
 
 
-const Rectangles: EventRenderer = ( props ) => {
+const Rectangles: Renderer = ( props ) => {
     return <Points {...props} PointElt={CRectangle}/>
 }
 

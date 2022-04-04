@@ -237,49 +237,47 @@ L.Hotline = function (latlngs, options, distances) {
 			gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
 		},
 
+		_addGradient: function(ctx, j, pointStart, pointEnd) {
+			ctx.lineWidth = this.getWeight(j - 1) 
+
+			// Create a gradient for each segment, pick start and end colors from palette gradient
+			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+
+			const deltaIndex = pointEnd.i - pointStart.i
+			const deltaDist = pointEnd.d - pointStart.d
+
+			for ( let k = pointStart.i; k <= pointEnd.i; k++ )
+			{
+				const point = projectedData[0][k]
+				const dist = distances !== undefined 
+					? (point.d - pointStart.d) / (deltaDist  !== 0 ? deltaDist  : 1)
+					: (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
+				this._addColorGradient(gradient, point, dist)
+			}
+
+			ctx.strokeStyle = gradient;
+			ctx.beginPath();
+			ctx.moveTo(pointStart.x, pointStart.y);
+			ctx.lineTo(pointEnd.x, pointEnd.y);
+			ctx.stroke();
+		},
+
 		/**
 		 * Draws the color encoded hotline of the graphs.
 		 * @private
 		 */
 		_drawHotline: function (ctx) {
-			var i, j, dataLength, path, pathLength, pointStart, pointEnd,
-					gradient, gradientStartRGB, gradientEndRGB;
+			var i, j, dataLength, path, pathLength, pointStart, pointEnd;
 
-			for (i = 0, dataLength = this._data.length; i < dataLength; i++) {
+			for (i = 0, dataLength = this._data.length; i < dataLength; i++) 
+			{
 				path = this._data[i];
-				// console.log(path);
-
-				for (j = 1, pathLength = path.length; j < pathLength; j++) {
+				for (j = 1, pathLength = path.length; j < pathLength; j++) 
+				{
 					pointStart = path[j - 1];
 					pointEnd = path[j];
-
-					ctx.lineWidth = this.getWeight(j - 1) 
-
-					// Create a gradient for each segment, pick start and end colors from palette gradient
-					gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
-					// console.log(pointStart, pointEnd);
-					const deltaIndex = pointEnd.i - pointStart.i
-					const deltaDist = pointEnd.d - pointStart.d
-					for ( let k = pointStart.i; k <= pointEnd.i; k++ )
-					{
-						const point = projectedData[0][k]
-						const dist = distances !== undefined 
-							? (point.d - pointStart.d) / deltaDist
-							: (point.i - pointStart.i) / deltaIndex
-						this._addColorGradient(gradient, point, dist)
-					}
-						// 	const first = part[0].i
-						// 	const last = part[part.length - 1].i
-						// 	return projectedData[0].slice(first, last + 1)
-						// })
-					// this._addColorGradient(gradient, pointStart, 0)
-					// this._addColorGradient(gradient, pointEnd, 1)
-
-					ctx.strokeStyle = gradient;
-					ctx.beginPath();
-					ctx.moveTo(pointStart.x, pointStart.y);
-					ctx.lineTo(pointEnd.x, pointEnd.y);
-					ctx.stroke();
+					if ( pointStart.i !== pointEnd.i )
+						this._addGradient(ctx, j, pointStart, pointEnd);
 				}
 			}
 		}

@@ -14,6 +14,7 @@ export enum RendererName {
 
 export interface RendererProps extends DataPath {
     properties: PathProperties;
+    onClick: PathEventHandler;
 }
 
 export interface PointProps extends LatLng {
@@ -25,9 +26,4 @@ export interface PointProps extends LatLng {
 
 export type PathEventHandler = (i: number) => (e: any) => void;
 
-export interface EventRendererProps extends RendererProps {
-	onClick: PathEventHandler;
-}
-
 export type Renderer = FC<RendererProps>
-export type EventRenderer = FC<EventRendererProps>
