@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import TripsController from '../controllers/tripsController';
+import TripsController from '../controllers/trips';
 
 const tripsController = new TripsController();
 

@@ -46,7 +46,8 @@ const Hotline: FC<HotlineProps> = ( {
     palette, zoomRange 
 } ) => {
 
-    const [coords, setCoords] = useState<[number, number, number][][]>([])
+    const [coords, setCoords] = useState<[number, number, number][]>([])
+    const [distances, setDistances] = useState<number[]>([])
     const [zoom, map] = useZoom()
 
     const options = {
@@ -56,7 +57,7 @@ const Hotline: FC<HotlineProps> = ( {
             // console.log(zoom);
             // const formula = ((i * 10) / coords.length) + 4
             // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
-            return width(path[i].properties, properties) + zoom - 7
+            return width(path[i].properties, properties) + Math.max(zoom / 5, 2)
         },
         outlineWidth: 0,
         palette: palette || {
@@ -75,26 +76,42 @@ const Hotline: FC<HotlineProps> = ( {
      */
 
     useEffect( () => {
-        const range = [12, 13, 14, 15, 16, 17]
-        const len = range.length;
-        setCoords(
-            range.map( zoom =>
-                path.map( (point: PointData) => 
-                    [point.lat, point.lng, point.value || 0]
-                )
-            )
-        )
-    }, [])
+        // const range = [12, 13, 14, 15, 16, 17]
+        // const len = range.length;
+        const tempCoords: [number, number, number][] = []
+        const tempDistances: number[] = []
+        const addVal = (i: number, dist: number) => {
+            tempCoords.push([path[i].lat, path[i].lng, path[i].value || 0])
+            tempDistances.push(dist)
+        }
+        addVal(0, 0)
+        let totalDist = 0;
+        for (let i = 1; i < path.length; i++ ) 
+        {
+            const lat1 = path[i - 1].lat;
+            const lng1 = path[i - 1].lng;
+            const lat2 = path[i].lat;
+            const lng2 = path[i].lng;
+            const dist = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1))
+            totalDist += dist;
+            addVal(i, totalDist)
+        }
+
+        setCoords(tempCoords)
+        setDistances(tempDistances)
+    }, [path])
 
     useEffect( () => {
         if (coords.length === 0) return;
-        const minZoom = options.zoomRange[0];
-        const maxZoom = options.zoomRange[1]
-        const zoomIndex = Math.max(minZoom, Math.min(maxZoom, zoom)) - minZoom;
-        const hl = L.Hotline( coords[zoomIndex], zoom, options )
+        console.log(coords);
+        
+        // const minZoom = options.zoomRange[0];
+        // const maxZoom = options.zoomRange[1]
+        // const zoomIndex = Math.max(minZoom, Math.min(maxZoom, zoom)) - minZoom;
+        const hl = L.Hotline( coords, options, distances )
         hl.addTo(map)
         return () => hl.remove()
-    }, [zoom, coords])
+    }, [coords])
         
     return <></>
 }

@@ -4,12 +4,9 @@ import { useChartCtx } from '../../context/ChartContext';
 import { ChartData } from '../../models/chart';
 import { Path, PointData } from '../../models/path';
 
-export type ChartAddFunc = (dataName: string, data: Path, minTime?: number) => void
-export type ChartRemFunc = (dataName: string) => void
-
 
 const Chart: FC = () => {
-    
+
     const { setAddChartData, setRemChartData } = useChartCtx()
 
     const [series, setSeries] = useState<any[]>([])

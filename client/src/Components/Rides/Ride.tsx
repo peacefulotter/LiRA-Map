@@ -24,6 +24,9 @@ const Ride: FC<Props> = ( { tripId, taskId } ) => {
     console.log('here');
     
     const { measurements } = useMeasurementsCtx()
+
+    // number of measurements .map
+    // useMeasurementsCtx in each ChartEventPath
     
     return (
         <>

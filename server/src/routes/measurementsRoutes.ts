@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import MeasurementsController from '../controllers/measurementsController';
+import MeasurementsController from '../controllers/measurements';
 
 const measurementsController = new MeasurementsController();
 
