@@ -14,13 +14,14 @@ import { RendererName } from "../../models/renderers";
 import { addMeasurement, editMeasurement } from "../../queries/measurements";
 
 import '../../css/ridedetails.css'
+import { useMetasCtx } from "../../context/MetasContext";
 
 
-type Props = {
-    metas: RideMeta[];
-};
+const RideDetails: FC = () => {
 
-const RideDetails: FC<Props> = ( {metas } ) => {
+	const { metas, selectedMetas } = useMetasCtx()
+
+	console.log(metas.length, selectedMetas.length);
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
@@ -90,8 +91,10 @@ const RideDetails: FC<Props> = ( {metas } ) => {
 				onClick={showAddMeasurement} />
 			
 			
-			{ metas.map( (meta: RideMeta, i: number) =>
-				<MetaData md={meta} key={`ride-md-${meta.TaskId}-${i}`}></MetaData>
+			{ selectedMetas.map( (isSelected: boolean, i: number) =>
+				isSelected 
+					? <MetaData md={metas[i]} key={`md-${Math.random()}`} />
+					: null
 			) }
         </div>
   )

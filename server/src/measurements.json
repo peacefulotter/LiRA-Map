@@ -13,7 +13,9 @@
         "queryMeasurement": "acc.xyz",
         "name": "Interpolation",
         "color": "#9900ef",
-        "hasValue": false
+        "width": 1,
+        "hasValue": true,
+        "isActive": false
     },
     {
         "rendererName": "line",

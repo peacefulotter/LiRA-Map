@@ -1,33 +1,35 @@
-version: '3.9'
+version: '3.8'
 
 services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3050:80"
+
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: "./server"
+    volumes:
+      - /app/node_modules
+      - ./server:/app
 
   client:
+    stdin_open: true
+    environment:
+      - REACT_APP_API_HOST=www.lirase2.compute.dtu.dk
+      - HOST=client
+      - CHOKIDAR_USEPOLLING=true
     build:
-      context: client
       dockerfile: Dockerfile
-    tty: true
-    container_name: client
-    ports:
-      - "3000:3000"
-    depends_on:
-      - server
-    networks:
-      - fullstack
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
 
-  server:
-    build:
-      context: server
-      dockerfile: Dockerfile
-    tty: true
-    container_name: server
-    ports:
-      - "3001:3001"
-    networks:
-      - fullstack
-
-networks:
-  fullstack:
-    driver: bridge

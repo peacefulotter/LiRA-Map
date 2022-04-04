@@ -1,10 +1,11 @@
 
 import React, { FC, useEffect, useState } from "react";
 import { useChartCtx } from "../../context/ChartContext";
-import { DataPath } from "../../models/path";
+import { DataPath, PathProps } from "../../models/path";
 import { RideMeasurement } from "../../models/properties";
 import { post } from "../../queries/fetch";
 import EventPath from "../Map/EventPath";
+import Path from "../Map/Path";
 import usePopup from "../Popup";
 
 interface Props {
@@ -13,15 +14,10 @@ interface Props {
     measurement: RideMeasurement;
 }
 
-interface LoadablePath {
-    displayed: boolean;
-    dataPath: DataPath | undefined
-}
+const MemoizedEventPath: FC<PathProps> = React.memo<PathProps>( ( { dataPath, properties } ) => {
+    return <Path dataPath={dataPath} properties={properties} />
+} )
 
-const getEmptyPath = () => {
-    return { displayed: false, dataPath: undefined }
-}
- 
 
 const ChartEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
 
@@ -39,13 +35,8 @@ const ChartEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
         post( query, { tripID: tripId, measurement: queryMeasurement }, (dataPath: DataPath) => {            
             
             const { path, minValue, maxValue, minTime, maxTime } = dataPath;
-            
-            setDataPath( dataPath )
-            
-            
+
             console.log("Got data for ride: ", Number(taskId), "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
-            // console.log("Min value", minValue, "Max Value", maxValue);
-            // console.log("Min time", minTime, "Max Time", maxTime);
 
             if ( path.length === 0 )
                 return popup( {
@@ -54,15 +45,21 @@ const ChartEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
                     footer: `TripId: ${tripId} | TaskId: ${taskId}`
                 } );
 
+                        
+            setDataPath( dataPath )
+        
+            // console.log("Min value", minValue, "Max Value", maxValue);
+            // console.log("Min time", minTime, "Max Time", maxTime);
+
             if ( hasValue )
                 addChartData( taskId, dataPath.path, dataPath.minTime )
         })
 
         return () => { dataPath !== undefined && measurement.hasValue && remChartData(taskId) }
-    }, [] )
+    }, [measurement] )
     
     return dataPath !== undefined 
-        ? <EventPath dataPath={dataPath} properties={measurement} />
+        ? <MemoizedEventPath dataPath={dataPath} properties={measurement} />
         : null
 }
 

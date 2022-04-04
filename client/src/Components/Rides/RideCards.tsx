@@ -6,11 +6,8 @@ import Checkbox from '../Checkbox';
 import { RideMeta } from '../../models/models'
 
 import '../../css/ridecard.css'
+import { useMetasCtx } from "../../context/MetasContext";
 
-interface Props {
-    metas: RideMeta[];
-    onClick: (i: number, isChecked: boolean) => void;
-}
 
 const range = (n: number): number[] => { 
     return Array.from( {length: n}, (elt, i) => i);
@@ -23,31 +20,21 @@ const rangeBool = (n: number): boolean[] => {
 interface CardsProps {
     metas: RideMeta[]
     showMetas: number[]
+    selectedMetas: boolean[]
     onClick: (i: number, isChecked: boolean) => void; 
 }
 
-const Cards: FC<CardsProps> = ( { metas, showMetas, onClick } ) => {  
+const Cards: FC<CardsProps> = ( { metas, showMetas, selectedMetas, onClick } ) => {  
     
-    // necessary because react-virtualized doesn't save the state of the elements that are not rendered
-    const [ checked, setChecked ] = useState<boolean[]>(rangeBool(showMetas.length))
-
-    useEffect( () => {        
-        if ( checked.length === 0 )
-            setChecked(rangeBool(showMetas.length))  
-    }, [checked.length])    
-
     const renderRow: ListRowRenderer = ( { index, key, style } ): ReactNode => {
         const n = showMetas[index];
         const meta = metas[n];
         return <div key={key} style={style}>
             <Checkbox 
-                forceState={checked[n]}
+                forceState={selectedMetas[n]}
                 className="ride-card-container"
                 html={<div><b>{meta.TaskId}</b><br></br>{new Date(meta.Created_Date).toLocaleDateString()}</div>}
                 onClick={(isChecked) => {
-                    const updated = [...checked]
-                    updated[n] = isChecked;
-                    setChecked(updated)
                     onClick(n, isChecked) 
                 }} />
         </div>
@@ -74,7 +61,12 @@ const useInput = ( { min, max, current }: InputProps ) => {
     return [value, input];
   }
 
-const RideCards: FC<Props> = ( { metas, onClick } ) => {                
+const RideCards: FC = ( ) => {   
+    
+    const { metas, selectedMetas, setSelectedMetas, toggleSelectRide } = useMetasCtx();
+
+    const [showMetas, setShowMetas] = useState<number[]>([])
+
     const [ searched, setSearched ] = useState<boolean>(false)
     const [ sorted, setSorted ] = useState<boolean>(true)
 
@@ -83,7 +75,6 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
     const [ endMonth, endMonthInput ] = useInput( { min: 1, max: 12, current: 12 } )
     const [ endYear, endYearInput ] = useInput( { min: 2019, max: 2050, current: 2021 } )
 
-    const [ showMetas, setShowMetas ] = useState<number[]>([]);
     const [ search, setSearch ] = useState<string>("")
 
     const getOrderedMD = () => {
@@ -95,13 +86,8 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
         setShowMetas([...showMetas].reverse())
     }
     
-    useEffect( () => {
-        setShowMetas(range(metas.length))
-    }, [metas])
-
     useEffect( () => {  
-        const filterSearch = (): number[] => {
-            return searched 
+        const newShowMetas = searched 
                 ? getOrderedMD().filter( (n: number) => {
                     const startStreetName: string = JSON.parse(metas[n].StartPositionDisplay).street_name
                     const endStreetName: string = JSON.parse(metas[n].EndPositionDisplay).street_name
@@ -114,9 +100,8 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                         : metas[n].TaskId.toString().includes(search)
                  } ) 
                 : getOrderedMD()
-        }
 
-        setShowMetas(filterSearch())
+        setShowMetas(newShowMetas)
     }, [searched, search, metas] )
 
     useEffect( () => {
@@ -174,7 +159,7 @@ const RideCards: FC<Props> = ( { metas, onClick } ) => {
                 html={<div>Sort {sorted ? '▲' : '▼'}</div>}
                 onClick={changeOrder}/>
 
-            <Cards metas={metas} showMetas={showMetas} onClick={onClick} />            
+            <Cards metas={metas} showMetas={showMetas} selectedMetas={selectedMetas} onClick={toggleSelectRide} />            
         </div>
     )
 }

@@ -260,9 +260,9 @@ L.Hotline = function (latlngs, options, distances) {
 					// console.log(pointStart, pointEnd);
 					const deltaIndex = pointEnd.i - pointStart.i
 					const deltaDist = pointEnd.d - pointStart.d
-					for ( i = pointStart.i; i <= pointEnd.i; i++ )
+					for ( let k = pointStart.i; k <= pointEnd.i; k++ )
 					{
-						const point = projectedData[0][i]
+						const point = projectedData[0][k]
 						const dist = distances !== undefined 
 							? (point.d - pointStart.d) / deltaDist
 							: (point.i - pointStart.i) / deltaIndex
@@ -306,6 +306,8 @@ L.Hotline = function (latlngs, options, distances) {
 			if (!parts.length) { return; }
 
 			this._updateOptions(layer);
+
+			console.log(parts);
 
 			// const dataOnView = parts.map(part => {
 			// 	const first = part[0].i

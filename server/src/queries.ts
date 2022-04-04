@@ -79,11 +79,7 @@ export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> =>
         .select( '*' )
         .from( { public: 'Trips' } )
         .whereNot( 'TaskId', 0 )
-
-    console.log(res.map( r => r.TaskId));
-
-    const time = (md: RideMeta) => new Date(md.Created_Date).getTime()
+        .orderBy('TaskId')
 
     return res
-        .sort((a: RideMeta, b: RideMeta) => time(a) - time(b))
 }

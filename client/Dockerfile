@@ -1,17 +1,13 @@
 FROM node:16
 
-WORKDIR /app-client
+WORKDIR /app
 
-COPY package.json /app-client/package.json
-
-ADD . /app-client
+COPY package.json ./
+COPY package-lock.json ./
+COPY ./ ./
 
 EXPOSE 3000
 
-RUN yarn --silent
+RUN npm i
 
-RUN yarn build
-
-RUN yarn global add serve
-
-CMD ["serve", "-s", "-n", "build"]
+CMD ["npm", "run", "start"]

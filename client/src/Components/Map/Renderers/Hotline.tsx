@@ -67,7 +67,7 @@ const Hotline: FC<HotlineProps> = ( {
         },
         min: minValue || 0,
         max: maxValue || 1,
-        onclick: onClick(0)
+        onclick: onClick ? onClick(0) : null
     }
 
 
@@ -104,16 +104,12 @@ const Hotline: FC<HotlineProps> = ( {
     useEffect( () => {
         if (coords.length === 0) return;
         console.log(coords);
-        
-        // const minZoom = options.zoomRange[0];
-        // const maxZoom = options.zoomRange[1]
-        // const zoomIndex = Math.max(minZoom, Math.min(maxZoom, zoom)) - minZoom;
         const hl = L.Hotline( coords, options, distances )
         hl.addTo(map)
         return () => hl.remove()
     }, [coords])
         
-    return <></>
+    return null;
 }
 
 export default Hotline;
