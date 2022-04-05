@@ -4,95 +4,59 @@ import MapWrapper from "../Components/Map/MapWrapper";
 import MetadataPath from "../Components/Map/MetadataPath";
 import Checkbox from "../Components/Checkbox";
 
+import { JSONProps } from "../models/path";
+import { get, post } from "../queries/fetch";
+import { Measurement } from "../models/properties";
+
 import "../css/ml.css";
-import { PathProps } from "../models/path";
-
-const brokerURL = "ws://localhost:3001/ws"
-
-type PathsMap = {[key: string]: PathProps}
 
 const range = (n: number): boolean[] => { 
     return Array.from( {length: n}, (elt, i) => true);
 }
 
 const ML: FC = () => {
-    const [paths, setPaths] = useState<PathsMap>({});
-    const [selectedPaths, setSelectedPaths] = useState<boolean[]>([])
+    const [paths, setPaths] = useState<JSONProps[]>([]);
+    const [measurements, setMeasurements] = useState<Measurement[]>([])
+
+    console.log(measurements);
+    
 
     useEffect(() => {
-        const ws = new WebSocket(brokerURL);
-
-        ws.onopen =  () => {
-            console.log('open');
-            ws.send('something');
-        };
-
-        ws.onmessage = payload => {
-            const { type, filename, data } = JSON.parse(payload.data);
-            console.log('received:', type, filename, data);
-            
-            if ( type === 'rename' || type === 'change' )
-            {
-                console.log(typeof data);
-                
-                // const pathProps = typeof data === 'string' ? JSON.parse(data) : data
-                const tripName = filename.replace('.json', '')
-                
-                const temp = { ...paths, [tripName]: data }
-                console.log(paths);
-                
-                console.log(temp)
-                setPaths(temp);
-            }
-            else if ( type === 'deleted' )
-            {
-                const temp = { ...paths }
-                const tripName = filename.replace('.json', '')
-                delete temp[tripName];
-                setPaths(temp)
-            }
-            else if ( type === 'CONNECTED' )
-            {
-                setSelectedPaths(range(data.length))
-
-                const temp: any = {}
-                for ( const file of data )
-                {
-                    const tripName = file.filename.replace('.json', '')
-                    temp[tripName] = file.data;
-                }
-                setPaths(temp);
-                console.log(temp);
-            }
-        };
+        get('/ml_files', setMeasurements)
     }, [])
 
-    const onClick = (i: number) => () => {
-        const temp = [...selectedPaths]
-        temp[i] = !temp[i]
-        setSelectedPaths(temp)
+    const addPath = (i: number) => {
+        post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) =>
+            setPaths( prev => [...prev, json] ) 
+        )
+    }
+
+    const delPath = (i: number) => {
+        setPaths( prev => prev
+            .filter( (pp: JSONProps) => pp.properties.name !== measurements[i].name )
+        )
+    }
+
+    const onClick = (i: number) => (isChecked: boolean) => {
+        isChecked ? addPath(i) : delPath(i)
     }
 
     return (
         <div className="ml-wrapper">
             <MapWrapper>
-                { Object.keys(paths)
-                    .map( (k, i) => selectedPaths[i] 
-                        ? <MetadataPath 
-                            key={`ml-path-${i}`}
-                            dataPath={paths[k].dataPath}
-                            properties={paths[k].properties}
-                            metadata={paths[k].metadata} /> 
-                        : <></>) 
-                }
+                { paths.map( (prop: JSONProps, i: number) => 
+                    <MetadataPath 
+                        key={`ml-path-${i}`}
+                        {...prop}
+                    />
+                ) }
             </MapWrapper>
             <div className="ml-checkboxes">
-                { Object.keys(paths).map( (filename, i) => 
+                { measurements.map( (meas, i) => 
                     <Checkbox 
-                        key={`ml-${i}`} 
-                        forceState={selectedPaths[i]}
+                        key={`ml-meas-cb-${i}`} 
                         className="btn ml-checkbox" 
-                        html={<div>{filename}</div>} 
+                        html={<div>{meas.name}</div>} 
                         onClick={onClick(i)}/>
                 ) }
             </div>

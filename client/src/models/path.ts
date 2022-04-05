@@ -1,7 +1,7 @@
 // Represents a point containing (lat, lng) coordinates, 
 
 import { LatLng } from "./models";
-import { PathProperties, PointProperties } from "./properties";
+import { Measurement, PathProperties, PointProperties } from "./properties";
 import { PathEventHandler } from "./renderers";
 
 // rendering properties, and optionally, a value and some metadata (like timestamp)
@@ -24,11 +24,17 @@ export interface DataPath {
 }
 
 // Props passed to the Path and EventPath components
-// This interface can also be used as a type for server's response
-// for instance, JSON files follow this format
 export interface PathProps {
 	dataPath: DataPath
 	properties: PathProperties;
 	metadata?: {[key: string]: any}
 	onClick?: PathEventHandler
+}
+
+// This interface is used as a type for server's response
+// for instance, JSON files follow this format
+export interface JSONProps {
+	dataPath: DataPath
+	properties: Measurement;
+	metadata?: {[key: string]: any}
 }

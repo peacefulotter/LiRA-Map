@@ -6,12 +6,11 @@ import fs from 'fs'
 import databaseQuery from './database'
 import osrmQuery from './osrm';
 
-import { DataPath, RideMeta } from "./models";
+import { DataPath, JSONProps, Measurement, RideMeta } from "./models";
 import { getRides, getTest, getMeasurementData } from './queries'
 
-import initWebsockets from './websockets';
 import measurements from './measurements.json';
-import { writeJsonFile } from './file';
+import { readJsonDir, readJsonFile, writeJsonFile } from './file';
 
 import tripsRoutes from "./routes/tripsRoutes";
 import measurementsRoutes from "./routes/measurementsRoutes";
@@ -78,6 +77,23 @@ app.get("/map_match", async (req: any, res: any) => {
 	res.json( data );
 } )
 
+
+
+
+app.get("/ml_files", async (req: any, res: any) => {
+	const data: Measurement[] = await readJsonDir()
+	res.json( data );
+} )
+
+app.get("/ml_file", async (req: any, res: any) => {
+	const { filename } = req.query;
+	console.log(filename);
+	const data: JSONProps = await readJsonFile(filename)
+	res.json( data );
+} )
+
+
+
 app.get("/trip_measurement", async (req: any, res: any) => {
 	const tripID = req.query.tripID
 	const measurement = req.query.measurement
@@ -107,5 +123,5 @@ const server = http.createServer(app);
 // start our server
 server.listen( PORT, () => {
 	console.log(`Server listening on ${PORT}`);
-	initWebsockets(server)
+	// initWebsockets(server)
 });

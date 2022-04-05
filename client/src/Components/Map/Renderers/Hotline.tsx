@@ -56,7 +56,7 @@ const Hotline: FC<HotlineProps> = ( {
             // console.log(zoom);
             // const formula = ((i * 10) / coords.length) + 4
             // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
-            return width(path[i].properties, properties) + Math.max(zoom / 5, 2)
+            return width(path[i].properties, properties) // + Math.max(zoom / 5, 2)
         },
         outlineWidth: 0,
         palette: palette || {

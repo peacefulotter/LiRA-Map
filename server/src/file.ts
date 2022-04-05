@@ -1,6 +1,7 @@
 import fs, { readdir } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
 import { promisify } from 'util';
+import { JSONProps, Measurement } from './models';
 const readdirAsync = promisify( readdir )
 
 const jsonFolder = './json/'
@@ -10,7 +11,7 @@ interface FileChange {
     filename: string;
 }
 
-type Callback = (eventType: string, filename: string, data: string) => void
+type Callback = (eventType: string, filename: string, data: JSONProps) => void
 
 
 let busyWriting = false;
@@ -44,29 +45,28 @@ export const watchJsonDir = async (cb: Callback) => {
 }
 
 export const readJsonDir = async () => {
-    const res = []
+    const res: Measurement[] = []
     const files = await readdirAsync( jsonFolder )
+
     for ( const filename of files )
     {
         const buffer = await readFile( jsonFolder + filename )
-        const data = JSON.parse(buffer.toString('utf8', 0, buffer.length))
-        res.push( { filename, data } )
+        const data: JSONProps = JSON.parse(buffer.toString('utf8', 0, buffer.length))
+        res.push( data.properties )
     }
-    console.log(res);
 
     return res;
 }
 
-export const readJsonFile = async (filename: string) => {
+export const readJsonFile = async (filename: string): Promise<JSONProps | undefined> => {
     try {
-        const data = await readFile( jsonFolder + filename, 'utf8')
-        console.log('[readJsonFile]', filename)
-        const json = JSON.parse(data)
-        return json;
+        const buffer = await readFile( jsonFolder + filename + '.json' )
+        return JSON.parse(buffer.toString('utf8', 0, buffer.length))
     }
     catch {
-        return null
+        console.log('Couldn\'t read file ', filename);
     }
+    return undefined
 }
 
 export const writeJsonFile = async (fn: string, data: any) => {
