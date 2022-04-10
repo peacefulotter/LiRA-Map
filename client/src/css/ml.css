@@ -1,7 +1,18 @@
 
 
-.ml-wrapper {
+.ml-wrapper { 
+    display: flex;
+    flex-direction: column;
     height: 100%;
+}
+
+.ml-map {
+    height: 50%;
+}
+
+
+.ml-graph {
+    height: 50%;
 }
 
 .ml-checkboxes {
@@ -12,7 +23,7 @@
     flex-direction: column;
     row-gap: 2px;
     z-index: 999999;
-    max-height: 83vh;
+    max-height: 45%;
     overflow-y: scroll;
 }
 
@@ -25,3 +36,4 @@
 .ml-checkbox.btn-checked {
     background-color: rgba(50, 50, 50, 0.95) !important;
 }
+

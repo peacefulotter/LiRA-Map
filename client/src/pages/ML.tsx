@@ -1,20 +1,26 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import MapWrapper from "../Components/Map/MapWrapper";
 import MetadataPath from "../Components/Map/MetadataPath";
 import Checkbox from "../Components/Checkbox";
+import Graph from "../Components/Machine/Graph";
 
 import { JSONProps } from "../models/path";
 import { get, post } from "../queries/fetch";
 import { Measurement } from "../models/properties";
 
 import "../css/ml.css";
+import useSize from "../hooks/useSize";
 
 const range = (n: number): boolean[] => { 
     return Array.from( {length: n}, (elt, i) => true);
 }
 
 const ML: FC = () => {
+
+    const graphRef = useRef(null)
+    const [width, height] = useSize(graphRef)
+
     const [paths, setPaths] = useState<JSONProps[]>([]);
     const [measurements, setMeasurements] = useState<Measurement[]>([])
 
@@ -43,23 +49,28 @@ const ML: FC = () => {
 
     return (
         <div className="ml-wrapper">
-            <MapWrapper>
-                { paths.map( (prop: JSONProps, i: number) => 
-                    <MetadataPath 
-                        key={`ml-path-${i}`}
-                        {...prop}
-                    />
-                ) }
-            </MapWrapper>
-            <div className="ml-checkboxes">
-                { measurements.map( (meas, i) => 
-                    <Checkbox 
-                        key={`ml-meas-cb-${i}`} 
-                        className="btn ml-checkbox" 
-                        html={<div>{meas.name}</div>} 
-                        onClick={onClick(i)}/>
-                ) }
+            <div className="ml-map">
+                <MapWrapper>
+                    { paths.map( (prop: JSONProps, i: number) => 
+                        <MetadataPath 
+                            key={`ml-path-${i}`}
+                            {...prop}
+                        />
+                    ) }
+                </MapWrapper>
+                <div className="ml-checkboxes">
+                    { measurements.map( (meas, i) => 
+                        <Checkbox 
+                            key={`ml-meas-cb-${i}`} 
+                            className="btn ml-checkbox" 
+                            html={<div>{meas.name}</div>} 
+                            onClick={onClick(i)}/>
+                    ) }
+                </div>
             </div>
+           <div className="ml-graph" ref={graphRef}>
+               <Graph width={width} height={height}/>
+           </div>
         </div>
     );
 }
