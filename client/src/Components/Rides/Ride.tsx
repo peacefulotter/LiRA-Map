@@ -2,10 +2,9 @@
 import { FC } from "react";
 
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
-import { useMetasCtx } from "../../context/MetasContext";
 import { RideMeasurement } from "../../models/properties";
 
-import ChartEventPath from "./ChartEventPath";
+import GraphEventPath from "./GraphEventPath";
 
 import '../../css/road.css'
 import { RideMeta } from "../../models/models";
@@ -24,7 +23,7 @@ const Ride: FC<Props> = ( { meta } ) => {
         <>
         { measurements.map( (meas: RideMeasurement, i: number) =>
             meas.isActive
-                ? <ChartEventPath 
+                ? <GraphEventPath 
                     key={`charteventpath-${i}`}
                     tripId={TripId} 
                     taskId={TaskId.toString()} 

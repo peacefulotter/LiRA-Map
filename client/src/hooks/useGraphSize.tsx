@@ -1,10 +1,14 @@
 
-import * as d3 from 'd3'
 import { useEffect, useState } from "react"
-import { ChartData } from '../Components/Machine/Graph'
+import * as d3 from 'd3'
+
+import { GraphData } from '../models/graph'
 
 
-const useChartSize = ( datas: ChartData[] ): [number, number, number, number] => {
+const useChartSize = ( datas: GraphData[] ): [number, number, number, number] => {
+
+    // TODO: remove this hook and move this to a function that is recomputed whenever we add or remove data to the chart
+
     const [minX, setMinX] = useState<number>(0)
     const [maxX, setMaxX] = useState<number>(0)
     const [minY, setMinY] = useState<number>(0)

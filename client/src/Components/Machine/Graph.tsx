@@ -1,97 +1,90 @@
 
 
-import { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef } from "react";
 
-import addGradient, { Palette } from "../../assets/graph/gradient";
-import { addLabelX, addLabelY } from "../../assets/graph/label";
-import getAxis, { Axis } from "../../assets/graph/axis";
-import addLine from "../../assets/graph/line";
+import { addLine, remLine } from "../../assets/graph/line";
+import useAxis, { getXAxis, getYAxis } from "../../assets/graph/useAxis";
 
-import useChartSize from "../../hooks/useChartSize";
+import { useGraph } from "../../context/GraphContext";
+
 import useD3 from "../../hooks/useD3";
+import useSize from "../../hooks/useSize";
+import { Palette } from "../../models/graph";
 
-export type ChartData =  [number, number][]
+import { JSONProps, PointData } from "../../models/path";
+import useGradient from "../../assets/graph/useGradient";
+
 
 interface Props {
-    width: number;
-    height: number;
-    usePalette?: boolean;
+    labelX: string;
+    labelY: string;
     palette?: Palette
 }
 
-const Graph: FC<Props> = ( { width, height, palette } ) => {
+const margin = {top: 20, right: 20, bottom: 50, left: 60};
 
-    const datas: ChartData[] = [
-        [
-            [0, 50],
-            [1, 40],
-            [2, 63], 
-            [3, 52],
-            [4, 59],
-            [5, 79]
-        ],
-        [
-            [0, 30],
-            [1, 70],
-            [2, 63],
-            [3, 52],
-            [4, 59],
-            [5, 79]
-        ],
-        [
-            [0, 10],
-            [2, 33],
-            [3, 42],
-            [4, 59],
-            [5, 10],
-            [6, 17]
-        ]
-    ]
+const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
 
-    const margin = {top: 20, right: 20, bottom: 50, left: 60};
+    const { setAddGraph, setRemGraph } = useGraph()
+
+    const svgRef = useRef(null)
+    const wrapperRef = useRef(null)
+
+    const svg = useD3(svgRef, margin)
+    const [width, height] = useSize(wrapperRef)
+
     const _width = width - margin.left - margin.right;
     const _height = height - margin.top - margin.bottom - 50;
+    
+    const [minX, maxX, minY, maxY] = [0, 10, 0, 10] // useChartSize(datas)
+    const xAxis = useCallback( () => getXAxis(maxX, _width), [maxX, _width] );
+    const yAxis = useCallback( () => getYAxis(maxY, _height), [maxY, _height] );
+    useAxis(svg, labelX, labelY, maxX, maxY, _width, _height)
+    // const gradient = useGradient(svg, yAxis, minY, maxY, palette)
 
-    const ref = useRef(null)
-    const svg = useD3(ref, margin)
-    const [minX, maxX, minY, maxY] = useChartSize(datas)
-    const [axis, setAxis] = useState<[Axis, Axis] | undefined>()
+    console.log('GRAPH reset', svg, xAxis, yAxis);
 
-    useEffect( () => {
+    // (svg: any, [xAxis, yAxis]: [Axis | undefined, Axis | undefined] ) => 
+        
+    const addPath = (pathProps: JSONProps, x: (p: PointData) => number) => {
 
-        if ( svg === undefined ||  width === 0 || height === 0 ) return;
+        console.log(xAxis, yAxis);
+        
+        if ( svg === undefined )
+            return console.log('ERROR, TRYING TO ADD GRAPH DATA WHILE SVG or AXIS = undefined');
 
-        console.log('here');
+        const label = pathProps.metadata?.name || 'label'
+        const { path, minValue, maxValue, minTime, maxTime } = pathProps.dataPath
+        const graphData: [number, number][] = path.map((p: PointData) => [x(p), p.value || 0] )
 
-        const [xAxis, yAxis] = getAxis(svg, maxX, maxY, _width, _height)
-
-        setAxis([xAxis, yAxis])
-
-        addLabelX( svg, _width, _height, "X Label" )
-        addLabelY( svg, _height, 'Y Label' )
-
-        addGradient( svg, yAxis(minY), yAxis(maxY), palette )
-
-    }, [svg, width, height])
-
-
-    useEffect( () => {
-        datas.forEach( (data, i) => addData(data, true, i) )
-    }, [svg, axis])
-
-    const addData = (data: ChartData, usePalette: boolean, i: number) => {
-        if ( svg === undefined || axis === undefined ) return
-        addLine( svg, data, axis, usePalette, i)
+        addLine(svg, graphData, [xAxis(), yAxis()], label, 0)
     }
+
+    const remPath = (svg: any) => (pathProps: JSONProps) => {
+        remLine(svg, pathProps.metadata?.name || 'label')
+    }
+
+    const memAddPath = useCallback( () => addPath, [svg, xAxis, yAxis] );
+    const memRemPath = useCallback( () => remPath, [svg, xAxis, yAxis] );
+
+    useEffect( () => {
+        console.log('Setting graph functions', xAxis, yAxis);
+        setAddGraph(memAddPath);
+        setRemGraph(memRemPath);
+        // setAddGraph(() => addPath)
+        // setRemGraph(() => remPath)
+    }, [svg, xAxis, yAxis])
     
     return (
-      <svg 
-        ref={ref}
-        style={{
-          width: `${width}px`, 
-          height: `${height}px`,
-        }}  
-    />
+        <div className='graph-wrapper' style={{width: '100%', height: '100%'}} ref={wrapperRef}>
+            <svg 
+                ref={svgRef}
+                style={{
+                    width: `${width}px`, 
+                    height: `${height}px`,
+                }}  
+            />
+        </div>
     )
 }
 

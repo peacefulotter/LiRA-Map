@@ -1,11 +1,10 @@
 
 import React, { FC, useEffect, useState } from "react";
-import { useChartCtx } from "../../context/ChartContext";
-import { DataPath, PathProps } from "../../models/path";
+import { useGraph } from "../../context/GraphContext";
+import { DataPath, PathProps, PointData } from "../../models/path";
 import { RideMeasurement } from "../../models/properties";
 import { post } from "../../queries/fetch";
 import MetadataPath from "../Map/MetadataPath";
-import Path from "../Map/Path";
 import usePopup from "../Popup";
 
 interface Props {
@@ -14,17 +13,16 @@ interface Props {
     measurement: RideMeasurement;
 }
 
-const MemoizedEventPath: FC<PathProps> = React.memo<PathProps>( ( { dataPath, properties } ) => {
-    return <MetadataPath dataPath={dataPath} properties={properties} />
-} )
+// const MemoizedEventPath: FC<PathProps> = React.memo<PathProps>( ( { dataPath, properties } ) => {
+//     return <MetadataPath dataPath={dataPath} properties={properties} />
+// } )
 
 
-const ChartEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
+const GraphEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
 
     const [dataPath, setDataPath] = useState<DataPath | undefined>(undefined)
 
-    const { addChartData, remChartData } = useChartCtx()
-
+    const { addGraph, remGraph } = useGraph()
     const popup = usePopup()
 
     useEffect( () => {
@@ -52,15 +50,15 @@ const ChartEventPath: FC<Props> = ( { tripId, taskId, measurement } ) => {
             // console.log("Min time", minTime, "Max Time", maxTime);
 
             if ( hasValue )
-                addChartData( taskId, dataPath.path, dataPath.minTime )
+                addGraph( { dataPath, properties: measurement }, (x: PointData) => x.metadata.timestamp )
         })
 
-        return () => { dataPath !== undefined && measurement.hasValue && remChartData(taskId) }
+        return () => { dataPath !== undefined && measurement.hasValue && remGraph( { dataPath, properties: measurement } ) }
     }, [measurement] )
     
     return dataPath !== undefined 
-        ? <MemoizedEventPath dataPath={dataPath} properties={measurement} />
+        ? <MetadataPath dataPath={dataPath} properties={measurement} />
         : null
 }
 
-export default ChartEventPath;
+export default GraphEventPath;

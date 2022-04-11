@@ -1,46 +1,67 @@
-import { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
-import MapWrapper from "../Components/Map/MapWrapper";
 import MetadataPath from "../Components/Map/MetadataPath";
-import Checkbox from "../Components/Checkbox";
+import MapWrapper from "../Components/Map/MapWrapper";
 import Graph from "../Components/Machine/Graph";
+import Checkbox from "../Components/Checkbox";
 
-import { JSONProps } from "../models/path";
-import { get, post } from "../queries/fetch";
+import { JSONProps, PointData } from "../models/path";
 import { Measurement } from "../models/properties";
 
-import "../css/ml.css";
-import useSize from "../hooks/useSize";
+import { useGraph } from "../context/GraphContext";
 
-const range = (n: number): boolean[] => { 
-    return Array.from( {length: n}, (elt, i) => true);
-}
+import { get, post } from "../queries/fetch";
+
+import "../css/ml.css";
+import { RendererName } from "../models/renderers";
 
 const ML: FC = () => {
-
-    const graphRef = useRef(null)
-    const [width, height] = useSize(graphRef)
 
     const [paths, setPaths] = useState<JSONProps[]>([]);
     const [measurements, setMeasurements] = useState<Measurement[]>([])
 
-    console.log(measurements);
-    
+    const { addGraph, remGraph } = useGraph()
 
-    useEffect(() => {
+    console.log("ML reset");
+
+    useEffect( () => {
         get('/ml_files', setMeasurements)
-    }, [])
+    }, [] )
 
     const addPath = (i: number) => {
-        post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) =>
-            setPaths( prev => [...prev, json] ) 
-        )
+        post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) => {
+            // setPaths( prev => [...prev, json] )
+
+            let curDist = 0;
+            let curWay = json.dataPath.path[0].metadata.way_id 
+
+            addGraph(json, (p: PointData) => {
+                const { dist, way_id } = p.metadata
+                
+                if (way_id !== curWay) {
+                    curDist++
+                    curWay = way_id
+                }
+
+                return dist + curDist
+            })
+        } )
+    }
+
+
+    const filterPath = (i: number): [JSONProps | undefined, JSONProps[]] => {
+        const findPred = (pp: JSONProps) => pp.properties.name === measurements[i].name
+        const filterPred = (pp: JSONProps) => pp.properties.name !== measurements[i].name
+        return [ paths.find( findPred ), paths.filter( filterPred ) ]
     }
 
     const delPath = (i: number) => {
-        setPaths( prev => prev
-            .filter( (pp: JSONProps) => pp.properties.name !== measurements[i].name )
-        )
+        const [p, newPaths] = filterPath(i)
+        if (p === undefined) 
+            return console.log('ERROR, TRYING TO REMOVE PATH', i, 'BUT DIDNT FIND', paths);
+        
+        setPaths( newPaths )
+        remGraph(p)
     }
 
     const onClick = (i: number) => (isChecked: boolean) => {
@@ -51,12 +72,12 @@ const ML: FC = () => {
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
-                    { paths.map( (prop: JSONProps, i: number) => 
+                    {/* { paths.map( (prop: JSONProps, i: number) => 
                         <MetadataPath 
                             key={`ml-path-${i}`}
                             {...prop}
                         />
-                    ) }
+                    ) } */}
                 </MapWrapper>
                 <div className="ml-checkboxes">
                     { measurements.map( (meas, i) => 
@@ -68,11 +89,11 @@ const ML: FC = () => {
                     ) }
                 </div>
             </div>
-           <div className="ml-graph" ref={graphRef}>
-               <Graph width={width} height={height}/>
-           </div>
+            <div className="ml-graph">
+                <Graph labelX="distance (m)" labelY="IRI" />
+            </div>
         </div>
     );
 }
 
-export default ML;
+export default React.memo(ML);

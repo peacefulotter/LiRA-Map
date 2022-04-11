@@ -1,17 +1,18 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 
 import { MeasurementsProvider } from "../context/MeasurementsContext";
-import { ChartProvider } from "../context/ChartContext";
+import { GraphProvider } from "../context/GraphContext";
 import { MetasProvider } from "../context/MetasContext";
 
 import RideDetails from "../Components/Rides/RideDetails";
 import MapWrapper from "../Components/Map/MapWrapper";
 import RideCards from "../Components/Rides/RideCards";
-import Chart from "../Components/Rides/Chart";
 import Rides from "../Components/Rides/Rides";
+import Graph from "../Components/Machine/Graph";
 
 
 const Trips: FC = () => {
+
     return (
         <MeasurementsProvider>
         <MetasProvider>
@@ -21,17 +22,17 @@ const Trips: FC = () => {
                 
                 <RideDetails  />
                 
-                <ChartProvider>
+                <GraphProvider>
                     <div className="map-container">
 
                         <MapWrapper>
                             <Rides />
                         </MapWrapper>
                         
-                        <Chart />
+                        <Graph labelX="time / dist" labelY="Measurement"/>
                     
                     </div>
-                </ChartProvider>
+                </GraphProvider>
             </div>
         </MetasProvider>
         </MeasurementsProvider>
