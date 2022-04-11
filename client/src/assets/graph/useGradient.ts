@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Axis, Gradient, Palette, SVG } from "../../models/graph";
+import { useEffect } from "react";
+import { Axis, Palette, PaletteColor, SVG } from "../../models/graph";
 
 
 const defaultPalette: Palette = [
@@ -9,13 +9,15 @@ const defaultPalette: Palette = [
 ]
 
 
-const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: number, yMax: number, palette?: Palette,  ) => {
+const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: number, yMax: number, palette?: Palette ) => {
+
+    const p = palette || defaultPalette 
 
     useEffect( () => {
 
         if ( svg === undefined || yAxis === undefined ) return;
 
-        const gradient = svg.append("linearGradient")
+        svg.append("linearGradient")
             .attr("id", "line-gradient")
             .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", 0)
@@ -23,17 +25,17 @@ const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: numbe
             .attr("x2", 0)
             .attr("y2", yAxis(yMax))
             .selectAll("stop")
-            .data(palette || defaultPalette)
+            .data(p)
             .enter().append("stop")
             .attr("offset", (d: any) => d.offset )
             .attr("stop-color", (d: any) => d.color )
 
 
-        return () => { gradient.remove() }
+        return () => { svg.select('#' + 'line-gradient').remove() }
 
     }, [svg, yAxis, yMin, yMax, palette])
 
-    return null
+    return `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${c.offset} `)})`
 }
 
 export default useGradient;

@@ -23,6 +23,7 @@ interface Props {
 }
 
 const margin = {top: 20, right: 20, bottom: 50, left: 60};
+const paletteWidth = 40
 
 const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
 
@@ -34,16 +35,16 @@ const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
     const svg = useD3(svgRef, margin)
     const [width, height] = useSize(wrapperRef)
 
-    const _width = width - margin.left - margin.right;
-    const _height = height - margin.top - margin.bottom - 50;
+    const _width = width - margin.left - margin.right - paletteWidth;
+    const _height = height - margin.top - margin.bottom;
     
     const [minX, maxX, minY, maxY] = [0, 10, 0, 10] // useChartSize(datas)
     const xAxis = useMemo( () => getXAxis(maxX, _width),  [maxX, _width] )
     const yAxis = useMemo( () => getYAxis(maxY, _height), [maxY, _height] );
     useAxis(svg, labelX, labelY, maxX, maxY, _width, _height)
-    useGradient(svg, yAxis, minY, maxY, palette)
+    const gradient = useGradient(svg, yAxis, minY, maxY, palette)
 
-    console.log('GRAPH reset', svg, xAxis, yAxis);
+    console.log('GRAPH reset', gradient);
 
     // (svg: any, [xAxis, yAxis]: [Axis | undefined, Axis | undefined] ) => 
         
@@ -81,7 +82,8 @@ const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
     }, [svg, xAxis, yAxis])
     
     return (
-        <div className='graph-wrapper' style={{width: '100%', height: '100%'}} ref={wrapperRef}>
+        <div className='graph-wrapper' ref={wrapperRef}>
+            <div className="graph-palette" style={{background: gradient, marginTop: margin.top}}></div>
             <svg 
                 ref={svgRef}
                 style={{

@@ -1,18 +1,16 @@
 
 
 .ml-wrapper { 
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    height: calc(100vh - 6vh);
 }
 
 .ml-map {
-    height: 50%;
+    height: 55%;
 }
 
 
 .ml-graph {
-    height: 50%;
+    height: 45%;
 }
 
 .ml-checkboxes {
@@ -37,3 +35,14 @@
     background-color: rgba(50, 50, 50, 0.95) !important;
 }
 
+
+.graph-wrapper {
+    height: 100%;
+    display: flex;
+}
+
+
+.graph-palette {
+    width: 30px;
+    height: 80%;
+}

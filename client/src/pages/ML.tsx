@@ -38,9 +38,6 @@ const ML: FC = () => {
             addGraph(json, (p: PointData) => {
                 const { dist, way_id } = p.metadata
 
-                console.log(dist, way_id, curDist, curWay);
-                
-                
                 if (way_id !== curWay) {
                     curDist++
                     curWay = way_id
