@@ -1,9 +1,10 @@
+import { SVG } from "../../models/graph";
 
 
 const labelOffset = 35
 const fontSize = 8
 
-export const addLabelX = ( svg: d3.Selection<SVGGElement, unknown, null, undefined>, width: number, height: number, label: string ) => {
+export const addLabelX = ( svg: SVG, width: number, height: number, label: string ) => {
     return svg.append('text')
         .attr('x', width / 2)
         .attr('y', height + labelOffset)
@@ -14,7 +15,7 @@ export const addLabelX = ( svg: d3.Selection<SVGGElement, unknown, null, undefin
         .text(label);
 }
 
-export const addLabelY = ( svg: d3.Selection<SVGGElement, unknown, null, undefined>, height: number, label: string ) => {
+export const addLabelY = ( svg: SVG, height: number, label: string ) => {
     return svg.append('text')
         .attr('transform', `translate(${-labelOffset}, ${height / 2}) rotate(-90)`)
         .attr('text-anchor', 'middle')

@@ -30,13 +30,16 @@ const ML: FC = () => {
 
     const addPath = (i: number) => {
         post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) => {
-            // setPaths( prev => [...prev, json] )
+            setPaths( prev => [...prev, json] )
 
             let curDist = 0;
             let curWay = json.dataPath.path[0].metadata.way_id 
 
             addGraph(json, (p: PointData) => {
                 const { dist, way_id } = p.metadata
+
+                console.log(dist, way_id, curDist, curWay);
+                
                 
                 if (way_id !== curWay) {
                     curDist++
@@ -72,12 +75,12 @@ const ML: FC = () => {
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
-                    {/* { paths.map( (prop: JSONProps, i: number) => 
+                    { paths.map( (prop: JSONProps, i: number) => 
                         <MetadataPath 
                             key={`ml-path-${i}`}
                             {...prop}
                         />
-                    ) } */}
+                    ) } 
                 </MapWrapper>
                 <div className="ml-checkboxes">
                     { measurements.map( (meas, i) => 

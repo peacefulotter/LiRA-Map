@@ -1,6 +1,6 @@
 
 
-import React, { FC, useCallback, useEffect, useRef } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 
 import { addLine, remLine } from "../../assets/graph/line";
 import useAxis, { getXAxis, getYAxis } from "../../assets/graph/useAxis";
@@ -14,6 +14,7 @@ import { Palette } from "../../models/graph";
 import { JSONProps, PointData } from "../../models/path";
 import useGradient from "../../assets/graph/useGradient";
 
+let i = 0;
 
 interface Props {
     labelX: string;
@@ -37,10 +38,10 @@ const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
     const _height = height - margin.top - margin.bottom - 50;
     
     const [minX, maxX, minY, maxY] = [0, 10, 0, 10] // useChartSize(datas)
-    const xAxis = useCallback( () => getXAxis(maxX, _width), [maxX, _width] );
-    const yAxis = useCallback( () => getYAxis(maxY, _height), [maxY, _height] );
+    const xAxis = useMemo( () => getXAxis(maxX, _width),  [maxX, _width] )
+    const yAxis = useMemo( () => getYAxis(maxY, _height), [maxY, _height] );
     useAxis(svg, labelX, labelY, maxX, maxY, _width, _height)
-    // const gradient = useGradient(svg, yAxis, minY, maxY, palette)
+    useGradient(svg, yAxis, minY, maxY, palette)
 
     console.log('GRAPH reset', svg, xAxis, yAxis);
 
@@ -53,15 +54,19 @@ const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
         if ( svg === undefined )
             return console.log('ERROR, TRYING TO ADD GRAPH DATA WHILE SVG or AXIS = undefined');
 
-        const label = pathProps.metadata?.name || 'label'
+        const label = pathProps.properties.name
         const { path, minValue, maxValue, minTime, maxTime } = pathProps.dataPath
         const graphData: [number, number][] = path.map((p: PointData) => [x(p), p.value || 0] )
 
-        addLine(svg, graphData, [xAxis(), yAxis()], label, 0)
+        addLine(svg, graphData, [xAxis, yAxis], label, i++)
     }
 
-    const remPath = (svg: any) => (pathProps: JSONProps) => {
-        remLine(svg, pathProps.metadata?.name || 'label')
+    const remPath = (pathProps: JSONProps) => {
+        if ( svg === undefined )
+            return console.log('ERROR, TRYING TO REMOVE GRAPH DATA WHILE SVG = undefined');
+
+        i--
+        remLine(svg, pathProps.properties.name )
     }
 
     const memAddPath = useCallback( () => addPath, [svg, xAxis, yAxis] );

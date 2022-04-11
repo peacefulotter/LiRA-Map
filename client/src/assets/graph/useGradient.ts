@@ -11,13 +11,11 @@ const defaultPalette: Palette = [
 
 const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: number, yMax: number, palette?: Palette,  ) => {
 
-    const [gradient, setGradient] = useState<Gradient>()
-
     useEffect( () => {
 
         if ( svg === undefined || yAxis === undefined ) return;
 
-        const _gradient = svg.append("linearGradient")
+        const gradient = svg.append("linearGradient")
             .attr("id", "line-gradient")
             .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", 0)
@@ -30,13 +28,12 @@ const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: numbe
             .attr("offset", (d: any) => d.offset )
             .attr("stop-color", (d: any) => d.color )
 
-        setGradient(_gradient)
 
-        return () => { _gradient.remove() }
+        return () => { gradient.remove() }
 
     }, [svg, yAxis, yMin, yMax, palette])
 
-    return gradient
+    return null
 }
 
 export default useGradient;
