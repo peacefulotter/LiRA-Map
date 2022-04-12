@@ -9,9 +9,16 @@ const defaultPalette: Palette = [
 ]
 
 
-const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: number, yMax: number, palette?: Palette ) => {
+const useGradient = ( 
+    svg: SVG | undefined, 
+    yAxis: Axis | undefined, 
+    yMin: number, yMax: number, 
+    palette?: Palette 
+): [Palette, string] => {
 
     const p = palette || defaultPalette 
+
+    const gradient = `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${c.offset} `)})`
 
     useEffect( () => {
 
@@ -35,7 +42,7 @@ const useGradient = ( svg: SVG | undefined, yAxis: Axis | undefined, yMin: numbe
 
     }, [svg, yAxis, yMin, yMax, palette])
 
-    return `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${c.offset} `)})`
+    return [p, gradient]
 }
 
 export default useGradient;

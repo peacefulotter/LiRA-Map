@@ -1,17 +1,16 @@
 
 
-import * as d3 from "d3";
-
-import { Axis, GraphData, SVG, SVGLayer } from "../../models/graph";
+import { Axis, GraphData, SVG } from "../../models/graph";
+import { getColors } from "./color";
 import Dots from "./dots";
 import Path from "./path";
 
 
-const colors = ['#79d45e', '#f6e683', '#ffaf68', '#f4889a', '#a484e9', '#31bff3'];
 const grey = '#aab'
 
 
 class Line {
+
     path: Path;
     dots: Dots;
 
@@ -41,6 +40,7 @@ export const addLine = (
     label: string,
     i: number 
 ) =>  {
+    const colors = getColors(0)
     const color = colors[i % colors.length]
 
     const line = new Line(svg, label)
