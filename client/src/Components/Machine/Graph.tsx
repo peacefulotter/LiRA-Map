@@ -28,6 +28,8 @@ const paletteWidth = 40
 
 const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
 
+    // TODO: recompute data positions on resize
+
     const { setAddGraph, setRemGraph } = useGraph()
 
     const svgRef = useRef(null)

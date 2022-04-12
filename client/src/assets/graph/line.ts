@@ -48,7 +48,7 @@ export const addLine = (
 
     line.path.onMouseOver( () => {
         line.path.allMouseOver()
-        line.dots.mouseOver(4)
+        line.dots.mouseOver()
         line.path.mouseOver(3)
     })
 
@@ -56,6 +56,18 @@ export const addLine = (
         line.path.allMouseOut()
         line.dots.mouseOut(color)
         line.path.mouseOut(color)
+    })
+
+    line.dots.onMouseOver( () => {
+        line.dots.get()
+            .selectAll('circle')
+            .style('opacity', 1)
+    })
+
+    line.dots.onMouseOut( () => {
+        line.dots.get()
+            .selectAll('circle')
+            .style('opacity', 0)
     })
 }
 

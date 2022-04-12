@@ -22,31 +22,28 @@ class Dots extends Layer {
             .append("circle")
             .attr("cx", (d: any) => x(d[0]) )
             .attr("cy", (d: any) => y(d[1]) )
-            .attr("r", 0)
-            .style("fill", color)
-            .style('position', "relative")
+            .attr("r", 4)
+            .style('opacity', 0)
+            .style('fill', color)
+
 
         return this;
     }
 
-    mouseOver( radius: number ) {
+    mouseOver() {
         return this.get()
-            .attr("r", radius)
+            .selectAll('circle')
             .style('fill', "url(#line-gradient)")
             .style('z-index', 9999)
-            .selectAll('circle')
-            .attr("r", radius)
-            .style("fill", "url(#line-gradient)")
+            .style('opacity', 1)
     }
 
     mouseOut(color: string) {
         return this.get()
-            .attr("r", 0)
+            .selectAll('circle')
             .style('fill', color)
             .style('z-index', 0)
-            .selectAll('circle')
-            .attr("r", 0)
-            .style("fill", color)
+            .style('opacity', 0)
     }
 
     allMouseOver() {
