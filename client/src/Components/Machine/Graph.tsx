@@ -44,10 +44,8 @@ const Graph: FC<Props> = ( { labelX, labelY, palette } ) => {
     useAxis(svg, labelX, labelY, maxX, maxY, _width, _height)
     const gradient = useGradient(svg, yAxis, minY, maxY, palette)
 
-    console.log('GRAPH reset', gradient);
+    console.log('GRAPH reset');
 
-    // (svg: any, [xAxis, yAxis]: [Axis | undefined, Axis | undefined] ) => 
-        
     const addPath = (pathProps: JSONProps, x: (p: PointData) => number) => {
 
         console.log(xAxis, yAxis);

@@ -4,6 +4,8 @@ import { JSONProps, PointData } from "./path"
 
 export type SVG = d3.Selection<SVGGElement, unknown, null, undefined>
 export type Axis = d3.ScaleLinear<number, number, never>
+export type SVGLayer = d3.Selection<d3.BaseType, unknown, null, undefined>
+
 
 export type GraphData =  [number, number][]
 

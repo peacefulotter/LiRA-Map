@@ -1,26 +1,16 @@
 
 import * as d3 from 'd3'
-import { Axis, GraphData, SVG } from "../../models/graph"
+import { Axis, GraphData, SVG, SVGLayer } from "../../models/graph"
+import Layer from './layer';
 
-type Base = d3.Selection<d3.BaseType, unknown, null, undefined>
 
-class Path {
-
-    class = 'graph-path';
-
-    svg: SVG;
-    label: string;
-    id: string;
+class Path extends Layer {
 
     constructor(svg: SVG, label: string) {
-        this.svg = svg;   
-        this.label = label;
-        this.id = `${this.label}-path`
+        super(svg, label, 'path')
     }
 
-    getPath = () => this.svg.select('#' + this.id)
-
-    addPath( data: GraphData, [x, y]: [Axis, Axis], color: string)
+    add( data: GraphData, [x, y]: [Axis, Axis], color: string)
     {
         this.svg.append("path")
             .attr("id", this.id)
@@ -37,25 +27,31 @@ class Path {
         return this
     }
 
-    remPath()
-    {
-        this.getPath().remove()
+    mouseOver(strokeWidth: number) {
+        return this.get()
+            .style("stroke-width", strokeWidth)
+            .style('stroke', "url(#line-gradient)")
+            .style('z-index', 9999)
+            .style('opacity', 1.0)
     }
 
-    onMouseOver( callback: (path: Base) => void ) 
-    {
-        const p = this.getPath()
-        p.on('mouseover', () => callback(p))
-        return this;
+    mouseOut(color: string) {
+        return this.get()
+            .style("stroke-width", "2")
+            .style('stroke', color)
+            .style('z-index', 0)
+            .style('opacity', 1.0)
     }
 
-    onMouseOut( callback: (path: Base) => void ) 
-    {
-        const p = this.getPath()
-        p.on('mouseout', () => callback(p))
-        return this;
+    allMouseOver() {
+        this.getAll()
+            .style('opacity', 0.2)
     }
 
+    allMouseOut() {
+        this.getAll()
+            .style('opacity', 1.0)
+    }
 }
 
 export default Path;

@@ -13,9 +13,15 @@ const useD3 = (ref: React.MutableRefObject<null>, margin: any) => {
 
         const _svg = d3.select(ref.current)
             .append("g")
+            .attr('class', 'svg-g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
         setSvg(_svg)
+
+        return () => { 
+            if ( svg !== undefined )
+                svg.selectAll('.svg-g').remove()
+        }
 
     }, [ref, margin])
     

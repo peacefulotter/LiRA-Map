@@ -6,7 +6,7 @@ const fontSize = 8
 
 export const addLabelX = ( svg: SVG, width: number, height: number, label: string ) => {
     return svg.append('text')
-        .attr('x', width / 2)
+        .attr('x', width - label.length - 20)
         .attr('y', height + labelOffset)
         .attr('text-anchor', 'middle')
         .style('font-family', 'Helvetica')
