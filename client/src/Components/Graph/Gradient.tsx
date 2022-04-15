@@ -15,28 +15,22 @@ export interface IGradient {
 
 const gradientId = "line-gradient";
 
-const getGradient = (p: Palette) => 
-    `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${c.offset} `)})`
+const getOffset = (color: PaletteColor, maxY: number) => color.stopValue 
+    ? (color.stopValue / maxY) * 100 + '%'
+    : color.offset
+
+const getGradient = (p: Palette, maxY: number) => 
+    `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${getOffset(c, maxY)} `)})`
 
 const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
-
-    console.log(palette);
-    
 
     const { svg, axis, minY, maxY } = useGraph()
 
     const p = palette || defaultPalette
-    
-    console.log(p);
 
     useEffect( () => {
 
-        console.log('here');
-
         if ( svg === undefined || axis === undefined ) return;
-
-        console.log('in');
-        
 
         svg.append("linearGradient")
             .attr("id", gradientId)
@@ -48,7 +42,7 @@ const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
             .selectAll("stop")
             .data(p)
             .enter().append("stop")
-            .attr("offset", (d: any) => d.stopValue || d.offset )
+            .attr("offset", (d: any) => getOffset(d, maxY) )
             .attr("stop-color", (d: any) => d.color )
 
 
@@ -59,7 +53,7 @@ const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
     return (
         <div 
             className="graph-palette" 
-            style={{background: getGradient(p), marginTop}}>
+            style={{background: getGradient(p, maxY), marginTop}}>
         </div>
     )
 }

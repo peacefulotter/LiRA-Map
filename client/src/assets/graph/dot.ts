@@ -24,12 +24,10 @@ class Dot {
     }
 
     static mouseOver(e: any, d: any) {
-        console.log(this, e, d)
         Tooltip.mouseOver(e, d)
     }
 
     static mouseOut(e: any, d: any) {
-        console.log(this, e, d)
         Tooltip.mouseOut(e, d)
     }
 }

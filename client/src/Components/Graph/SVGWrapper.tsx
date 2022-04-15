@@ -12,6 +12,7 @@ interface ISVG {
     labelX: string;
     labelY: string;
 }
+// lol
 
 const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY } ) => {
 
@@ -28,17 +29,15 @@ const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY
         const _svg = d3.select(ref.current)
             .append("g")
             .attr('class', 'svg-g')
+            .attr('id', 'svg-g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
         setSVG(_svg)
 
-        return () => { 
-
-            console.log(svg);
-            
-
-            if ( svg !== undefined )
-                svg.selectAll('.svg-g').remove()
+        return () => {
+            console.log(_svg.selectAll('.svg-g'));
+             
+            _svg.select('#svg-g').remove()
         }
 
     }, [ref, margin])
@@ -47,8 +46,8 @@ const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY
         <svg 
             ref={ref}
             style={{
-                width: `${width}px`, 
-                height: `${height}px`,
+                // width: `${width}px`, 
+                // height: `${height}px`,
             }}  
         >
             <Axis width={w} height={h} labelX={labelX} labelY={labelY}/>
