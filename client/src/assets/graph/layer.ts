@@ -1,4 +1,4 @@
-import { SVG } from "../../models/graph";
+import { D3Callback, SVG } from "../../models/graph";
 
 class Layer {
 
@@ -24,13 +24,13 @@ class Layer {
         this.get().remove()
     }
 
-    public onMouseOver( callback: () => void ) 
+    public onMouseOver( callback: D3Callback ) 
     {
         this.get().on('mouseover', callback )
         return this;
     }
 
-    public onMouseOut( callback: () => void ) 
+    public onMouseOut( callback: D3Callback ) 
     {
         this.get().on('mouseout', callback )
         return this;

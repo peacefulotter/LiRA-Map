@@ -17,13 +17,13 @@ const getColor = (val: any, defaultColor: string | undefined, i: number): string
 }
 
 
-const Hotpoints: Renderer = ( { path, properties, onClick, minValue, maxValue } ) => { 
+const Hotpoints: Renderer = ( { path, properties, onClick, minY, maxY } ) => { 
 
     const [map, canvas] = useCanvas();
 
     useEffect(() => {
         path.forEach( (p: PointData, i: number) => {
-            const mappedValue: number = ((p.value || -9999) - (minValue || 0)) / ((maxValue || 1) - (minValue || 0))
+            const mappedValue: number = ((p.value || -9999) - (minY || 0)) / ((maxY || 1) - (minY || 0))
             return L.circle( [p.lat, p.lng], { 
                 renderer: canvas, 
                 radius: width(p.properties, properties),

@@ -8,7 +8,7 @@ import RideDetails from "../Components/Rides/RideDetails";
 import MapWrapper from "../Components/Map/MapWrapper";
 import RideCards from "../Components/Rides/RideCards";
 import Rides from "../Components/Rides/Rides";
-import Graph from "../Components/Machine/Graph";
+import Graph from "../Components/Graph/Graph";
 
 
 const Trips: FC = () => {

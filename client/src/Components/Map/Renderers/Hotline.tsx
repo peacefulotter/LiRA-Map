@@ -41,7 +41,7 @@ interface HotlineProps extends RendererProps {
 
 const Hotline: FC<HotlineProps> = ( { 
     path, properties, onClick,
-    minValue, maxValue, 
+    minY, maxY, 
     palette, zoomRange 
 } ) => {
 
@@ -64,8 +64,8 @@ const Hotline: FC<HotlineProps> = ( {
             0.5: 'yellow',
             1.0: 'red'
         },
-        min: minValue || 0,
-        max: maxValue || 1,
+        min: minY || 0,
+        max: maxY || 1,
         onclick: onClick ? onClick(0) : null
     }
 

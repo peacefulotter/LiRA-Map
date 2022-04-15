@@ -1,6 +1,5 @@
 
 import { Selection } from "d3"
-import { JSONProps, PointData } from "./path"
 
 // SVG 
 export type SVG = d3.Selection<SVGGElement, unknown, null, undefined>
@@ -13,16 +12,15 @@ export type GraphAxis = [Axis, Axis]
 // Data format
 export type GraphData =  [number, number][]
 
-// Graph funcs
-export type GraphAddFunc = (pathProps: JSONProps, x: (p: PointData) => number) => void
-export type GraphRemFunc = (pathProps: JSONProps) => void
-
 // Palette - Gradient
-export interface PaletteColor { offset: string; color: string; }
+export interface PaletteColor { offset: string; color: string; stopValue?: number }
 export type Palette = PaletteColor[]
 export type Gradient = Selection<SVGStopElement, PaletteColor, SVGLinearGradientElement, unknown>
 
 // MinMax
 export type MinMaxAxis = [number, number, number, number]
-export type AddMinMaxFunc = (label: string, _minX: number, _maxX: number, _minY: number, _maxY: number) => void
+export type AddMinMaxFunc = (label: string, _minX?: number, _maxX?: number, _minY?: number, _maxY?: number) => void
 export type RemMinMaxFunc = (label: string) => void
+
+// Callback
+export type D3Callback = (event: any, d: unknown) => void

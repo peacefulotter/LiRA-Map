@@ -1,10 +1,12 @@
 
 
-import { Axis, GraphData, SVG } from "../../models/graph";
+import * as d3 from 'd3'
+
 import { getColors } from "./color";
 import Dots from "./dots";
 import Path from "./path";
 
+import { Axis, GraphData, SVG } from "../../models/graph";
 
 const grey = '#aab'
 
@@ -46,29 +48,22 @@ export const addLine = (
     const line = new Line(svg, label)
         .add(data, axis, color)
 
-    line.path.onMouseOver( () => {
+    const mouseOverLine = () => {
         line.path.allMouseOver()
         line.dots.mouseOver()
-        line.path.mouseOver(3)
-    })
+        line.path.mouseOver(3)	
+    }
 
-    line.path.onMouseOut( () => {
+    const mouseOutLine = () => {
         line.path.allMouseOut()
         line.dots.mouseOut(color)
         line.path.mouseOut(color)
-    })
+    }
 
-    // line.dots.onMouseOver( () => {
-    //     line.dots.get()
-    //         .selectAll('circle')
-    //         .style('opacity', 1)
-    // })
-
-    // line.dots.onMouseOut( () => {
-    //     line.dots.get()
-    //         .selectAll('circle')
-    //         .style('opacity', 0)
-    // })
+    line.path.onMouseOver( mouseOverLine )
+    line.path.onMouseOut( mouseOutLine )
+    line.dots.onMouseOver( mouseOverLine )
+    line.dots.onMouseOut( mouseOutLine )
 }
 
 export const remLine = (svg: SVG, label: string) => {

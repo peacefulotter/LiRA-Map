@@ -50,10 +50,10 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
             .where( { 'FK_Trip': tripId, 'T': measurement } )
             .whereNot( { 'lat': null, 'lon': null } )
 
-    let minValue = Number.MAX_VALUE;
-    let maxValue = -Number.MAX_VALUE;
-    let minTime = Number.MAX_VALUE;
-    let maxTime = -Number.MAX_VALUE;
+    let minX = Number.MAX_SAFE_INTEGER;
+    let maxX = Number.MIN_SAFE_INTEGER;
+    let minY = Number.MAX_SAFE_INTEGER;
+    let maxY = Number.MIN_SAFE_INTEGER;
 
     const path = res
         .map( (msg: any) => {
@@ -61,10 +61,10 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
             const value = json['obd.rpm.value'];
             const time = new Date(msg.Created_Date).getTime()
 
-            minValue = Math.min(minValue, value);
-            maxValue = Math.max(maxValue, value);
-            minTime = Math.min(minTime, time)
-            maxTime = Math.max(maxTime, time)
+            minX = Math.min(minX, time);
+            maxX = Math.max(maxX, time);
+            minY = Math.min(minY, value)
+            maxY = Math.max(maxY, value)
 
             return { lat: msg.lat, lng: msg.lon, value, metadata: { timestamp: time } } as PointData
         } )
@@ -72,7 +72,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
             a.metadata.timestamp - b.metadata.timestamp
         )
 
-    return { path, minValue, maxValue, minTime, maxTime }
+    return { path, minX, maxX, minY, maxY }
 }
 
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {

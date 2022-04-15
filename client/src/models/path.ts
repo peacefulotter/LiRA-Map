@@ -17,10 +17,10 @@ export type Path = PointData[]
 // A DataPath is a Path with informations on the latter
 export interface DataPath {
 	path: Path;
-	minValue?: number;
-    maxValue?: number; 
-    minTime?: number;
-    maxTime?: number;
+	minY: number;
+    maxY: number; 
+    minX: number;
+    maxX: number;
 }
 
 // Props passed to the Path and EventPath components

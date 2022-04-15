@@ -6,7 +6,7 @@ import {
 	useState,
 } from "react";
 import useMinMaxAxis from "../hooks/useMinMaxAxis";
-import { AddMinMaxFunc, GraphAddFunc, GraphAxis, GraphRemFunc, MinMaxAxis, RemMinMaxFunc, SVG } from "../models/graph";
+import { AddMinMaxFunc, GraphAxis, RemMinMaxFunc, SVG } from "../models/graph";
 
 
 interface ContextProps {
@@ -17,16 +17,12 @@ interface ContextProps {
 	maxY: number;
 	gradientId: string;
 	axis: GraphAxis | undefined;
-	addGraph: GraphAddFunc;
-    remGraph: GraphRemFunc;
 
 	setSVG: Dispatch<SetStateAction<SVG | undefined>>;
     addMinMax: AddMinMaxFunc;
 	remMinMax: RemMinMaxFunc;
     setGradientId: Dispatch<SetStateAction<string>>;
     setAxis: Dispatch<SetStateAction<GraphAxis | undefined>>;
-    setAddGraph: Dispatch<SetStateAction<GraphAddFunc>>;
-    setRemGraph: Dispatch<SetStateAction<GraphRemFunc>>;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -38,9 +34,6 @@ export const GraphProvider = ({ children }: any) => {
 	const [minMaxAxis, addMinMax, remMinMax] = useMinMaxAxis()
 	const [gradientId, setGradientId] = useState<string>("gradient")
 
-	const [addGraph, setAddGraph] = useState<GraphAddFunc>(() => {});
-    const [remGraph, setRemGraph] = useState<GraphRemFunc>(() => {});
-	
 	const [minX, maxX, minY, maxY] = minMaxAxis
 
 	return (
@@ -50,13 +43,11 @@ export const GraphProvider = ({ children }: any) => {
 				axis,
 				gradientId,
 				minX, maxX, minY, maxY,
-				addGraph, remGraph,
 
 				setSVG,
 				setAxis,
 				setGradientId,
 				addMinMax, remMinMax,
-				setAddGraph, setRemGraph
 			}}
 		>
 			{children}

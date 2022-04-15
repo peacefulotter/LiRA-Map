@@ -36,10 +36,10 @@ export type Path = PointData[]
 
 export interface DataPath {
 	path: Path;
-	minValue?: number;
-    maxValue?: number;
-    minTime?: number;
-    maxTime?: number;
+	minY?: number;
+    maxY?: number; 
+    minX?: number;
+    maxX?: number;
 }
 
 export enum RendererName {

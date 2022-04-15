@@ -7,28 +7,21 @@ import { JSONProps, PointData } from "../../models/path";
 
 
 interface ILine {
-    json: JSONProps;
-    x: (p: PointData) => number
-    i: number
+    data: GraphData;
+    minX: number, maxX: number; minY: number; maxY: number;
+    label: string; i: number
 }
 
-const Line: FC<ILine> = ( { json, x, i } ) => {
+const Line: FC<ILine> = ( { data, minX, maxX, minY, maxY, label, i } ) => {
 
     const { svg, axis, addMinMax, remMinMax } = useGraph()
-
-    const label = json.properties.name
 
     useEffect( () => {
         
         if ( svg === undefined || axis === undefined )
             return console.log('ERROR, TRYING TO ADD GRAPH DATA WHILE SVG or AXIS = undefined');
 
-        const { path, minValue, maxValue, minTime, maxTime } = json.dataPath
-        const data: GraphData = path.map((p: PointData) => [x(p), p.value || 0] )
-
-        console.log(minValue, maxValue);
-        
-        addMinMax(label, 0, 10, minValue || Number.MAX_SAFE_INTEGER, maxValue || Number.MIN_SAFE_INTEGER)
+        addMinMax(label, minX, maxX, minY, maxY)
 
         addLine(svg, data, axis, label, i)
 
@@ -40,7 +33,7 @@ const Line: FC<ILine> = ( { json, x, i } ) => {
             remMinMax(label)
         }
 
-    }, [svg, json, axis, label])
+    }, [svg, data, label, axis])
 
     return null
 

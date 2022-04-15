@@ -1,8 +1,10 @@
 
 import * as d3 from 'd3'
 import { FC, useEffect } from "react";
+
 import { addLabelX, addLabelY } from '../../assets/graph/label';
 import { getXAxis, getYAxis } from '../../assets/graph/useAxis';
+
 import { useGraph } from "../../context/GraphContext";
 
 interface IAxis {
@@ -19,8 +21,6 @@ const Axis: FC<IAxis> = ( { width, height, labelX, labelY } ) => {
     useEffect( () => {
 
         if ( svg === undefined ) return;
-
-        console.log(svg, maxX, maxY, width, height);
 
         const x = getXAxis(maxX, width);
         const y = getYAxis(maxY, height)

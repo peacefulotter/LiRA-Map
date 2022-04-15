@@ -1,5 +1,7 @@
 import { EnterElement, Selection } from "d3";
+
 import { Axis } from "../../models/graph";
+import Tooltip from "./tooltip";
 
 type EnterSVG = Selection<EnterElement, [number, number], SVGGElement, unknown>
 
@@ -21,14 +23,14 @@ class Dot {
         return this;
     }
 
-    static mouseOver(c: SVGCircleElement, d: any) {
-        console.log(this, c, d)
-        console.log('here');
+    static mouseOver(e: any, d: any) {
+        console.log(this, e, d)
+        Tooltip.mouseOver(e, d)
     }
 
-    static mouseOut(c: SVGCircleElement, d: any) {
-        console.log(this, c, d)
-        console.log('out');
+    static mouseOut(e: any, d: any) {
+        console.log(this, e, d)
+        Tooltip.mouseOut(e, d)
     }
 }
 

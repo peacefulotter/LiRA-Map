@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 
 import MetadataPath from "../Components/Map/MetadataPath";
 import MapWrapper from "../Components/Map/MapWrapper";
-import Graph from "../Components/Machine/Graph";
+import Graph from "../Components/Graph/Graph";
 import Checkbox from "../Components/Checkbox";
 
 import { JSONProps, PointData } from "../models/path";
@@ -14,8 +14,8 @@ import { get, post } from "../queries/fetch";
 
 import "../css/ml.css";
 
-import Axis from "../Components/Machine/Axis";
-import Line from "../Components/Machine/Line";
+import Axis from "../Components/Graph/Axis";
+import Line from "../Components/Graph/Line";
 
 const ML: FC = () => {
 
@@ -93,14 +93,16 @@ const ML: FC = () => {
             </div>
             <div className="ml-graph">
                 <Graph labelX="distance (m)" labelY="IRI">
-                    { paths.map((json: JSONProps, i: number) =>
-                        <Line 
+                    { paths.map((json: JSONProps, i: number) => {
+                        const { path, minX, maxX, minY, maxY } = json.dataPath;
+                        return <Line 
                             key={'graph-line-' + i}
-                            json={json} 
-                            x={(p: PointData) => p.metadata.dist} 
+                            data={path.map((p: PointData) => [p.metadata.tdist, p.value || 0])} 
+                            minX={minX} maxX={maxX} minY={minY} maxY={maxY} 
+                            label={json.properties.name}
                             i={i}
                         />
-                    )}
+                    }) }
                 </Graph>
             </div>
         </div>
