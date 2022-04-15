@@ -12,7 +12,9 @@ class Dots extends Layer {
 
     add(data: GraphData, [x, y]: [Axis, Axis], color: string) 
     {
-        this.svg.append('g')
+        this.svg
+            .select('#content')
+            .append('g')
             .attr("id", this.id)
             .attr('class', this.class)
             .selectAll("dot")

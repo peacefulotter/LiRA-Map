@@ -25,11 +25,14 @@ const Axis: FC<IAxis> = ( { width, height, labelX, labelY } ) => {
         const x = getXAxis(maxX, width * 2);
         const y = getYAxis(maxY, height)
 
-        const axisX = svg.append("g")
+        const axisX = svg
+            .select('#content')
+            .append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
 
-        const axisY = svg.append("g")
+        const axisY = svg
+            .append("g")
             .call(d3.axisLeft(y))
             .call(g => g.select(".domain")
                 .style('stroke-width', 5)

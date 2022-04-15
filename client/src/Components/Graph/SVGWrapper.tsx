@@ -17,7 +17,7 @@ interface ISVG {
 const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY } ) => {
 
     const ref = useRef(null)
-    const { svg, setSVG } = useGraph()
+    const { setSVG } = useGraph()
 
     const paletteWidth = 40;
     const w = width - margin.left - margin.right - paletteWidth;
@@ -31,6 +31,9 @@ const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY
             .attr('class', 'svg-g')
             .attr('id', 'svg-g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            
+        _svg.append('g')
+            .attr('id', 'content')
 
         setSVG(_svg)
 

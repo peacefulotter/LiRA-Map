@@ -12,7 +12,9 @@ class Path extends Layer {
 
     add( data: GraphData, [x, y]: [Axis, Axis], color: string)
     {
-        this.svg.append("path")
+        this.svg
+            .select('#content')
+            .append("path")
             .attr("id", this.id)
             .attr('class', this.class)
             .datum(data)

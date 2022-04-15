@@ -19,7 +19,7 @@ class Tooltip {
     static mouseOver(e: any, d: any) {
 
         const { pageX, pageY } = e;
-        const xVal = Math.round(d[0] * 10) / 10
+        const xVal = Math.round(d[0])
         const yVal = Math.round(d[1] * 100) / 100
 
         const maxLeft = window.innerWidth - 75
