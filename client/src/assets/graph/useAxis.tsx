@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { addLabelX, addLabelY } from "./label";
 
-import { Axis, SVG } from "../../models/graph";
+import { SVG } from "../../models/graph";
 
 export const getXAxis = (maxX: number, width: number) => {
     return d3.scaleLinear()

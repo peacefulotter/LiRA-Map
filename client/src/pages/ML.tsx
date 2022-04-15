@@ -13,14 +13,16 @@ import { useGraph } from "../context/GraphContext";
 import { get, post } from "../queries/fetch";
 
 import "../css/ml.css";
-import { RendererName } from "../models/renderers";
+
+import Axis from "../Components/Machine/Axis";
+import Line from "../Components/Machine/Line";
 
 const ML: FC = () => {
 
     const [paths, setPaths] = useState<JSONProps[]>([]);
     const [measurements, setMeasurements] = useState<Measurement[]>([])
 
-    const { addGraph, remGraph } = useGraph()
+    // const { addGraph, remGraph } = useGraph()
 
     console.log("ML reset");
 
@@ -35,16 +37,16 @@ const ML: FC = () => {
             let curDist = 0;
             let curWay = json.dataPath.path[0].metadata.way_id 
 
-            addGraph(json, (p: PointData) => {
-                const { dist, way_id } = p.metadata
+            // addGraph(json, (p: PointData) => {
+            //     const { dist, way_id } = p.metadata
 
-                if (way_id !== curWay) {
-                    curDist++
-                    curWay = way_id
-                }
+            //     if (way_id !== curWay) {
+            //         curDist++
+            //         curWay = way_id
+            //     }
 
-                return dist + curDist
-            })
+            //     return dist + curDist
+            // })
         } )
     }
 
@@ -61,7 +63,7 @@ const ML: FC = () => {
             return console.log('ERROR, TRYING TO REMOVE PATH', i, 'BUT DIDNT FIND', paths);
         
         setPaths( newPaths )
-        remGraph(p)
+        // remGraph(p)
     }
 
     const onClick = (i: number) => (isChecked: boolean) => {
@@ -90,7 +92,16 @@ const ML: FC = () => {
                 </div>
             </div>
             <div className="ml-graph">
-                <Graph labelX="distance (m)" labelY="IRI" />
+                <Graph labelX="distance (m)" labelY="IRI">
+                    { paths.map((json: JSONProps, i: number) =>
+                        <Line 
+                            key={'graph-line-' + i}
+                            json={json} 
+                            x={(p: PointData) => p.metadata.dist} 
+                            i={i}
+                        />
+                    )}
+                </Graph>
             </div>
         </div>
     );

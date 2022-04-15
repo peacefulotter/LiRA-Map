@@ -1,10 +1,8 @@
 
 import { useState } from "react"
+import { AddMinMaxFunc, MinMaxAxis, RemMinMaxFunc } from "../models/graph";
 
-type MinMaxAxis = [number, number, number, number]
 
-type AddMinMaxFunc = (label: string, _minX: number, _maxX: number, _minY: number, _maxY: number) => void
-type RemMinMaxFunc = (label: string) => void
 
 type LabelMinMax = {[key: string]: MinMaxAxis}
 

@@ -1,4 +1,5 @@
 import { Axis, GraphData, SVG } from "../../models/graph"
+import Dot from "./dot";
 import Layer from "./layer";
 
 
@@ -23,10 +24,8 @@ class Dots extends Layer {
             .attr("r", 4)
             .style('opacity', 0)
             .style('fill', color)
-            .on('mouseover', (c: SVGCircleElement, e: any) => {
-                console.log(c, e)
-                console.log('here');
-            })
+            .on('mouseover', Dot.mouseOver )
+            .on('mouseout',  Dot.mouseOut )
 
 
         return this;

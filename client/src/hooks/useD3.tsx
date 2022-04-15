@@ -1,13 +1,13 @@
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import * as d3 from 'd3'
 
-import { SVG } from "../models/graph"
+import { useGraph } from "../context/GraphContext"
 
 const useD3 = (ref: React.MutableRefObject<null>, margin: any) => {
 
-    const [svg, setSvg] = useState<SVG | undefined>()
-
+    const { svg, setSVG } = useGraph()
+    
     useEffect( () => {
         if ( ref.current === undefined ) return;
 
@@ -16,7 +16,7 @@ const useD3 = (ref: React.MutableRefObject<null>, margin: any) => {
             .attr('class', 'svg-g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-        setSvg(_svg)
+        setSVG(_svg)
 
         return () => { 
             if ( svg !== undefined )

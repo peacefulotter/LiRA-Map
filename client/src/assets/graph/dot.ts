@@ -21,13 +21,13 @@ class Dot {
         return this;
     }
 
-    static mouseOver(event: any, d: [number, number]) {
-        console.log(this, event, d)
+    static mouseOver(c: SVGCircleElement, d: any) {
+        console.log(this, c, d)
         console.log('here');
     }
 
-    static mouseOut(event: any, d: [number, number]) {
-        console.log(this, event, d)
+    static mouseOut(c: SVGCircleElement, d: any) {
+        console.log(this, c, d)
         console.log('out');
     }
 }
