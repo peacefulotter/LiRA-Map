@@ -58,17 +58,17 @@ export const addLine = (
         line.path.mouseOut(color)
     })
 
-    line.dots.onMouseOver( () => {
-        line.dots.get()
-            .selectAll('circle')
-            .style('opacity', 1)
-    })
+    // line.dots.onMouseOver( () => {
+    //     line.dots.get()
+    //         .selectAll('circle')
+    //         .style('opacity', 1)
+    // })
 
-    line.dots.onMouseOut( () => {
-        line.dots.get()
-            .selectAll('circle')
-            .style('opacity', 0)
-    })
+    // line.dots.onMouseOut( () => {
+    //     line.dots.get()
+    //         .selectAll('circle')
+    //         .style('opacity', 0)
+    // })
 }
 
 export const remLine = (svg: SVG, label: string) => {

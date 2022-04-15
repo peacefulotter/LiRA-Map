@@ -5,8 +5,6 @@ import Layer from "./layer";
 
 class Dots extends Layer {
 
-    public class = 'graph-dots';
-
     constructor(svg: SVG, label: string) {
         super(svg, label, 'dots')
     }
@@ -25,6 +23,10 @@ class Dots extends Layer {
             .attr("r", 4)
             .style('opacity', 0)
             .style('fill', color)
+            .on('mouseover', (c: SVGCircleElement, e: any) => {
+                console.log(c, e)
+                console.log('here');
+            })
 
 
         return this;
