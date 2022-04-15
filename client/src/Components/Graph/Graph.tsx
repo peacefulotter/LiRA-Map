@@ -30,7 +30,7 @@ const Graph: FC<Props> = ( props ) => {
         <div className='graph-wrapper' ref={wrapperRef}>
             <Tooltip />
             <Gradient palette={palette} marginTop={margin.top}/>
-            <SVGWrapper margin={margin} width={width * 2} height={height} labelX={labelX} labelY={labelY}>
+            <SVGWrapper margin={margin} width={width} height={height} labelX={labelX} labelY={labelY}>
                 {children}
             </SVGWrapper>
         </div>

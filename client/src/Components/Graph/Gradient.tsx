@@ -3,9 +3,9 @@ import { useGraph } from "../../context/GraphContext";
 import { Palette, PaletteColor } from "../../models/graph"
 
 const defaultPalette: Palette = [
-    {offset: "0%",   color: "green",  stopValue: 0 },
-    {offset: "50%",  color: "yellow", stopValue: 2 },
-    {offset: "100%", color: "red",    stopValue: 5 }
+    {offset: "0%",   color: "green"  },
+    {offset: "50%",  color: "yellow" },
+    {offset: "100%", color: "red"    }
 ]
 
 export interface IGradient {
@@ -18,9 +18,6 @@ const gradientId = "line-gradient";
 const getOffset = (color: PaletteColor, maxY: number) => color.stopValue 
     ? (color.stopValue / maxY) * 100 + '%'
     : color.offset
-
-const getGradient = (p: Palette, maxY: number) => 
-    `linear-gradient(0deg, ${p.map((c: PaletteColor) => `${c.color} ${getOffset(c, maxY)} `)})`
 
 const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
 
@@ -50,12 +47,7 @@ const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
 
     }, [svg, axis, minY, maxY, p])
 
-    return (
-        <div 
-            className="graph-palette" 
-            style={{background: getGradient(p, maxY), marginTop}}>
-        </div>
-    )
+    return null
 }
 
 

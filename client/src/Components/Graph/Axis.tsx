@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import { FC, useEffect } from "react";
 
 import { addLabelX, addLabelY } from '../../assets/graph/label';
-import { getXAxis, getYAxis } from '../../assets/graph/useAxis';
+import { getXAxis, getYAxis } from '../../assets/graph/axis';
 
 import { useGraph } from "../../context/GraphContext";
 
@@ -22,7 +22,7 @@ const Axis: FC<IAxis> = ( { width, height, labelX, labelY } ) => {
 
         if ( svg === undefined ) return;
 
-        const x = getXAxis(maxX, width);
+        const x = getXAxis(maxX, width * 2);
         const y = getYAxis(maxY, height)
 
         const axisX = svg.append("g")
@@ -30,7 +30,11 @@ const Axis: FC<IAxis> = ( { width, height, labelX, labelY } ) => {
             .call(d3.axisBottom(x));
 
         const axisY = svg.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y))
+            .call(g => g.select(".domain")
+                .style('stroke-width', 5)
+                .style('stroke', "url(#line-gradient)")
+            )
 
         const _labelX = addLabelX( svg, width, height, labelX )
         const _labelY = addLabelY( svg, height, labelY )

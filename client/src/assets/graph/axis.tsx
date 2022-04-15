@@ -8,7 +8,9 @@ export const getXAxis = (maxX: number, width: number) => {
 }
 
 export const getYAxis = (maxY: number, height: number) => {
-    return d3.scaleLinear()
+    const axis = d3.scaleLinear()
         .domain([0, maxY])
-        .range([ height, 0 ]);
+        .range([ height, 0 ])
+    
+    return axis
 }
