@@ -1,26 +1,31 @@
 
 import { FC, useEffect } from "react"
+
 import { addLine, remLine } from "../../assets/graph/line"
+
 import { useGraph } from "../../context/GraphContext";
-import { GraphData } from "../../models/graph"
-import { JSONProps, PointData } from "../../models/path";
+
+import { GraphAxis, GraphData, SVG } from "../../models/graph"
 
 
 interface ILine {
+    svg: SVG | undefined;
+    axis: GraphAxis | undefined;
     data: GraphData;
     minX: number, maxX: number; minY: number; maxY: number;
     label: string; i: number
 }
 
-const Line: FC<ILine> = ( { data, minX, maxX, minY, maxY, label, i } ) => {
+const Line: FC<ILine> = ( { svg, axis, data, minX, maxX, minY, maxY, label, i } ) => {
 
-    const { svg, axis, addMinMax, remMinMax } = useGraph()
+    const { addMinMax, remMinMax } = useGraph()
 
     useEffect( () => {
-        
-        if ( svg === undefined || axis === undefined )
-            return console.log('ERROR, TRYING TO ADD GRAPH DATA WHILE SVG or AXIS = undefined');
 
+        console.log(svg, axis, data, label, i);
+
+        if ( svg === undefined || axis === undefined ) return;
+        
         addMinMax(label, minX, maxX, minY, maxY)
 
         addLine(svg, data, axis, label, i)
@@ -33,7 +38,7 @@ const Line: FC<ILine> = ( { data, minX, maxX, minY, maxY, label, i } ) => {
             remMinMax(label)
         }
 
-    }, [svg, data, label, axis])
+    }, [svg, axis, data, label])
 
     return null
 

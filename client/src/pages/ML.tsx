@@ -4,25 +4,22 @@ import MetadataPath from "../Components/Map/MetadataPath";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Graph from "../Components/Graph/Graph";
 import Checkbox from "../Components/Checkbox";
+import Line from "../Components/Graph/Line";
 
 import { JSONProps, PointData } from "../models/path";
 import { Measurement } from "../models/properties";
 
-import { useGraph } from "../context/GraphContext";
-
 import { get, post } from "../queries/fetch";
 
 import "../css/ml.css";
+import { GraphProvider } from "../context/GraphContext";
+import { GraphAxis, GraphData, SVG } from "../models/graph";
 
-import Axis from "../Components/Graph/Axis";
-import Line from "../Components/Graph/Line";
 
 const ML: FC = () => {
 
     const [paths, setPaths] = useState<JSONProps[]>([]);
     const [measurements, setMeasurements] = useState<Measurement[]>([])
-
-    // const { addGraph, remGraph } = useGraph()
 
     console.log("ML reset");
 
@@ -92,18 +89,20 @@ const ML: FC = () => {
                 </div>
             </div>
             <div className="ml-graph">
-                <Graph labelX="distance (m)" labelY="IRI">
-                    { paths.map((json: JSONProps, i: number) => {
-                        const { path, minX, maxX, minY, maxY } = json.dataPath;
-                        return <Line 
-                            key={'graph-line-' + i}
-                            data={path.map((p: PointData) => [p.metadata.tdist, p.value || 0])} 
-                            minX={minX} maxX={maxX} minY={minY} maxY={maxY} 
-                            label={json.properties.name}
-                            i={i}
-                        />
-                    }) }
-                </Graph>
+                <GraphProvider>
+                <Graph 
+                    labelX="distance (m)" 
+                    labelY="IRI"
+                    plots={ 
+                        paths.map( (json: JSONProps, i: number) => {
+                            const { path, minX, maxX, minY, maxY } = json.dataPath;
+                            const data: GraphData = path.map((p: PointData) => [p.metadata.tdist, p.value || 0])
+                            const label = json.properties.name
+                            return { data, minX, maxX, minY, maxY, label, i }
+                        } ) 
+                    }
+                />
+                </GraphProvider>
             </div>
         </div>
     );

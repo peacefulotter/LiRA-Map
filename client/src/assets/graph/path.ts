@@ -13,7 +13,6 @@ class Path extends Layer {
     add( data: GraphData, [x, y]: [Axis, Axis], color: string)
     {
         this.svg
-            .select('#content')
             .append("path")
             .attr("id", this.id)
             .attr('class', this.class)

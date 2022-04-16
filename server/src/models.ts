@@ -37,7 +37,7 @@ export type Path = PointData[]
 export interface DataPath {
 	path: Path;
 	minY?: number;
-    maxY?: number; 
+    maxY?: number;
     minX?: number;
     maxX?: number;
 }

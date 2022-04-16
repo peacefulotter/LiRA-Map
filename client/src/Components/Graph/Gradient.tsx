@@ -1,6 +1,8 @@
 import { FC, useEffect } from "react"
+import * as d3 from 'd3'
+
 import { useGraph } from "../../context/GraphContext";
-import { Palette, PaletteColor } from "../../models/graph"
+import { Axis, Palette, PaletteColor, SVG } from "../../models/graph"
 
 const defaultPalette: Palette = [
     {offset: "0%",   color: "green"  },
@@ -9,8 +11,9 @@ const defaultPalette: Palette = [
 ]
 
 export interface IGradient {
+    svg: SVG | undefined;
+    axis: [Axis, Axis] | undefined;
     palette: Palette | undefined
-    marginTop: number;
 }
 
 const gradientId = "line-gradient";
@@ -19,9 +22,9 @@ const getOffset = (color: PaletteColor, maxY: number) => color.stopValue
     ? (color.stopValue / maxY) * 100 + '%'
     : color.offset
 
-const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
+const Gradient: FC<IGradient> = ( { svg, axis, palette} ) => {
 
-    const { svg, axis, minY, maxY } = useGraph()
+    const { minY, maxY } = useGraph()
 
     const p = palette || defaultPalette
 
@@ -29,7 +32,8 @@ const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
 
         if ( svg === undefined || axis === undefined ) return;
 
-        svg.append("linearGradient")
+        svg
+            .append("linearGradient")
             .attr("id", gradientId)
             .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", 0)
@@ -42,8 +46,9 @@ const Gradient: FC<IGradient> = ( { palette, marginTop } ) => {
             .attr("offset", (d: any) => getOffset(d, maxY) )
             .attr("stop-color", (d: any) => d.color )
 
-
-        return () => { svg.select('#' + gradientId).remove() }
+        return () => { 
+            svg.select('#' + gradientId).remove() 
+        }
 
     }, [svg, axis, minY, maxY, p])
 

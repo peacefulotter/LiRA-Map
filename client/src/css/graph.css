@@ -20,12 +20,27 @@
     color: var(--background);
 }
 
-.graph-wrapper {
-    height: 100%;
-    display: flex;
-}
-
 .graph-palette {
     width: 30px;
     height: 80%;
+}
+
+
+.graph-wrapper {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 65px auto;
+}
+
+.svg-left svg {
+    width: 100%;
+}
+
+.svg-right {
+    overflow: auto hidden;
+}
+
+.svg-right svg {
+    width: 100%;
 }

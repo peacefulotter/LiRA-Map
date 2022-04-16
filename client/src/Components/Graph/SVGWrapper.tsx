@@ -1,61 +1,62 @@
 
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import * as d3 from 'd3'
 
-import { useGraph } from "../../context/GraphContext";
-import Axis from "./Axis";
+import Gradient from "./Gradient";
+
+import { Axis, Palette, Plot, ReactAxis, SVG } from "../../models/graph";
+import Line from "./Line";
 
 interface ISVG {
+    isLeft: boolean;
+    zoom: number;
     margin: any,
+    w: number;
+    h: number;
     width: number;
     height: number;
-    labelX: string;
-    labelY: string;
+    label: string;
+    axis: [Axis, Axis] | undefined
+    Axis: ReactAxis;
+    palette: Palette | undefined;
+    plots?: Plot[]
 }
-// lol
 
-const SVGWrapper: FC<ISVG> = ( { children, margin, width, height, labelX, labelY } ) => {
+const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, label, axis, Axis, palette, plots } ) => {
 
     const ref = useRef(null)
-    const { setSVG } = useGraph()
-
-    const paletteWidth = 40;
-    const w = width - margin.left - margin.right - paletteWidth;
-    const h = height - margin.top - margin.bottom;
+    const [svg, setSVG] = useState<SVG>()
     
     useEffect( () => {
+
         if ( ref.current === undefined ) return;
 
         const _svg = d3.select(ref.current)
             .append("g")
             .attr('class', 'svg-g')
-            .attr('id', 'svg-g')
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + (isLeft ? margin.left : 3) + "," + margin.top + ")")
             
-        _svg.append('g')
-            .attr('id', 'content')
-
         setSVG(_svg)
 
         return () => {
-            console.log(_svg.selectAll('.svg-g'));
-             
-            _svg.select('#svg-g').remove()
+            _svg.selectAll('.svg-g').remove()
         }
 
     }, [ref, margin])
 
     return (
-        <svg 
-            ref={ref}
-            style={{
-                // width: `${width}px`, 
-                // height: `${height}px`,
-            }}  
+        <div 
+            className={'svg-container ' + (isLeft ? 'svg-left' : 'svg-right')} 
+            style={{height: height + 'px'}}
         >
-            <Axis width={w} height={h} labelX={labelX} labelY={labelY}/>
-            {children}
-        </svg>
+            <svg ref={ref} style={{width: w * zoom + 'px', height: '100%'}}>
+                <Gradient svg={svg} axis={axis} palette={palette} />
+                <Axis svg={svg} axis={axis} width={w} height={h} label={label} />
+                { plots && plots.map((p: Plot, i: number) => 
+                    <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
+                }
+            </svg>
+        </div>
     )
 }
 

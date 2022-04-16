@@ -29,7 +29,7 @@ class Tooltip {
         const top = pageY - 42
 
         const tooltip = document.getElementById('tooltip') as HTMLElement
-        const {x, y} = tooltip.getBoundingClientRect()
+        const { x, y } = tooltip.getBoundingClientRect()
         const [tX, tY] = Tooltip.getTranslation(tooltip)
 
         d3.select('#tooltip')
