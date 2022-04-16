@@ -8,23 +8,23 @@ import { Axis, Palette, Plot } from "../../models/graph";
 import SVGWrapper from "./SVGWrapper";
 import Tooltip from "./Tooltip";
 
-import { useGraph } from "../../context/GraphContext";
+import { GraphProvider, useGraph } from "../../context/GraphContext";
 
 import '../../css/graph.css'
 import XAxis from "./XAxis";
 import YAxis from "./YAxis";
 import { getXAxis, getYAxis } from "../../assets/graph/axis";
 
-interface Props {
+interface IGraph {
     labelX: string;
     labelY: string;
     plots?: Plot[]
     palette?: Palette
 }
 
-const margin = {top: 20, right: 20, bottom: 50, left: 60};
+const margin = {top: 20, right: 20, bottom: 50, left: 70};
 
-const Graph: FC<Props> = ( { labelX, labelY, plots, palette }  ) => {
+const RGraph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
 
     const wrapperRef = useRef(null)
     const [width, height] = useSize(wrapperRef)
@@ -36,7 +36,7 @@ const Graph: FC<Props> = ( { labelX, labelY, plots, palette }  ) => {
 
     const { maxX, maxY } = useGraph()
 
-    const zoom = 10
+    const zoom = 2
 
     useEffect( () => {
         const x = getXAxis(maxX, w * zoom)
@@ -63,5 +63,10 @@ const Graph: FC<Props> = ( { labelX, labelY, plots, palette }  ) => {
         </>
     )
 }
+
+const Graph: FC<IGraph> = (props) => 
+    <GraphProvider>
+        <RGraph {...props} />
+    </GraphProvider>
 
 export default Graph

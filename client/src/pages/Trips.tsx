@@ -9,6 +9,9 @@ import MapWrapper from "../Components/Map/MapWrapper";
 import RideCards from "../Components/Rides/RideCards";
 import Rides from "../Components/Rides/Rides";
 import Graph from "../Components/Graph/Graph";
+import { JSONProps, PointData } from "../models/path";
+import { GraphData } from "../models/graph";
+import { PathsProvider } from "../context/PathsContext";
 
 
 const Trips: FC = () => {
@@ -22,17 +25,10 @@ const Trips: FC = () => {
                 
                 <RideDetails  />
                 
-                <GraphProvider>
-                    <div className="map-container">
-
-                        <MapWrapper>
-                            <Rides />
-                        </MapWrapper>
-                        
-                        <Graph labelX="time / dist" labelY="Measurement"/>
-                    
-                    </div>
-                </GraphProvider>
+                <PathsProvider>
+                    <Rides />
+                </PathsProvider>
+                
             </div>
         </MetasProvider>
         </MeasurementsProvider>

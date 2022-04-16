@@ -4,16 +4,14 @@ import MetadataPath from "../Components/Map/MetadataPath";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Graph from "../Components/Graph/Graph";
 import Checkbox from "../Components/Checkbox";
-import Line from "../Components/Graph/Line";
 
 import { JSONProps, PointData } from "../models/path";
 import { Measurement } from "../models/properties";
+import { GraphData } from "../models/graph";
 
 import { get, post } from "../queries/fetch";
 
 import "../css/ml.css";
-import { GraphProvider } from "../context/GraphContext";
-import { GraphAxis, GraphData, SVG } from "../models/graph";
 
 
 const ML: FC = () => {
@@ -89,7 +87,6 @@ const ML: FC = () => {
                 </div>
             </div>
             <div className="ml-graph">
-                <GraphProvider>
                 <Graph 
                     labelX="distance (m)" 
                     labelY="IRI"
@@ -102,7 +99,6 @@ const ML: FC = () => {
                         } ) 
                     }
                 />
-                </GraphProvider>
             </div>
         </div>
     );

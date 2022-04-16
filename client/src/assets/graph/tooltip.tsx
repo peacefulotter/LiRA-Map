@@ -32,11 +32,14 @@ class Tooltip {
         const { x, y } = tooltip.getBoundingClientRect()
         const [tX, tY] = Tooltip.getTranslation(tooltip)
 
+        const fX = tX + left - x
+        const fY = tY + top - y
+
         d3.select('#tooltip')
             .html(`<b>x</b>: ${xVal}<br/><b>y</b>: ${yVal}`)	
             .style('border-bottom-right-radius', onRightSide ? '0px' : '4px')
             .style('border-bottom-left-radius',  onRightSide ? '4px' : '0px')
-            .style('transform', `translate(${tX + left - x}px, ${tY + top - y}px)`)	
+            .style('transform', `translate(${fX}px, ${fY}px)`)	
             .style('opacity', 1)
     }
 
