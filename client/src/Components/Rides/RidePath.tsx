@@ -31,11 +31,14 @@ const RidePath: FC<Props> = ( { meta, meas } ) => {
 
         getRide(meas, popup, TripId, TaskId, (dp: DataPath) => {
             setDataPath(dp)
-            addKeyPath(meas, meta, dp)
+            console.log(meas);
+            
+            if ( meas.hasValue )
+                addKeyPath(meas, meta, dp)
         })
 
         return () => {
-            remKeyPath(meas, meta)
+            //remKeyPath(meas, meta)
         }
         
     }, [meas] )

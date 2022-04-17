@@ -1,5 +1,6 @@
 import { FC, useEffect, useState, ReactNode } from "react";
 import { List, ListRowRenderer } from "react-virtualized";
+import { RiDeleteBack2Line } from 'react-icons/ri'
 
 import Checkbox from '../Checkbox';
 
@@ -143,7 +144,7 @@ const RideCards: FC = ( ) => {
                     onChange={onFilterInput} />
                 <div 
                     className="ride-search-cross" 
-                    onClick={clearFilter}>X</div>
+                    onClick={clearFilter}><RiDeleteBack2Line/></div>
             </div>
             <div className="ride-search-container">
                 { startMonthInput }

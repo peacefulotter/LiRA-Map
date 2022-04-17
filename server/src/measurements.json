@@ -14,15 +14,14 @@
         "name": "Interpolation",
         "color": "#9900ef",
         "width": 1,
-        "hasValue": true,
-        "isActive": false
+        "hasValue": false
     },
     {
         "rendererName": "line",
         "query": "/map_match",
         "name": "Map Matching",
         "color": "#0000FF",
-        "hasValue": true
+        "hasValue": false
     },
     {
         "rendererName": "hotline",
@@ -30,6 +29,7 @@
         "queryMeasurement": "obd.rpm",
         "name": "Engine RPM",
         "color": "#7bdcb5",
+        "width": 1,
         "hasValue": true
     },
     {

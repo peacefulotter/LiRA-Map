@@ -45,12 +45,15 @@ const RideDetails: FC = () => {
 		)
 	}
 
-	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
-		return <div className="checkbox-container">
-			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {m.rendererName}</p></div>
+	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element =>
+		<div className="checkbox-container">
+			<div className="checkbox-text">
+				<div className="checkbox-title">{m.name}</div>
+				<p className="checkbox-subtitle">- {m.rendererName}</p>
+			</div>
 			<FiSettings className="edit-meas-btn btn" onClick={(e) => openEditMeasurement(e, i)} strokeWidth={1}/>
 		</div>
-	}
+
 
 	const showAddMeasurement = () => {
 		setAddChecked(true) 
