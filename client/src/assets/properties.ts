@@ -1,4 +1,6 @@
-import { PathProperties, PointProperties } from "../models/models";
+
+import { PathProperties } from "../models/properties";
+import { PointProperties } from "../models/properties";
 
 export const DEFAULT_WIDTH = 8
 export const DEFAULT_WEIGHT = 4

@@ -1,4 +1,7 @@
-import { PointData, PathProperties, SegmentProps, DataPath, RendererName } from "../models/models";
+import {SegmentProps} from "../models/models";
+import {RendererName} from "../models/renderers";
+import {PointData, DataPath} from "../models/path";
+import { PathProperties } from "../models/properties";
 
 export const parseSegments = (data: any): SegmentProps[] => {
     //EXAMPLE OF ROW

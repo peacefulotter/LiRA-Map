@@ -2,6 +2,7 @@ import { FC } from "react";
 
 import { SegmentsProps } from '../../models/models';
 import Path from "../Map/Path";
+import EventPath from "../Map/EventPath";
 
 import '../../css/rides.css'
 
@@ -15,14 +16,18 @@ const Segments: FC<SegmentsProps> = ( { segments } ) => {
         return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
     }
 
+    const onClick = () => {
+
+    }
+
     return (
         <>
         { segments.map( segment =>{
             segment.properties.color= getColor(segment.avg, 203, 126);
-            return <Path 
+            return <EventPath 
                 key={`Segment${Math.random()}`} 
                 dataPath={segment.dataPath} 
-                properties={segment.properties} 
+                properties={segment.properties}
             />     
         } ) }
         </>
