@@ -1,7 +1,7 @@
 import { Circle } from "react-leaflet";
 import { color, opacity, weight, width } from "../../../assets/properties";
 import { PathProperties, PointProperties } from "../../../models/properties";
-import { EventRenderer } from "../../../models/renderers";
+import { Renderer } from "../../../models/renderers";
 
 /*
     Circle as Renderer 
@@ -22,7 +22,7 @@ export const createCircle = (
         eventHandlers={{'click': onClick}}/>
 }
 
-const RCircle: EventRenderer = ( { path, properties, onClick } ) =>  {   
+const RCircle: Renderer = ( { path, properties, onClick } ) =>  {   
     const { lat, lng } = path[0]
     return createCircle(lat, lng, path[0].properties, properties, onClick(0))
 }

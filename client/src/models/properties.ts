@@ -30,6 +30,7 @@ export interface Measurement extends PathProperties {
 	name: string;
 	// Needs to be specified if the points have a value attached to them 
 	hasValue?: boolean;
+	// TODO: min max value if hasValue true
 }
 
 export interface RideMeasurement extends Measurement {

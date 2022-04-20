@@ -2,7 +2,7 @@
 import { PathProperties } from "../models/properties";
 import { PointProperties } from "../models/properties";
 
-export const DEFAULT_WIDTH = 8
+export const DEFAULT_WIDTH = 4
 export const DEFAULT_WEIGHT = 4
 export const DEFAULT_COLOR = 'red'
 export const DEFAULT_OPACITY = 1.0

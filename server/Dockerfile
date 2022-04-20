@@ -1,13 +1,14 @@
-FROM node:16
+FROM node:alpine
 
 WORKDIR /app
 
-COPY package.json /app/package.json
-
-ADD . /app
+COPY package.json ./
+COPY package-lock.json ./
+COPY ./ ./
 
 EXPOSE 3001
 
 RUN npm i
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
+

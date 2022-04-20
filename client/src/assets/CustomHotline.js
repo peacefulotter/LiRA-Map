@@ -1,7 +1,10 @@
 
 import L from 'leaflet'
 
-L.Hotline = function (latlngs, zoom, options) {
+L.Hotline = function (latlngs, options, distances) {
+
+	if ( latlngs.length !== distances.length )
+		throw new Error('latlngs and distances should have the same length')
 
 	let projectedData = undefined
 	// Plugin is already added to Leaflet
@@ -229,36 +232,52 @@ L.Hotline = function (latlngs, zoom, options) {
 			}
 		},
 
+		_addColorGradient(gradient, point, dist) {
+			const rgb = this.getRGBForValue(point.z)
+			gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
+		},
+
+		_addGradient: function(ctx, j, pointStart, pointEnd) {
+			ctx.lineWidth = this.getWeight(j - 1) 
+
+			// Create a gradient for each segment, pick start and end colors from palette gradient
+			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+
+			const deltaIndex = pointEnd.i - pointStart.i
+			const deltaDist = pointEnd.d - pointStart.d
+
+			for ( let k = pointStart.i; k <= pointEnd.i; k++ )
+			{
+				const point = projectedData[0][k]
+				const dist = distances !== undefined 
+					? (point.d - pointStart.d) / (deltaDist  !== 0 ? deltaDist  : 1)
+					: (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
+				this._addColorGradient(gradient, point, dist)
+			}
+
+			ctx.strokeStyle = gradient;
+			ctx.beginPath();
+			ctx.moveTo(pointStart.x, pointStart.y);
+			ctx.lineTo(pointEnd.x, pointEnd.y);
+			ctx.stroke();
+		},
+
 		/**
 		 * Draws the color encoded hotline of the graphs.
 		 * @private
 		 */
 		_drawHotline: function (ctx) {
-			var i, j, dataLength, path, pathLength, pointStart, pointEnd,
-					gradient, gradientStartRGB, gradientEndRGB;
+			var i, j, dataLength, path, pathLength, pointStart, pointEnd;
 
-			for (i = 0, dataLength = this._data.length; i < dataLength; i++) {
+			for (i = 0, dataLength = this._data.length; i < dataLength; i++) 
+			{
 				path = this._data[i];
-				// console.log(path);
-
-				for (j = 1, pathLength = path.length; j < pathLength; j++) {
+				for (j = 1, pathLength = path.length; j < pathLength; j++) 
+				{
 					pointStart = path[j - 1];
 					pointEnd = path[j];
-
-					ctx.lineWidth = this.getWeight(j - 1)
-
-					// Create a gradient for each segment, pick start end end colors from palette gradient
-					gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
-					gradientStartRGB = this.getRGBForValue(pointStart.z);
-					gradientEndRGB = this.getRGBForValue(pointEnd.z);
-					gradient.addColorStop(0, 'rgb(' + gradientStartRGB.join(',') + ')');
-					gradient.addColorStop(1, 'rgb(' + gradientEndRGB.join(',') + ')');
-
-					ctx.strokeStyle = gradient;
-					ctx.beginPath();
-					ctx.moveTo(pointStart.x, pointStart.y);
-					ctx.lineTo(pointEnd.x, pointEnd.y);
-					ctx.stroke();
+					if ( pointStart.i !== pointEnd.i )
+						this._addGradient(ctx, j, pointStart, pointEnd);
 				}
 			}
 		}
@@ -286,17 +305,16 @@ L.Hotline = function (latlngs, zoom, options) {
 
 			this._updateOptions(layer);
 
-			console.log('a');
+			console.log(parts);
 
-			const points = parts[0]
-			const first = points[0].i
-			const last = points[points.length - 1].i
-			const dataOnView = projectedData[0].slice(first, last)
-			// this._optimize(zoom, first, last) 
-			console.log(zoom, dataOnView.length);
+			// const dataOnView = parts.map(part => {
+			// 	const first = part[0].i
+			// 	const last = part[part.length - 1].i
+			// 	return projectedData[0].slice(first, last + 1)
+			// })
 
 			this._hotline
-				.data([dataOnView])
+				.data(parts)
 				.draw();
 		},
 
@@ -359,11 +377,13 @@ L.Hotline = function (latlngs, zoom, options) {
 					if (codeOut === codeA) {
 						p.z = a.z;
 						p.i = a.i
+						p.d = a.d
 						a = p;
 						codeA = newCode;
 					} else {
 						p.z = b.z;
 						p.i = b.i
+						p.d = b.d
 						b = p;
 						codeB = newCode;
 					}
@@ -401,21 +421,22 @@ L.Hotline = function (latlngs, zoom, options) {
 		 * Just like the Leaflet version, but with support for a z coordinate.
 		 */
 		_projectLatlngs: function (latlngs, result, projectedBounds) {
-			var flat = latlngs[0] instanceof L.LatLng,
-					len = latlngs.length,
-					i, ring;
+			const len = latlngs.length;
+			var i, ring;
 
-			if (flat) {
+			if (latlngs[0] instanceof L.LatLng) {
 				ring = [];
 				for (i = 0; i < len; i++) {
 					ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
+					// console.log(latlngs[i]);
 					// Add the altitude of the latLng as the z coordinate to the point
 					ring[i].z = latlngs[i].alt;
 					ring[i].i = i
+					ring[i].d = distances[i];
 					projectedBounds.extend(ring[i]);
 				}
 				result.push(ring);
-			} else {
+			} else if (Array.isArray(latlngs[0]) ) {
 				for (i = 0; i < len; i++) {
 					this._projectLatlngs(latlngs[i], result, projectedBounds);
 				}

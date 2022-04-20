@@ -4,34 +4,20 @@ import * as dotenv from "dotenv";
 dotenv.config( { path: __dirname + '/.env' } );
 
 // CONFIG FOR MAIN DATABASE
-/*
-const { DB_USER, DB_PASSWORD } = process.env;
+
+const { DB_USER, DB_PASSWORD, DB_USER_VIS, DB_PASSWORD_VIS } = process.env;
 
 const DB_NAME = "postgres";
 const DB_HOST = "liradb.compute.dtu.dk"; // "liradbdev.compute.dtu.dk"
 const DB_PORT = 5435; // 5432;
-*/
 
 
 // CONFIG FOR VISUALIZATION DATABASE
-const { DB_USER_VIS, DB_PASSWORD_VIS } = process.env;
+const DB_HOST_VIS = "liravisualization.postgres.database.azure.com";
+const DB_PORT_VIS = 5432;
 
-const DB_NAME = "postgres";
-const DB_HOST = "liravisualization.postgres.database.azure.com"; // "liradbdev.compute.dtu.dk"
-const DB_PORT = 5432; // 5432;
-const DB_USER = DB_USER_VIS;
-const DB_PASSWORD = DB_PASSWORD_VIS;
-
-export const DATABASE_CONFIG = {
+const BASE_CONFIG = {
     client: 'pg',
-    connection: {
-          host : DB_HOST,
-          port: DB_PORT,
-          user : DB_USER,
-          password : DB_PASSWORD,
-          database : DB_NAME,
-          ssl: true
-    },
     debug: true,
     pool: {
         min: 1,
@@ -51,13 +37,36 @@ export const DATABASE_CONFIG = {
     }
 }
 
+const LIRADB_CONFIG = {
+    ...BASE_CONFIG,
+    connection: {
+        host : DB_HOST,
+        port: DB_PORT,
+        user : DB_USER,
+        password : DB_PASSWORD,
+        database : DB_NAME,
+    },
+}
+
+const VISUAL_CONFIG = {
+    ...BASE_CONFIG,
+    connection: {
+        host : DB_HOST_VIS,
+        port: DB_PORT_VIS,
+        user : DB_USER_VIS,
+        password : DB_PASSWORD_VIS,
+        database : DB_NAME,
+    },
+}
 
 
-// http://liradbdev.compute.dtu.dk:5000/match/v1/car/12.5639696,55.7066193;12.5639715,55.7066193;12.5639753,55.7066193
+
 type Func<T> = (db: Knex<any, unknown[]>, ...args: any[]) => Promise<T>;
+type Database = 'liradb' | 'visual'
 
-const databaseQuery = async <T>(func: Func<T>, ...args: any[]): Promise<T> => {
-    const database: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
+const databaseQuery = async <T>(func: Func<T>, kind: Database, ...args: any[]): Promise<T> => {
+    const config = kind === 'liradb' ? LIRADB_CONFIG : VISUAL_CONFIG;
+    const database: Knex<any, unknown[]> = knex(config);
     let res: T;
     try {
         res = await func(database, args);

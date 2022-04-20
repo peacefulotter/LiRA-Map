@@ -3,6 +3,7 @@
 .ride-list {
     display: flex;
     flex-direction: column;
+    align-items: center;
     min-height: 100%;
     background-color: rgb(58, 58, 58);
     overflow-x: hidden;
@@ -25,8 +26,9 @@
     padding-left: 10px;
     border: none;
     color: white;
-    font-size: 1.1em;
-    background: var(--lightgrey);
+    font-size: 1em;
+    outline: none;
+    background-color: var(--background-2);
 }
 
 .ride-search-cross {
@@ -36,14 +38,16 @@
     justify-content: center;
     text-align: center;
     cursor: pointer;
-    background: var(--lightgrey);
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 .ride-sort-cb {
+    width: 70%;
     font-size: 1.1em !important;
-    border-radius: 0px !important;
-    padding: 10px 15px !important;
-    background: var(--grey) !important;
+    border-radius: 30px !important;
+    padding: 7px 10px !important;
+    margin-bottom: 10px;
+    background: var(--background-3) !important;
 }
 
 .ride-sort-cb.btn-checked {

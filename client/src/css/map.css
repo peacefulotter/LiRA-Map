@@ -4,12 +4,6 @@
     height: 90vh;
 }
   
-.leaflet-container{
+.leaflet-container {
     height:100%;
-}
-
-.leaflet-top.leaflet-right {
-    display: none;
-    visibility: hidden;
-    height: 0;
 }

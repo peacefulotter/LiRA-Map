@@ -36,10 +36,10 @@ export type Path = PointData[]
 
 export interface DataPath {
 	path: Path;
-	minValue?: number;
-    maxValue?: number;
-    minTime?: number;
-    maxTime?: number;
+	minY?: number;
+    maxY?: number;
+    minX?: number;
+    maxX?: number;
 }
 
 export enum RendererName {
@@ -85,10 +85,11 @@ export interface Measurement extends PathProperties {
 	hasValue?: boolean;
 }
 
-// JSON files must follow this format
-export interface PathProps {
+// This interface is used as a type for server's response
+// for instance, JSON files follow this format
+export interface JSONProps {
 	dataPath: DataPath
-	properties: PathProperties;
+	properties: Measurement;
 	metadata?: {[key: string]: any}
 }
 

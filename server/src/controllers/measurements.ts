@@ -1,7 +1,5 @@
-import { path } from 'nconf';
 import measurements from '../measurements.json';
 import knex, { Knex } from 'knex';
-import {DATABASE_CONFIG} from '../database';
 
 class MeasurementsController {
 
@@ -9,13 +7,12 @@ class MeasurementsController {
 
     // get '/types'
     getMeasurementTypes = (request: any, response: any) => {
-        console.log("[GET /measurements/types]");
         response.json(measurements)
     }
 
     getMeasurements = async (request: any, response: any) => {
-        console.log("[GET /measurements]")
-
+        throw new Error('DATABASE_CONFIG NOT EXPORTED FROM database.ts ANYMORE\n\t=> Change this file so that it\'s generic (using databaseQuery() for instance)')
+        const DATABASE_CONFIG = {};
         const builder: Knex<any, unknown[]> = knex(DATABASE_CONFIG);
         const res =  await builder.select('*')
                      .from( { public: 'MeasurementTypes' } )

@@ -1,15 +1,12 @@
 
 import { FC, useState } from "react";
 
-
 import { Marker, Popup } from "react-leaflet";
-import renderers from "../../assets/renderers";
 import { PathProps } from "../../models/path";
-import { EventRenderer } from "../../models/renderers";
+import Path from "./Path";
 
 
 const parseMD = (mds: any) => {
-    console.log(mds, typeof mds === 'object');
     
     if ( typeof mds === 'object' && Array.isArray(mds) )
     {
@@ -27,7 +24,7 @@ const parseMD = (mds: any) => {
 
 const getPopupLine = (key: string, value: any) => {
     if ( value === undefined || value === null )
-        return <></>
+        return null;
 
     else if ( typeof value === 'object' )
         return <div key={`popupline-${Math.random()}`}>{key}:{parseMD(value)}</div>
@@ -35,13 +32,10 @@ const getPopupLine = (key: string, value: any) => {
     return <div key={`popupline-${Math.random()}`}>{key}: {value}</div>
 }
 
-const EventPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
+const MetadataPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
 
     const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
     const [selected, setSelected] = useState<number | undefined>(undefined);
-
-    const md = metadata || {}
-    const EventRenderer = renderers[properties.rendererName] as EventRenderer
 
     const onClick = (i: number) => (e: any) => {
         const { lat, lng } = e.latlng
@@ -50,13 +44,11 @@ const EventPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
     }
     
     const point = dataPath.path[selected || 0]
-    
+    const md = metadata || {}
+
     return ( <> 
-        <EventRenderer 
-            {...dataPath}
-            properties={properties} 
-            onClick={onClick} 
-        />
+        <Path dataPath={dataPath} properties={properties} onClick={onClick}></Path>
+        
         { selected !== undefined && 
             <Marker position={markerPos}>
                 <Popup>
@@ -70,4 +62,4 @@ const EventPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
     </> )
 }
 
-export default EventPath;
+export default MetadataPath;

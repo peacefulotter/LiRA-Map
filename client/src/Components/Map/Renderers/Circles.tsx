@@ -1,12 +1,12 @@
 
 
 import { FC } from "react";
-import { EventRenderer, PointProps } from "../../../models/renderers";
+import { PointProps, Renderer } from "../../../models/renderers";
 
 import { createCircle } from "./Circle";
 import Points from "./Points";
 
-const Circles: EventRenderer = ( props ) => {
+const Circles: Renderer = ( props ) => {
     return <Points {...props} PointElt={CCircle} />
 }
 

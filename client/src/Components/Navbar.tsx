@@ -16,7 +16,7 @@ const NavBtn: FC<NavBtnProps> = ( { to, name } ) => {
             activeClassName="nav-tab-active" 
             to={to}
         >
-            { name.toUpperCase() }
+            { name }
         </NavLink>
     )
 }
@@ -26,12 +26,12 @@ const Navbar: FC = () => {
         <div className="nav-wrapper">
             <div className="nav-container">
                 <div className="nav-block">
-                    <NavBtn  to='/rides' name='rides' />
-                    <NavBtn  to='/ml' name='ml' />
-                    <NavBtn  to='/cardata' name='cardata' />
+                    <NavBtn  to='/rides' name='Measurements' />
+                    <NavBtn  to='/ml' name='IRI' />
+                    <NavBtn  to='/cardata' name='Cardata' />
                 </div>
                 <div className="nav-block">
-                    <NavBtn  to='/login' name='login' />
+                    <NavBtn  to='/login' name='Login' />
                 </div>
             </div>
         </div>

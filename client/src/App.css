@@ -2,6 +2,9 @@
 
 :root {
   --background: #2e2e2e;
+  --background-2: rgb(58, 58, 58);
+  --background-3: rgba(85, 85, 97, 0.5);
+  --background-3-hover: rgba(85, 85, 97, 0.8);
 
   --highlight-background: rgba(0, 0, 255, 0.1);
   --highlight-text: rgb(55, 180, 255);
@@ -13,10 +16,16 @@
   --lightgrey: rgba(130, 130, 130, 0.5);
 }
 
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap");
+
+
 html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+
 }
 
 .App {
@@ -26,8 +35,6 @@ html, body {
   background-color: var(--background);
   height: 100vh;
   color: white;
-  overflow: hidden;
-
 }
 
 

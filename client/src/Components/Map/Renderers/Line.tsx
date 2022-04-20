@@ -3,10 +3,10 @@
 import { Polyline } from 'react-leaflet'
 
 import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
-import { EventRenderer } from '../../../models/renderers';
+import { Renderer } from '../../../models/renderers';
 
 
-const Line: EventRenderer = ( { path, properties, onClick } ) => {
+const Line: Renderer = ( { path, properties, onClick } ) => {
     
     return <Polyline 
         positions={path}

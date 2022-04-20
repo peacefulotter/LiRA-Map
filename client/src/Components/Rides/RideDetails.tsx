@@ -14,13 +14,14 @@ import { RendererName } from "../../models/renderers";
 import { addMeasurement, editMeasurement } from "../../queries/measurements";
 
 import '../../css/ridedetails.css'
+import { useMetasCtx } from "../../context/MetasContext";
 
 
-type Props = {
-    metas: RideMeta[];
-};
+const RideDetails: FC = () => {
 
-const RideDetails: FC<Props> = ( {metas } ) => {
+	const { metas, selectedMetas } = useMetasCtx()
+
+	console.log(metas.length, selectedMetas.length);
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
@@ -44,12 +45,15 @@ const RideDetails: FC<Props> = ( {metas } ) => {
 		)
 	}
 
-	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element => {
-		return <div className="checkbox-container">
-			<div className="checkbox-title">{m.name} <p className="checkbox-subtitle">- {m.rendererName}</p></div>
+	const getMeasurementsContent = (m: Measurement, i: number): JSX.Element =>
+		<div className="checkbox-container">
+			<div className="checkbox-text">
+				<div className="checkbox-title">{m.name}</div>
+				<p className="checkbox-subtitle">- {m.rendererName}</p>
+			</div>
 			<FiSettings className="edit-meas-btn btn" onClick={(e) => openEditMeasurement(e, i)} strokeWidth={1}/>
 		</div>
-	}
+
 
 	const showAddMeasurement = () => {
 		setAddChecked(true) 
@@ -90,8 +94,10 @@ const RideDetails: FC<Props> = ( {metas } ) => {
 				onClick={showAddMeasurement} />
 			
 			
-			{ metas.map( (meta: RideMeta, i: number) =>
-				<MetaData md={meta} key={`ride-md-${meta.TaskId}-${i}`}></MetaData>
+			{ selectedMetas.map( (isSelected: boolean, i: number) =>
+				isSelected 
+					? <MetaData md={metas[i]} key={`md-${Math.random()}`} />
+					: null
 			) }
         </div>
   )
