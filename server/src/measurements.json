@@ -29,7 +29,6 @@
         "queryMeasurement": "obd.rpm",
         "name": "Engine RPM",
         "color": "#7bdcb5",
-        "width": 1,
         "hasValue": true
     },
     {

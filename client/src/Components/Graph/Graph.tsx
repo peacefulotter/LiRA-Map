@@ -36,7 +36,7 @@ const RGraph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
 
     const { maxX, maxY } = useGraph()
 
-    const zoom = 2
+    const zoom = 10
 
     useEffect( () => {
         const x = getXAxis(maxX, w * zoom)

@@ -22,7 +22,7 @@ class Tooltip {
         const xVal = Math.round(d[0])
         const yVal = Math.round(d[1] * 100) / 100
 
-        const maxLeft = window.innerWidth - 75
+        const maxLeft = window.innerWidth - 90
         const onRightSide = pageX >= maxLeft;
 
         const left = pageX - (onRightSide ? 100 : 0)

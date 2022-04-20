@@ -21,7 +21,9 @@ const XAxis: ReactAxis = ( { svg, axis, width, height, label } ) => {
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(axis[0]));
 
-        const _label = addLabelX( svg, width, height, label )
+        const labelW = Math.min(window.innerWidth - 130, width)
+
+        const _label = addLabelX( svg, labelW, height, label )
         
         return () => {
             axisX.remove()
