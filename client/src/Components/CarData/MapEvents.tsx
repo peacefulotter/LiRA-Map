@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useMapEvents,  } from 'react-leaflet';
 import {MeasurementData, SegmentProps} from '../../models/models';
-import {GetSegmentsAndAggregatedDataInAPolygon} from '../../queries/DataRequests';
+import {GetSegmentsAndAverageValuesInAPolygon} from '../../queries/DataRequests';
 
 interface MapEventsProps {
     setMeasurements: (measurements: MeasurementData[]) => void;
@@ -22,7 +22,7 @@ const MapEvents: FC<MapEventsProps> = (props) => {
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
-            await GetSegmentsAndAggregatedDataInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
+            await GetSegmentsAndAverageValuesInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
                  bounds.getNorthEast(), bounds.getNorthWest()], 'obd.trac_cons')
                  .then(res => {
                    props.setSegments(res);

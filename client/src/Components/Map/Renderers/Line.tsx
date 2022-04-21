@@ -16,7 +16,9 @@ const Line: Renderer = ( { path, properties, onClick } ) => {
             weight: properties.width || DEFAULT_WIDTH,
             opacity: properties.opacity || DEFAULT_OPACITY
         }} 
-        eventHandlers={{'click': onClick(0)}} />
+        eventHandlers={{'click': onClick(0)}} >
+            
+        </Polyline>
 }
 
 

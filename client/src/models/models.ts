@@ -33,15 +33,14 @@ export interface LatLng {
 
 export interface SegmentProps extends PathProps {
 	id: number;
-	length: number;
-	avg: number;
+	value: number;
 	count:number;
-	max:number;
-	min:number;
 	way:number;
+	function(segment:SegmentProps): any;
 }
 
+
 export interface SegmentsProps {
-	segments: SegmentProps[] 
+	segments: SegmentProps[]
 }
 

@@ -1,35 +1,37 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import {Marker, Popup, PopupProps} from "react-leaflet"
 
-import { SegmentsProps } from '../../models/models';
+import { SegmentsProps, SegmentProps } from '../../models/models';
 import Path from "../Map/Path";
-import EventPath from "../Map/EventPath";
-
+import { PathEventHandler } from "../../models/renderers";
+import Segment from "./Segment";
 import '../../css/rides.css'
+import SegmentPopup from "./SegmentPopup";
+import { popup } from "Leaflet.MultiOptionsPolyline";
 
 
 const Segments: FC<SegmentsProps> = ( { segments } ) => {
+    const [showPopup, setShowPopup] = useState<boolean>();
+    const [popUpProps, setPopUpProps] = useState<SegmentProps>();
 
-    const getColor = (val: number, maxval: number, minval: number): string => {
-        const v = Math.min(1, Math.max(0, (val - minval) / (maxval - minval))) 
-        const green: number = Math.min(v * 2, 1) * 255;
-        const red: number = (v < 0.5 ? v +  0.5 : 2 - v * 2) * 255;                 
-        return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
-    }
-
-    const onClick = () => {
-
+    const activatePopup = (segment:SegmentProps) => {
+        setShowPopup(true)
+        setPopUpProps(segment);
     }
 
     return (
         <>
+        {showPopup == true && popUpProps != undefined && 
+            <SegmentPopup {...popUpProps}>
+            </SegmentPopup>
+        }
         { segments.map( segment =>{
-            segment.properties.color= getColor(segment.avg, 203, 126);
-            return <EventPath 
-                key={`Segment${Math.random()}`} 
-                dataPath={segment.dataPath} 
-                properties={segment.properties}
-            />     
-        } ) }
+            return <Segment {...segment} function={activatePopup} >
+
+
+            </Segment> 
+            
+         } ) }
         </>
   )
 }

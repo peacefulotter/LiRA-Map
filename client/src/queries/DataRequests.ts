@@ -1,9 +1,10 @@
 import { LatLng } from "leaflet";
-import { parseSegments } from "../assets/DataParsers";
+import { parseSegments, parseEnergyData } from "../assets/DataParsers";
+import { PopUpInformation } from "../Components/CarData/SegmentPopup";
 import { SegmentProps } from "../models/models";
 
 
-export const GetSegmentsAndAggregatedDataInAPolygon = async (points: LatLng[], measurementType:String): Promise<SegmentProps[]> => {
+export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], measurementType:String): Promise<SegmentProps[]> => {
 
     const northEastString = points[0].lat + " " + points[0].lng;
     const southEastString = points[1].lat + " " + points[1].lng;
@@ -15,4 +16,14 @@ export const GetSegmentsAndAggregatedDataInAPolygon = async (points: LatLng[], m
     let res = await fetch(path)
     let data = await res.json();
     return parseSegments(data);
+}
+
+
+export const GetEnergyConsumptionDataFromSegment = async (segment: Number): Promise<PopUpInformation> => {
+
+    let path = '/segments/' + segment + '/energy';
+    let res = await fetch(path);
+    let data = await res.json();
+    return parseEnergyData(data);
+
 }

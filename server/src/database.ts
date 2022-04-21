@@ -56,6 +56,7 @@ const VISUAL_CONFIG = {
         user : DB_USER_VIS,
         password : DB_PASSWORD_VIS,
         database : DB_NAME,
+        ssl: true
     },
 }
 
