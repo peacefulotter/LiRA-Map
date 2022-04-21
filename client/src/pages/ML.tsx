@@ -12,6 +12,7 @@ import { GraphData } from "../models/graph";
 import { get, post } from "../queries/fetch";
 
 import "../css/ml.css";
+import { GraphProvider } from "../context/GraphContext";
 
 
 const ML: FC = () => {
@@ -66,6 +67,7 @@ const ML: FC = () => {
     }
 
     return (
+        <GraphProvider>
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
@@ -93,7 +95,7 @@ const ML: FC = () => {
                     plots={ 
                         paths.map( (json: JSONProps, i: number) => {
                             const { path, minX, maxX, minY, maxY } = json.dataPath;
-                            const data: GraphData = path.map((p: PointData) => [p.metadata.tdist, p.value || 0])
+                            const data: GraphData = path.map((p: PointData, i: number) => [p.metadata.tdist, p.value || 0, i])
                             const label = json.properties.name
                             return { data, minX, maxX, minY, maxY, label, i }
                         } ) 
@@ -101,6 +103,7 @@ const ML: FC = () => {
                 />
             </div>
         </div>
+        </GraphProvider> 
     );
 }
 

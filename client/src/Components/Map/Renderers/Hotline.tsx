@@ -7,6 +7,8 @@ import '../../../assets/CustomHotline';
 import useZoom from '../Hooks/useZoom';
 import { DEFAULT_WIDTH, width } from '../../../assets/properties';
 import { RendererProps } from '../../../models/renderers';
+import { useGraph } from '../../../context/GraphContext';
+import { HotlineOptions } from '../../../models/path';
 
 interface HotlineProps extends RendererProps {
     palette?: any
@@ -47,27 +49,48 @@ const Hotline: FC<HotlineProps> = ( {
 
     const [coords, setCoords] = useState<[number, number, number][]>([])
     const [distances, setDistances] = useState<number[]>([])
+    const [options, setOptions] = useState<HotlineOptions>()
+    
+    const { dotHoverIndex } = useGraph()
     const [zoom, map] = useZoom()
 
-    const options = {
-        zoomRange: zoomRange || [12, 17],
-        weight: properties.width || DEFAULT_WIDTH,
-        weightFunc: (i: number) => {
-            // console.log(zoom);
-            // const formula = ((i * 10) / coords.length) + 4
-            // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
-            return width(path[i].properties, properties) // + Math.max(zoom / 5, 2)
-        },
-        outlineWidth: 0,
-        palette: palette || {
-            0.0: 'green',
-            0.5: 'yellow',
-            1.0: 'red'
-        },
-        min: minY || 0,
-        max: maxY || 1,
-        onclick: onClick ? onClick(0) : null
-    }
+    console.log(dotHoverIndex);
+    
+
+    useEffect( () => {
+
+        console.log('OPTIONS UPDATE');
+
+        const _options: HotlineOptions = {
+            zoomRange: zoomRange || [12, 17],
+            weight: properties.width || DEFAULT_WIDTH,
+            weightFunc: (a: number, b: number) => {
+                console.log(dotHoverIndex, a, b);
+                // TODO path[a:b].properties (average?)
+                return dotHoverIndex 
+                    ?  dotHoverIndex >= a && dotHoverIndex < b
+                        ? 100
+                        : 0
+                    :  width(path[a].properties, properties)
+                // console.log(zoom);
+                // const formula = ((i * 10) / coords.length) + 4
+                // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
+                // + Math.max(zoom / 5, 2)
+            },
+            outlineWidth: 0,
+            palette: palette || {
+                0.0: 'green',
+                0.5: 'yellow',
+                1.0: 'red'
+            },
+            min: minY || 0,
+            max: maxY || 1,
+            onclick: onClick ? onClick(0) : undefined
+        }
+
+        setOptions(_options)
+
+    }, [dotHoverIndex])
 
 
     /**
@@ -102,12 +125,12 @@ const Hotline: FC<HotlineProps> = ( {
     }, [path])
 
     useEffect( () => {
-        if (coords.length === 0) return;
-        console.log(coords);
+        if (coords.length === 0 || options === undefined) return;
+        console.log('UPDATE HOTLINE');
         const hl = L.Hotline( coords, options, distances )
         hl.addTo(map)
         return () => hl.remove()
-    }, [coords])
+    }, [coords, options])
         
     return null;
 }
