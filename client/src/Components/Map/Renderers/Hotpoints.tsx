@@ -2,6 +2,7 @@ import L from 'leaflet'
 import { useEffect } from 'react';
 
 import { opacity, weight, width } from '../../../assets/properties';
+import { useGraph } from '../../../context/GraphContext';
 import { PointData } from '../../../models/path';
 import { Renderer } from '../../../models/renderers';
 import useCanvas from '../Hooks/useCanvas';
@@ -17,9 +18,11 @@ const getColor = (val: any, defaultColor: string | undefined, i: number): string
 }
 
 
-const Hotpoints: Renderer = ( { path, properties, onClick, minY, maxY } ) => { 
+const Hotpoints: Renderer = ( { dataPath, properties, onClick } ) => { 
 
     const [map, canvas] = useCanvas();
+    const { minY, maxY } = useGraph()
+    const { path } = dataPath
 
     useEffect(() => {
         path.forEach( (p: PointData, i: number) => {

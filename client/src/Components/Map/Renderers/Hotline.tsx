@@ -42,8 +42,7 @@ interface HotlineProps extends RendererProps {
 
 
 const Hotline: FC<HotlineProps> = ( { 
-    path, properties, onClick,
-    minY, maxY, 
+    dataPath, properties, onClick,
     palette, zoomRange 
 } ) => {
 
@@ -51,12 +50,13 @@ const Hotline: FC<HotlineProps> = ( {
     const [distances, setDistances] = useState<number[]>([])
     const [options, setOptions] = useState<HotlineOptions>()
     
-    const { dotHoverIndex } = useGraph()
+    const { dotHoverIndex, minY, maxY } = useGraph()
     const [zoom, map] = useZoom()
+
+    const { path } = dataPath;
 
     console.log(dotHoverIndex);
     
-
     useEffect( () => {
 
         console.log('OPTIONS UPDATE');
@@ -127,6 +127,8 @@ const Hotline: FC<HotlineProps> = ( {
     useEffect( () => {
         if (coords.length === 0 || options === undefined) return;
         console.log('UPDATE HOTLINE');
+        console.log(coords, options);
+        
         const hl = L.Hotline( coords, options, distances )
         hl.addTo(map)
         return () => hl.remove()

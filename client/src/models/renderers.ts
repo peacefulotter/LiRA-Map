@@ -12,7 +12,8 @@ export enum RendererName {
     hotpoints = 'hotpoints'
 }
 
-export interface RendererProps extends DataPath {
+export interface RendererProps {
+    dataPath: DataPath;
     properties: PathProperties;
     onClick: PathEventHandler;
 }

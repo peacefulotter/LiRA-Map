@@ -11,7 +11,7 @@ const Path: FC<PathProps> = ( { dataPath, properties, onClick } ) => {
     const onClickOrDefault = onClick ? onClick : (i: number) => (e: any) => {}
 
     return dataPath.path.length !== 0 && Renderer !== undefined
-        ? <Renderer {...dataPath} properties={properties} onClick={onClickOrDefault}/>
+        ? <Renderer dataPath={dataPath} properties={properties} onClick={onClickOrDefault}/>
         : null
 }
 
