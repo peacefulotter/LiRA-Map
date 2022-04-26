@@ -25,14 +25,13 @@ class Dot {
     }
 
     static mouseOver(e: any, d: any, setDotHoverIndex: Dispatch<SetStateAction<number | undefined>>) {
-        console.log(e, d);
-        console.log(d[2]);
-        // setDotHoverIndex(d[2])
+        console.log(d);
+        setDotHoverIndex(d[2])
         Tooltip.mouseOver(e, d)
     }
 
     static mouseOut(e: any, d: any, setDotHoverIndex: Dispatch<SetStateAction<number | undefined>>) {
-        // setDotHoverIndex(undefined)
+        setDotHoverIndex(undefined)
         Tooltip.mouseOut(e, d)
     }
 }

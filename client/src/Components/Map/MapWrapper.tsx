@@ -1,13 +1,14 @@
 
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
+import { MapContainer, TileLayer, ScaleControl, ZoomControl } from 'react-leaflet'
 
 import '../../css/map.css'
+import Zoom from './Zoom';
 
 
 const MapWrapper = ( props : any ) => { 
 
 	const { children } = props;
-	
+
 	return (
 		<MapContainer 
 			preferCanvas={true}
@@ -23,7 +24,8 @@ const MapWrapper = ( props : any ) => {
 				attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<ZoomControl position='topright'/>
+			<Zoom />
+			<ScaleControl imperial={false} position='bottomright'/>
 			{ children }
 		</MapContainer>
   	)

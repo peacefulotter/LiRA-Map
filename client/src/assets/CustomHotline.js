@@ -201,8 +201,8 @@ L.Hotline = function (latlngs, options, distances) {
 			];
 		},
 
-		getWeight: function (i) {
-			return this._weightFunc ? this._weightFunc(i) : this._weight
+		getWeight: function (a, b) {
+			return this._weightFunc ? this._weightFunc(a, b) : this._weight
 		},
 
 		/**
@@ -220,8 +220,7 @@ L.Hotline = function (latlngs, options, distances) {
 						pointStart = path[j - 1];
 						pointEnd = path[j];
 
-						ctx.lineWidth = this.getWeight(j - 1) + 2 * this._outlineWidth;
-
+						ctx.lineWidth = this._outlineWidth;
 						ctx.strokeStyle = this._outlineColor;
 						ctx.beginPath();
 						ctx.moveTo(pointStart.x, pointStart.y);
@@ -238,7 +237,8 @@ L.Hotline = function (latlngs, options, distances) {
 		},
 
 		_addGradient: function(ctx, j, pointStart, pointEnd) {
-			ctx.lineWidth = this.getWeight(j - 1) 
+
+			ctx.lineWidth = this.getWeight(pointStart.i, pointEnd.i) 
 
 			// Create a gradient for each segment, pick start and end colors from palette gradient
 			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
@@ -276,6 +276,7 @@ L.Hotline = function (latlngs, options, distances) {
 				{
 					pointStart = path[j - 1];
 					pointEnd = path[j];
+
 					if ( pointStart.i !== pointEnd.i )
 						this._addGradient(ctx, j, pointStart, pointEnd);
 				}
