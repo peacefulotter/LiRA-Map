@@ -22,6 +22,7 @@ const SegmentPopup: FC<SegmentProps> = (props) => {
 
     const [information, setInformation] = useState<PopUpInformation>();
 
+
     useEffect(() => {
         // Create an scoped async function in the hook
         async function fetchData() {
