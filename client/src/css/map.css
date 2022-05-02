@@ -7,3 +7,13 @@
 .leaflet-container {
     height:100%;
 }
+
+.map-zoom {
+    position: absolute;
+    right: 55px;
+    z-index: 999999;
+    color: var(--background);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 2em;
+    margin-top: 5px;
+}

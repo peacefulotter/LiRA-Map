@@ -6,10 +6,10 @@ import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/p
 import { Renderer } from '../../../models/renderers';
 
 
-const Line: Renderer = ( { path, properties, onClick } ) => {
+const Line: Renderer = ( { dataPath, properties, onClick } ) => {
     
     return <Polyline 
-        positions={path}
+        positions={dataPath.path}
         key={`${Math.random()}-line`}
         pathOptions={{
             color: properties.color || DEFAULT_COLOR,

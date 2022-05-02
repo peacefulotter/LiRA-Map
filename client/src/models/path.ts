@@ -38,3 +38,17 @@ export interface JSONProps {
 	properties: Measurement;
 	metadata?: {[key: string]: any}
 }
+
+
+export type HotlinePalette = { [key: number]: string } 
+
+export interface HotlineOptions {
+	min?: number;
+	max?: number;
+	zoomRange: [number, number]; // TODO: remove
+	weight?: number;
+	weightFunc?: (a: number, b: number) => number;
+	outlineWidth?: number;
+	palette?: HotlinePalette;
+	onclick?: (e: any) => void;
+}

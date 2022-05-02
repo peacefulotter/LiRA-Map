@@ -18,7 +18,7 @@ interface ILine {
 
 const Line: FC<ILine> = ( { svg, axis, data, minX, maxX, minY, maxY, label, i } ) => {
 
-    const { addMinMax, remMinMax } = useGraph()
+    const { addMinMax, remMinMax, setDotHoverIndex } = useGraph()
 
     useEffect( () => {
 
@@ -28,7 +28,7 @@ const Line: FC<ILine> = ( { svg, axis, data, minX, maxX, minY, maxY, label, i } 
         
         addMinMax(label, minX, maxX, minY, maxY)
 
-        addLine(svg, data, axis, label, i)
+        addLine(svg, data, axis, label, i, setDotHoverIndex)
 
         return () => {
             if ( svg === undefined )

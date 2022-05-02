@@ -16,7 +16,7 @@ class Path extends Layer {
             .append("path")
             .attr("id", this.id)
             .attr('class', this.class)
-            .datum(data)
+            .datum(data as any)
             .style('position', "relative")
             .attr("fill", "none")
             .attr("stroke", color)

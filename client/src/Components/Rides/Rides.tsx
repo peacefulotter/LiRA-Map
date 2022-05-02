@@ -54,7 +54,7 @@ const Rides: FC = () => {
                                     const maxX = path.length - 1
                                     console.log(minX, maxX, minY, maxY);
                                     // p.metadata.timestamp - minX
-                                    const data: GraphData = path.map((p: PointData, i:number) => [i, p.value || 0])
+                                    const data: GraphData = path.map((p: PointData, i:number) => [i, p.value || 0, i])
                                     console.log(data);
                                     
                                     return { data, minX, maxX, minY, maxY, label: 'r-' + taskId, i }

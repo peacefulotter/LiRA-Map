@@ -23,7 +23,7 @@ interface IGraph {
 
 const margin = {top: 20, right: 30, bottom: 50, left: 100};
 
-const RGraph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
+const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
 
     const wrapperRef = useRef(null)
     const [width, height] = useSize(wrapperRef)
@@ -68,10 +68,5 @@ const RGraph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
         </>
     )
 }
-
-const Graph: FC<IGraph> = (props) => 
-    <GraphProvider>
-        <RGraph {...props} />
-    </GraphProvider>
 
 export default Graph

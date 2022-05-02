@@ -19,7 +19,7 @@ export type Axis = d3.ScaleLinear<number, number, never>
 export type GraphAxis = [Axis, Axis]
 
 // Data format
-export type GraphData =  [number, number][]
+export type GraphData =  [number, number, number][]
 export interface Plot {
     data: GraphData
     minX: number; maxX: number; minY: number; maxY: number;
