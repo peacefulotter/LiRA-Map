@@ -1,5 +1,4 @@
 import knex, { Knex } from 'knex';
-import { type } from 'os';
 import { DataPath } from '../models';
 
 class SegmentsController {
