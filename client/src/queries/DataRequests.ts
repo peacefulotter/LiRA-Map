@@ -15,7 +15,7 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], me
     console.log(path)
     let res = await fetch(path)
     let data = await res.json();
-    return parseSegments(data);
+    return data
 }
 
 

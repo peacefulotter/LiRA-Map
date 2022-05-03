@@ -39,6 +39,12 @@ export interface SegmentProps extends PathProps {
 	function(segment:SegmentProps): any;
 }
 
+export interface Segment{
+	id: number;
+	positionA: [number, number];
+	positionB:[number, number];
+	way: number
+}
 
 export interface SegmentsProps {
 	segments: SegmentProps[]
