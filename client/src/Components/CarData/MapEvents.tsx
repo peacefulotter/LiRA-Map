@@ -1,11 +1,11 @@
+import { LatLng } from "Leaflet.MultiOptionsPolyline";
 import { FC } from "react";
 import { useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, SegmentProps} from '../../models/models';
-import {GetSegmentsAndAverageValuesInAPolygon} from '../../queries/DataRequests';
+import {MeasurementData, SegmentInterface} from '../../models/models';
 
 interface MapEventsProps {
     setMeasurements: (measurements: MeasurementData[]) => void;
-    setSegments: (segments: SegmentProps[]) => void;
+    setBoundaries: (boundaries: [LatLng, LatLng, LatLng, LatLng]) => void;
 }
 
 const MapEvents: FC<MapEventsProps> = (props) => {
@@ -22,11 +22,8 @@ const MapEvents: FC<MapEventsProps> = (props) => {
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
-            await GetSegmentsAndAverageValuesInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
-                 bounds.getNorthEast(), bounds.getNorthWest()], 'obd.trac_cons')
-                 .then(res => {
-                   props.setSegments(res);
-                 });
+            props.setBoundaries([bounds.getSouthWest(), bounds.getSouthEast(),
+              bounds.getNorthEast(), bounds.getNorthWest()])
                  
         },
         zoomstart() {

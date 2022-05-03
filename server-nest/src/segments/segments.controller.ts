@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Inject } from '@nestjs/common';
+import { Controller, Get, Param, Inject, Query } from '@nestjs/common';
 import { SegmentsService } from './segments.service';
 import {ConfigService } from '@nestjs/config';
-import { Segment } from './interfaces/segment.interface';
+import { Segment, SegmentWithAggregatedValue } from './interfaces/segment.interface';
 
 @Controller('segments')
 export class SegmentsController {
@@ -14,10 +14,14 @@ export class SegmentsController {
 
 
     @Get(':points')
-    getSegmentsInPolygon(@Param() params): Promise<Segment[]>{
+    getSegmentsInPolygon(@Param() params, @Query() query: { type: string, aggregation: string }): Promise<SegmentWithAggregatedValue[]>{
         const pointsList = params.points.split(";")
-        return this.segmentsService.getSegmentsInAPolygon(pointsList);
+        const type = query.type;
+        const aggregation = query.aggregation;
+        return this.segmentsService.getSegmentsInPolygonWithAggregatedValues(pointsList, type, aggregation);
+        
     }
+
 
 
 }

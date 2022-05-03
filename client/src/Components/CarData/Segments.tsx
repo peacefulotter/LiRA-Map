@@ -1,36 +1,50 @@
-import { FC, useState } from "react";
-import {Marker, Popup, PopupProps} from "react-leaflet"
-
-import { SegmentsProps, SegmentProps } from '../../models/models';
-import Path from "../Map/Path";
-import { PathEventHandler } from "../../models/renderers";
-import Segment from "./Segment";
+import { FC, useEffect, useState } from "react";
 import '../../css/rides.css'
-import SegmentPopup from "./SegmentPopup";
-import { popup } from "Leaflet.MultiOptionsPolyline";
+import { SegmentProps } from "./Segment";
+import { SegmentInterface } from "../../models/models";
+import Segment from "./Segment";
+import { LatLng } from "leaflet";
+import {GetSegmentsAndAverageValuesInAPolygon} from '../../queries/DataRequests';
 
 
-const Segments: FC<SegmentsProps> = ( { segments } ) => {
+export interface SegmentsProps{
+    boundaries: LatLng[];
+    type: string;
+    aggregation: string;
+}
+
+const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation} ) => {
     const [showPopup, setShowPopup] = useState<boolean>();
+    const [segments, setSegments] = useState<SegmentProps[]>([]);
     const [popUpProps, setPopUpProps] = useState<SegmentProps>();
 
-    const activatePopup = (segment:SegmentProps) => {
-        setShowPopup(true)
-        setPopUpProps(segment);
+    useEffect(() => {
+        
+        const fetchData = async () => {
+            const segmentProps: SegmentProps[] = await getSegmentProps();
+            console.log(segmentProps);
+            setSegments(segmentProps);
+          }
+        
+        fetchData()
+
+      }, [boundaries]);
+
+
+    const getSegmentProps = async () => {
+        let segmentProps = await GetSegmentsAndAverageValuesInAPolygon(boundaries, type, aggregation)
+            .then(res => {
+              return res;
+            });
+        return segmentProps;
     }
 
     return (
         <>
-        {showPopup == true && popUpProps != undefined && 
-            <SegmentPopup {...popUpProps}>
-            </SegmentPopup>
-        }
-        { segments.map( segment =>{
-            return <Segment {...segment} function={activatePopup} >
 
-
+        { segments != undefined && segments.map( (segment:SegmentProps) => {
+            return <Segment {...segment}>
             </Segment> 
-            
          } ) }
         </>
   )

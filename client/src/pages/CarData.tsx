@@ -1,23 +1,24 @@
 import { FC, useState } from "react";
-import { MeasurementData, SegmentProps } from "../models/models";
+import { MeasurementData, SegmentInterface} from "../models/models";
 
 import MapWrapper from "../Components/Map/MapWrapper";
 import MapEvents from "../Components/CarData/MapEvents";
 import Measurements from "../Components/CarData/Measurements";
-import Segments from "../Components/CarData/Segments";
-import SegmentPopup from "../Components/CarData/SegmentPopup";
+import Segments, { SegmentsProps } from "../Components/CarData/Segments";
+import { LatLng } from "leaflet";
 const CarData: FC = () => {
 
     const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
-    const [segments, setSegments] = useState<SegmentProps[]>([]);
+    const [boundaries, setBoundaries] = useState<LatLng[]>()
 
     return (
         <>
             <div className="ml-wrapper">
                 <MapWrapper>
-                    <Segments segments={segments} />
-                    <Measurements measurements={measurements} />
-                    <MapEvents setMeasurements={setMeasurements} setSegments={setSegments}></MapEvents>        
+                    {boundaries != undefined &&
+                        <Segments boundaries={boundaries} type="inertialForce" aggregation="average" /> 
+                    }
+                    <MapEvents setMeasurements={setMeasurements} setBoundaries={setBoundaries}></MapEvents>        
                 </MapWrapper>
             </div>
         </>

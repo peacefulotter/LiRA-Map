@@ -31,22 +31,25 @@ export interface LatLng {
 	lng: number;
 }
 
-export interface SegmentProps extends PathProps {
-	id: number;
-	value: number;
-	count:number;
-	way:number;
-	function(segment:SegmentProps): any;
-}
 
-export interface Segment{
+////// VISUALIZATION DATABASE OBJECTS //////
+
+
+
+export interface SegmentInterface{
 	id: number;
 	positionA: [number, number];
 	positionB:[number, number];
 	way: number
 }
 
-export interface SegmentsProps {
-	segments: SegmentProps[]
+export interface AggregatedValueInterface{
+	id:number;
+	segment:number;
+	count:number;
+	type:string;
+	aggregation:string;
+	value:number;
 }
+
 

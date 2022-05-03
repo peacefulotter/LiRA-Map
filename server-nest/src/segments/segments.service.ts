@@ -3,7 +3,7 @@ import { json } from 'express';
 import { Knex } from 'knex';
 import { InjectConnection } from 'nestjs-knex';
 import internal from 'stream';
-import { Segment } from './interfaces/segment.interface';
+import {Segment, SegmentWithAggregatedValue } from './interfaces/segment.interface';
 
 @Injectable()
 export class SegmentsService {
@@ -22,6 +22,17 @@ export class SegmentsService {
     }
 
 
+    parseSegmentsWithAggregatedValue(rowsList: any): SegmentWithAggregatedValue[]{
+        let res: SegmentWithAggregatedValue[] = [];
+        rowsList.forEach(row => {
+            let segmentWithAggregatedValue = <SegmentWithAggregatedValue>{id: row.Id, positionA: [row.lata, row.lona], positionB:[row.latb, row.lonb], way: row.Way, 
+                count: row.Count, type: row.Type, aggregation: row.Aggregation, value: row.Value};
+            res.push(segmentWithAggregatedValue);
+        });
+        return res;
+    }
+
+
 
     async getSegmentsInAPolygon(pointsList: any):Promise<Segment[]>{
         const pointsString = pointsList[0] + ',' + pointsList[1] + ',' + pointsList[2] + ',' + pointsList[3] + ',' + pointsList[0];
@@ -32,7 +43,27 @@ export class SegmentsService {
         + 'WHERE ST_Contains(' + makePolygon + ', "PositionA")')
             .then(res => {
                 const segments = this.parseSegments(res.rows);
-                console.log(segments)
+                return segments;
+            })
+    }
+
+    async getSegmentsInPolygonWithAggregatedValues(pointsList: any, type:string, aggregation: string):Promise<SegmentWithAggregatedValue[]>{
+
+        const typeString = "'" + type + "'";
+        const aggregationString = "'" + aggregation + "'";
+
+        const pointsString = pointsList[0] + ',' + pointsList[1] + ',' + pointsList[2] + ',' + pointsList[3] + ',' + pointsList[0];
+        const makePolygon = "ST_MakePolygon( ST_GeomFromText('LINESTRING(" + pointsString + ")'))"
+        return await this.knex.raw('SELECT "Segments"."Id", "Segments"."Way", ST_Y("Segments"."PositionA") as LonA, '
+        + 'ST_X("Segments"."PositionA") as LatA, '
+        + 'ST_Y("Segments"."PositionB") as LonB, ST_X("Segments"."PositionB") as LatB, '
+        + '"AggregatedValues"."Count", "AggregatedValues"."Type", "AggregatedValues"."Aggregation", "AggregatedValues"."Value" '
+        + 'FROM "Segments" INNER JOIN "AggregatedValues" '
+        + 'ON "Segments"."Id" = "AggregatedValues"."Segment" '
+        + 'WHERE ST_Contains(' + makePolygon + ', "Segments"."PositionA") '
+        + 'AND "AggregatedValues"."Type" = ' + typeString + ' AND "AggregatedValues"."Aggregation" = ' + aggregationString)
+            .then(res => {
+                const segments = this.parseSegmentsWithAggregatedValue(res.rows);
                 return segments;
             })
     }
