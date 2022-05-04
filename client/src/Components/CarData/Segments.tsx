@@ -28,7 +28,7 @@ const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation} ) => {
         
         fetchData()
 
-      }, [boundaries]);
+      }, [boundaries, type, aggregation]);
 
 
     const getSegmentProps = async () => {

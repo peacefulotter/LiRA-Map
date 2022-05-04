@@ -1,0 +1,10 @@
+.filter-button{
+    position: fixed;
+    top: 15%;
+    left: 5%;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+}

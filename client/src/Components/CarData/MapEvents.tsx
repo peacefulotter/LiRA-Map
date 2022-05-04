@@ -1,5 +1,5 @@
 import { LatLng } from "Leaflet.MultiOptionsPolyline";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useMapEvents,  } from 'react-leaflet';
 import {MeasurementData, SegmentInterface} from '../../models/models';
 
@@ -13,15 +13,21 @@ const MapEvents: FC<MapEventsProps> = (props) => {
     let latestZoom = 18;
     let maxrendered = 100;
 
-    const map = useMapEvents({
-        async zoomend() {
 
+    const map = useMapEvents({
+
+      
+        zoomend() {
             if(map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
                 return;
             }
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
+            console.log(bounds.getSouthWest())
+            console.log(bounds.getSouthEast())
+            console.log(bounds.getNorthEast())
+            console.log(bounds.getNorthWest())
             props.setBoundaries([bounds.getSouthWest(), bounds.getSouthEast(),
               bounds.getNorthEast(), bounds.getNorthWest()])
                  
