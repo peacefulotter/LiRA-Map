@@ -8,7 +8,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100000;
+    z-index: 1000000;
+    
 }
 
 .content{
@@ -16,21 +17,22 @@
     border-radius: 10px;
     width: 50%;
     padding: 10px;
-    height: 80%;
+    height: 85%;
     justify-content: center;
     background-color: #3F3F3F;
     color: white;
+    border: solid #2146FF;
+    border-width: 3px;
 }
 
 .subsection{
     position: relative;
-    padding: 10px;
+    padding: 5px;
     margin: 0 auto;
     width: 80%;
-    height: 40%;
+    height: fit-content;
     border-radius: 25px;
-    background-color: #323232;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .subsection .title{
@@ -38,6 +40,7 @@
     position: relative;
     height: 20%;
     display: flex;
+    font-size: 17.5px;
     justify-content: start;
 }
 
@@ -45,7 +48,11 @@
 .subsection .items{
     display: flex;
     width: 100%;
+    min-height: 35px;
     height: 80%;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #323232;
 }
 
 
@@ -56,7 +63,21 @@
     padding-left: 7.5px;
     padding-right: 7.5px;
     background-color: #9CADFF;
-    border-radius: 25px;
+    border-radius: 5px;
     cursor: pointer;
     margin-right: 5px;
+}
+
+.done-button{
+    background-color: #2146FF; 
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 5px;
+    cursor: pointer;
 }

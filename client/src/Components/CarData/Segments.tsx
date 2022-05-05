@@ -11,9 +11,10 @@ export interface SegmentsProps{
     boundaries: LatLng[];
     type: string;
     aggregation: string;
+    activatePopUp: (props: SegmentProps) => void
 }
 
-const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation} ) => {
+const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation, activatePopUp} ) => {
     const [showPopup, setShowPopup] = useState<boolean>();
     const [segments, setSegments] = useState<SegmentProps[]>([]);
     const [popUpProps, setPopUpProps] = useState<SegmentProps>();
@@ -39,11 +40,15 @@ const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation} ) => {
         return segmentProps;
     }
 
+    const onClickSegment = (props: SegmentProps) => {
+      activatePopUp(props);
+    }
+
     return (
         <>
 
         { segments != undefined && segments.map( (segment:SegmentProps) => {
-            return <Segment {...segment}>
+            return <Segment {...segment} onClick={onClickSegment}>
             </Segment> 
          } ) }
         </>

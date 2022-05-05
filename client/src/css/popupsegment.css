@@ -1,10 +1,11 @@
-.segmentPopup{
+.container-segment{
     position: fixed;
-    top: 0;
+    
+    top: 100px;
     left: 75%;
     width: 20%;
-    height: 100%;
-    
+    height: 80%;
+    background-color: black;
     font-family: 'Noto Sans JP', sans-serif;
     display: flex;
     justify-content: center;
@@ -12,41 +13,69 @@
     z-index: 100000;
 }
 
-.segmentPopup-inner{
+.content-segment{
     position: relative;
-    padding:5px;
+    border: solid #2146FF;
+    border-width: 3px;
+    border-radius: 15px;
     width: 100%;
-    height: 80%;
-    max-width: 640px;
-    background-color: white;
-    color: black;
-}
-
-.segmentPopup-inner .close-btn{
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
-
-.segmentPopup-inner .title{
-    position: relative;
+    padding: 10px;
+    height: 100%;
+    justify-content: center;
+    background-color: #3F3F3F;
     
+    color: white;
 }
 
-.segmentPopup-inner .subtitle{
-    position: relative;
-    
+.section{
+
+    margin-bottom: 20px;
+
+
 }
 
-.segmentPopup-inner .element-div{
-    position: relative;
+.subsection-segment{
     display: flex;
-    justify-content: left;
-    padding-left: 20px;
+    justify-content: center;
 }
 
-.element-div .element{
-    position: relative;
-    margin-left: 5px;
-    margin-right: 5px;
+.title{
+    font-size: 25px;
 }
+
+.way{
+    font-size: 20px;
+}
+
+.data{
+    font-size: 20px;
+}
+
+.value{
+    font-size: 25px;
+}
+
+.dataScrollable{
+    width: 100%;
+    height: 150px;
+    background-color: #2146FF;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.scrollableItem{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    width: 100%;
+    background-color: #6F6F6F;
+    height: 40px;
+    box-sizing: border-box;
+    border: solid black;
+    border-width: 2px;
+    border-radius: 2px;
+}
+

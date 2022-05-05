@@ -5,6 +5,8 @@ import { SegmentsController } from './segments/segments.controller';
 import { SegmentsService } from './segments/segments.service';
 import { KnexModule } from 'nestjs-knex';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypesController } from './types/types.controller';
+import { TypesService } from './types/types.service';
 
 
 @Module({
@@ -67,7 +69,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     },
     'lira-vis',
   ),],
-  controllers: [AppController, SegmentsController],
-  providers: [AppService, SegmentsService, ConfigService],
+  controllers: [AppController, SegmentsController, TypesController],
+  providers: [AppService, SegmentsService, ConfigService, TypesService],
 })
 export class AppModule {}

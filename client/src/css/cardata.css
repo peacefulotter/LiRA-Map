@@ -2,7 +2,13 @@
     position: fixed;
     top: 15%;
     left: 5%;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    border-radius: 35px;;
     font-family: 'Noto Sans JP', sans-serif;
+    background-color: black;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,7 +1,6 @@
 import { LatLng } from "leaflet";
-import { parseSegments, parseEnergyData } from "../assets/DataParsers";
+import { parseSegments} from "../assets/DataParsers";
 import { SegmentProps } from "../Components/CarData/Segment";
-import { PopUpInformation } from "../Components/CarData/SegmentPopup";
 
 
 export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string): Promise<SegmentProps[]> => {
@@ -20,11 +19,27 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], ty
 }
 
 
-export const GetEnergyConsumptionDataFromSegment = async (segment: Number): Promise<PopUpInformation> => {
-
-    let path = '/segments/' + segment + '/energy';
+export const GetDataTypes = async (): Promise<string[]> => {
+    let path = '/types/aggregatedValues/types'
     let res = await fetch(path);
     let data = await res.json();
-    return parseEnergyData(data);
 
+    let stringArray:string[] = [];
+    data.forEach((element:any) => {
+        stringArray.push(element.Type);
+    });
+
+    return stringArray;
+}
+
+export const GetAggregationTypes = async (dataType: string): Promise<string[]> => {
+    let path = '/types/aggregatedValues/aggregation' + '?type=' + dataType;
+    let res = await fetch(path);
+    let data = await res.json();
+    let stringArray:string[] = [];
+    data.forEach((element:any) => {
+        stringArray.push(element.Aggregation);
+    });
+
+    return stringArray;
 }

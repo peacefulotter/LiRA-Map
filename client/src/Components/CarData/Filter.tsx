@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
 import '../../css/filter.css'
 
 export interface FilterProps{
@@ -11,45 +12,35 @@ const Filter: FC<FilterProps> = (props) => {
 
     const [selectedData, setSelectedData] = useState<[string, string]>();
     const [selectedAggregation, setSelectedAggregation] = useState<[string, string]>();
-
-
-    let dataOptions: any[] = [];
-    let aggregationOptions: any[] = [];
-
+    const [dataTypes, setDataTypes] = useState<string[]>([]);
+    const [aggregationTypes, setAggregationTypes] = useState<string[]>([]);
 
     useEffect(() => {
-        changeSelectedDataColor('#1B41FF');
-        changeSelectedAggregationColor('#1B41FF')
-    });
+        const fetchDataTypes = async () => {
+            console.log("fetching data");
+            let dataTypes = await GetDataTypes();
+            setDataTypes(dataTypes);
+        }
+        fetchDataTypes();
+    }, []);
+
+    const fetchAggregationTypes = async (dataType: string) => {
+        console.log("fetching " + dataType)
+        let aggregationTypes = await GetAggregationTypes(dataType);
+        console.log(aggregationTypes);
+        setAggregationTypes(aggregationTypes);
+    }
 
     const dataTypeOnClick = (e:any) =>{
-
         const element = e.target;
-        changeSelectedDataColor('#9CADFF');
         setSelectedData([element.id, element.textContent]);
+        fetchAggregationTypes(element.textContent);
     }
 
     const aggregationTypeOnClick = (e:any) =>{
 
         const element = e.target;
-        changeSelectedAggregationColor('#9CADFF');
         setSelectedAggregation([element.id, element.textContent]);
-    }
-
-    const changeSelectedDataColor = (color:string) => {
-        if(selectedData != null){
-            let selectedElement = document.getElementById(selectedData[0]);
-            if(selectedElement != null)
-                selectedElement.style.backgroundColor = color;
-        }
-    }
-
-    const changeSelectedAggregationColor = (color:string) => {
-        if(selectedAggregation != null){
-            let selectedElement = document.getElementById(selectedAggregation[0]);
-            if(selectedElement != null)
-                selectedElement.style.backgroundColor = color;
-        }
     }
 
 
@@ -61,34 +52,51 @@ const Filter: FC<FilterProps> = (props) => {
         }
     }
 
-
-    let index = -1;
-    let dataTypes = ["inertialForce", "tractionForce"]
-        dataOptions = dataTypes.map((element) => {
+    const GetDataOptions = () => {
+        let index = -1;
+    
+        return dataTypes.map((element) => {
             index = index + 1;
-            return(<div className="item" id={String(index)} onClick={((e) => dataTypeOnClick(e))}>
+            let color = '#9CADFF';
+
+            if(selectedData != undefined && String(index) == String(selectedData[0]))
+                color = '#2146FF'
+
+            return(<div style={{"backgroundColor": color}} className="item" id={String(index)} onClick={((e) => dataTypeOnClick(e))}>
                 {element}
             </div>)
         })
+    }
 
-    let aggregationTypes = ["average"]
-    aggregationOptions = aggregationTypes.map((element) => {
-        index = index + 1;
-        return(<div className="item" id={String(index)} onClick={((e) => aggregationTypeOnClick(e))}>
-            {element}
-        </div>)
-    })
+
+
+    const GetAggregationOptions = () => {
+        let index = 1000;
+        return aggregationTypes.map((element) => {
+            index = index + 1;
+            let color = '#9CADFF';
+
+            if(selectedAggregation != undefined && String(index) == String(selectedAggregation[0]))
+                color = '#2146FF'
+
+            return(<div style={{"backgroundColor": color}} className="item" id={String(index)} onClick={((e) => aggregationTypeOnClick(e))}>
+                {element}
+            </div>)
+        })
+    }
+
 
     return (
     <div className="container">
         <div className="content">
+            <h2>Filter</h2>
             <div className="subsection">
                 <div className="title">
                     <p>Select the type of data you want to visualize</p>
                 </div>
                 
                 <div className="items">
-                    {dataOptions}
+                    {GetDataOptions()}
                 </div>
             </div>
             <div className="subsection">
@@ -97,10 +105,10 @@ const Filter: FC<FilterProps> = (props) => {
                 </div>
                 
                 <div className="items">
-                    {aggregationOptions}
+                    {GetAggregationOptions()}
                 </div>
             </div>
-            <button onClick={((e) => doneOnClick(e))}>
+            <button className="done-button" onClick={((e) => doneOnClick(e))}>
                 Done
             </button>
         </div>

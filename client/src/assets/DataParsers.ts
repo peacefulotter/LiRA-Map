@@ -1,7 +1,6 @@
 import {RendererName} from "../models/renderers";
 import {PointData, DataPath} from "../models/path";
 import { PathProperties } from "../models/properties";
-import { PopUpInformation } from "../Components/CarData/SegmentPopup";
 import { SegmentProps } from "../Components/CarData/Segment";
 
 export const parseSegments = (data: any): SegmentProps[] => {
@@ -30,49 +29,3 @@ export const parseSegments = (data: any): SegmentProps[] => {
 }
 
 
-export const parseEnergyData = (data: any): PopUpInformation => {
-    // EXAMPLE OF ROW
-    //Id: 57800,
-    //   Length: 0.061589863,
-    //   Way: 167982047,
-    //   propertytype: 'hillClimbingForce',
-    //   propertyvalue: -646.1707
-
-    let segmentId: Number;
-    let segmentWay: Number;
-    let segmentLength: Number;
-    let segmentAngle: Number = 0;
-    let tractionForce: Number = 0;
-    let inertialForce: Number = 0;
-    let hillClimbingForce: Number = 0;
-    
-    segmentId = data[0][1].Id;
-    segmentWay = data[0][1].Way;
-    segmentLength = data[0][1].Length;
-
-    data.forEach((element:any) => {
-        let values = element[1];
-        switch(values.Type){
-            case "hillClimbingForce":
-                hillClimbingForce = values.Value;
-                break;
-            case "inertialForce":
-                inertialForce = values.Value;
-                break;
-            case "theta":
-                segmentAngle = values.Value;
-                break;
-            case "energy":
-                tractionForce = values.Value;
-                break;
-            default:
-                break;
-        }
-        
-    });
-
-    const res: PopUpInformation = { segmentId: segmentId, segmentWay: segmentWay, segmentLength: segmentLength,
-    segmentAngle: segmentAngle, hillClimbingForce: hillClimbingForce, inertialForce: inertialForce, tractionForce: tractionForce };
-
-    return res;
-}
