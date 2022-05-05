@@ -7,11 +7,13 @@ import ML from "./pages/ML";
 import CarData from "./pages/CarData";
 import Login from "./pages/Login";
 
+import { ZoomProvider } from "./context/ZoomContext";
+
 import "./App.css";
 
 const App: FC = () => {
 
-    // TODO: Move GraphProvider => to .App ?
+    // TODO: Move ZoomProvider => to ML ?
 
     return (
         <div className="App">
@@ -20,7 +22,7 @@ const App: FC = () => {
                 <Switch>
                     <Route exact path="/cardata" component={() => <CarData />} />
                     <Route exact path="/rides" component={() => <Trips />} />
-                    <Route exact path="/ml"    component={() => <ML/>} />
+                    <Route exact path="/ml"    component={() => <ZoomProvider><ML/></ZoomProvider>} />
                     <Route exact path="/login" component={() => <Login />} />
                 </Switch>
             </Router>

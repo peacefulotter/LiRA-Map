@@ -1,5 +1,5 @@
 import { SegmentProps } from "../models/models";
-import { DataPath, PointData } from "../models/path";
+import { BoundedPath, PointData } from "../models/path";
 import { PathProperties } from "../models/properties";
 import { RendererName } from "../models/renderers";
 
@@ -21,10 +21,10 @@ export const parseSegments = (data: any): SegmentProps[] => {
     return data.rows.map( (row:any) => {
         const pointA: PointData = { lat: row.lata, lng: row.lona }
         const pointB: PointData = { lat: row.latb, lng: row.lonb }
-        const dataPath: DataPath = { path: [pointA, pointB], minX: 0, maxX: 10, minY: 0, maxY: 10 };
+        const bPath: BoundedPath = { path: [pointA, pointB], bounds: { minX: 0, maxX: 10, minY: 0, maxY: 10 } };
         const properties: PathProperties = { rendererName: RendererName.line, color:"#00000", width: 4 }
         return { 
-            dataPath, properties, id: row.Id, length: row.Length,
+            bPath, properties, id: row.Id, length: row.Length,
             avg: row.Average, count: row.Count, max: row.Max, min: row.Min, way: row.Way
         };
     });

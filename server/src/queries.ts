@@ -1,5 +1,5 @@
 
-import { RideMeta, Position3D, DataPath, PointData } from './models'
+import { RideMeta, Position3D, PointData, BoundedPath } from './models'
 import { Knex } from 'knex'
 
 // const fetchPositions = async (query: object ): Promise<Path> =>
@@ -42,7 +42,7 @@ export const getTest = async ( db: Knex<any, unknown[]>, [tripId]: [string] ): P
 }
 
 
-export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<DataPath> =>
+export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, measurement]: [string, string] ): Promise<BoundedPath> =>
 {
     const res = await db
             .select( [ 'message', 'lat', 'lon', 'Created_Date' ] )
@@ -72,7 +72,7 @@ export const getMeasurementData = async ( db: Knex<any, unknown[]>, [tripId, mea
             a.metadata.timestamp - b.metadata.timestamp
         )
 
-    return { path, minX, maxX, minY, maxY }
+    return { path, bounds: { minX, maxX, minY, maxY } }
 }
 
 export const getRides = async (db: Knex<any, unknown[]>): Promise<RideMeta[]> => {

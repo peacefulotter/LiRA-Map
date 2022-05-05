@@ -11,11 +11,11 @@ interface Props extends RendererProps {
 /*
     Used to render Rectangles and Circles
 */
-const Points: FC<Props> = ( { dataPath, properties, onClick, PointElt } ) => {
+const Points: FC<Props> = ( { path, properties, onClick, PointElt } ) => {
     return (
         <>
         {
-            dataPath.path.map( (point: PointData, i: number) => {
+            path.map( (point: PointData, i: number) => {
                 return <PointElt 
                     key={`PointElt${Math.random()}`}
                     lat={point.lat}

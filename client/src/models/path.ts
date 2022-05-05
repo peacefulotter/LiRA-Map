@@ -14,30 +14,36 @@ export interface PointData extends LatLng {
 // A Path is a collection of points
 export type Path = PointData[]
 
-// A DataPath is a Path with informations on the latter
-export interface DataPath {
-	path: Path;
-	minY: number;
-    maxY: number; 
-    minX: number;
-    maxX: number;
+export interface Bounds {
+    minX?: number;
+    maxX?: number;
+	minY?: number;
+    maxY?: number; 
 }
+
 
 // Props passed to the Path and EventPath components
 export interface PathProps {
-	dataPath: DataPath
+	path: Path;
+	bounds?: Bounds;
 	properties: PathProperties;
 	metadata?: {[key: string]: any}
 	onClick?: PathEventHandler
 }
 
+// used for queries
+export interface BoundedPath {
+	path: Path;
+	bounds?: Bounds;
+}
+
 // This interface is used as a type for server's response
 // for instance, JSON files follow this format
-export interface JSONProps {
-	dataPath: DataPath
+export interface JSONProps extends BoundedPath {
 	properties: Measurement;
 	metadata?: {[key: string]: any}
 }
+
 
 
 export type HotlinePalette = { [key: number]: string } 

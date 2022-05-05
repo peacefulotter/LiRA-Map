@@ -21,7 +21,7 @@ const Segments: FC<SegmentsProps> = ( { segments } ) => {
             segment.properties.color= getColor(segment.avg, 203, 126);
             return <Path 
                 key={`Segment${Math.random()}`} 
-                dataPath={segment.dataPath} 
+                path={segment.path} 
                 properties={segment.properties} 
             />     
         } ) }

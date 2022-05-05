@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import MetadataPath from "../Components/Map/MetadataPath";
 import MapWrapper from "../Components/Map/MapWrapper";
@@ -11,13 +11,15 @@ import { GraphData } from "../models/graph";
 
 import { get, post } from "../queries/fetch";
 
-import "../css/ml.css";
 import { GraphProvider } from "../context/GraphContext";
+import useZoomPaths from "../hooks/useZoomPaths";
+
+import "../css/ml.css";
 
 
-const ML: FC = () => {
+const ML = () => {
 
-    const [paths, setPaths] = useState<JSONProps[]>([]);
+    const [paths, setPaths] = useZoomPaths()
     const [measurements, setMeasurements] = useState<Measurement[]>([])
 
     console.log("ML reset");
@@ -29,28 +31,15 @@ const ML: FC = () => {
     const addPath = (i: number) => {
         post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) => {
             setPaths( prev => [...prev, json] )
-
-            let curDist = 0;
-            let curWay = json.dataPath.path[0].metadata.way_id 
-
-            // addGraph(json, (p: PointData) => {
-            //     const { dist, way_id } = p.metadata
-
-            //     if (way_id !== curWay) {
-            //         curDist++
-            //         curWay = way_id
-            //     }
-
-            //     return dist + curDist
-            // })
         } )
     }
 
-
     const filterPath = (i: number): [JSONProps | undefined, JSONProps[]] => {
-        const findPred = (pp: JSONProps) => pp.properties.name === measurements[i].name
-        const filterPred = (pp: JSONProps) => pp.properties.name !== measurements[i].name
-        return [ paths.find( findPred ), paths.filter( filterPred ) ]
+        const n = measurements[i].name
+        return [ 
+            paths.find(   (pp: JSONProps) => pp.properties.name === n ), 
+            paths.filter( (pp: JSONProps) => pp.properties.name !== n ) 
+        ]
     }
 
     const delPath = (i: number) => {
@@ -59,7 +48,6 @@ const ML: FC = () => {
             return console.log('ERROR, TRYING TO REMOVE PATH', i, 'BUT DIDNT FIND', paths);
         
         setPaths( newPaths )
-        // remGraph(p)
     }
 
     const onClick = (i: number) => (isChecked: boolean) => {
@@ -68,6 +56,7 @@ const ML: FC = () => {
 
     return (
         <GraphProvider>
+
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
@@ -94,15 +83,16 @@ const ML: FC = () => {
                     labelY="IRI"
                     plots={ 
                         paths.map( (json: JSONProps, i: number) => {
-                            const { path, minX, maxX, minY, maxY } = json.dataPath;
+                            const { path, bounds } = json;
                             const data: GraphData = path.map((p: PointData, i: number) => [p.metadata.tdist, p.value || 0, i])
                             const label = json.properties.name
-                            return { data, minX, maxX, minY, maxY, label, i }
+                            return { data, bounds, label, i }
                         } ) 
                     }
                 />
             </div>
         </div>
+
         </GraphProvider> 
     );
 }

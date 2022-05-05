@@ -1,16 +1,16 @@
 
 import { createContext, useContext, useState } from "react";
 import { RideMeta } from "../models/models";
-import { DataPath } from "../models/path";
+import { BoundedPath } from "../models/path";
 import { RideMeasurement } from "../models/properties";
 
 
-type MetaPath = {[key: number]: DataPath }
+type MetaPath = {[key: number]: BoundedPath }
 type MeasMetaPath = {[key: string]: MetaPath}
 
 interface ContextProps {
 	paths: MeasMetaPath;
-	addKeyPath: (meas: RideMeasurement, meta: RideMeta, path: DataPath) => void
+	addKeyPath: (meas: RideMeasurement, meta: RideMeta, bpath: BoundedPath) => void
 	remKeyPath: (meas: RideMeasurement, meta: RideMeta) => void
 }
 
@@ -24,7 +24,7 @@ export const PathsProvider = ({ children }: any) => {
 		return { name: meas.name, TaskId: meta.TaskId }
 	}
 
-	const addKeyPath = (meas: RideMeasurement, meta: RideMeta, path: DataPath) => {
+	const addKeyPath = (meas: RideMeasurement, meta: RideMeta, bpath: BoundedPath) => {
 		const { name, TaskId } = keys(meas, meta);
 
 		const temp = {...paths}
@@ -34,7 +34,7 @@ export const PathsProvider = ({ children }: any) => {
 		if (!temp.hasOwnProperty(meas.name))
 			temp[name] = {}
 
-		temp[name][TaskId] = path
+		temp[name][TaskId] = bpath
 
 		console.log('AFTER adding', temp);
 		

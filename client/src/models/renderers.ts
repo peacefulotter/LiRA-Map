@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { LatLng } from "./models";
-import { DataPath } from "./path";
+import { Path, Bounds } from "./path";
 import { PathProperties, PointProperties } from "./properties";
 
 export enum RendererName {
@@ -13,7 +13,8 @@ export enum RendererName {
 }
 
 export interface RendererProps {
-    dataPath: DataPath;
+    path: Path;
+    bounds?: Bounds;
     properties: PathProperties;
     onClick: PathEventHandler;
 }

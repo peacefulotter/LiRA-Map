@@ -32,7 +32,7 @@ const getPopupLine = (key: string, value: any) => {
     return <div key={`popupline-${Math.random()}`}>{key}: {value}</div>
 }
 
-const MetadataPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
+const MetadataPath: FC<PathProps> = ( { path, properties, metadata } ) => {
 
     const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
     const [selected, setSelected] = useState<number | undefined>(undefined);
@@ -43,11 +43,11 @@ const MetadataPath: FC<PathProps> = ( { dataPath, properties, metadata } ) => {
         setSelected(i)
     }
     
-    const point = dataPath.path[selected || 0]
+    const point = path[selected || 0]
     const md = metadata || {}
 
     return ( <> 
-        <Path dataPath={dataPath} properties={properties} onClick={onClick}></Path>
+        <Path path={path} properties={properties} onClick={onClick}></Path>
         
         { selected !== undefined && 
             <Marker position={markerPos}>

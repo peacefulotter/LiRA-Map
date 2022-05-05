@@ -6,7 +6,7 @@ import fs from 'fs'
 import databaseQuery from './database'
 import osrmQuery from './osrm';
 
-import { DataPath, JSONProps, Measurement, RideMeta } from "./models";
+import { BoundedPath, JSONProps, Measurement, RideMeta } from "./models";
 import { getRides, getTest, getMeasurementData } from './queries'
 
 import measurements from './measurements.json';
@@ -70,18 +70,19 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 	res.json()
 })
 
-app.get("/map_match", async (req: any, res: any) => {
-	const { tripID } = req.query;
-	const path: DataPath = await databaseQuery<DataPath>(getMeasurementData, 'liradb', tripID, 'track.pos')
-	const data: any = await osrmQuery(path);
-	res.json( data );
-} )
+// app.get("/map_match", async (req: any, res: any) => {
+// 	const { tripID } = req.query;
+// 	const path: DataPath = await databaseQuery<DataPath>(getMeasurementData, 'liradb', tripID, 'track.pos')
+// 	const data: any = await osrmQuery(path);
+// 	res.json( data );
+// } )
 
 
 
 
 app.get("/ml_files", async (req: any, res: any) => {
 	const data: Measurement[] = await readJsonDir()
+	
 	res.json( data );
 } )
 
@@ -97,8 +98,8 @@ app.get("/ml_file", async (req: any, res: any) => {
 app.get("/trip_measurement", async (req: any, res: any) => {
 	const tripID = req.query.tripID
 	const measurement = req.query.measurement
-	const data: DataPath = await databaseQuery<DataPath>(getMeasurementData, 'liradb', tripID, measurement)
-	res.json( data );
+	const { path, bounds }: BoundedPath = await databaseQuery<BoundedPath>(getMeasurementData, 'liradb', tripID, measurement)
+	res.json( { measurement, path, bounds } );
 } )
 
 app.get("/rides", async (req: any, res: any) => {

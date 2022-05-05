@@ -1,14 +1,16 @@
 
+import { FC, useEffect, useState } from 'react';
 import L from 'leaflet'
 import 'Leaflet.MultiOptionsPolyline'
-import { FC, useEffect, useState } from 'react';
 
-import '../../../assets/CustomHotline';
-import useZoom from '../Hooks/useZoom';
 import { DEFAULT_WIDTH } from '../../../assets/properties';
 import { RendererProps } from '../../../models/renderers';
 import { useGraph } from '../../../context/GraphContext';
-import { HotlineOptions, Path, PointData } from '../../../models/path';
+import { HotlineOptions } from '../../../models/path';
+import { useMapEvents } from 'react-leaflet';
+
+import '../../../assets/CustomHotline';
+
 
 interface HotlineProps extends RendererProps {
     palette?: any
@@ -41,20 +43,15 @@ interface HotlineProps extends RendererProps {
 // }
 
 
-const Hotline: FC<HotlineProps> = ( { 
-    dataPath, properties, onClick,
-    palette, zoomRange 
-} ) => {
+const Hotline: FC<HotlineProps> = ( { path, properties, onClick, palette, zoomRange  } ) => {
 
     const [coords, setCoords] = useState<[number, number, number][]>([])
     const [distances, setDistances] = useState<number[]>([])
     const [hotline, setHotline] = useState<any>()
-    const [zoomPath, setZoomPath] = useState<Path>()
 
     const { dotHoverIndex, minY, maxY } = useGraph()
-    const [zoom, map] = useZoom()
 
-    const { path } = dataPath;    
+    const map = useMapEvents({})
 
     // const _weightFunc = useCallback( (a: number, b: number) => {
     //     const c = dotHoverIndex ? dotHoverIndex >= a && dotHoverIndex < b : false
@@ -87,9 +84,6 @@ const Hotline: FC<HotlineProps> = ( {
         onclick: onClick ? onClick(0) : undefined
     }
 
-    useEffect( () => {
-        setZoomPath( path.filter( (point: PointData) => point.metadata.zoom + 15 === zoom ) )
-    }, [zoom, path])
 
     // useEffect( () => {
     //     if ( hotline === undefined) return
@@ -102,23 +96,23 @@ const Hotline: FC<HotlineProps> = ( {
      */
 
     useEffect( () => {
-        if ( zoomPath === undefined || zoomPath.length === 0 ) return;
+        if ( path === undefined || path.length === 0 ) return;
         // const range = [12, 13, 14, 15, 16, 17]
         // const len = range.length;
         const tempCoords: [number, number, number][] = []
         const tempDistances: number[] = []
         const addVal = (i: number, dist: number) => {
-            tempCoords.push([zoomPath[i].lat, zoomPath[i].lng, zoomPath[i].value || 0])
+            tempCoords.push([path[i].lat, path[i].lng, path[i].value || 0])
             tempDistances.push(dist)
         }
         addVal(0, 0)
         let totalDist = 0;
-        for (let i = 1; i < zoomPath.length; i++ ) 
+        for (let i = 1; i < path.length; i++ ) 
         {
-            const lat1 = zoomPath[i - 1].lat;
-            const lng1 = zoomPath[i - 1].lng;
-            const lat2 = zoomPath[i].lat;
-            const lng2 = zoomPath[i].lng;
+            const lat1 = path[i - 1].lat;
+            const lng1 = path[i - 1].lng;
+            const lat2 = path[i].lat;
+            const lng2 = path[i].lng;
             const dist = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1)) || 0
             // console.log(i, dist, totalDist, lat1, lng1, lat2, lng2);
             totalDist += dist;
@@ -127,7 +121,7 @@ const Hotline: FC<HotlineProps> = ( {
 
         setCoords(tempCoords)
         setDistances(tempDistances)
-    }, [zoomPath])
+    }, [path])
 
     useEffect( () => {
         if (coords.length === 0 || options === undefined) return;

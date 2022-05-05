@@ -1,6 +1,7 @@
 
 import { useState } from "react"
 import { AddMinMaxFunc, MinMaxAxis, RemMinMaxFunc } from "../models/graph";
+import { Bounds } from "../models/path";
 
 
 
@@ -34,10 +35,12 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
         ]
     }
 
-    const addMinMax = (label: string, _minX?: number, _maxX?: number, _minY?: number, _maxY?: number) => {
+    const addMinMax = (label: string, bounds: Bounds) => {
+
+        const { minX, maxX, minY, maxY } = bounds;
         
         const newMinMax: MinMaxAxis = [
-            min(_minX), max(_maxX), min(_minY), max(_maxY) 
+            min(minX), max(maxX), min(minY), max(maxY) 
         ]
         
         if ( firstUpdate )
