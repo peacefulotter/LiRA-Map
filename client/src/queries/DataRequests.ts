@@ -10,7 +10,7 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], ty
     const southWestString = points[2].lat + " " + points[2].lng;
     const northWestString = points[3].lat + " " + points[3].lng;
 
-    let path = '/segments/'+ northEastString +';'+ southEastString +';'+ southWestString +';'+ northWestString +
+    let path = '/segments/polygon/'+ northEastString +';'+ southEastString +';'+ southWestString +';'+ northWestString +
      '?type=' + type +  '&aggregation=' + aggregation;
     console.log(path)
     let res = await fetch(path)
@@ -42,4 +42,39 @@ export const GetAggregationTypes = async (dataType: string): Promise<string[]> =
     });
 
     return stringArray;
+}
+
+export const GetDataTypesOfSegment = async (segment_id: number): Promise<string[]> => {
+    let path = '/types/aggregatedValues/types/' + segment_id;
+    let res = await fetch(path);
+    let data = await res.json();
+
+    let stringArray:string[] = [];
+    data.forEach((element:any) => {
+        stringArray.push(element.Type);
+    });
+
+    return stringArray;
+}
+
+export const GetAggregationTypesOfSegment = async (dataType: string, segment_id: number): Promise<string[]> => {
+    let path = '/types/aggregatedValues/aggregation/' + segment_id + '?type=' + dataType;
+    let res = await fetch(path);
+    let data = await res.json();
+    let stringArray:string[] = [];
+    data.forEach((element:any) => {
+        stringArray.push(element.Aggregation);
+    });
+
+    return stringArray;
+}
+
+
+export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<SegmentProps> => {
+
+    let path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
+    console.log(path)
+    let res = await fetch(path)
+    let data = await res.json();
+    return data
 }

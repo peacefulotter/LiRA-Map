@@ -9,7 +9,7 @@ export enum RendererName {
     rectangles = 'rectangles',
     line = 'line',
     hotline = 'hotline',
-    hotpoints = 'hotpoints'
+    hotpoints = 'hotpoints',
 }
 
 export interface RendererProps {

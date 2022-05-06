@@ -15,10 +15,11 @@ export interface SegmentProps extends SegmentInterface{
     aggregation:string,
     value:number
     onClick?: (props: SegmentProps) => void;
+    direction: number
 }
 
 
-const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, aggregation, value, onClick}) => {
+const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, aggregation, value, onClick, direction}) => {
     
     
     const getColor = (val: number, maxval: number, minval: number): string => {
@@ -29,7 +30,8 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
     }
 
     const onClickPath = (i: number) => (e: any) => {
-        let segmentProps:SegmentProps = {id, positionA, positionB, way, count, type, aggregation, value};
+        console.log(direction)
+        let segmentProps:SegmentProps = {id, positionA, positionB, way, count, type, aggregation, value, direction};
         if(onClick != undefined)
             onClick(segmentProps);
     }

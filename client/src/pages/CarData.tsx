@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { MeasurementData, SegmentInterface} from "../models/models";
 import '../css/cardata.css'
 import filter_image from "../assets/images/filter.png";
@@ -12,9 +12,13 @@ import { LatLng } from "leaflet";
 import Filter from "../Components/CarData/Filter";
 import SegmentPopup from "../Components/CarData/SegmentPopup";
 import { SegmentProps } from "../Components/CarData/Segment";
+import { SegmentPopUpProps } from "../Components/CarData/SegmentPopup";
+import {GetSegmentsAndAverageValuesInAPolygon} from '../queries/DataRequests';
+
 const CarData: FC = () => {
 
     const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
+    const [segments, setSegments] = useState<SegmentProps[]>([]);
     const [boundaries, setBoundaries] = useState<LatLng[]>(
         [new LatLng(55.523966596348956, 12.030029296875002),
         new LatLng(55.523966596348956, 12.74620056152344),
@@ -23,14 +27,52 @@ const CarData: FC = () => {
     const [dataType, setDataType] = useState<string>();
     const [aggregationType, setAggregationType] = useState<string>();
     const [showFilter, setShowFilter] = useState<Boolean>(false);
-    const [showSegmentPopUp, setShowSegmentPopUp] = useState<[Boolean, SegmentProps]>();
+    const [showSegmentPopUp, setShowSegmentPopUp] = useState<[Boolean, SegmentPopUpProps]>();
+
+
+    useEffect(() => {
+        
+        const fetchData = async () => {
+            const segmentProps: SegmentProps[] = await getSegmentProps();
+            console.log(segmentProps);
+            setSegments(segmentProps);
+          }
+        
+        fetchData()
+
+      }, [boundaries, dataType, aggregationType]);
+
+
+    const getSegmentProps = async () => {
+        let segmentsProps:SegmentProps[] = [];
+        if(dataType != undefined && aggregationType != undefined){
+            segmentsProps = await GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggregationType)
+                .then(res => {
+                    return res;
+                });
+        }
+        return segmentsProps;
+    }
+
 
     const filterButtonOnClick = (e:any) => {
         setShowFilter(!showFilter);
     }
 
+    const updateSegment = (props: SegmentProps) => {
+        let currentSegments = segments;
+        let index = currentSegments.findIndex((segment) => {
+            return segment.id == props.id;
+        })
+        currentSegments[index] = props;
+        setSegments(currentSegments);
+        activatePopUp(currentSegments[index]);
+    }
+
     const activatePopUp = (props: SegmentProps) => {
-        setShowSegmentPopUp([true, props]);
+
+        let popUpProps = {...props, updateSegment}
+        setShowSegmentPopUp([true, popUpProps]);
     }
 
 
@@ -45,8 +87,8 @@ const CarData: FC = () => {
                         <SegmentPopup {...showSegmentPopUp[1]}></SegmentPopup>
                     }
                     <img onClick={((e) => filterButtonOnClick(e))} className = "filter-button" src={filter_image} alt="" />
-                    {boundaries != undefined && dataType != undefined && aggregationType != undefined &&
-                        <Segments boundaries={boundaries} type={dataType} aggregation={aggregationType} activatePopUp={activatePopUp}/> 
+                    {segments != undefined &&
+                        <Segments segments={segments} activatePopUp={activatePopUp}/> 
                     }
                     <MapEvents setMeasurements={setMeasurements} setBoundaries={setBoundaries}></MapEvents>        
                 </MapWrapper>

@@ -8,37 +8,13 @@ import {GetSegmentsAndAverageValuesInAPolygon} from '../../queries/DataRequests'
 
 
 export interface SegmentsProps{
-    boundaries: LatLng[];
-    type: string;
-    aggregation: string;
+    segments: SegmentProps[]
     activatePopUp: (props: SegmentProps) => void
 }
 
-const Segments: FC<SegmentsProps> = ( {boundaries, type, aggregation, activatePopUp} ) => {
+const Segments: FC<SegmentsProps> = ( {segments, activatePopUp} ) => {
     const [showPopup, setShowPopup] = useState<boolean>();
-    const [segments, setSegments] = useState<SegmentProps[]>([]);
     const [popUpProps, setPopUpProps] = useState<SegmentProps>();
-
-    useEffect(() => {
-        
-        const fetchData = async () => {
-            const segmentProps: SegmentProps[] = await getSegmentProps();
-            console.log(segmentProps);
-            setSegments(segmentProps);
-          }
-        
-        fetchData()
-
-      }, [boundaries, type, aggregation]);
-
-
-    const getSegmentProps = async () => {
-        let segmentProps = await GetSegmentsAndAverageValuesInAPolygon(boundaries, type, aggregation)
-            .then(res => {
-              return res;
-            });
-        return segmentProps;
-    }
 
     const onClickSegment = (props: SegmentProps) => {
       activatePopUp(props);

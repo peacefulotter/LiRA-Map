@@ -26,7 +26,7 @@ export class SegmentsService {
         let res: SegmentWithAggregatedValue[] = [];
         rowsList.forEach(row => {
             let segmentWithAggregatedValue = <SegmentWithAggregatedValue>{id: row.Id, positionA: [row.lata, row.lona], positionB:[row.latb, row.lonb], way: row.Way, 
-                count: row.Count, type: row.Type, aggregation: row.Aggregation, value: row.Value};
+                count: row.Count, type: row.Type, aggregation: row.Aggregation, value: row.Value, direction: row.Direction};
             res.push(segmentWithAggregatedValue);
         });
         return res;
@@ -57,14 +57,33 @@ export class SegmentsService {
         return await this.knex.raw('SELECT "Segments"."Id", "Segments"."Way", ST_Y("Segments"."PositionA") as LonA, '
         + 'ST_X("Segments"."PositionA") as LatA, '
         + 'ST_Y("Segments"."PositionB") as LonB, ST_X("Segments"."PositionB") as LatB, '
-        + '"AggregatedValues"."Count", "AggregatedValues"."Type", "AggregatedValues"."Aggregation", "AggregatedValues"."Value" '
+        + '"AggregatedValues"."Count", "AggregatedValues"."Type", "AggregatedValues"."Aggregation", "AggregatedValues"."Value", "AggregatedValues"."Direction" '
         + 'FROM "Segments" INNER JOIN "AggregatedValues" '
         + 'ON "Segments"."Id" = "AggregatedValues"."Segment" '
-        + 'WHERE ST_Contains(' + makePolygon + ', "Segments"."PositionA") '
+        + 'WHERE "AggregatedValues"."Direction" = -1 AND ST_Contains(' + makePolygon + ', "Segments"."PositionA") '
         + 'AND "AggregatedValues"."Type" = ' + typeString + ' AND "AggregatedValues"."Aggregation" = ' + aggregationString)
             .then(res => {
                 const segments = this.parseSegmentsWithAggregatedValue(res.rows);
                 return segments;
+            })
+    }
+
+    async getSegmentWithAggregatedValue(segment_id: number, type:string, aggregation: string):Promise<SegmentWithAggregatedValue>{
+
+        const typeString = "'" + type + "'";
+        const aggregationString = "'" + aggregation + "'";
+
+        return await this.knex.raw('SELECT "Segments"."Id", "Segments"."Way", ST_Y("Segments"."PositionA") as LonA, '
+        + 'ST_X("Segments"."PositionA") as LatA, '
+        + 'ST_Y("Segments"."PositionB") as LonB, ST_X("Segments"."PositionB") as LatB, '
+        + '"AggregatedValues"."Count", "AggregatedValues"."Type", "AggregatedValues"."Aggregation", "AggregatedValues"."Value", "AggregatedValues"."Direction" '
+        + 'FROM "Segments" INNER JOIN "AggregatedValues" '
+        + 'ON "Segments"."Id" = "AggregatedValues"."Segment" '
+        + 'WHERE "AggregatedValues"."Direction" = -1 AND "Segments"."Id" = ' + segment_id
+        + ' AND "AggregatedValues"."Type" = ' + typeString + ' AND "AggregatedValues"."Aggregation" = ' + aggregationString)
+            .then(res => {
+                const segments = this.parseSegmentsWithAggregatedValue(res.rows);
+                return segments[0];
             })
     }
 }

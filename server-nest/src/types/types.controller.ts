@@ -19,5 +19,19 @@ export class TypesController {
         return this.typesService.getAggregationTypes(type);
     }
 
+    @Get('aggregatedValues/types/:segment_id')
+    getAggregatedValuesTypesOfSegment(@Param() params: {segment_id: number}): Promise<string[]>{
+        const segment_id = params.segment_id;
+        return this.typesService.getAggregatedValuesTypesOfSegment(segment_id);
+        
+    }
+
+    @Get('aggregatedValues/aggregation/:segment_id')
+    getAggregationTypesOfSegment(@Param() params: {segment_id: number}, @Query() query: {type: string}): Promise<string[]>{
+        const type = query.type;
+        const segment_id = params.segment_id;
+        return this.typesService.getAggregationTypesOfSegment(type, segment_id);
+    }
+
 
 }
