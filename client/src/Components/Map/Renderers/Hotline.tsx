@@ -140,7 +140,7 @@ const Hotline: FC<HotlineProps> = ( { path, properties, onClick, palette, zoomRa
     const origin = path[path.length - 2]
     const end = path[path.length - 1]
         
-    return <ArrowHead origin={origin} end={end} options={options}/>;
+    return <ArrowHead origin={origin} end={end} />;
 }
 
 export default Hotline;
