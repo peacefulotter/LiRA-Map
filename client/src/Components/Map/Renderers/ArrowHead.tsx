@@ -3,7 +3,6 @@ import { Polyline } from "react-leaflet";
 import { LatLng } from "../../../models/models";
 
 interface IArrowHead {
-    options: any;
     origin: LatLng
     end: LatLng
 }

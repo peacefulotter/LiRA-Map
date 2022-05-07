@@ -11,9 +11,6 @@ const Line: Renderer = ( { path, properties, onClick } ) => {
 
     const { color, width, opacity } = properties
 
-    console.log(path);
-    
-
     const options = {
         color: color || DEFAULT_COLOR,
         weight: width || DEFAULT_WIDTH,
@@ -28,7 +25,7 @@ const Line: Renderer = ( { path, properties, onClick } ) => {
         pathOptions={options}
         eventHandlers={{'click': onClick(0)}} 
     >
-        <ArrowHead origin={origin} end={end} options={options}/>
+        <ArrowHead origin={origin} end={end} />
     </Polyline>
 }
 
