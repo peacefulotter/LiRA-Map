@@ -12,6 +12,8 @@ import { RideMeasurement } from "../../models/properties";
 import { PointData } from "../../models/path";
 import { RideMeta } from "../../models/models";
 import { GraphData } from "../../models/graph";
+import { ZoomProvider } from "../../context/ZoomContext";
+import { GraphProvider } from "../../context/GraphContext";
 
 const Rides: FC = () => {
     
@@ -28,7 +30,9 @@ const Rides: FC = () => {
     
 
     return (
-        <div className="map-container">
+        <ZoomProvider>
+        <GraphProvider>
+            <div className="map-container">
             <MapWrapper>
                 { _metas.map( (meta: RideMeta, i: number) =>
                     _measurements.map( (meas: RideMeasurement, j: number) =>
@@ -42,7 +46,7 @@ const Rides: FC = () => {
             </MapWrapper>
             {
                 _measurements.map( (meas: RideMeasurement, i: number) => 
-                    <Graph 
+                    meas.hasValue && <Graph 
                         key={"graph-"+i}
                         labelX="time (?)" 
                         labelY={meas.name}
@@ -67,8 +71,9 @@ const Rides: FC = () => {
                     />
                 )
             }
-            
         </div>
+        </GraphProvider>
+        </ZoomProvider>
   )
 }
 

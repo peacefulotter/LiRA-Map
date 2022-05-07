@@ -10,6 +10,7 @@ import { HotlineOptions } from '../../../models/path';
 import { useMapEvents } from 'react-leaflet';
 
 import '../../../assets/CustomHotline';
+import ArrowHead from './ArrowHead';
 
 
 interface HotlineProps extends RendererProps {
@@ -135,8 +136,11 @@ const Hotline: FC<HotlineProps> = ( { path, properties, onClick, palette, zoomRa
         return () => hl.remove()
 
     }, [coords])
+
+    const origin = path[path.length - 2]
+    const end = path[path.length - 1]
         
-    return null;
+    return <ArrowHead origin={origin} end={end} options={options}/>;
 }
 
 export default Hotline;

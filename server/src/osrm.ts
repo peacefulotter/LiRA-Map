@@ -1,6 +1,6 @@
 
 import http from 'http';
-import { PointData, DataPath } from './models';
+import { BoundedPath, PointData } from './models';
 
 // cd server/src/osrm
 // ../../node_modules/osrm/lib/binding/osrm-extract denmark-latest.osm.pbf  -p ../../node_modules/osrm/profiles/car.lua
@@ -24,7 +24,7 @@ const getOSRM = (path: string) => new Promise( (resolve, reject) => {
     })
 } )
 
-const osrmQuery = async (data: DataPath): Promise<any> => {
+const osrmQuery = async (data: BoundedPath): Promise<any> => {
     console.log(data.path.length);
     const filteredPath = data.path.filter((p, i) => i % 10 === 0 )
     console.log(filteredPath.length);

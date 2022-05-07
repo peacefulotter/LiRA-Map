@@ -82,7 +82,7 @@ app.put('/editmeasurement', async (req: any, res: any) => {
 
 app.get("/ml_files", async (req: any, res: any) => {
 	const data: Measurement[] = await readJsonDir()
-	
+
 	res.json( data );
 } )
 
