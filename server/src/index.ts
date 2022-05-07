@@ -89,8 +89,9 @@ app.get("/ml_files", async (req: any, res: any) => {
 app.get("/ml_file", async (req: any, res: any) => {
 	const { filename } = req.query;
 	console.log(filename);
-	const data: JSONProps = await readJsonFile(filename)
-	res.json( data );
+	const {path, properties, metadata}: JSONProps = await readJsonFile(filename)
+	const p = path.filter((e, i) => i % 10 === 0)
+	res.json( { path: p, properties, metadata } );
 } )
 
 
