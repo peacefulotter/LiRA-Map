@@ -23,8 +23,6 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
     useEffect( () => {
 
-        console.log(svg, axis, data, label, i);
-
         if ( svg === undefined || axis === undefined ) return;
 
         const _bounds: Bounds = {

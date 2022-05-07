@@ -13,7 +13,6 @@ export interface IAxis {
     axis: GraphAxis | undefined, 
     width: number; 
     height: number; 
-    label: string; 
 }
 export type ReactAxis = FC<IAxis>;
 export type Axis = d3.ScaleLinear<number, number, never>

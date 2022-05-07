@@ -22,6 +22,7 @@ interface IGraph {
 }
 
 const margin = {top: 20, right: 30, bottom: 50, left: 100};
+const paddingRight = 50
 
 const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
 
@@ -56,12 +57,12 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
             <SVGWrapper 
                 isLeft={true} zoom={zoom}
                 margin={margin} w={w} h={h} width={width} height={height} 
-                label={labelY} axis={axis} Axis={YAxis} palette={palette} 
+                labelX={labelX} labelY={labelY} axis={axis} Axis={YAxis} palette={palette} 
             />
             <SVGWrapper 
                 isLeft={false} zoom={zoom}
-                margin={margin} w={w} h={h} width={width} height={height} 
-                label={labelX} axis={axis} Axis={XAxis} palette={palette} 
+                margin={margin} w={w + paddingRight} h={h} width={width} height={height} 
+                labelX={labelX} labelY={labelY} axis={axis} Axis={XAxis} palette={palette} 
                 plots={plots}
             />
         </div>

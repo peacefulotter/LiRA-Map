@@ -33,8 +33,6 @@ const ArrowHead: FC<IArrowHead> = ( { origin, end } ) => {
         const nX = (rotX / l) * size
         const nY = (rotY / l) * size * 2
 
-        console.log(nX, nY);
-        
         // move to origin
         const edgeX = nX + end.lat
         const edgeY = nY + end.lng 

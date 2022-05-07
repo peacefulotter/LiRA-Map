@@ -48,7 +48,6 @@ const Hotline: FC<HotlineProps> = ( { path, properties, onClick, palette, zoomRa
 
     const [coords, setCoords] = useState<[number, number, number][]>([])
     const [distances, setDistances] = useState<number[]>([])
-    const [hotline, setHotline] = useState<any>()
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
@@ -126,16 +125,15 @@ const Hotline: FC<HotlineProps> = ( { path, properties, onClick, palette, zoomRa
 
     useEffect( () => {
         if (coords.length === 0 || options === undefined) return;
-        console.log('UPDATE HOTLINE');
-        console.log(coords, options);
         
-        const hl = L.Hotline( coords, options, distances )
-        setHotline(hl)
-        hl.addTo(map)
+        const hotline = L.Hotline( coords, options, distances, dotHoverIndex )
+        hotline.addTo(map)
 
-        return () => hl.remove()
+        return () => { 
+            hotline.remove();
+        }
 
-    }, [coords])
+    }, [coords, dotHoverIndex])
 
     const origin = path[path.length - 2]
     const end = path[path.length - 1]
