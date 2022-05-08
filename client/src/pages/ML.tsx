@@ -7,14 +7,24 @@ import Checkbox from "../Components/Checkbox";
 
 import { JSONProps, PointData } from "../models/path";
 import { Measurement } from "../models/properties";
-import { GraphData } from "../models/graph";
+import { GraphData, Palette } from "../models/graph";
 
 import { get, post } from "../queries/fetch";
 
 import { GraphProvider } from "../context/GraphContext";
 import useZoomPaths from "../hooks/useZoomPaths";
 
+import { DEFAULT_PALETTE } from "../assets/properties";
+
 import "../css/ml.css";
+
+// const IRIPalette: Palette = [
+//     {offset: 0,   color: "green",  stopValue: 0  },
+//     {offset: 0.5, color: "yellow", stopValue: 5  },
+//     {offset: 1,   color: "red",    stopValue: 10 }
+// ]
+
+const IRIPalette: Palette = DEFAULT_PALETTE
 
 
 const ML = () => {
@@ -60,10 +70,12 @@ const ML = () => {
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
-                    { paths.map( (prop: JSONProps, i: number) => 
+                    { paths.map( (props: JSONProps, i: number) => 
                         <MetadataPath 
                             key={`ml-path-${i}`}
-                            {...prop}
+                            properties={{...props.properties, palette: IRIPalette}}
+                            path={props.path}
+                            metadata={props.metadata}
                         />
                     ) } 
                 </MapWrapper>
@@ -81,6 +93,7 @@ const ML = () => {
                 <Graph 
                     labelX="distance (m)" 
                     labelY="IRI"
+                    palette={IRIPalette}
                     plots={ 
                         paths.map( (json: JSONProps, i: number) => {
                             const { path, bounds } = json;

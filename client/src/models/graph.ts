@@ -27,7 +27,7 @@ export interface Plot {
 }
 
 // Palette - Gradient
-export interface PaletteColor { offset: string; color: string; stopValue?: number }
+export interface PaletteColor { offset: number; color: string; stopValue?: number }
 export type Palette = PaletteColor[]
 export type Gradient = Selection<SVGStopElement, PaletteColor, SVGLinearGradientElement, unknown>
 

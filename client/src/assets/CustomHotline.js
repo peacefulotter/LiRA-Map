@@ -1,10 +1,7 @@
 
 import L from 'leaflet'
 
-L.Hotline = function (latlngs, options, distances, dotHoverIndex) {
-
-	if ( latlngs.length !== distances.length )
-		throw new Error('latlngs and distances should have the same length')
+L.Hotline = function (latlngs, options, dotHoverIndex) {
 
 	let projectedData = undefined
 	// Plugin is already added to Leaflet
@@ -244,16 +241,14 @@ L.Hotline = function (latlngs, options, distances, dotHoverIndex) {
 			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
 
 			const deltaIndex = pointEnd.i - pointStart.i
-			const deltaDist = pointEnd.d - pointStart.d
+			// const deltaDist = pointEnd.d - pointStart.d
 
 			const hoverPoint = projectedData[0][dotHoverIndex || 0];
 
 			for ( let k = pointStart.i; k <= pointEnd.i; k++ )
 			{
 				const point = projectedData[0][k]
-				const dist = distances !== undefined 
-					? (point.d - pointStart.d) / (deltaDist  !== 0 ? deltaDist  : 1)
-					: (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
+				const dist = (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
 
 				const rgb = this.getRGBForValue(point.z);
 
@@ -388,13 +383,13 @@ L.Hotline = function (latlngs, options, distances, dotHoverIndex) {
 					if (codeOut === codeA) {
 						p.z = a.z;
 						p.i = a.i
-						p.d = a.d
+						// p.d = a.d
 						a = p;
 						codeA = newCode;
 					} else {
 						p.z = b.z;
 						p.i = b.i
-						p.d = b.d
+						// p.d = b.d
 						b = p;
 						codeB = newCode;
 					}
@@ -443,7 +438,7 @@ L.Hotline = function (latlngs, options, distances, dotHoverIndex) {
 					// Add the altitude of the latLng as the z coordinate to the point
 					ring[i].z = latlngs[i].alt;
 					ring[i].i = i
-					ring[i].d = distances[i];
+					// ring[i].d = distances[i];
 					projectedBounds.extend(ring[i]);
 				}
 				result.push(ring);

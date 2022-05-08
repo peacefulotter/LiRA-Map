@@ -1,32 +1,26 @@
 import { FC, useEffect } from "react"
-import * as d3 from 'd3'
+import { DEFAULT_PALETTE } from "../../assets/properties";
 
 import { useGraph } from "../../context/GraphContext";
 import { Axis, Palette, PaletteColor, SVG } from "../../models/graph"
 
-const defaultPalette: Palette = [
-    {offset: "0%",   color: "green"  },
-    {offset: "50%",  color: "yellow" },
-    {offset: "100%", color: "red"    }
-]
-
 export interface IGradient {
     svg: SVG | undefined;
     axis: [Axis, Axis] | undefined;
-    palette: Palette | undefined
+    palette: Palette | undefined;
 }
 
 const gradientId = "line-gradient";
 
 const getOffset = (color: PaletteColor, maxY: number) => color.stopValue 
     ? (color.stopValue / maxY) * 100 + '%'
-    : color.offset
+    : (color.offset * 100).toString() + '%'
 
-const Gradient: FC<IGradient> = ( { svg, axis, palette} ) => {
+const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
 
     const { minY, maxY } = useGraph()
 
-    const p = palette || defaultPalette
+    const p = palette || DEFAULT_PALETTE
 
     useEffect( () => {
 

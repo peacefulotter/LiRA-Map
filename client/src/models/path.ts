@@ -1,5 +1,6 @@
 // Represents a point containing (lat, lng) coordinates, 
 
+import { Palette } from "./graph";
 import { LatLng } from "./models";
 import { Measurement, PathProperties, PointProperties } from "./properties";
 import { PathEventHandler } from "./renderers";
@@ -45,13 +46,11 @@ export interface JSONProps extends BoundedPath {
 }
 
 
-
-export type HotlinePalette = { [key: number]: string } 
+export type HotlinePalette = { [x: number]: string; };
 
 export interface HotlineOptions {
 	min?: number;
 	max?: number;
-	zoomRange: [number, number]; // TODO: remove
 	weight?: number;
 	weightFunc?: (a: number, b: number) => number;
 	outlineWidth?: number;
