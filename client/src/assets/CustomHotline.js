@@ -241,7 +241,7 @@ L.Hotline = function (latlngs, options, dotHoverIndex) {
 			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
 
 			const deltaIndex = pointEnd.i - pointStart.i
-			// const deltaDist = pointEnd.d - pointStart.d
+			const deltaDist = pointEnd.d - pointStart.d
 
 			const hoverPoint = projectedData[0][dotHoverIndex || 0];
 
@@ -249,6 +249,7 @@ L.Hotline = function (latlngs, options, dotHoverIndex) {
 			{
 				const point = projectedData[0][k]
 				const dist = (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
+				// (point.d - pointStart.d) / (deltaDist !== 0 ? deltaDist : 1)
 
 				const rgb = this.getRGBForValue(point.z);
 

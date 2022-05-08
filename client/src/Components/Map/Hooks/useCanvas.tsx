@@ -12,7 +12,7 @@ const useCanvas = (): [L.Map, L.Canvas] => {
     useEffect( () => {
         canvas.addTo(map)
         return () => { canvas.removeFrom(map) }
-    }, [])
+    }, [canvas, map])
 
     return [map, canvas];
 }

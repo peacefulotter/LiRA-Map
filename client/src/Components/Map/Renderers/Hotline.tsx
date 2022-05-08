@@ -1,17 +1,19 @@
 
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { useMapEvents } from 'react-leaflet';
 import L from 'leaflet'
 import 'Leaflet.MultiOptionsPolyline'
 
-import { DEFAULT_WIDTH, palette, width } from '../../../assets/properties';
-import { RendererProps } from '../../../models/renderers';
-import { useGraph } from '../../../context/GraphContext';
-import { HotlineOptions, HotlinePalette, PointData } from '../../../models/path';
-import { useMapEvents } from 'react-leaflet';
-
-import '../../../assets/CustomHotline';
 import ArrowHead from './ArrowHead';
+
+import { useGraph } from '../../../context/GraphContext';
+
+import { HotlineOptions, HotlinePalette, PointData } from '../../../models/path';
+import { RendererProps } from '../../../models/renderers';
 import { Palette } from '../../../models/graph';
+
+import { palette, width } from '../../../assets/properties';
+import '../../../assets/CustomHotline';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -45,35 +47,36 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
-    const map = useMapEvents({})
-
-    const p = palette(properties)
-    const min = p[0].stopValue            || minY || 0
-    const max = p[p.length - 1].stopValue || maxY || 1
-
-    const hotlinePal = toHotlinePalette(p, max)
-
-    console.log(min, max, p, hotlinePal);
+    const map = useMapEvents({
+        layeradd: (e: any) => console.log('LAYER ADD', e),
+        layerremove: (e: any) => console.log('LAYER REMOVE', e)
+    })
     
-    const options: HotlineOptions = {
-        weight: width(undefined, properties),
-        weightFunc: (a: number, b: number) => 4,
-        outlineWidth: 0,
-        palette: hotlinePal,
-        min: min,
-        max: max,
-        onclick: onClick ? onClick(0) : undefined
-    }
+    const options: HotlineOptions = useMemo( () => { 
+        console.log('MEMO OPTIONS');
+
+        const p = palette(properties)
+        const min = p[0].stopValue            || minY || 0
+        const max = p[p.length - 1].stopValue || maxY || 1
+
+        const hotlinePal = toHotlinePalette(p, max)
+        console.log(min, max, p, hotlinePal);
+        
+        return {
+            weight: width(undefined, properties),
+            weightFunc: (a: number, b: number) => 4,
+            outlineWidth: 0,
+            palette: hotlinePal,
+            min: min,
+            max: max,
+            onclick: onClick ? onClick(0) : undefined
+        } 
+    }, [properties, minY, maxY, onClick] )
 
     // useEffect( () => {
     //     if ( hotline === undefined) return
     //     hotline.redraw(options)
     // }, [options])
-
-
-    /**
-     * COMPUTE GRADIENT
-     */
 
     useEffect( () => {
         if ( path === undefined || path.length === 0 ) return;
@@ -87,14 +90,22 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         hotline.addTo(map)
 
         return () => { 
+            console.log(hotline);
+            console.log(hotline.remove);
+            console.log(map.removeLayer(hotline));
+            console.log(L.stamp(hotline));
+            
+            console.log(hotline.remove());
+            console.log(hotline.removeFrom(map));
+            
             hotline.remove();
         }
 
-    }, [coords, dotHoverIndex])
+    }, [map, options, coords, dotHoverIndex])
+
 
     const origin = path[path.length - 2]
     const end = path[path.length - 1]
-        
     return <ArrowHead origin={origin} end={end} />;
 }
 

@@ -12,7 +12,6 @@ import { GraphData, Palette } from "../models/graph";
 import { get, post } from "../queries/fetch";
 
 import { GraphProvider } from "../context/GraphContext";
-import useZoomPaths from "../hooks/useZoomPaths";
 
 import { DEFAULT_PALETTE } from "../assets/properties";
 
@@ -29,10 +28,8 @@ const IRIPalette: Palette = DEFAULT_PALETTE
 
 const ML = () => {
 
-    const [paths, setPaths] = useZoomPaths()
+    const [paths, setPaths] = useState<JSONProps[]>([])
     const [measurements, setMeasurements] = useState<Measurement[]>([])
-
-    console.log("ML reset");
 
     useEffect( () => {
         get('/ml_files', setMeasurements)

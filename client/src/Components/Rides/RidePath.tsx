@@ -4,14 +4,14 @@ import { FC, useEffect, useState } from "react";
 import MetadataPath from "../Map/MetadataPath";
 import usePopup from "../Popup";
 
+import { useKeyPaths } from "../../context/PathsContext";
+
 import { PopupFunc } from "../../models/popup";
 import { RideMeasurement } from "../../models/properties";
+import { RideMeta } from "../../models/models";
+import { BoundedPath, } from "../../models/path";
 
 import { getRide } from "../../queries/rides";
-import { useKeyPaths } from "../../context/PathsContext";
-import { RideMeta } from "../../models/models";
-import { Data } from "ws";
-import { BoundedPath, Path } from "../../models/path";
 
 interface Props {
     meta: RideMeta
@@ -23,7 +23,7 @@ const RidePath: FC<Props> = ( { meta, meas } ) => {
     const { TripId, TaskId } = meta;
 
     const [bpath, setBPath] = useState<BoundedPath>()
-    const { addKeyPath, remKeyPath } = useKeyPaths()
+    const { addKeyPath } = useKeyPaths()
 
     const popup: PopupFunc = usePopup()
 
@@ -41,7 +41,7 @@ const RidePath: FC<Props> = ( { meta, meas } ) => {
             //remKeyPath(meas, meta)
         }
         
-    }, [meas] )
+    }, [meas, TripId, TaskId, addKeyPath, meta, popup] )
     
     return bpath !== undefined 
         ? <MetadataPath path={bpath.path} properties={meas} />

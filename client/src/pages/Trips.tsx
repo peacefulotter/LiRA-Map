@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC } from "react";
 
 import { MeasurementsProvider } from "../context/MeasurementsContext";
 import { MetasProvider } from "../context/MetasContext";

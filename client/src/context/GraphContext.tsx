@@ -3,11 +3,10 @@ import {
 	Dispatch,
 	SetStateAction,
 	useContext,
-	useEffect,
 	useState,
 } from "react";
 import useMinMaxAxis from "../hooks/useMinMaxAxis";
-import { AddMinMaxFunc, Axis, RemMinMaxFunc, SVG } from "../models/graph";
+import { AddMinMaxFunc, RemMinMaxFunc } from "../models/graph";
 
 
 interface ContextProps {
@@ -31,8 +30,6 @@ export const GraphProvider = ({ children }: any) => {
 	const [dotHoverIndex, setDotHoverIndex] = useState<number>()
 
 	const [minX, maxX, minY, maxY] = minMaxAxis
-
-	useEffect(() => console.log('here'), [dotHoverIndex])
 
 	return (
 		<GraphContext.Provider

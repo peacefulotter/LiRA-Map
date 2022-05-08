@@ -7,7 +7,7 @@ import Tooltip from "./Tooltip";
 import XAxis from "./XAxis";
 import YAxis from "./YAxis";
 
-import { GraphProvider, useGraph } from "../../context/GraphContext";
+import { useGraph } from "../../context/GraphContext";
 import { getXAxis, getYAxis } from "../../assets/graph/axis";
 import { Axis, Palette, Plot } from "../../models/graph";
 import useSize from "../../hooks/useSize";

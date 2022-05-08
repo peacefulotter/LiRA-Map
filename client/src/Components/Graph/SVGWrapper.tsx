@@ -44,7 +44,7 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
             _svg.selectAll('.svg-g').remove()
         }
 
-    }, [ref, margin, zoom])
+    }, [ref, margin, zoom, isLeft])
 
     return (
         <div 

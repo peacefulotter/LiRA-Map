@@ -13,7 +13,7 @@ const Measurement: FC<MeasurementProps> = (props) => {
 
     const getColor = (val: number, maxval: number, minval: number): string => {
 
-        if(val == undefined)
+        if(val === undefined)
             return `rgb(0, 0, 0)`
 
         if(val > maxval)

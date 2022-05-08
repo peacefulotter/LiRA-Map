@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
 import MapWrapper from "../Map/MapWrapper";
 import Graph from "../Graph/Graph";
@@ -23,11 +23,6 @@ const Rides: FC = () => {
 
     const _metas = metas.filter( (m: RideMeta, i: number) => selectedMetas[i] )
     const _measurements = measurements.filter( (m: RideMeasurement) => m.isActive )
-
-    console.log(paths);
-    console.log(_metas);
-    console.log(_measurements);
-    
 
     return (
         <ZoomProvider>
@@ -56,7 +51,6 @@ const Rides: FC = () => {
                                     const { path, bounds } = dp;
                                     const minX = 0
                                     const maxX = path.length - 1
-                                    console.log(minX, maxX, bounds?.minY, bounds?.maxY);
                                     // p.metadata.timestamp - minX
                                     const data: GraphData = path.map((p: PointData, i:number) => [i, p.value || 0, i])
                                     console.log(data);

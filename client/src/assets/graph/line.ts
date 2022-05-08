@@ -1,15 +1,11 @@
 
 
-import * as d3 from 'd3'
-
 import { getColors } from "./color";
 import Dots from "./dots";
 import Path from "./path";
 
 import { Axis, GraphData, SVG } from "../../models/graph";
 import { Dispatch, SetStateAction } from 'react';
-
-const grey = '#aab'
 
 
 class Line {

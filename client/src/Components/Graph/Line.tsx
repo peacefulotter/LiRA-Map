@@ -44,7 +44,7 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
             remMinMax(label)
         }
 
-    }, [svg, axis, data, label])
+    }, [svg, axis, data, label, addMinMax, remMinMax, bounds, i, setDotHoverIndex])
 
     return null
 
