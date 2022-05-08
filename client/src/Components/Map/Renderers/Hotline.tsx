@@ -48,8 +48,8 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
     const { dotHoverIndex, minY, maxY } = useGraph()
 
     const map = useMapEvents({
-        layeradd: (e: any) => console.log('LAYER ADD', e),
-        layerremove: (e: any) => console.log('LAYER REMOVE', e)
+        layeradd: (e: any) => console.log('LAYER ADD'),
+        layerremove: (e: any) => console.log('LAYER REMOVE')
     })
     
     const options: HotlineOptions = useMemo( () => { 
@@ -60,7 +60,6 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         const max = p[p.length - 1].stopValue || maxY || 1
 
         const hotlinePal = toHotlinePalette(p, max)
-        console.log(min, max, p, hotlinePal);
         
         return {
             weight: width(undefined, properties),
@@ -87,18 +86,25 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         if (coords.length === 0 || options === undefined) return;
         
         const hotline = L.Hotline( coords, options, dotHoverIndex )
+        const id = L.stamp(hotline)
+        console.log('new id', id);
+        
         hotline.addTo(map)
 
         return () => { 
-            console.log(hotline);
-            console.log(hotline.remove);
-            console.log(map.removeLayer(hotline));
-            console.log(L.stamp(hotline));
+            console.log(map);
+
+            // map.removeLayer(hotline);
+            // hotline.removeFrom(map);
+
+            const id = L.stamp(hotline);
+            console.log('old id', id);
             
-            console.log(hotline.remove());
-            console.log(hotline.removeFrom(map));
+		    // console.log((map as any)._layers[id]);
+            // !map._layers[id])
             
-            hotline.remove();
+            map.removeLayer(hotline);
+            // map.invalidateSize()
         }
 
     }, [map, options, coords, dotHoverIndex])
