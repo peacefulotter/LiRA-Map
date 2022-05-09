@@ -60,13 +60,13 @@ const PopupWrapper: FC<IPopupWrapper> = ( { updateName, updateTag, updateSelecte
     </div>
 }
 
-const useMeasPopup = () => {
+const useMeasPopup = ( value: RideMeasurement ) => {
 
-    const popup = usePopup()
+    const popup = usePopup<RideMeasurement>(value)
 
     return { fire: ( callback: (measurement: RideMeasurement) => void, options: PopupOptions) => {
 
-        popup( {
+        popup.fire( {
             title: <p>Enter the name of your measurement and its tag<br/>(ex: obd.rpm, acc.xyz)</p>,
             showCancelButton: true,
             cancelButtonColor: '#d33',
@@ -95,7 +95,7 @@ const useMeasPopup = () => {
 
             callback(newMeasurement)
     
-            popup( {
+            popup.fire( {
                 title: <p>Measurement <b>{newMeasurement.name}</b> added / modified</p>,
                 footer: `Will be drawn as ${newMeasurement.rendererName}`,
                 icon: 'success',

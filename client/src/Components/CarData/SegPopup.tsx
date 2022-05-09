@@ -1,8 +1,9 @@
 
 
 
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "react";
 
+import { SegTypes } from "../../pages/CarData";
 import usePopup from "../Popup";
 import Checkbox from "../Checkbox";
 
@@ -10,115 +11,91 @@ import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
 
 
 interface ICheckboxes {
+    typeName: string;
     types: string[];
     type: string | undefined;
-    onClick: (_: boolean, e: any) => void;
+    onClick: (type: string) => (isChecked: boolean) => void;
 }
 
-const Checkboxes: FC<ICheckboxes> = ( { types, type, onClick } ) => {
+const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
+    console.log(typeName, types, type);
+    
     return (
-        <div className="sweetalert-checkboxes">
+        <div className="swal-checkboxes">
+            <p className="swal-cb-name">{typeName}:</p>
             { types.map( (t: string, i: number) => {
-                
-                const color = t === type ? '#2146FF' : '#9CADFF'
-                
                 return <Checkbox 
-                    key={`sweetalert-data-checkbox-${i}`}
-                    style={{background: color}}
-                    className='item'
+                    key={`swal-cb-${typeName}-${i}`}
+                    forceState={t === type}
+                    className='seg-checkbox'
                     html={<p>{t}</p>}
-                    onClick={onClick} />
+                    onClick={onClick(t)} />
             } ) }
         </div>
     )
 }
 
-
-export interface SegPopupOptions {
-    dataType?: string;
-    aggrType?: string;
-}
-
 interface IPopupWrapper {
-    updateDataType: (dt: string) => void;
-    updateAggrType: (at: string) => void;
-    options: SegPopupOptions;
+    state: SegTypes;
+    setState: Dispatch<SetStateAction<SegTypes>>;
 }
 
-const PopupWrapper: FC<IPopupWrapper> = ( { updateDataType, updateAggrType, options } ) => {
+const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
 
+    
     const [dataTypes, setDataTypes] = useState<string[]>([]);
     const [aggrTypes, setAggrTypes] = useState<string[]>([]);
 
-    const { dataType, aggrType } = options;
+    // force child components to rerender
+    const [copy, setCopy] = useState<SegTypes>({...state})
+    const { dataType, aggrType } = copy;
 
+    const updateState = (dataType: string | undefined, aggrType: string | undefined ) => {
+        const newState = { dataType, aggrType }
+        setState( newState )
+        setCopy( newState )
+    }
+        
     useEffect( () => {
-        console.log("fetching data");
         GetDataTypes().then( setDataTypes )
     }, [] );
 
-    const fetchAggregationTypes = (dataType: string) => {
-        console.log("fetching " + dataType)
-        GetAggregationTypes(dataType).then( (newAggrTypes) => {
-            console.log(newAggrTypes);
-            setAggrTypes(newAggrTypes)
-        } )
+    const dataTypeOnClick = (type: string) => () => {
+        updateState( type, undefined )
+        GetAggregationTypes(type).then( setAggrTypes )
     }
 
-    const dataTypeOnClick = ( _: boolean, { target }: any ) => {
-        const { textContent } = target;
-        console.log('dataTypeOnClick', textContent);
-        updateDataType(textContent);
-        fetchAggregationTypes(textContent);
-    }
-
-    const aggregationTypeOnClick = ( _: boolean, { target }: any ) => {
-        const { textContent } = target;
-        updateAggrType( textContent );
+    const aggregationTypeOnClick = (type: string) => () => {
+        updateState( dataType, type )
     }
 
     return (
         <div className="popup-wrapper">    
-            <Checkboxes types={dataTypes} type={dataType} onClick={dataTypeOnClick}/>
-            <Checkboxes types={aggrTypes} type={aggrType} onClick={aggregationTypeOnClick}/>
+            <Checkboxes typeName='Data type' types={dataTypes} type={dataType} onClick={dataTypeOnClick}/>
+            <Checkboxes typeName='Aggr type' types={aggrTypes} type={aggrType} onClick={aggregationTypeOnClick}/>
         </div>
     )
 }
 
-const useSegPopup = () => {
 
-    const popup = usePopup()
 
-    return { fire: ( callback: (opt: SegPopupOptions) => void, options: SegPopupOptions) => {
+const useSegPopup = (types: SegTypes) => {
 
-        popup( {
-            title: <p>Filter<br/></p>,
+    const popup = usePopup(types)
+
+    return { fire: ( callback: (opt: SegTypes) => void ) => {
+
+        popup.fire( {
+            titleText: 'Please choose the filters you wish to use',
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Add',
-            html: 
-                <PopupWrapper 
-                    options={options}
-                    updateDataType={ (dt: string) => (options.dataType = dt)}
-                    updateAggrType={ (at: string) => (options.aggrType = at)}
-                />,
+            html: <PopupWrapper state={popup.state} setState={popup.setState}/>,
         } )
         .then( (result: any) => {
-            if ( !result.isConfirmed )
-                return
-
-            console.log(result, options);
-            
-            callback(options)
-    
-            // popup( {
-            //     title: <p>Filter</p>,
-            //     footer: `Will be drawn as ${a.name}`,
-            //     icon: 'success',
-            //     timer: 1500,
-            //     timerProgressBar: true,
-            // } )
-        })
+            console.log(result, popup.state);
+            result.isConfirmed && callback(popup.state)
+        } )
 
     } }
 }

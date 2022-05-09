@@ -14,6 +14,11 @@ import {GetSegmentsAndAverageValuesInAPolygon} from '../queries/DataRequests';
 
 import '../css/cardata.css'
 
+export interface SegTypes {
+    dataType: string | undefined;
+    aggrType: string | undefined;
+}
+
 const CarData: FC = () => {
 
     const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
@@ -24,23 +29,29 @@ const CarData: FC = () => {
         new LatLng(55.8089989927049, 12.74620056152344),
         new LatLng(55.8089989927049, 12.030029296875002)
     ])
-    const [dataType, setDataType] = useState<string>();
-    const [aggregationType, setAggregationType] = useState<string>();
+    
+    const [types, setTypes] = useState<SegTypes>({
+        dataType: undefined,
+        aggrType: undefined
+    })
+
     const [showSegmentPopUp, setShowSegmentPopUp] = useState<[boolean, SegmentPopUpProps]>();
 
 
     useEffect(() => {
 
-        if ( dataType === undefined || aggregationType === undefined )
+        const { dataType, aggrType } = types;
+
+        if ( dataType === undefined || aggrType === undefined )
             return 
 
-        GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggregationType)
+        GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggrType)
             .then( segmentProps => {
                 console.log(segmentProps);
                 setSegments(segmentProps);
             })
 
-    }, [boundaries, dataType, aggregationType]);
+    }, [boundaries, types]);
 
 
 
@@ -64,7 +75,7 @@ const CarData: FC = () => {
     return (
         <>
             <div className="ml-wrapper">
-                <Filter setPropsAggrType={setAggregationType} setPropsDataType={setDataType}></Filter>
+                <Filter setTypes={setTypes}></Filter>
                 <MapWrapper>
                     {showSegmentPopUp !== undefined && showSegmentPopUp[0] && 
                         <SegmentPopup {...showSegmentPopUp[1]}></SegmentPopup>

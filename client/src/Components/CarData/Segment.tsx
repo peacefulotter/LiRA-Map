@@ -30,9 +30,8 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
 
     const onClickPath = (i: number) => (e: any) => {
         console.log(direction)
-        let segmentProps:SegmentProps = {id, positionA, positionB, way, count, type, aggregation, value, direction};
-        if(onClick != undefined)
-            onClick(segmentProps);
+        const segmentProps: SegmentProps = {id, positionA, positionB, way, count, type, aggregation, value, direction};
+        onClick != undefined && onClick(segmentProps);
     }
 
     const getDataPath = () => {
@@ -45,14 +44,16 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
         return { rendererName: RendererName.line, color:getColor(value, 5, 0), width: 4 }
     }
 
-    return(<>
+    return (
+        <>
         <Path 
             key={`Segment${Math.random()}`} 
             path={getDataPath()} 
             properties={getProperties()}
             onClick = {onClickPath}
         />
-    </>   )
+        </>   
+    )
 }
 
 export default Segment;

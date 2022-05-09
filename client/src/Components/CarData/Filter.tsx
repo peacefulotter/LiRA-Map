@@ -1,29 +1,30 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { FaFilter } from "react-icons/fa";
-import useSegPopup, { SegPopupOptions } from "./SegPopup";
+
+import { SegTypes } from "../../pages/CarData";
+import useSegPopup from "./SegPopup";
 
 import '../../css/filter.css'
 
 
-export interface FilterProps{
-    setPropsDataType: (type: string) => void;
-    setPropsAggrType: (type: string) => void;
+export interface IFilter {
+    setTypes: Dispatch<SetStateAction<SegTypes>>;
 }
 
-const Filter: FC<FilterProps> = ( { setPropsDataType, setPropsAggrType } ) => {
+const Filter: FC<IFilter> = ( { setTypes } ) => {
 
-    const popup = useSegPopup()
+    const popup = useSegPopup({
+        dataType: undefined,
+        aggrType: undefined
+    })
 
-    const firePopup = () => popup.fire( (options: SegPopupOptions) => {
-
-        const { dataType, aggrType } = options;
-        
-        dataType !== undefined && setPropsDataType(dataType)
-        aggrType !== undefined && setPropsAggrType(aggrType)
-
-    }, {} )
+    const firePopup = () => popup.fire( (types: SegTypes) => {
+        console.log(types);
+        setTypes(types)
+    } )
 
     return <FaFilter onClick={firePopup} className="filter-button" />
+
 }
 
 

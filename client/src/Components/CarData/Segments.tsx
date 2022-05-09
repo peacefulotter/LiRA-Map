@@ -1,11 +1,7 @@
-import { FC, useEffect, useState } from "react";
-import '../../css/rides.css'
-import { SegmentProps } from "./Segment";
-import { SegmentInterface } from "../../models/models";
-import Segment from "./Segment";
-import { LatLng } from "leaflet";
-import {GetSegmentsAndAverageValuesInAPolygon} from '../../queries/DataRequests';
+import { FC, useState } from "react";
+import Segment, { SegmentProps } from "./Segment";
 
+import '../../css/rides.css'
 
 export interface SegmentsProps{
     segments: SegmentProps[]
@@ -13,20 +9,20 @@ export interface SegmentsProps{
 }
 
 const Segments: FC<SegmentsProps> = ( {segments, activatePopUp} ) => {
-    const [showPopup, setShowPopup] = useState<boolean>();
-    const [popUpProps, setPopUpProps] = useState<SegmentProps>();
+    // const [showPopup, setShowPopup] = useState<boolean>();
+    // const [popUpProps, setPopUpProps] = useState<SegmentProps>();
 
-    const onClickSegment = (props: SegmentProps) => {
-      activatePopUp(props);
-    }
+    const onClickSegment = (props: SegmentProps) => activatePopUp(props);
 
     return (
         <>
-
-        { segments != undefined && segments.map( (segment:SegmentProps) => {
-            return <Segment {...segment} onClick={onClickSegment}>
-            </Segment> 
-         } ) }
+        { segments != undefined && segments.map( (segment: SegmentProps, i: number) =>
+            <Segment 
+				{...segment} 
+				key={`segment-${i}`} 
+				onClick={onClickSegment} 
+			/>
+        ) }
         </>
   )
 }
