@@ -1,6 +1,6 @@
 
 
-import { useState } from "react";
+import { FC, useState } from "react";
 
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
@@ -16,7 +16,7 @@ interface PopupOptions {
     color: string
 }
 
-interface PopupWrapperProps {
+interface IPopupWrapper {
     updateName: (val: string) => void;
     updateTag: (val: string) => void;
     updateSelected: (val: RendererName) => void;
@@ -24,20 +24,16 @@ interface PopupWrapperProps {
     defaultOptions: PopupOptions;
 }
 
-const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, defaultOptions }: PopupWrapperProps ) => {
+const PopupWrapper: FC<IPopupWrapper> = ( { updateName, updateTag, updateSelected, updateColor, defaultOptions } ) => {
 
     const [renderer, setRenderer] = useState<RendererName>(defaultOptions.renderer);
-    const [ color, setColor ] = useState<Color>(defaultOptions.color)
+    const [color, setColor] = useState<Color>(defaultOptions.color)
 
-    const changeName = (e: any) => {                
-        updateName(e.target.value) 
-    } 
+    const changeName = ( { target }: any ) => updateName(target.value) 
 
-    const changeTag = (e: any) => {                
-        updateTag(e.target.value) 
-    } 
+    const changeTag = ( { target }: any ) => updateTag(target.value) 
 
-    const changeSelect = (rendererName: RendererName) => (isChecked: boolean) => { 
+    const changeSelect = (rendererName: RendererName) => () => { 
         setRenderer( rendererName );
         updateSelected( rendererName )  
     }

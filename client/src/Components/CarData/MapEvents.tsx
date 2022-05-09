@@ -1,7 +1,8 @@
+import { FC } from "react";
 import { LatLng } from "Leaflet.MultiOptionsPolyline";
-import { FC, useEffect } from "react";
 import { useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, SegmentInterface} from '../../models/models';
+
+import {MeasurementData} from '../../models/models';
 
 interface MapEventsProps {
     setMeasurements: (measurements: MeasurementData[]) => void;

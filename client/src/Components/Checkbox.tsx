@@ -1,24 +1,27 @@
 import { useState } from "react";
 
 interface Props {
-	forceState?: boolean;
 	className: string;
 	html: JSX.Element;
-  	onClick: (isChecked: boolean) => void;
+  	onClick: (isChecked: boolean, e: any) => void;
+	forceState?: boolean;
+	style?: React.CSSProperties;
 }
 
 const Checkbox = (props: Props) => {
-	const { forceState, className, html, onClick } = props;
+	const { forceState, className, html, onClick, style } = props;
   	const [ isChecked, setChecked ] = useState<boolean>(forceState || false)	
 	  	
   	return (
         <div 
-            className={`${className} btn ${(forceState === undefined ? isChecked : forceState) ? 'btn-checked' : ''}`} 
-            onClick={() => { 	
+            className={`${className} btn ${(forceState === undefined ? isChecked : forceState) ? 'btn-checked' : ''}`}
+			style={style}
+            onClick={(e) => { 	
 				const update = forceState === undefined ? !isChecked : !forceState								
-				onClick( update ); 
+				onClick( update, e ); 
 				setChecked( update ); 
-			}}>
+			}}
+		>
 			{html}
         </div>
   	);

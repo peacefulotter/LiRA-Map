@@ -20,7 +20,7 @@ const App: FC = () => {
             <Router>
                 <Navbar />
                 <Switch>
-                    <Route exact path="/cardata" component={() => <CarData />} />
+                    <Route exact path="/cardata" component={() => <ZoomProvider><CarData/></ZoomProvider>} />
                     <Route exact path="/rides" component={() => <Trips />} />
                     <Route exact path="/ml"    component={() => <ZoomProvider><ML/></ZoomProvider>} />
                     <Route exact path="/login" component={() => <Login />} />

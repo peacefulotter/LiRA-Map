@@ -4,10 +4,11 @@
   --background: #2e2e2e;
   --background-2: rgb(58, 58, 58);
   --background-3: rgba(85, 85, 97, 0.5);
-  --background-3-hover: rgba(85, 85, 97, 0.8);
+  --background-3-hover: #555561cc;
 
   --highlight-background: rgba(0, 0, 255, 0.1);
   --highlight-text: rgb(55, 180, 255);
+  --highlight-text-2: rgba(55, 180, 255, 0.8);
 
   --orange-background: rgba(218, 120, 55, 0.1);
   --orange-text: rgb(218, 120, 55);

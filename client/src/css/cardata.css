@@ -1,16 +1,17 @@
-.filter-button{
+.filter-button {
     position: fixed;
-    top: 15%;
-    left: 5%;
+    top: 100px;
+    left: 50px;
     cursor: pointer;
-    height: 40px;
-    width: 40px;
-    border-radius: 35px;;
+    font-size: 2em;
+    border-radius: 100px;
     font-family: 'Noto Sans JP', sans-serif;
-    background-color: black;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100000;
+    background: var(--background);
+    fill: var(--highlight-text-2);
+    padding: 15px;
+    z-index: 999;
+}
+
+.filter-button:hover {
+    fill: var(--highlight-text);
 }

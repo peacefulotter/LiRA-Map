@@ -1,121 +1,61 @@
-import { FC, useEffect, useState } from "react";
-import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
+import { FC } from "react";
+import { FaFilter } from "react-icons/fa";
+import useSegPopup, { SegPopupOptions } from "./SegPopup";
+
 import '../../css/filter.css'
 
+
 export interface FilterProps{
-    setSelectedDataType: (type: string) => void;
-    setSelectedAggregation: (type: string) => void;
-    setShowFilter: (value: Boolean) => void;
+    setPropsDataType: (type: string) => void;
+    setPropsAggrType: (type: string) => void;
 }
 
-const Filter: FC<FilterProps> = (props) => {
+const Filter: FC<FilterProps> = ( { setPropsDataType, setPropsAggrType } ) => {
 
-    const [selectedData, setSelectedData] = useState<[string, string]>();
-    const [selectedAggregation, setSelectedAggregation] = useState<[string, string]>();
-    const [dataTypes, setDataTypes] = useState<string[]>([]);
-    const [aggregationTypes, setAggregationTypes] = useState<string[]>([]);
+    const popup = useSegPopup()
 
-    useEffect(() => {
-        const fetchDataTypes = async () => {
-            console.log("fetching data");
-            let dataTypes = await GetDataTypes();
-            setDataTypes(dataTypes);
-        }
-        fetchDataTypes();
-    }, []);
-
-    const fetchAggregationTypes = async (dataType: string) => {
-        console.log("fetching " + dataType)
-        let aggregationTypes = await GetAggregationTypes(dataType);
-        console.log(aggregationTypes);
-        setAggregationTypes(aggregationTypes);
+    const firePopup = () => {
+        popup.fire( (options: SegPopupOptions) => {
+            const { dataType, aggrType } = options;
+            console.log(dataType, aggrType);
+            
+            dataType !== undefined && setPropsDataType(dataType)
+            aggrType !== undefined && setPropsAggrType(aggrType)
+        }, {} )
     }
-
-    const dataTypeOnClick = (e:any) =>{
-        const element = e.target;
-        setSelectedData([element.id, element.textContent]);
-        fetchAggregationTypes(element.textContent);
-    }
-
-    const aggregationTypeOnClick = (e:any) =>{
-
-        const element = e.target;
-        setSelectedAggregation([element.id, element.textContent]);
-    }
-
-
-    const doneOnClick = (e:any) => {
-        if(selectedAggregation != undefined && selectedData != undefined){
-            props.setSelectedAggregation(selectedAggregation[1]);
-            props.setSelectedDataType(selectedData[1]);
-            props.setShowFilter(false);
-        }
-    }
-
-    const GetDataOptions = () => {
-        let index = -1;
-    
-        return dataTypes.map((element) => {
-            index = index + 1;
-            let color = '#9CADFF';
-
-            if(selectedData != undefined && String(index) == String(selectedData[0]))
-                color = '#2146FF'
-
-            return(<div style={{"backgroundColor": color}} className="item" id={String(index)} onClick={((e) => dataTypeOnClick(e))}>
-                {element}
-            </div>)
-        })
-    }
-
-
-
-    const GetAggregationOptions = () => {
-        let index = 1000;
-        return aggregationTypes.map((element) => {
-            index = index + 1;
-            let color = '#9CADFF';
-
-            if(selectedAggregation != undefined && String(index) == String(selectedAggregation[0]))
-                color = '#2146FF'
-
-            return(<div style={{"backgroundColor": color}} className="item" id={String(index)} onClick={((e) => aggregationTypeOnClick(e))}>
-                {element}
-            </div>)
-        })
-    }
-
 
     return (
-    <div className="container">
-        <div className="content">
-            <h2>Filter</h2>
-            <div className="subsection">
-                <div className="title">
-                    <p>Select the type of data you want to visualize</p>
-                </div>
-                
-                <div className="items">
-                    {GetDataOptions()}
-                </div>
-            </div>
-            <div className="subsection">
-                <div className="title">
-                    <p>Select the type of aggregation</p>
-                </div>
-                
-                <div className="items">
-                    {GetAggregationOptions()}
-                </div>
-            </div>
-            <button className="done-button" onClick={((e) => doneOnClick(e))}>
-                Done
-            </button>
-        </div>
+        <>
+        <FaFilter onClick={firePopup} className="filter-button" />
+        {/* // <div className="container">
+        //     <div className="content">
+        //         <h2>Filter</h2>
+        //         <div className="subsection">
+        //             <div className="title">
+        //                 <p>Select the type of data you want to visualize</p>
+        //             </div>
+                    
+        //             <div className="items">
+        //                 {GetDataOptions()}
+        //             </div>
+        //         </div>
+        //         <div className="subsection">
+        //             <div className="title">
+        //                 <p>Select the type of aggregation</p>
+        //             </div>
+                    
+        //             <div className="items">
+        //                 {GetAggregationOptions()}
+        //             </div>
+        //         </div>
+        //         <button className="done-button" onClick={doneOnClick}>
+        //             Done
+        //         </button>
+        //     </div>
+        // </div> */}
+        </>
+    )
+}
 
-        
-    </div>)
-  }
 
-
-  export default Filter;
+export default Filter;
