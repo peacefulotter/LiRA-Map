@@ -1,9 +1,9 @@
-import knex, { Knex } from 'knex';
-import { DataPath } from '../models';
+import { Knex } from 'knex';
+import { BoundedPath } from '../models';
 
 class SegmentsController {
 
-    getSegments = async ( db: Knex<any, unknown[]>, [points, type]: [string, string] ): Promise<DataPath> => {
+    getSegments = async ( db: Knex<any, unknown[]>, [points, type]: [string, string] ): Promise<any> => {
         const typeString = "'"+type+"'"
         const pointsList = points.split(";");
 

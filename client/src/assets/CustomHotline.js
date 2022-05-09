@@ -1,10 +1,7 @@
 
 import L from 'leaflet'
 
-L.Hotline = function (latlngs, options, distances) {
-
-	if ( latlngs.length !== distances.length )
-		throw new Error('latlngs and distances should have the same length')
+L.Hotline = function (latlngs, options, dotHoverIndex) {
 
 	let projectedData = undefined
 	// Plugin is already added to Leaflet
@@ -231,14 +228,14 @@ L.Hotline = function (latlngs, options, distances) {
 			}
 		},
 
-		_addColorGradient(gradient, point, dist) {
-			const rgb = this.getRGBForValue(point.z)
+		_addColorGradient(gradient, rgb, dist) {
 			gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
 		},
 
 		_addGradient: function(ctx, j, pointStart, pointEnd) {
 
-			ctx.lineWidth = this.getWeight(pointStart.i, pointEnd.i) 
+			const weight = this.getWeight(pointStart.i, pointEnd.i) 
+			ctx.lineWidth = weight + (dotHoverIndex ? 4 : 0)
 
 			// Create a gradient for each segment, pick start and end colors from palette gradient
 			const gradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
@@ -246,13 +243,24 @@ L.Hotline = function (latlngs, options, distances) {
 			const deltaIndex = pointEnd.i - pointStart.i
 			const deltaDist = pointEnd.d - pointStart.d
 
+			const hoverPoint = projectedData[0][dotHoverIndex || 0];
+
 			for ( let k = pointStart.i; k <= pointEnd.i; k++ )
 			{
 				const point = projectedData[0][k]
-				const dist = distances !== undefined 
-					? (point.d - pointStart.d) / (deltaDist  !== 0 ? deltaDist  : 1)
-					: (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
-				this._addColorGradient(gradient, point, dist)
+				const dist = (point.i - pointStart.i) / (deltaIndex !== 0 ? deltaIndex : 1)
+				// (point.d - pointStart.d) / (deltaDist !== 0 ? deltaDist : 1)
+
+				const rgb = this.getRGBForValue(point.z);
+
+				if ( dotHoverIndex )
+				{
+					const opacity = Math.max(1 - (Math.abs(dotHoverIndex - k) / deltaIndex), 0)
+					const color = this.getRGBForValue(hoverPoint.z);
+					gradient.addColorStop(dist, 'rgba(' + color.join(',') + ',' + opacity + ')');
+				}
+				else
+					this._addColorGradient(gradient, rgb, dist)
 			}
 
 			ctx.strokeStyle = gradient;
@@ -305,8 +313,6 @@ L.Hotline = function (latlngs, options, distances) {
 			if (!parts.length) { return; }
 
 			this._updateOptions(layer);
-
-			console.log(parts);
 
 			// const dataOnView = parts.map(part => {
 			// 	const first = part[0].i
@@ -378,13 +384,13 @@ L.Hotline = function (latlngs, options, distances) {
 					if (codeOut === codeA) {
 						p.z = a.z;
 						p.i = a.i
-						p.d = a.d
+						// p.d = a.d
 						a = p;
 						codeA = newCode;
 					} else {
 						p.z = b.z;
 						p.i = b.i
-						p.d = b.d
+						// p.d = b.d
 						b = p;
 						codeB = newCode;
 					}
@@ -433,7 +439,7 @@ L.Hotline = function (latlngs, options, distances) {
 					// Add the altitude of the latLng as the z coordinate to the point
 					ring[i].z = latlngs[i].alt;
 					ring[i].i = i
-					ring[i].d = distances[i];
+					// ring[i].d = distances[i];
 					projectedBounds.extend(ring[i]);
 				}
 				result.push(ring);

@@ -34,12 +34,11 @@ export interface PointData extends LatLng {
 
 export type Path = PointData[]
 
-export interface DataPath {
-	path: Path;
-	minY?: number;
-    maxY?: number;
-    minX?: number;
-    maxX?: number;
+export interface Bounds {
+    minX: number;
+    maxX: number;
+	minY: number;
+    maxY: number;
 }
 
 export enum RendererName {
@@ -85,10 +84,16 @@ export interface Measurement extends PathProperties {
 	hasValue?: boolean;
 }
 
+
+// used for queries
+export interface BoundedPath {
+	path: Path;
+	bounds?: Bounds;
+}
+
 // This interface is used as a type for server's response
 // for instance, JSON files follow this format
-export interface JSONProps {
-	dataPath: DataPath
+export interface JSONProps extends BoundedPath {
 	properties: Measurement;
 	metadata?: {[key: string]: any}
 }

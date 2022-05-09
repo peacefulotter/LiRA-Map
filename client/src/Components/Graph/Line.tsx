@@ -6,27 +6,33 @@ import { addLine, remLine } from "../../assets/graph/line"
 import { useGraph } from "../../context/GraphContext";
 
 import { GraphAxis, GraphData, SVG } from "../../models/graph"
+import { Bounds } from "../../models/path";
 
 
 interface ILine {
     svg: SVG | undefined;
     axis: GraphAxis | undefined;
     data: GraphData;
-    minX: number, maxX: number; minY: number; maxY: number;
+    bounds?: Bounds;
     label: string; i: number
 }
 
-const Line: FC<ILine> = ( { svg, axis, data, minX, maxX, minY, maxY, label, i } ) => {
+const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
     const { addMinMax, remMinMax, setDotHoverIndex } = useGraph()
 
     useEffect( () => {
 
-        console.log(svg, axis, data, label, i);
-
         if ( svg === undefined || axis === undefined ) return;
+
+        const _bounds: Bounds = {
+            minX: bounds?.minX || Math.min(...data.map( d => d[0] )),
+            maxX: bounds?.maxX || Math.max(...data.map( d => d[0] )),
+            minY: bounds?.minY || Math.min(...data.map( d => d[1] )),
+            maxY: bounds?.maxY || Math.max(...data.map( d => d[1] )),
+        }
         
-        addMinMax(label, minX, maxX, minY, maxY)
+        addMinMax(label, _bounds)
 
         addLine(svg, data, axis, label, i, setDotHoverIndex)
 
@@ -38,7 +44,7 @@ const Line: FC<ILine> = ( { svg, axis, data, minX, maxX, minY, maxY, label, i } 
             remMinMax(label)
         }
 
-    }, [svg, axis, data, label])
+    }, [svg, axis, data, label, addMinMax, remMinMax, bounds, i, setDotHoverIndex])
 
     return null
 

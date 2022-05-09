@@ -6,6 +6,7 @@ import Gradient from "./Gradient";
 
 import { Axis, Palette, Plot, ReactAxis, SVG } from "../../models/graph";
 import Line from "./Line";
+import Labels from "./Labels";
 
 interface ISVG {
     isLeft: boolean;
@@ -15,14 +16,15 @@ interface ISVG {
     h: number;
     width: number;
     height: number;
-    label: string;
+    labelX: string;
+    labelY: string;
     axis: [Axis, Axis] | undefined
     Axis: ReactAxis;
     palette: Palette | undefined;
     plots?: Plot[]
 }
 
-const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, label, axis, Axis, palette, plots } ) => {
+const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labelX, labelY, axis, Axis, palette, plots } ) => {
 
     const ref = useRef(null)
     const [svg, setSVG] = useState<SVG>()
@@ -42,7 +44,7 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
             _svg.selectAll('.svg-g').remove()
         }
 
-    }, [ref, margin, zoom])
+    }, [ref, margin, zoom, isLeft])
 
     return (
         <div 
@@ -51,7 +53,8 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
         >
             <svg ref={ref} style={{width: w * zoom + 'px', height: '100%'}}>
                 <Gradient svg={svg} axis={axis} palette={palette} />
-                <Axis svg={svg} axis={axis} width={w} height={h} label={label} />
+                <Axis svg={svg} axis={axis} width={w} height={h} />
+                { isLeft ? <Labels svg={svg} width={w} height={h} labelX={labelX} labelY={labelY}/> : null }
                 { plots && plots.map((p: Plot, i: number) => 
                     <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
                 }

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
 import MapWrapper from "../Map/MapWrapper";
 import Graph from "../Graph/Graph";
@@ -12,6 +12,8 @@ import { RideMeasurement } from "../../models/properties";
 import { PointData } from "../../models/path";
 import { RideMeta } from "../../models/models";
 import { GraphData } from "../../models/graph";
+import { ZoomProvider } from "../../context/ZoomContext";
+import { GraphProvider } from "../../context/GraphContext";
 
 const Rides: FC = () => {
     
@@ -22,13 +24,10 @@ const Rides: FC = () => {
     const _metas = metas.filter( (m: RideMeta, i: number) => selectedMetas[i] )
     const _measurements = measurements.filter( (m: RideMeasurement) => m.isActive )
 
-    console.log(paths);
-    console.log(_metas);
-    console.log(_measurements);
-    
-
     return (
-        <div className="map-container">
+        <ZoomProvider>
+        <GraphProvider>
+            <div className="map-container">
             <MapWrapper>
                 { _metas.map( (meta: RideMeta, i: number) =>
                     _measurements.map( (meas: RideMeasurement, j: number) =>
@@ -42,30 +41,33 @@ const Rides: FC = () => {
             </MapWrapper>
             {
                 _measurements.map( (meas: RideMeasurement, i: number) => 
-                    <Graph 
+                    meas.hasValue && <Graph 
                         key={"graph-"+i}
                         labelX="time (?)" 
                         labelY={meas.name}
                         plots={ 
                             paths.hasOwnProperty(meas.name) 
                                 ? Object.entries(paths[meas.name]).map( ([taskId, dp], i: number) => {
-                                    const { path,  minY, maxY } = dp;
+                                    const { path, bounds } = dp;
                                     const minX = 0
                                     const maxX = path.length - 1
-                                    console.log(minX, maxX, minY, maxY);
                                     // p.metadata.timestamp - minX
                                     const data: GraphData = path.map((p: PointData, i:number) => [i, p.value || 0, i])
                                     console.log(data);
+                                    const _bounds = {
+                                        minX, maxX, minY: bounds?.minY, maxY: bounds?.maxY
+                                    }
                                     
-                                    return { data, minX, maxX, minY, maxY, label: 'r-' + taskId, i }
+                                    return { data, bounds: _bounds, label: 'r-' + taskId, i }
                                 } ) 
                                 : undefined 
                         }
                     />
                 )
             }
-            
         </div>
+        </GraphProvider>
+        </ZoomProvider>
   )
 }
 

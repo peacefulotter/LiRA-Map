@@ -22,9 +22,9 @@ export const createCircle = (
         eventHandlers={{'click': onClick}}/>
 }
 
-const RCircle: Renderer = ( { dataPath, properties, onClick } ) =>  {   
-    const { lat, lng } = dataPath.path[0]
-    return createCircle(lat, lng, dataPath.path[0].properties, properties, onClick(0))
+const RCircle: Renderer = ( { path, properties, onClick } ) =>  {   
+    const { lat, lng } = path[0]
+    return createCircle(lat, lng, path[0].properties, properties, onClick(0))
 }
 
 export default RCircle;

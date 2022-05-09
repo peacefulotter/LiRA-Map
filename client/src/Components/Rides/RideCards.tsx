@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, ReactNode } from "react";
+import { FC, useEffect, useState, ReactNode, useCallback } from "react";
 import { List, ListRowRenderer } from "react-virtualized";
 import { RiDeleteBack2Line } from 'react-icons/ri'
 
@@ -14,9 +14,6 @@ const range = (n: number): number[] => {
     return Array.from( {length: n}, (elt, i) => i);
 }
 
-const rangeBool = (n: number): boolean[] => { 
-    return new Array(n).fill(false);
-}
 
 interface CardsProps {
     metas: RideMeta[]
@@ -64,7 +61,7 @@ const useInput = ( { min, max, current }: InputProps ) => {
 
 const RideCards: FC = ( ) => {   
     
-    const { metas, selectedMetas, setSelectedMetas, toggleSelectRide } = useMetasCtx();
+    const { metas, selectedMetas, toggleSelectRide } = useMetasCtx();
 
     const [showMetas, setShowMetas] = useState<number[]>([])
 
@@ -78,9 +75,9 @@ const RideCards: FC = ( ) => {
 
     const [ search, setSearch ] = useState<string>("")
 
-    const getOrderedMD = () => {
+    const getOrderedMD = useCallback( () => {
         return sorted ? range(metas.length) : range(metas.length).reverse()
-    }
+    }, [sorted, metas] )
 
     const changeOrder = (isChecked: boolean) => {
         setSorted(!isChecked)
@@ -103,7 +100,7 @@ const RideCards: FC = ( ) => {
                 : getOrderedMD()
 
         setShowMetas(newShowMetas)
-    }, [searched, search, metas] )
+    }, [searched, search, metas, getOrderedMD] )
 
     useEffect( () => {
         const filterDate = () => {
@@ -117,7 +114,7 @@ const RideCards: FC = ( ) => {
         }
 
         setShowMetas(filterDate())
-    }, [startMonth, endMonth, startYear, endYear, metas])
+    }, [startMonth, endMonth, startYear, endYear, metas, getOrderedMD])
 
 
     const clearFilter = () => {

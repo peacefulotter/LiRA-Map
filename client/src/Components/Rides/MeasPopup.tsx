@@ -64,8 +64,6 @@ const PopupWrapper = ( { updateName, updateTag, updateSelected, updateColor, def
     </div>
 }
 
-const DEFAULT_COLOR = '#bb55dd'
-
 const useMeasPopup = () => {
 
     const popup = usePopup()

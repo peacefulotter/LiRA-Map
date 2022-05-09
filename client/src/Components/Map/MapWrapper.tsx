@@ -1,9 +1,9 @@
 
-import { MapContainer, TileLayer, ScaleControl, ZoomControl } from 'react-leaflet'
+import { MapContainer, TileLayer, ScaleControl } from 'react-leaflet'
 
-import '../../css/map.css'
 import Zoom from './Zoom';
 
+import '../../css/map.css'
 
 const MapWrapper = ( props : any ) => { 
 

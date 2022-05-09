@@ -8,7 +8,6 @@ import MetaData from "./MetaData";
 import { DEFAULT_COLOR } from "../../assets/properties";
 
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
-import { RideMeta } from "../../models/models";
 import { Measurement, RideMeasurement } from "../../models/properties";
 import { RendererName } from "../../models/renderers";
 import { addMeasurement, editMeasurement } from "../../queries/measurements";
@@ -20,8 +19,6 @@ import { useMetasCtx } from "../../context/MetasContext";
 const RideDetails: FC = () => {
 
 	const { metas, selectedMetas } = useMetasCtx()
-
-	console.log(metas.length, selectedMetas.length);
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)

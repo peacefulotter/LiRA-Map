@@ -1,6 +1,6 @@
 
 import * as d3 from 'd3'
-import { Axis, GraphData, SVG, SVGLayer } from "../../models/graph"
+import { Axis, GraphData, SVG } from "../../models/graph"
 import Layer from './layer';
 
 

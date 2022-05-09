@@ -1,11 +1,15 @@
-
-import { PathProperties } from "../models/properties";
-import { PointProperties } from "../models/properties";
+import { Palette } from "../models/graph"
+import { PathProperties, PointProperties } from "../models/properties"
 
 export const DEFAULT_WIDTH = 4
 export const DEFAULT_WEIGHT = 4
 export const DEFAULT_COLOR = 'red'
 export const DEFAULT_OPACITY = 1.0
+export const DEFAULT_PALETTE: Palette = [
+    { offset: 0,    color: "green"  },
+    { offset: 0.5,  color: "yellow" },
+    { offset: 1,    color: "red"    }
+]
 
 export const setProperty = (
     property: keyof PointProperties,
@@ -32,3 +36,5 @@ export const color = (pointProperties: PointProperties | undefined, pathProperti
 export const width = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
     return setProperty('width', DEFAULT_WIDTH, pointProperties, pathProperties)
 }
+
+export const palette = (pathProperties: PathProperties) => pathProperties.palette || DEFAULT_PALETTE

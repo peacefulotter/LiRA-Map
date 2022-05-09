@@ -18,11 +18,10 @@ const getColor = (val: any, defaultColor: string | undefined, i: number): string
 }
 
 
-const Hotpoints: Renderer = ( { dataPath, properties, onClick } ) => { 
+const Hotpoints: Renderer = ( { path, properties, onClick } ) => { 
 
     const [map, canvas] = useCanvas();
     const { minY, maxY } = useGraph()
-    const { path } = dataPath
 
     useEffect(() => {
         path.forEach( (p: PointData, i: number) => {
@@ -35,7 +34,7 @@ const Hotpoints: Renderer = ( { dataPath, properties, onClick } ) => {
                 opacity: opacity(p.properties, properties)
             } ).on("click", onClick(i)).addTo(map);
         } )
-    }, [])
+    }, [canvas, map, minY, maxY, onClick, path, properties])
 
     return <></>;
 }
