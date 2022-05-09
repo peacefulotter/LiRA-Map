@@ -5,7 +5,6 @@ import '../../css/rides.css'
 import { AggregatedValueInterface, SegmentInterface } from "../../models/models";
 import Path from "../Map/Path";
 import { PointData } from "../../models/path";
-import { DataPath } from "../../models/path";
 import { PathProperties } from "../../models/properties";
 import { RendererName } from "../../models/renderers";
 
@@ -39,7 +38,7 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
     const getDataPath = () => {
         const pointA: PointData = { lat: positionA[0], lng:  positionA[1] }
         const pointB: PointData = { lat: positionB[0], lng:  positionB[1] }
-        return { path: [pointA, pointB], minX: 0, maxX: 10, minY: 0, maxY: 10 };
+        return [pointA, pointB];
     }
 
     const getProperties = () => {
@@ -49,7 +48,7 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
     return(<>
         <Path 
             key={`Segment${Math.random()}`} 
-            dataPath={getDataPath()} 
+            path={getDataPath()} 
             properties={getProperties()}
             onClick = {onClickPath}
         />
