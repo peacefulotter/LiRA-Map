@@ -10,7 +10,7 @@ export class SegmentsController {
     public config: ConfigService;
 
 
-    constructor(private readonly segmentsService: SegmentsService){}
+    constructor(private readonly segmentsService: SegmentsService) {}
 
 
     @Get('/polygon/:points')
@@ -19,7 +19,6 @@ export class SegmentsController {
         const type = query.type;
         const aggregation = query.aggregation;
         return this.segmentsService.getSegmentsInPolygonWithAggregatedValues(pointsList, type, aggregation);
-        
     }
 
     @Get(':segment_id')

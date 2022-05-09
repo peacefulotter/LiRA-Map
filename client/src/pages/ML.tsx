@@ -17,44 +17,44 @@ import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/ml.css";
 
-// const IRIPalette: Palette = [
-//     {offset: 0,   color: "green",  stopValue: 0  },
-//     {offset: 0.5, color: "yellow", stopValue: 5  },
-//     {offset: 1,   color: "red",    stopValue: 10 }
-// ]
 
 const IRIPalette: Palette = DEFAULT_PALETTE
+
+interface FilterJSON { 
+    p: JSONProps | undefined,
+    rest: JSONProps[]
+}
 
 
 const ML = () => {
 
     const [paths, setPaths] = useState<JSONProps[]>([])
-    const [measurements, setMeasurements] = useState<Measurement[]>([])
+    const [measurements, setMeasurements] = useState<string[]>([])
 
     useEffect( () => {
-        get('/ml_files', setMeasurements)
+        get('/ml/files', setMeasurements)
     }, [] )
 
     const addPath = (i: number) => {
-        post('/ml_file', { filename: measurements[i].name }, (json: JSONProps) => {
+        post('/ml/file', { filename: measurements[i] }, (json: JSONProps) => {
             setPaths( prev => [...prev, json] )
         } )
     }
-
-    const filterPath = (i: number): [JSONProps | undefined, JSONProps[]] => {
-        const n = measurements[i].name
-        return [ 
-            paths.find(   (pp: JSONProps) => pp.properties.name === n ), 
-            paths.filter( (pp: JSONProps) => pp.properties.name !== n ) 
-        ]
+    
+    const filterPath = (i: number): FilterJSON => {
+        const n = measurements[i]
+        return paths.reduce( (acc: FilterJSON, cur: JSONProps) => cur.properties.name === n 
+            ? { p: cur, rest: acc.rest } 
+            : { p: acc.p, rest: [...acc.rest, cur] } 
+        , { p: undefined, rest: [] }  )
     }
 
     const delPath = (i: number) => {
-        const [p, newPaths] = filterPath(i)
+        const { p, rest } = filterPath(i)
         if (p === undefined) 
-            return console.log('ERROR, TRYING TO REMOVE PATH', i, 'BUT DIDNT FIND', paths);
+            throw new Error('TRYING TO REMOVE PATH' +  i + 'BUT DIDNT FIND IN' + paths)
         
-        setPaths( newPaths )
+        setPaths( rest )
     }
 
     const onClick = (i: number) => (isChecked: boolean) => {
@@ -81,7 +81,7 @@ const ML = () => {
                         <Checkbox 
                             key={`ml-meas-cb-${i}`} 
                             className="btn ml-checkbox" 
-                            html={<div>{meas.name}</div>} 
+                            html={<div>{meas}</div>} 
                             onClick={onClick(i)}/>
                     ) }
                 </div>

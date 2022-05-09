@@ -1,16 +1,12 @@
-import knex, { Knex } from 'knex';
 
 import * as dotenv from "dotenv";
-dotenv.config( { path: __dirname + '/.env' } );
-
-// CONFIG FOR MAIN DATABASE
+dotenv.config();
 
 const { DB_USER, DB_PASSWORD, DB_USER_VIS, DB_PASSWORD_VIS } = process.env;
 
 const DB_NAME = "postgres";
 const DB_HOST = "liradb.compute.dtu.dk"; // "liradbdev.compute.dtu.dk"
 const DB_PORT = 5435; // 5432;
-
 
 // CONFIG FOR VISUALIZATION DATABASE
 const DB_HOST_VIS = "liravisualization.postgres.database.azure.com";
@@ -19,9 +15,10 @@ const DB_PORT_VIS = 5432;
 const BASE_CONFIG = {
     client: 'pg',
     debug: true,
+    useNullAsDefault: true,
     pool: {
-        min: 1,
-        max: 7,
+        min: 2,
+        max: 10,
         "createTimeoutMillis": 3000,
         "acquireTimeoutMillis": 30000,
         "idleTimeoutMillis": 30000,
@@ -37,7 +34,7 @@ const BASE_CONFIG = {
     }
 }
 
-const LIRADB_CONFIG = {
+export const LIRA_DB_CONFIG = {
     ...BASE_CONFIG,
     connection: {
         host : DB_HOST,
@@ -48,7 +45,8 @@ const LIRADB_CONFIG = {
     },
 }
 
-const VISUAL_CONFIG = {
+
+export const VISUAL_DB_CONFIG = {
     ...BASE_CONFIG,
     connection: {
         host : DB_HOST_VIS,
@@ -59,27 +57,3 @@ const VISUAL_CONFIG = {
         ssl: true
     },
 }
-
-
-type Func<T> = (db: Knex<any, unknown[]>, ...args: any[]) => Promise<T>;
-type Database = 'liradb' | 'visual'
-
-const databaseQuery = async <T>(func: Func<T>, kind: Database, ...args: any[]): Promise<T> => {
-    dotenv.config( { path: __dirname + '/.env' } );
-    const config = kind === 'liradb' ? LIRADB_CONFIG : VISUAL_CONFIG;
-    console.log(config);
-    
-    const database: Knex<any, unknown[]> = knex(config);
-    let res: T;
-    try {
-        res = await func(database, args);
-        await database.destroy();
-    } catch (error) {
-        console.error(error)
-    }
-    return res;
-}
-
-
-export default databaseQuery
-

@@ -21,7 +21,7 @@ export const getRide = (
 
     console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
     
-    post( query, { tripID: tripId, measurement: queryMeasurement }, (boundedPath: BoundedPath) => {            
+    post( 'rides' + query, { tripID: tripId, measurement: queryMeasurement }, (boundedPath: BoundedPath) => {            
         
         const { path } = boundedPath;
 

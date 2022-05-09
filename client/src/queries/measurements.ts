@@ -5,16 +5,16 @@ import { get, put } from "./fetch";
 export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeasurement[]>> ) => {
     get('/measurements', (data: Measurement[]) => {
         console.log(data);
-        callback( data.map(meas => { 
+        callback( data.map( meas => { 
             return { ...meas, isActive: false } 
         } ) )
     })
 }
 
 export const addMeasurement = (measurement: Measurement) => {
-	put('/addmeasurement', measurement)	
+	put('/measurements/add', measurement)	
 }
 
 export const editMeasurement = (measurement: Measurement, index: number) => {
-	put('/editmeasurement', { measurement: measurement, index: index } )	
+	put('/measurements/edit', { measurement, index } )	
 }
