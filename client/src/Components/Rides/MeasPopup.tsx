@@ -43,21 +43,23 @@ const PopupWrapper: FC<IPopupWrapper> = ( { updateName, updateTag, updateSelecte
         updateColor(color.hex);
     }
 
-    return <div className="popup-wrapper">    
-        <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={defaultOptions.name} onChange={changeName}/>
-        <input className="sweetalert-input" placeholder="Tag.." type='text' defaultValue={defaultOptions.tag} onChange={changeTag}/>
-        <div className="sweetalert-checkboxes">
-            { Object.keys(renderers).map( (rendererName: string, i: number) => 
-                <Checkbox 
-                    key={`sweetalert-checkbox-${i}`}
-                    className='ride-metadata-checkbox'
-                    html={<div style={{textTransform: "capitalize"}}>{rendererName}</div>}
-                    forceState={renderer === rendererName}
-                    onClick={changeSelect(rendererName as RendererName)} />
-            ) }
+    return (
+        <div className="popup-wrapper">    
+            <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={defaultOptions.name} onChange={changeName}/>
+            <input className="sweetalert-input" placeholder="Tag.." type='text' defaultValue={defaultOptions.tag} onChange={changeTag}/>
+            <div className="sweetalert-checkboxes">
+                { Object.keys(renderers).map( (rendererName: string, i: number) => 
+                    <Checkbox 
+                        key={`sweetalert-checkbox-${i}`}
+                        className='ride-metadata-checkbox'
+                        html={<div style={{textTransform: "capitalize"}}>{rendererName}</div>}
+                        forceState={renderer === rendererName}
+                        onClick={changeSelect(rendererName as RendererName)} />
+                ) }
+            </div>
+            <TwitterPicker color={color} onChangeComplete={changeColor} triangle={"hide"}/>
         </div>
-        <TwitterPicker color={color} onChangeComplete={changeColor} triangle={"hide"}/>
-    </div>
+    )
 }
 
 const useMeasPopup = ( value: RideMeasurement ) => {
@@ -84,8 +86,7 @@ const useMeasPopup = ( value: RideMeasurement ) => {
 
             const newMeasurement: RideMeasurement = {
                 rendererName: options.renderer,
-                query: '/trip_measurement',
-                queryMeasurement: options.tag,
+                dbName: options.tag,
                 name: options.name,
                 color: options.color,
                 width: 1,

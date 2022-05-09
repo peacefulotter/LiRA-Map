@@ -14,7 +14,7 @@
     max-width: 230px;
     padding: 0px 20px 100px 20px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .ride-metadata-separation {

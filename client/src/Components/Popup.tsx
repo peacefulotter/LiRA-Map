@@ -14,7 +14,13 @@ const usePopup = <T,>(value: T) => {
         state, 
         setState,
         fire: ( options: SweetAlertOptions<any, any> ): Promise<SweetAlertResult<T>> => {
-            return swal.fire( { ...options, customClass: { popup: 'sweetalert-popup', title: 'sweetalert-title'} } )
+            return swal.fire( { 
+                ...options, 
+                customClass: { 
+                    popup: 'sweetalert-popup', 
+                    title: 'sweetalert-title'
+                } 
+            } )
         }
     }
 }

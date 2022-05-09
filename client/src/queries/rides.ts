@@ -17,11 +17,11 @@ export const getRide = (
     callback: (dp: BoundedPath) => void
 ) => {
 
-    const { query, queryMeasurement, name, hasValue } = measurement
+    const { dbName, name, hasValue } = measurement
 
     console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
     
-    post( 'rides' + query, { tripID: tripId, measurement: queryMeasurement }, (boundedPath: BoundedPath) => {            
+    post( 'rides/ride', { tripId, dbName }, (boundedPath: BoundedPath) => {            
         
         const { path } = boundedPath;
 
@@ -31,7 +31,8 @@ export const getRide = (
             return popup( {
                 icon: "warning",
                 title: `This trip doesn't contain data for ${name}`,
-                footer: `TripId: ${tripId} | TaskId: ${taskId}`
+                footer: `TripId: ${tripId} | TaskId: ${taskId}`,
+                toast: true
             } );
 
                     

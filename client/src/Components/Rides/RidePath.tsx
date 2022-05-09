@@ -25,13 +25,13 @@ const RidePath: FC<Props> = ( { meta, meas } ) => {
     const [bpath, setBPath] = useState<BoundedPath>()
     const { addKeyPath } = useKeyPaths()
 
-    const popup: PopupFunc = usePopup()
+    const popup: PopupFunc = usePopup(undefined).fire
 
     useEffect( () => {
 
         getRide(meas, popup, TripId, TaskId, (bp: BoundedPath) => {
             setBPath(bp)
-            console.log(meas);
+            console.log(bp);
             
             if ( meas.hasValue )
                 addKeyPath(meas, meta, bp)
@@ -41,7 +41,7 @@ const RidePath: FC<Props> = ( { meta, meas } ) => {
             //remKeyPath(meas, meta)
         }
         
-    }, [meas, TripId, TaskId, addKeyPath, meta, popup] )
+    }, [meas, TripId, TaskId, meta] )
     
     return bpath !== undefined 
         ? <MetadataPath path={bpath.path} properties={meas} />

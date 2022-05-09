@@ -1,40 +1,29 @@
 [
     {
         "rendererName": "circles",
-        "query": "/trip_measurement",
-        "queryMeasurement": "track.pos",
+        "dbName": "track.pos",
         "name": "Track Position",
         "color": "#ff6900",
         "hasValue": false
     },
     {
         "rendererName": "line",
-        "query": "/trip_measurement",
-        "queryMeasurement": "acc.xyz",
+        "dbName": "acc.xyz",
         "name": "Interpolation",
         "color": "#9900ef",
         "width": 1,
         "hasValue": false
     },
     {
-        "rendererName": "line",
-        "query": "/map_match",
-        "name": "Map Matching",
-        "color": "#0000FF",
-        "hasValue": false
-    },
-    {
         "rendererName": "hotline",
-        "query": "/trip_measurement",
-        "queryMeasurement": "obd.rpm",
+        "dbName": "obd.rpm",
         "name": "Engine RPM",
         "color": "#7bdcb5",
         "hasValue": true
     },
     {
         "rendererName": "hotline",
-        "query": "/trip_measurement",
-        "queryMeasurement": "obd.trac_cons",
+        "dbName": "obd.trac_cons",
         "name": "Traction Instant Consumption",
         "color": "#00d084",
         "hasValue": true

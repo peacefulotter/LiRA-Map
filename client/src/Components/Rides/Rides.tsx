@@ -49,16 +49,13 @@ const Rides: FC = () => {
                             paths.hasOwnProperty(meas.name) 
                                 ? Object.entries(paths[meas.name]).map( ([taskId, dp], i: number) => {
                                     const { path, bounds } = dp;
-                                    const minX = 0
-                                    const maxX = path.length - 1
-                                    // p.metadata.timestamp - minX
-                                    const data: GraphData = path.map((p: PointData, i:number) => [i, p.value || 0, i])
-                                    console.log(data);
-                                    const _bounds = {
-                                        minX, maxX, minY: bounds?.minY, maxY: bounds?.maxY
-                                    }
+
+                                    const data: GraphData = path.map( (p: PointData, i:number) => 
+                                        [p.metadata.timestamp, p.value || 0, i]
+                                    )
+                                    console.log(bounds, data);
                                     
-                                    return { data, bounds: _bounds, label: 'r-' + taskId, i }
+                                    return { data, bounds, label: 'r-' + taskId, i }
                                 } ) 
                                 : undefined 
                         }

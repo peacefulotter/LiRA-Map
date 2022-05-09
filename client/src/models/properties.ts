@@ -25,9 +25,10 @@ export interface PathProperties extends PointProperties {
 }
 
 export interface Measurement extends PathProperties {
-	query: string;
-	queryMeasurement: string,
-	name: string;
+	// measurement as it is in the database
+	dbName: string;
+	// human friendly name of the measurement 
+	name: string; 
 	// Needs to be specified if the points have a value attached to them 
 	hasValue?: boolean;
 }

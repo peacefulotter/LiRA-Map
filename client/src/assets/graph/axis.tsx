@@ -1,15 +1,17 @@
 
 import * as d3 from "d3";
 
-export const getXAxis = (maxX: number, width: number) => {
+export const getXAxis = (minX: number, maxX: number, width: number) => {
+    console.log(minX, maxX);
+    
     return d3.scaleLinear()
-        .domain([0, maxX])
+        .domain([minX, maxX])
         .range([ 0, width ])
 }
 
-export const getYAxis = (maxY: number, height: number) => {
+export const getYAxis = (minY: number, maxY: number, height: number) => {
     const axis = d3.scaleLinear()
-        .domain([0, maxY])
+        .domain([minY, maxY])
         .range([ height, 0 ])
     
     return axis

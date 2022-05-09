@@ -4,8 +4,6 @@
         "name": "true_iri_1ccf",
         "color": "red",
         "width": "5",
-        "query": "/ml",
-        "queryMeasurement": "1ccf",
         "hasValue": true
     },
     "path": [

@@ -1,7 +1,7 @@
 
 
 
-import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
 import { SegTypes } from "../../pages/CarData";
 import usePopup from "../Popup";

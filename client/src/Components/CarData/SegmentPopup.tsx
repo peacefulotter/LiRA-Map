@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from "react";
-import { Marker } from 'react-leaflet'
 import { GetAggregationTypesOfSegment, GetDataTypesOfSegment, GetSegmentAndAggregateValue } from "../../queries/DataRequests";
-import '../../css/rides.css'
-import '../../css/popupsegment.css'
 import { SegmentProps } from "./Segment";
+
+import '../../css/popupsegment.css'
+import '../../css/rides.css'
 
 export interface SegmentPopUpProps extends SegmentProps{
     updateSegment:(props: SegmentProps) => void;
@@ -51,7 +51,7 @@ const SegmentPopup: FC<SegmentPopUpProps> = ({id, positionA, positionB, way, cou
 
     const dataTypeOnClick = async (e:any) =>{
         const element = e.target;
-        if(segmentProps != undefined)
+        if(segmentProps !== undefined)
             setSegmentProps(await GetSegmentAndAggregateValue(element.textContent, segmentProps?.aggregation, segmentProps?.id))
         
     }
@@ -59,7 +59,7 @@ const SegmentPopup: FC<SegmentPopUpProps> = ({id, positionA, positionB, way, cou
     const aggregationTypeOnClick = async (e:any) =>{
 
         const element = e.target;
-        if(segmentProps != undefined)
+        if(segmentProps !== undefined)
             setSegmentProps(await GetSegmentAndAggregateValue(segmentProps?.type, element.textContent, segmentProps?.id))
             
 
@@ -108,11 +108,11 @@ const SegmentPopup: FC<SegmentPopUpProps> = ({id, positionA, positionB, way, cou
                 </div>
                 <span className="data">More data types</span>
                 <div className="dataScrollable">
-                    {dataTypes != undefined && GetDataOptions()}
+                    {dataTypes !== undefined && GetDataOptions()}
                 </div>
                 <span className="data">More aggregations</span>
                 <div className="dataScrollable">
-                    {aggregationTypes != undefined && GetAggregationOptions()}
+                    {aggregationTypes !== undefined && GetAggregationOptions()}
                 </div>
             </div>
         </div>

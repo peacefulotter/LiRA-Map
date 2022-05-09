@@ -23,7 +23,12 @@ const RideDetails: FC = () => {
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
 	
-	const popup = useMeasPopup()
+	const popup = useMeasPopup({
+		rendererName: RendererName.circles,
+		name: '',
+		dbName: '',
+		isActive: false
+	})
 
 	const openEditMeasurement = (e: any, i: number) => {
 		e.preventDefault()
@@ -38,7 +43,7 @@ const RideDetails: FC = () => {
 				setMeasurements( temp )
 				editMeasurement(newMeasurement, i)
 			}, 
-			{ name: m.name, tag: m.queryMeasurement, renderer: m.rendererName, color: m.color || DEFAULT_COLOR } 
+			{ name: m.name, tag: m.dbName, renderer: m.rendererName, color: m.color || DEFAULT_COLOR } 
 		)
 	}
 

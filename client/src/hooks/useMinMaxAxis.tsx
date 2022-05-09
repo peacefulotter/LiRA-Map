@@ -17,8 +17,8 @@ const defaultMinMax: MinMaxAxis = [
     defaultMinY, defaultMaxY
 ]
 
-const min = (_min?: number) => _min || Number.MAX_SAFE_INTEGER
-const max = (_max?: number) => _max || Number.MIN_SAFE_INTEGER
+const min = (_min?: number) => _min !== undefined ? _min : Number.MAX_SAFE_INTEGER
+const max = (_max?: number) => _max !== undefined ? _max : Number.MIN_SAFE_INTEGER
 
 const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
 
@@ -42,18 +42,14 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
         const newMinMax: MinMaxAxis = [
             min(minX), max(maxX), min(minY), max(maxY) 
         ]
-        
-        if ( firstUpdate )
-        {
-            setFirstUpdate(false)
-            setMinMaxAxis( newMinMax )
-        }
-        else
-        {
-            setMinMaxAxis( prev => update(prev, newMinMax) )
-        }
 
-        setLabels( prev => { return { ...prev, newMinMax } } )
+        const realMinMax = firstUpdate ? newMinMax : update(minMaxAxis, newMinMax)
+
+        console.log(bounds, newMinMax);
+        
+        setFirstUpdate(false)
+        setMinMaxAxis( realMinMax )
+        setLabels( prev => { return { ...prev, [label]: realMinMax } } )
 
     }, [setLabels, setMinMaxAxis, firstUpdate, setFirstUpdate] )
 

@@ -4,8 +4,6 @@
         "name": "zoom_hw",
         "color": "red",
         "width": "5",
-        "query": "/ml",
-        "queryMeasurement": "hw",
         "hasValue": true
     },
     "path": [

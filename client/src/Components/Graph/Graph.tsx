@@ -35,13 +35,13 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
     const w = width - margin.left - margin.right;
     const h = height - margin.top - margin.bottom;
 
-    const { maxX, maxY } = useGraph()
+    const { minX, maxX, minY, maxY } = useGraph()
 
     useEffect( () => {
-        const x = getXAxis(maxX, w * zoom)
-        const y = getYAxis(maxY, h)
+        const x = getXAxis(minX, maxX, w * zoom)
+        const y = getYAxis(minY, maxY, h)
         setAxis([x, y])
-    }, [zoom, maxX, maxY, w, h])
+    }, [zoom, minX, maxX, minY, maxY, w, h])
 
     const zoomIn = () => setZoom( z => z + 1 )
     const zoomOut = () => setZoom( z => Math.max(1, z - 1) )
