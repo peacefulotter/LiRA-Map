@@ -14,47 +14,16 @@ const Filter: FC<FilterProps> = ( { setPropsDataType, setPropsAggrType } ) => {
 
     const popup = useSegPopup()
 
-    const firePopup = () => {
-        popup.fire( (options: SegPopupOptions) => {
-            const { dataType, aggrType } = options;
-            console.log(dataType, aggrType);
-            
-            dataType !== undefined && setPropsDataType(dataType)
-            aggrType !== undefined && setPropsAggrType(aggrType)
-        }, {} )
-    }
+    const firePopup = () => popup.fire( (options: SegPopupOptions) => {
 
-    return (
-        <>
-        <FaFilter onClick={firePopup} className="filter-button" />
-        {/* // <div className="container">
-        //     <div className="content">
-        //         <h2>Filter</h2>
-        //         <div className="subsection">
-        //             <div className="title">
-        //                 <p>Select the type of data you want to visualize</p>
-        //             </div>
-                    
-        //             <div className="items">
-        //                 {GetDataOptions()}
-        //             </div>
-        //         </div>
-        //         <div className="subsection">
-        //             <div className="title">
-        //                 <p>Select the type of aggregation</p>
-        //             </div>
-                    
-        //             <div className="items">
-        //                 {GetAggregationOptions()}
-        //             </div>
-        //         </div>
-        //         <button className="done-button" onClick={doneOnClick}>
-        //             Done
-        //         </button>
-        //     </div>
-        // </div> */}
-        </>
-    )
+        const { dataType, aggrType } = options;
+        
+        dataType !== undefined && setPropsDataType(dataType)
+        aggrType !== undefined && setPropsAggrType(aggrType)
+
+    }, {} )
+
+    return <FaFilter onClick={firePopup} className="filter-button" />
 }
 
 
