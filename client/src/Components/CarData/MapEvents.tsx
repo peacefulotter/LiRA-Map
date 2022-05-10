@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { LatLng } from "Leaflet.MultiOptionsPolyline";
-import { useMapEvents,  } from 'react-leaflet';
+import { useMapEvents } from 'react-leaflet';
 
 import {MeasurementData} from '../../models/models';
 
@@ -19,19 +19,20 @@ const MapEvents: FC<MapEventsProps> = (props) => {
 
       
         zoomend() {
-            if(map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
+            if (map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
                 return;
             }
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
-            console.log(bounds.getSouthWest())
-            console.log(bounds.getSouthEast())
-            console.log(bounds.getNorthEast())
-            console.log(bounds.getNorthWest())
-            props.setBoundaries([bounds.getSouthWest(), bounds.getSouthEast(),
-              bounds.getNorthEast(), bounds.getNorthWest()])
-                 
+            // console.log(bounds.getSouthWest())
+            // console.log(bounds.getSouthEast())
+            // console.log(bounds.getNorthEast())
+            // console.log(bounds.getNorthWest())
+            props.setBoundaries([
+              bounds.getSouthWest(), bounds.getSouthEast(),
+              bounds.getNorthEast(), bounds.getNorthWest()
+            ])
         },
         zoomstart() {
           latestZoom = map.getZoom();

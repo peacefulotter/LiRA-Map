@@ -2,118 +2,59 @@ import { FC, useState, useEffect } from "react";
 import { GetAggregationTypesOfSegment, GetDataTypesOfSegment, GetSegmentAndAggregateValue } from "../../queries/DataRequests";
 import { SegmentProps } from "./Segment";
 
+import Checkboxes from "./Checkboxes";
+import { SegTypes } from "../../pages/CarData";
+
 import '../../css/popupsegment.css'
 import '../../css/rides.css'
+import Checkbox from "../Checkbox";
 
-export interface SegmentPopUpProps extends SegmentProps{
+export interface ISegmentPopup {
+    segmentProps: SegmentProps
     updateSegment:(props: SegmentProps) => void;
+    types: SegTypes;
 }
 
 
-const SegmentPopup: FC<SegmentPopUpProps> = ({id, positionA, positionB, way, count, type, aggregation, value, direction, updateSegment}) => {
+const SegmentPopup: FC<ISegmentPopup> = ( { segmentProps, types, updateSegment } ) => {
 
-    const [dataTypes, setDataTypes] = useState<string[]>([]);
-    const [aggregationTypes, setAggregationTypes] = useState<string[]>([]);
-    const [segmentProps, setSegmentProps] = useState<SegmentProps>();
+    const { dataType, aggrType } = types;
+    const { id, positionA, positionB, way, count, value, direction } = segmentProps
+    // const [_segmentProps, _setSegmentProps] = useState<SegmentProps>(segmentProps);
 
     useEffect(() => {
-        const fetchDataTypes = async (segment_id: number) => {
-            console.log("fetching mew data types");
-            let dataTypes = await GetDataTypesOfSegment(segment_id);
-            setDataTypes(dataTypes);
-        }
-        const fetchAggregationTypes = async (segment_id: number, dataType: string) => {
-            console.log("fetching " + dataType)
-            let aggregationTypes = await GetAggregationTypesOfSegment(dataType, segment_id);
-            console.log(aggregationTypes);
-            setAggregationTypes(aggregationTypes);
-        }
-        fetchDataTypes(id);
-        fetchAggregationTypes(id, type);
-        console.log(direction)
-        setSegmentProps({id, positionA, positionB, way, count, type, aggregation, value, direction})
-    }, [id, positionA, positionB, way, count, type, aggregation, value, direction]);
+        console.log("fetching new data types; id:", id, '- dataType:', dataType, '- aggrType:', aggrType, '- direction:', direction);
+        // _setSegmentProps( { id, positionA, positionB, way, count, value, direction } )
+    }, [id, positionA, positionB, way, count, dataType, aggrType, value, direction]);
 
+    useEffect( () => {
+        if ( segmentProps === undefined || dataType === undefined || aggrType === undefined ) return;
+        GetSegmentAndAggregateValue(dataType, aggrType, segmentProps?.id)
+            // .then( _setSegmentProps )
+    }, [dataType, aggrType])
 
-
-    const GetDataOptions = () => {
-        let index = -1;
-    
-        return dataTypes.map((element) => {
-            index = index + 1;
-            let color = '#9CADFF';
-
-            return(<div style={{"backgroundColor": color}} className="scrollableItem" id={String(index)} onClick={((e) => dataTypeOnClick(e))}>
-                {element}
-            </div>)
-        })
-    }
-
-    const dataTypeOnClick = async (e:any) =>{
-        const element = e.target;
-        if(segmentProps !== undefined)
-            setSegmentProps(await GetSegmentAndAggregateValue(element.textContent, segmentProps?.aggregation, segmentProps?.id))
-        
-    }
-
-    const aggregationTypeOnClick = async (e:any) =>{
-
-        const element = e.target;
-        if(segmentProps !== undefined)
-            setSegmentProps(await GetSegmentAndAggregateValue(segmentProps?.type, element.textContent, segmentProps?.id))
-            
-
-    }
-
-    const GetAggregationOptions = () => {
-        let index = 1000;
-        return aggregationTypes.map((element) => {
-            index = index + 1;
-            let color = '#9CADFF';
-
-            return(<div style={{"backgroundColor": color}} className="scrollableItem" id={String(index)} onClick={((e) => aggregationTypeOnClick(e))}>
-                {element}
-            </div>)
-        })
-    }
 
     const activateDirection = () => {
-        updateSegment({id, positionA, positionB, way, count, type, aggregation, value, direction:0})
+        updateSegment({id, positionA, positionB, way, count, value, direction:0})
     }
 
     const switchDirection = () => {
 
     }
 
-    return(
-        <div className="container-segment">
-            <div className="content-segment">
-                <div className="section">
-                    <div className="subsection-segment">
-                        <span className="title">Segment {segmentProps?.id}</span>
-                        <button onClick={activateDirection}>activate direction</button>
-                        <button onClick={switchDirection}>switch direction</button>
-                    </div>
-                    <div className="subsection">
-                        <span className="way">Way {segmentProps?.way}</span>
-                    </div>
-                </div>
-                <div className="section">
-                    <div className="subsection">
-                        <span className="data">{segmentProps?.aggregation} {segmentProps?.type} {segmentProps?.direction}:</span>
-                    </div>
-                    <div className="subsection">
-                        <span className="value">{segmentProps?.value} Newtons</span>
-                    </div>
-                </div>
-                <span className="data">More data types</span>
-                <div className="dataScrollable">
-                    {dataTypes !== undefined && GetDataOptions()}
-                </div>
-                <span className="data">More aggregations</span>
-                <div className="dataScrollable">
-                    {aggregationTypes !== undefined && GetAggregationOptions()}
-                </div>
+    return (
+        <div className="seg-popup-container">
+            <div className="seg-popup-section seg-center-section">
+                <div className="seg-title">Segment: <b>{segmentProps?.id}</b></div>
+                <div className="seg-title">Way: <b>{segmentProps?.way}</b></div>
+            </div>
+            <div className="seg-popup-section seg-center-section">
+                <Checkbox html={<p>Activate direction</p>} className='seg-checkbox' onClick={activateDirection}/>
+                <Checkbox html={<p>Switch direction</p>} className='seg-checkbox' onClick={switchDirection}/>
+            </div>  
+            <div className="seg-popup-section seg-center-section">
+                <div className="seg-data">Direction: {segmentProps?.direction}</div>
+                <div className="seg-data">{segmentProps?.value} Newtons</div>
             </div>
         </div>
     );

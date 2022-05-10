@@ -1,5 +1,4 @@
 import { LatLng } from "leaflet";
-import { parseSegments} from "../assets/DataParsers";
 import { SegmentProps } from "../Components/CarData/Segment";
 
 
@@ -33,48 +32,30 @@ export const GetDataTypes = async (): Promise<string[]> => {
 }
 
 export const GetAggregationTypes = async (dataType: string): Promise<string[]> => {
-    let path = '/types/aggregatedValues/aggregation' + '?type=' + dataType;
-    let res = await fetch(path);
-    let data = await res.json();
-    let stringArray:string[] = [];
-    data.forEach((element:any) => {
-        stringArray.push(element.Aggregation);
-    });
-
-    return stringArray;
+    const path = '/types/aggregatedValues/aggregation' + '?type=' + dataType;
+    const res = await fetch(path);
+    const data = await res.json();
+    return data.forEach( (elt: any) => elt.Aggregation );
 }
 
 export const GetDataTypesOfSegment = async (segment_id: number): Promise<string[]> => {
-    let path = '/types/aggregatedValues/types/' + segment_id;
-    let res = await fetch(path);
-    let data = await res.json();
-
-    let stringArray:string[] = [];
-    data.forEach((element:any) => {
-        stringArray.push(element.Type);
-    });
-
-    return stringArray;
+    const path = '/types/aggregatedValues/types/' + segment_id;
+    const res = await fetch(path);
+    const data = await res.json();
+    return data.map( (elt: any) => elt.Type );
 }
 
 export const GetAggregationTypesOfSegment = async (dataType: string, segment_id: number): Promise<string[]> => {
-    let path = '/types/aggregatedValues/aggregation/' + segment_id + '?type=' + dataType;
-    let res = await fetch(path);
-    let data = await res.json();
-    let stringArray:string[] = [];
-    data.forEach((element:any) => {
-        stringArray.push(element.Aggregation);
-    });
-
-    return stringArray;
+    const path = '/types/aggregatedValues/aggregation/' + segment_id + '?type=' + dataType;
+    const res = await fetch(path);
+    const data = await res.json();
+    return data.map( (elt: any) => elt.Aggregation );
 }
 
-
 export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<SegmentProps> => {
-
-    let path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
+    const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
     console.log(path)
-    let res = await fetch(path)
-    let data = await res.json();
+    const res = await fetch(path)
+    const data = await res.json();
     return data
 }
