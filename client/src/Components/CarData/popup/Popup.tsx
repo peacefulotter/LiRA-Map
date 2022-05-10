@@ -1,5 +1,6 @@
-import { SegTypes } from "../../pages/CarData";
-import usePopup from "../Popup";
+
+import { SegTypes } from "../../../pages/CarData";
+import usePopup from "../../Popup";
 import FilterPopup from "./TypesPopup";
 
 

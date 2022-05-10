@@ -1,20 +1,20 @@
-import { FC, useState, useEffect } from "react";
-import { GetAggregationTypesOfSegment, GetDataTypesOfSegment, GetSegmentAndAggregateValue } from "../../queries/DataRequests";
-import { SegmentProps } from "./Segment";
+import { FC, useEffect } from "react";
 
-import Checkboxes from "./Checkboxes";
-import { SegTypes } from "../../pages/CarData";
+import { SegTypes } from "../../../pages/CarData";
+import { SegmentProps } from "../Segment";
+import Checkbox from "../../Checkbox";
 
-import '../../css/popupsegment.css'
-import '../../css/rides.css'
-import Checkbox from "../Checkbox";
+import { GetSegmentAndAggregateValue } from "../../../queries/DataRequests";
+
+import '../../../css/popupsegment.css'
+import '../../../css/rides.css'
+
 
 export interface ISegmentPopup {
     segmentProps: SegmentProps
     updateSegment:(props: SegmentProps) => void;
     types: SegTypes;
 }
-
 
 const SegmentPopup: FC<ISegmentPopup> = ( { segmentProps, types, updateSegment } ) => {
 

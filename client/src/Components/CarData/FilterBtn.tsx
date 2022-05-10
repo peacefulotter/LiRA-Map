@@ -1,10 +1,11 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 
-import SegmentPopup from "./SegmentPopup";
 import { SegTypes } from "../../pages/CarData";
-import TypesPopup from "./TypesPopup";
 import { SegmentProps } from "./Segment";
+
+import TypesPopup from "./popup/TypesPopup";
+import SegmentPopup from "./popup/SegmentPopup";
 
 import '../../css/filter.css'
 

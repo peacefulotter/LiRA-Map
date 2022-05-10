@@ -3,10 +3,10 @@
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
-import { SegTypes } from "../../pages/CarData";
+import { SegTypes } from "../../../pages/CarData";
+import Checkboxes from "../Checkboxes";
 
-import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
-import Checkboxes from "./Checkboxes";
+import { GetAggregationTypes, GetDataTypes } from "../../../queries/DataRequests";
 
 
 interface IPopupWrapper {
