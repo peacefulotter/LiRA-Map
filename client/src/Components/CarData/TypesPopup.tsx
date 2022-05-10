@@ -10,40 +10,37 @@ import Checkboxes from "./Checkboxes";
 
 
 interface IPopupWrapper {
-    state: SegTypes;
-    setState: Dispatch<SetStateAction<SegTypes>>;
+    types: SegTypes;
+    setTypes: Dispatch<SetStateAction<SegTypes>>;
 }
 
-const TypesPopup: FC<IPopupWrapper> = ( { state, setState } ) => {
+const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     
     const [dataTypes, setDataTypes] = useState<string[]>([]);
     const [aggrTypes, setAggrTypes] = useState<string[]>([]);
 
-    // force child components to rerender
-    const [copy, setCopy] = useState<SegTypes>({...state})
-    const { dataType, aggrType } = copy;
+    const { dataType, aggrType } = types;
 
-    const updateState = (dataType: string | undefined, aggrType: string | undefined ) => {
-        const newState = { dataType, aggrType }
-        setState( newState )
-        setCopy( newState )
-    }
-
-    const fetchAggrTypes = (dt: string) => GetAggregationTypes(dt).then( setAggrTypes )
+    const fetchAggrTypes = (dt: string) => GetAggregationTypes(dt).then( (at) => {
+        console.log(dt, at);
+        setAggrTypes(at); 
+    })
         
     useEffect( () => {
         GetDataTypes().then( setDataTypes )
-        if ( dataType !== undefined )
-            fetchAggrTypes(dataType)
     }, [] );
 
-    const dataTypeOnClick = (type: string) => () => {
-        updateState( type, undefined )
-        fetchAggrTypes( type )
+    useEffect( () => {
+        if ( dataType !== undefined )
+            fetchAggrTypes(dataType)
+    }, [dataType])
+
+    const dataTypeOnClick = (dataType: string) => () => {
+        setTypes( { dataType, aggrType: undefined } )
     }
 
-    const aggregationTypeOnClick = (type: string) => () => {
-        updateState( dataType, type )
+    const aggregationTypeOnClick = (aggrType: string) => () => {
+        setTypes( { dataType, aggrType } )
     }
 
     return (

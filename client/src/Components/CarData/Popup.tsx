@@ -14,7 +14,7 @@ const useTypesPopup = (types: SegTypes) => {
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Add',
-            html: <FilterPopup state={popup.state} setState={popup.setState}/>,
+            html: <FilterPopup types={popup.state} setTypes={popup.setState}/>,
         } )
         .then( (result: any) => {
             console.log(result, popup.state);

@@ -10,6 +10,8 @@ interface ICheckboxes {
 }
 
 const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
+    console.log(typeName, types, type,);
+    
     return (
         <div className="seg-checkboxes">
             <p className="seg-cb-name">{typeName}:</p>

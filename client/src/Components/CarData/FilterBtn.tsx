@@ -34,7 +34,7 @@ const FilterBtn: FC<IFilter> = ( { types, setTypes, segmentProps, setSegmentProp
         <>
         <FaFilter onClick={toggleShow} className="filter-button" />
         <div className="seg-popup-wrapper">
-            { show ? <TypesPopup state={types} setState={setTypes}/> : null }
+            { show ? <TypesPopup types={types} setTypes={setTypes}/> : null }
             { show && segmentProps ? <SegmentPopup segmentProps={segmentProps} types={types} updateSegment={updateSegment}/> : null }
         </div>
         </> 

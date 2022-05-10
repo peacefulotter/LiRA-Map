@@ -19,23 +19,17 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], ty
 
 
 export const GetDataTypes = async (): Promise<string[]> => {
-    let path = '/types/aggregatedValues/types'
-    let res = await fetch(path);
-    let data = await res.json();
-
-    let stringArray:string[] = [];
-    data.forEach((element:any) => {
-        stringArray.push(element.Type);
-    });
-
-    return stringArray;
+    const path = '/types/aggregatedValues/types'
+    const res = await fetch(path);
+    const data = await res.json();
+    return data.map( (elt: any) => elt.Type );
 }
 
 export const GetAggregationTypes = async (dataType: string): Promise<string[]> => {
     const path = '/types/aggregatedValues/aggregation' + '?type=' + dataType;
     const res = await fetch(path);
     const data = await res.json();
-    return data.forEach( (elt: any) => elt.Aggregation );
+    return data.map( (elt: any) => elt.Aggregation );
 }
 
 export const GetDataTypesOfSegment = async (segment_id: number): Promise<string[]> => {
