@@ -13,12 +13,12 @@ const length = (x: number, y: number) => Math.sqrt( x * x + y * y )
 const ArrowHead: FC<IArrowHead> = ( { origin, end } ) => {
 
     const options = {
-        color: 'purple',
+        color: 'blue',
         weight: 5
     }
 
     // inverse vec
-    const size = 0.001
+    const size = 0.00005
 
     const x = (end.lat - origin.lat) 
     const y = (end.lng - origin.lng)
@@ -41,9 +41,9 @@ const ArrowHead: FC<IArrowHead> = ( { origin, end } ) => {
     }
 
     const arrows = [
-        edge(120),
+        edge(150),
         end,
-        edge(210)
+        edge(230)
     ]
 
     return <Polyline positions={arrows} pathOptions={options}/>

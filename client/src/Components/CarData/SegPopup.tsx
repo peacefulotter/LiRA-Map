@@ -49,9 +49,11 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
     // force child components to rerender
     const [copy, setCopy] = useState<SegTypes>({...state})
     const { dataType, aggrType } = copy;
+    var direction = -1;
 
-    const updateState = (dataType: string | undefined, aggrType: string | undefined ) => {
-        const newState = { dataType, aggrType }
+
+    const updateState = (dataType: string | undefined, aggrType: string | undefined, direction: number | undefined ) => {
+        const newState = { dataType, aggrType, direction}
         setState( newState )
         setCopy( newState )
     }
@@ -61,12 +63,12 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
     }, [] );
 
     const dataTypeOnClick = (type: string) => () => {
-        updateState( type, undefined )
+        updateState( type, undefined, direction)
         GetAggregationTypes(type).then( setAggrTypes )
     }
 
     const aggregationTypeOnClick = (type: string) => () => {
-        updateState( dataType, type )
+        updateState( dataType, type, direction)
     }
 
     return (

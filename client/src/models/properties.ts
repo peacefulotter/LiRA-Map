@@ -21,7 +21,8 @@ export interface PathProperties extends PointProperties {
 	// 	< 1 -> shrinks ; > 1 -> grows ; == 1 -> stays the same
 	dilatationFactor?: number;
 	// Palette used for coloring the path and graph
-	palette?: Palette
+	palette?: Palette;
+	direction?: number;
 }
 
 export interface Measurement extends PathProperties {

@@ -14,7 +14,7 @@ export interface SegmentProps extends SegmentInterface{
     aggregation:string,
     value:number
     onClick?: (props: SegmentProps) => void;
-    direction: number
+    direction?: number
 }
 
 
@@ -41,7 +41,7 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, type, 
     }
 
     const getProperties = () => {
-        return { rendererName: RendererName.line, color:getColor(value, 5, 0), width: 4 }
+        return { rendererName: RendererName.line, color:getColor(value, 5, 0), width: 4, direction: direction }
     }
 
     return (

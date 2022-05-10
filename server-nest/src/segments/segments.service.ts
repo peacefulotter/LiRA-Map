@@ -47,7 +47,7 @@ export class SegmentsService {
             })
     }
 
-    async getSegmentsInPolygonWithAggregatedValues(pointsList: any, type:string, aggregation: string):Promise<SegmentWithAggregatedValue[]>{
+    async getSegmentsInPolygonWithAggregatedValues(pointsList: any, type:string, aggregation: string, direction: number):Promise<SegmentWithAggregatedValue[]>{
 
         const typeString = "'" + type + "'";
         const aggregationString = "'" + aggregation + "'";
@@ -60,7 +60,7 @@ export class SegmentsService {
         + '"AggregatedValues"."Count", "AggregatedValues"."Type", "AggregatedValues"."Aggregation", "AggregatedValues"."Value", "AggregatedValues"."Direction" '
         + 'FROM "Segments" INNER JOIN "AggregatedValues" '
         + 'ON "Segments"."Id" = "AggregatedValues"."Segment" '
-        + 'WHERE "AggregatedValues"."Direction" = -1 AND ST_Contains(' + makePolygon + ', "Segments"."PositionA") '
+        + 'WHERE "AggregatedValues"."Direction" = ' + direction + ' AND ST_Contains(' + makePolygon + ', "Segments"."PositionA") '
         + 'AND "AggregatedValues"."Type" = ' + typeString + ' AND "AggregatedValues"."Aggregation" = ' + aggregationString)
             .then(res => {
                 const segments = this.parseSegmentsWithAggregatedValue(res.rows);

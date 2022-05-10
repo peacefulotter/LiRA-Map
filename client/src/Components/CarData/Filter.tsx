@@ -15,7 +15,8 @@ const Filter: FC<IFilter> = ( { setTypes } ) => {
 
     const popup = useSegPopup({
         dataType: undefined,
-        aggrType: undefined
+        aggrType: undefined,
+        direction : undefined
     })
 
     const firePopup = () => popup.fire( (types: SegTypes) => {
@@ -23,7 +24,7 @@ const Filter: FC<IFilter> = ( { setTypes } ) => {
         setTypes(types)
     } )
 
-    return <FaFilter onClick={firePopup} className="filter-button" />
+    return <FaFilter onClick={firePopup} className="toolbar-button" />
 
 }
 

@@ -9,8 +9,6 @@ export interface SegmentsProps{
 }
 
 const Segments: FC<SegmentsProps> = ( {segments, activatePopUp} ) => {
-    // const [showPopup, setShowPopup] = useState<boolean>();
-    // const [popUpProps, setPopUpProps] = useState<SegmentProps>();
 
     const onClickSegment = (props: SegmentProps) => activatePopUp(props);
 

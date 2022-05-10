@@ -3,7 +3,7 @@ import { parseSegments} from "../assets/DataParsers";
 import { SegmentProps } from "../Components/CarData/Segment";
 
 
-export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string): Promise<SegmentProps[]> => {
+export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string, direction:number): Promise<SegmentProps[]> => {
 
     const northEastString = points[0].lat + " " + points[0].lng;
     const southEastString = points[1].lat + " " + points[1].lng;
@@ -11,7 +11,7 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], ty
     const northWestString = points[3].lat + " " + points[3].lng;
 
     let path = '/segments/polygon/'+ northEastString +';'+ southEastString +';'+ southWestString +';'+ northWestString +
-     '?type=' + type +  '&aggregation=' + aggregation;
+     '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
     console.log(path)
     let res = await fetch(path)
     let data = await res.json();

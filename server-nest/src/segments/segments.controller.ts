@@ -14,11 +14,12 @@ export class SegmentsController {
 
 
     @Get('/polygon/:points')
-    getSegmentsInPolygon(@Param() params, @Query() query: { type: string, aggregation: string }): Promise<SegmentWithAggregatedValue[]>{
+    getSegmentsInPolygon(@Param() params, @Query() query: { type: string, aggregation: string, direction: number }): Promise<SegmentWithAggregatedValue[]>{
         const pointsList = params.points.split(";")
         const type = query.type;
+        const direction = query.direction;
         const aggregation = query.aggregation;
-        return this.segmentsService.getSegmentsInPolygonWithAggregatedValues(pointsList, type, aggregation);
+        return this.segmentsService.getSegmentsInPolygonWithAggregatedValues(pointsList, type, aggregation, direction);
     }
 
     @Get(':segment_id')

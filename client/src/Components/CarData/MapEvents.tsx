@@ -2,10 +2,8 @@ import { FC } from "react";
 import { LatLng } from "Leaflet.MultiOptionsPolyline";
 import { useMapEvents,  } from 'react-leaflet';
 
-import {MeasurementData} from '../../models/models';
 
 interface MapEventsProps {
-    setMeasurements: (measurements: MeasurementData[]) => void;
     setBoundaries: (boundaries: [LatLng, LatLng, LatLng, LatLng]) => void;
 }
 
@@ -25,10 +23,6 @@ const MapEvents: FC<MapEventsProps> = (props) => {
             maxrendered = map.getZoom();            
                         
             const bounds = map.getBounds();
-            console.log(bounds.getSouthWest())
-            console.log(bounds.getSouthEast())
-            console.log(bounds.getNorthEast())
-            console.log(bounds.getNorthWest())
             props.setBoundaries([bounds.getSouthWest(), bounds.getSouthEast(),
               bounds.getNorthEast(), bounds.getNorthWest()])
                  
