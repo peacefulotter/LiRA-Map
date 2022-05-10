@@ -15,6 +15,8 @@ interface ILabels {
     labelY: string;
 }
 
+const offsetX = 140;
+
 const Labels: FC<ILabels> = ( { svg, width, height, labelX, labelY } ) => {
 
     const { maxY } = useGraph()
@@ -23,7 +25,9 @@ const Labels: FC<ILabels> = ( { svg, width, height, labelX, labelY } ) => {
 
         if ( svg === undefined ) return;
 
-        const labelW = Math.min(window.innerWidth - 130, width)
+        const labelW = Math.min(window.innerWidth - offsetX, width)
+        console.log(window.innerWidth - offsetX, width);
+        
         const _labelX = addLabelX( svg, labelW, height, labelX )
         const _labelY = addLabelY( svg, height, labelY )
 

@@ -51,7 +51,7 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
             className={'svg-container ' + (isLeft ? 'svg-left' : 'svg-right')} 
             style={{height: height + 'px'}}
         >
-            <svg ref={ref} style={{width: w * zoom + 'px', height: '100%'}}>
+            <svg ref={ref} style={{width: w * zoom - 20 + (isLeft ? 150 : 0) + 'px', height: '100%'}}>
                 <Gradient svg={svg} axis={axis} palette={palette} />
                 <Axis svg={svg} axis={axis} width={w} height={h} />
                 { isLeft ? <Labels svg={svg} width={w} height={h} labelX={labelX} labelY={labelY}/> : null }

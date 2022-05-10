@@ -13,7 +13,11 @@
 }
 
 .zoom-btn {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
     margin: 10px;
     padding: 5px !important;
     background: var(--background-3) !important;

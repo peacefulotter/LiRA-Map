@@ -6,7 +6,6 @@ import Graph from "../Components/Graph/Graph";
 import Checkbox from "../Components/Checkbox";
 
 import { JSONProps, PointData } from "../models/path";
-import { Measurement } from "../models/properties";
 import { GraphData, Palette } from "../models/graph";
 
 import { get, post } from "../queries/fetch";

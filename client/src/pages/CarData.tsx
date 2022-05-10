@@ -4,11 +4,8 @@ import {GiDirectionSigns} from "react-icons/gi";
 import MapWrapper from "../Components/Map/MapWrapper";
 import MapEvents from "../Components/CarData/MapEvents";
 import Segments from "../Components/CarData/Segments";
-import Filter from "../Components/CarData/Filter";
-import SegmentPopup from "../Components/CarData/SegmentPopup";
+import FilterBtn from "../Components/CarData/FilterBtn";
 import { SegmentProps } from "../Components/CarData/Segment";
-import { SegmentPopUpProps } from "../Components/CarData/SegmentPopup";
-import '../css/filter.css'
 
 import {GetSegmentsAndAverageValuesInAPolygon} from '../queries/DataRequests';
 
@@ -30,13 +27,12 @@ const CarData: FC = () => {
         new LatLng(55.8089989927049, 12.030029296875002)
     ])
     
+    const [segmentProps, setSegmentProps] = useState<SegmentProps>();
     const [types, setTypes] = useState<SegTypes>({
         dataType: undefined,
         aggrType: undefined,
         direction: undefined
     })
-
-    const [showSegmentPopUp, setShowSegmentPopUp] = useState<[boolean, SegmentPopUpProps]>();
 
 
     useEffect(() => {
@@ -47,13 +43,8 @@ const CarData: FC = () => {
             return 
 
         GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggrType, direction)
-            .then( segmentProps => {
-                console.log(segmentProps);
-                setSegments(segmentProps);
-            })
-
+            .then( setSegments )
     }, [boundaries, types]);
-
 
 
     const updateSegment = (props: SegmentProps) => {
@@ -61,7 +52,6 @@ const CarData: FC = () => {
         const index = segments.findIndex( (segment) => segment.id === props.id )
         temp[index] = props;
         console.log('update segment', index, props, temp);
-        
         setSegments(temp);
         activatePopUp(props);
     }
@@ -69,30 +59,30 @@ const CarData: FC = () => {
     const activatePopUp = (props: SegmentProps) => {
         console.log('activate popup', props);
         const popUpProps = {...props, updateSegment}
-        setShowSegmentPopUp([true, popUpProps]);
+        setSegmentProps(popUpProps);
     }
 
-
     return (
-        <>
-            <div className="ml-wrapper">
-                <div className="toolBar">
-                    <Filter setTypes={setTypes}></Filter>
-                    <GiDirectionSigns className="toolbar-button"></GiDirectionSigns>
-                </div>
-                
-                <MapWrapper>
-                    {showSegmentPopUp !== undefined && showSegmentPopUp[0] && 
-                        <SegmentPopup {...showSegmentPopUp[1]}></SegmentPopup>
-                    }
-                    {segments !== undefined &&
-                        <Segments segments={segments} activatePopUp={activatePopUp}/> 
-                    }
-                    <MapEvents setBoundaries={setBoundaries}></MapEvents>        
-                </MapWrapper>
+        <div className="ml-wrapper">
+            <div className="toolBar">
+                <FilterBtn 
+                    types={types} 
+                    setTypes={setTypes} 
+                    segmentProps={segmentProps} 
+                    setSegmentProps={setSegmentProps}
+                    updateSegment={updateSegment}
+                />
+                <GiDirectionSigns className="toolbar-button"></GiDirectionSigns>
+
             </div>
-        </>
-        
+            
+            <MapWrapper>
+                { segments !== undefined &&
+                    <Segments segments={segments} activatePopUp={activatePopUp}/> 
+                }
+                <MapEvents setBoundaries={setBoundaries}></MapEvents>        
+            </MapWrapper>
+        </div>
     );
 }
 

@@ -1,6 +1,7 @@
 
 
 import { FC, useEffect, useRef, useState } from "react";
+import { FiMinus, FiPlus, FiRotateCcw } from 'react-icons/fi'
 
 import SVGWrapper from "./SVGWrapper";
 import Tooltip from "./Tooltip";
@@ -21,8 +22,9 @@ interface IGraph {
     palette?: Palette
 }
 
-const margin = {top: 20, right: 30, bottom: 50, left: 100};
+const margin = {top: 20, right: 30, bottom: 70, left: 100};
 const paddingRight = 50
+const zoomGap = 0.5
 
 const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
 
@@ -43,16 +45,18 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
         setAxis([x, y])
     }, [zoom, minX, maxX, minY, maxY, w, h])
 
-    const zoomIn = () => setZoom( z => z + 1 )
-    const zoomOut = () => setZoom( z => Math.max(1, z - 1) )
+    const zoomIn = () => setZoom( z => z + zoomGap )
+    const zoomOut = () => setZoom( z => Math.max(1, z - zoomGap) )
+    const resetZoom = () => setZoom( 1 )
 
     return (
         <>
         <Tooltip />
         <div className='graph-wrapper' ref={wrapperRef}>
             <div className="zoom-btns">
-                <div className="btn zoom-btn" onClick={zoomIn}>+</div>
-                <div className="btn zoom-btn" onClick={zoomOut}>-</div>
+                <div className="btn zoom-btn" onClick={zoomIn}><FiPlus /></div>
+                <div className="btn zoom-btn" onClick={zoomOut}><FiMinus /></div>
+                <div className="btn zoom-btn" onClick={resetZoom}><FiRotateCcw /></div>
             </div>
             <SVGWrapper 
                 isLeft={true} zoom={zoom}

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { LatLng } from "Leaflet.MultiOptionsPolyline";
-import { useMapEvents,  } from 'react-leaflet';
+import { useMapEvents } from 'react-leaflet';
 
 
 interface MapEventsProps {
@@ -17,7 +17,7 @@ const MapEvents: FC<MapEventsProps> = (props) => {
 
       
         zoomend() {
-            if(map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
+            if (map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
                 return;
             }
             maxrendered = map.getZoom();            
