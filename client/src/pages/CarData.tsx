@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { LatLng } from "leaflet";
 import {GiDirectionSigns} from "react-icons/gi";
+import { FaDirections } from "react-icons/fa";
 import MapWrapper from "../Components/Map/MapWrapper";
 import MapEvents from "../Components/CarData/MapEvents";
 import Segments from "../Components/CarData/Segments";
@@ -62,6 +63,26 @@ const CarData: FC = () => {
         setSegmentProps(popUpProps);
     }
 
+    const activateDirection = () => {
+        const {dataType, aggrType, direction} = types;
+        if(direction === -1){
+            setTypes({dataType, aggrType, direction: 0});
+        }
+        else{
+            setTypes({dataType, aggrType, direction: -1});
+        }
+    }
+
+    const switchDirection = () => {
+        const {dataType, aggrType, direction} = types;
+        if(direction === 0){
+            setTypes({dataType, aggrType, direction: 1});
+        }
+        else{
+            setTypes({dataType, aggrType, direction: 0});
+        }
+    }
+
     return (
         <div className="ml-wrapper">
             <div className="toolBar">
@@ -72,7 +93,8 @@ const CarData: FC = () => {
                     setSegmentProps={setSegmentProps}
                     updateSegment={updateSegment}
                 />
-                <GiDirectionSigns className="toolbar-button"></GiDirectionSigns>
+                <GiDirectionSigns onClick={activateDirection} className="toolbar-button"></GiDirectionSigns>
+                <FaDirections onClick={switchDirection} className="toolbar-button"></FaDirections>
 
             </div>
             

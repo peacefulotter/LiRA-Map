@@ -20,7 +20,7 @@ const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     const [aggrTypes, setAggrTypes] = useState<string[]>([]);
 
     const { dataType, aggrType } = types;
-
+    var direction = -1;
     const fetchAggrTypes = (dt: string) => GetAggregationTypes(dt).then( (at) => {
         console.log(dt, at);
         setAggrTypes(at); 
@@ -36,11 +36,11 @@ const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     }, [dataType])
 
     const dataTypeOnClick = (dataType: string) => () => {
-        setTypes( { dataType, aggrType: undefined } )
+        setTypes( { dataType, aggrType: undefined, direction: direction } )
     }
 
     const aggregationTypeOnClick = (aggrType: string) => () => {
-        setTypes( { dataType, aggrType } )
+        setTypes( { dataType, aggrType, direction} )
     }
 
     return (

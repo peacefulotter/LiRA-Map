@@ -43,7 +43,7 @@ const SegmentPopup: FC<ISegmentPopup> = ( { segmentProps, types, updateSegment }
     }
 
     return (
-        <div className="seg-popup-container">
+        <div className="seg-popup-container">6
             <div className="seg-popup-section seg-center-section">
                 <div className="seg-title">Segment: <b>{segmentProps?.id}</b></div>
                 <div className="seg-title">Way: <b>{segmentProps?.way}</b></div>
