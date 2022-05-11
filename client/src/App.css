@@ -41,7 +41,7 @@ html, body {
 
 
 .btn {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.15);
   padding: 12px 0px;
   border-radius: 5px;
   text-align: center;
@@ -49,7 +49,7 @@ html, body {
 }
 
 .btn:hover {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .btn-checked {

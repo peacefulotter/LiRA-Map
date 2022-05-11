@@ -2,20 +2,17 @@ import { FC } from "react";
 
 import Path from "../Map/Path";
 
-import { SegmentInterface } from "../../models/models";
 import { RendererName } from "../../models/renderers";
 import { PointData } from "../../models/path";
 
+import { Segment } from "../../models/segment";
+
 import '../../css/rides.css'
 
-
-export interface SegmentProps extends SegmentInterface {
-    count: number,
-    value: number
-    onClick?: (props: SegmentProps) => void;
-    direction?: number
+export interface ISegment {
+    segment: Segment;
+    onClick: (seg: Segment) => () => () => void;
 }
-
 
 const getColor = (val: number, maxval: number, minval: number): string => {
     const v = Math.min(1, Math.max(0, (val - minval) / (maxval - minval))) 
@@ -24,13 +21,9 @@ const getColor = (val: number, maxval: number, minval: number): string => {
     return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
 }
 
-const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, value, onClick, direction}) => {
+const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
 
-    const onClickPath = (i: number) => (e: any) => {
-        console.log(direction)
-        const segmentProps: SegmentProps = {id, positionA, positionB, way, count, value, direction};
-        onClick !== undefined && onClick(segmentProps);
-    }
+    const { positionA, positionB, value } = segment;
 
     const pointA: PointData = { lat: positionA[0], lng:  positionA[1] }
     const pointB: PointData = { lat: positionB[0], lng:  positionB[1] }
@@ -48,10 +41,10 @@ const Segment: FC<SegmentProps> = ({id, positionA, positionB, way, count, value,
         <Path 
             path={path} 
             properties={properties}
-            onClick={onClickPath}
+            onClick={onClick(segment)}
         />
         </>   
     )
 }
 
-export default Segment;
+export default SegmentPath;

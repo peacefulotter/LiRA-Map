@@ -1,28 +1,34 @@
-import { FC, useState } from "react";
-import Segment, { SegmentProps } from "./Segment";
+import { FC } from "react";
+
+import SegmentPath from "./SegmentPath";
+import { useSegment } from "../../context/SegmentContext";
+import { Segment } from "../../models/segment";
 
 import '../../css/rides.css'
 
 export interface SegmentsProps{
-    segments: SegmentProps[]
-    activatePopUp: (props: SegmentProps) => void
+    segments: Segment[]
 }
 
-const Segments: FC<SegmentsProps> = ( {segments, activatePopUp} ) => {
+const Segments: FC<SegmentsProps> = ( { segments } ) => {
 
-    const onClickSegment = (props: SegmentProps) => activatePopUp(props);
+    const { setSegment } = useSegment()
+
+    const onClickSegment = (seg: Segment) => () => () => {
+        setSegment(seg)
+    }
 
     return (
         <>
-        { segments != undefined && segments.map( (segment: SegmentProps, i: number) =>
-            <Segment 
-				{...segment} 
-				key={`segment-${i}`} 
-				onClick={onClickSegment} 
-			/>
+        { segments.map( (segment: Segment, i: number) =>
+            <SegmentPath
+                key={`segment-${i}`} 
+                segment={segment} 
+                onClick={onClickSegment} 
+            />
         ) }
         </>
-  )
+    )
 }
 
 export default Segments;

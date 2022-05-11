@@ -1,10 +1,8 @@
 import {RendererName} from "../models/renderers";
-import {PointData} from "../models/path";
-import { BoundedPath} from "../models/path";
+import { JSONProps, PointData } from "../models/path";
 import { PathProperties } from "../models/properties";
-import { SegmentProps } from "../Components/CarData/Segment";
 
-export const parseSegments = (data: any): SegmentProps[] => {
+export const parseSegments = (data: any): JSONProps[] => {
     // EXAMPLE OF ROW
     // Count: 18
     // Id: 57615
@@ -20,13 +18,17 @@ export const parseSegments = (data: any): SegmentProps[] => {
         console.log(row);
         const pointA: PointData = { lat: row.lata, lng: row.lona }
         const pointB: PointData = { lat: row.latb, lng: row.lonb }
-        const bPath: BoundedPath = { path: [pointA, pointB], bounds: { minX: 0, maxX: 10, minY: 0, maxY: 10 } };
         const properties: PathProperties = { rendererName: RendererName.line, color:"#00000", width: 4 }
+        /*
+        max: row.Max, min: row.Min, length: row.Length, avg: row.Average,
+        */
         return { 
-            bPath, properties, id: row.Id, length: row.Length,
-            avg: row.Average, count: row.Count, max: row.Max, min: row.Min, way: row.Way
+            path: [pointA, pointB], 
+            bounds: { minX: 0, maxX: 10, minY: 0, maxY: 10 },
+            properties, 
+            metadata: { id: row.Id,  count: row.Count, way: row.Way }
         };
-    });
+    } )
 }
 
 

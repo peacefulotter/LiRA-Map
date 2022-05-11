@@ -5,12 +5,12 @@ import { FaDirections } from "react-icons/fa";
 import MapWrapper from "../Components/Map/MapWrapper";
 import MapEvents from "../Components/CarData/MapEvents";
 import Segments from "../Components/CarData/Segments";
-import FilterBtn from "../Components/CarData/FilterBtn";
-import { SegmentProps } from "../Components/CarData/Segment";
+import Toolbars from "../Components/CarData/toolbar/Toolbars";
 
+import { Segment } from "../models/segment";
 import {GetSegmentsAndAverageValuesInAPolygon} from '../queries/DataRequests';
+import { SegmentProvider, useSegment } from "../context/SegmentContext";
 
-import '../css/cardata.css'
 
 export interface SegTypes {
     dataType: string | undefined;
@@ -20,7 +20,6 @@ export interface SegTypes {
 
 const CarData: FC = () => {
 
-    const [segments, setSegments] = useState<SegmentProps[]>([]);
     const [boundaries, setBoundaries] = useState<LatLng[]>([
         new LatLng(55.523966596348956, 12.030029296875002),
         new LatLng(55.523966596348956, 12.74620056152344),
@@ -28,12 +27,8 @@ const CarData: FC = () => {
         new LatLng(55.8089989927049, 12.030029296875002)
     ])
     
-    const [segmentProps, setSegmentProps] = useState<SegmentProps>();
-    const [types, setTypes] = useState<SegTypes>({
-        dataType: undefined,
-        aggrType: undefined,
-        direction: undefined
-    })
+    const [segments, setSegments] = useState<Segment[]>([])
+    const { pathTypes } = useSegment();
 
 
     useEffect(() => {
@@ -85,27 +80,17 @@ const CarData: FC = () => {
 
     return (
         <div className="ml-wrapper">
-            <div className="toolBar">
-                <FilterBtn 
-                    types={types} 
-                    setTypes={setTypes} 
-                    segmentProps={segmentProps} 
-                    setSegmentProps={setSegmentProps}
-                    updateSegment={updateSegment}
-                />
-                <GiDirectionSigns onClick={activateDirection} className="toolbar-button"></GiDirectionSigns>
-                <FaDirections onClick={switchDirection} className="toolbar-button"></FaDirections>
-
-            </div>
-            
+            <Toolbars  />
             <MapWrapper>
-                { segments !== undefined &&
-                    <Segments segments={segments} activatePopUp={activatePopUp}/> 
-                }
+                <Segments segments={segments} /> 
                 <MapEvents setBoundaries={setBoundaries}></MapEvents>        
             </MapWrapper>
         </div>
     );
 }
 
-export default CarData;
+
+export default ( props: any ) => 
+    <SegmentProvider>
+        <CarData {...props} />
+    </SegmentProvider>;
