@@ -28,13 +28,13 @@ const Toolbars: FC = () => {
 
     return (
         <div className='toolbar-wrapper'>
-            <Toolbar Icon={FaFilter}>
+            <Toolbar Icon={FaFilter} isSegment={false}>
                 <TypesPopup types={pathTypes} setTypes={setPathTypes} />
                 <DirectionPopup curDir={pathDirection} setDir={setPathDirection} />
             </Toolbar>
 
             { segment !== undefined 
-                ? <Toolbar Icon={CgArrowLongRightC}>
+                ? <Toolbar Icon={CgArrowLongRightC} isSegment={true}>
                     <SegmentPopup segment={segment} types={segTypes} />
                     <TypesPopup types={segTypes} setTypes={setSegTypes}/>
                     <DirectionPopup curDir={segDirection} setDir={setSegDirection} />

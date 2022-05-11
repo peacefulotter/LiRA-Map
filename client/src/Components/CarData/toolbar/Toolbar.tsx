@@ -1,22 +1,24 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useSegment } from "../../../context/SegmentContext";
 
 import '../../../css/toolbar.css'
 
 
 export interface IToolbar {
     Icon: any;
+    isSegment: boolean
 }
 
-const Toolbar: FC<IToolbar> = ( props ) => {
+const Toolbar: FC<IToolbar> = ( { children, Icon, isSegment }  ) => {
 
-    const { children, Icon } = props;
-
-    console.log(children, Icon);
-    
-
+    const { segment } = useSegment()
     const [show, setShow] = useState<boolean>(true)
 
     const toggleShow = () => setShow( prev => !prev )
+
+    useEffect( () => {
+        setShow(isSegment || show)
+    }, [segment] )
 
     return (
         <div className='toolbar-container'>
