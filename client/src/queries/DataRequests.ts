@@ -1,8 +1,8 @@
 import { LatLng } from "leaflet";
-import { SegmentProps } from "../Components/CarData/Segment";
+import { Segment } from "../models/segment";
 
 
-export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string): Promise<SegmentProps[]> => {
+export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string): Promise<Segment[]> => {
 
     const northEastString = points[0].lat + " " + points[0].lng;
     const southEastString = points[1].lat + " " + points[1].lng;
@@ -46,7 +46,7 @@ export const GetAggregationTypesOfSegment = async (dataType: string, segment_id:
     return data.map( (elt: any) => elt.Aggregation );
 }
 
-export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<SegmentProps> => {
+export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<Segment> => {
     const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
     console.log(path)
     const res = await fetch(path)

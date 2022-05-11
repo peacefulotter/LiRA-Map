@@ -1,3 +1,4 @@
+
 import { FC } from "react";
 import Checkbox from "../Checkbox";
 
@@ -9,9 +10,7 @@ interface ICheckboxes {
     onClick: (type: string) => (isChecked: boolean) => void;
 }
 
-const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
-    console.log(typeName, types, type,);
-    
+const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {    
     return (
         <div className="seg-checkboxes">
             <p className="seg-cb-name">{typeName}:</p>

@@ -1,6 +1,4 @@
 
-import { PathProps } from './path';
-
 export interface RideMeta {
 	TripId: string,
 	TaskId: number, 
@@ -19,12 +17,12 @@ export interface RideMeta {
 	Updated_Date: string, //		"0001-01-01T00:00:00.000Z"
 }
 
-export interface MeasurementData {
-	T: string,
-	lat: number,
-	lon: number,
-	message: string
-}
+// export interface MeasurementData {
+// 	T: string,
+// 	lat: number,
+// 	lon: number,
+// 	message: string
+// }
 
 export interface LatLng {
 	lat: number;
@@ -32,24 +30,5 @@ export interface LatLng {
 }
 
 
-////// VISUALIZATION DATABASE OBJECTS //////
-
-
-
-export interface SegmentInterface{
-	id: number;
-	positionA: [number, number];
-	positionB:[number, number];
-	way: number
-}
-
-export interface AggregatedValueInterface{
-	id:number;
-	segment:number;
-	count:number;
-	type:string;
-	aggregation:string;
-	value:number;
-}
 
 
