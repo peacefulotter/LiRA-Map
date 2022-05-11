@@ -35,7 +35,6 @@ const CarData: FC = () => {
 
         const { dataType, aggrType} = pathTypes;
         const direction = pathDirection;
-        console.log(direction)
         
         if ( dataType === undefined || aggrType === undefined || direction === undefined )
             return 

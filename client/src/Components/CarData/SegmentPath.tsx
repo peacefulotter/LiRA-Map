@@ -23,17 +23,16 @@ const getColor = (val: number, maxval: number, minval: number): string => {
 
 const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
 
-    const { positionA, positionB, value } = segment;
+    const { positionA, positionB, value, direction } = segment;
 
     const pointA: PointData = { lat: positionA[0], lng:  positionA[1] }
     const pointB: PointData = { lat: positionB[0], lng:  positionB[1] }
-    const path = [pointA, pointB];
+    const path = direction === 0 ? [pointA, pointB] : [pointB, pointA];
 
     const properties = { 
         rendererName: RendererName.line, 
         color: getColor(value, 5, 0), 
         width: 8,
-        direction: segment.direction
     }
 
     return (

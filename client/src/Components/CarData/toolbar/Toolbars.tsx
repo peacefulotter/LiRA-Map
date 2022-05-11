@@ -23,7 +23,7 @@ const Toolbars: FC = () => {
 
     const { 
         pathTypes, setPathTypes, pathDirection, setPathDirection, 
-        segment, segTypes, setSegTypes, segDirection, setSegDirection
+        segment, setSegment, segTypes, setSegTypes, segDirection, setSegDirection
     } = useSegment()
 
     return (
@@ -35,7 +35,7 @@ const Toolbars: FC = () => {
 
             { segment !== undefined 
                 ? <Toolbar Icon={CgArrowLongRightC} isSegment={true}>
-                    <SegmentPopup segment={segment} types={segTypes} />
+                    <SegmentPopup segment={segment} types={segTypes} direction={segDirection} setSegment={setSegment} />
                     <TypesPopup types={segTypes} setTypes={setSegTypes}/>
                     <DirectionPopup curDir={segDirection} setDir={setSegDirection} />
                 </Toolbar>

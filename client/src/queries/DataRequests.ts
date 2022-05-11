@@ -46,10 +46,10 @@ export const GetAggregationTypesOfSegment = async (dataType: string, segment_id:
     return data.map( (elt: any) => elt.Aggregation );
 }
 
-export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<Segment> => {
-    const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
+export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number, direction:number): Promise<Segment> => {
+    const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
     console.log(path)
     const res = await fetch(path)
     const data = await res.json();
-    return data
+    return data;
 }

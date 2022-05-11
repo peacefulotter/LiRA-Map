@@ -23,11 +23,12 @@ export class SegmentsController {
     }
 
     @Get(':segment_id')
-    getSegmentAndValue(@Param() params, @Query() query: { type: string, aggregation: string }): Promise<SegmentWithAggregatedValue>{
+    getSegmentAndValue(@Param() params, @Query() query: { type: string, aggregation: string, direction:number }): Promise<SegmentWithAggregatedValue>{
         const segment_id = params.segment_id
         const type = query.type;
         const aggregation = query.aggregation;
-        return this.segmentsService.getSegmentWithAggregatedValue(segment_id , type, aggregation);
+        const direction = query.direction;
+        return this.segmentsService.getSegmentWithAggregatedValue(segment_id , type, aggregation, direction);
         
     }
 

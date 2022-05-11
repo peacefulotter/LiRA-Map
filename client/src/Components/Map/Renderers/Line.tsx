@@ -26,7 +26,6 @@ const Line: Renderer = ( { path, properties, onClick } ) => {
         end = path[0];  
     }
     
-    console.log(direction)
     return <Polyline  
         positions={path}
         pathOptions={options}
