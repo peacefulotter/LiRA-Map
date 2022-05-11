@@ -33,7 +33,7 @@ const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
         rendererName: RendererName.line, 
         color: getColor(value, 5, 0), 
         width: 8,
-        direction: direction
+        direction: segment.direction
     }
 
     return (

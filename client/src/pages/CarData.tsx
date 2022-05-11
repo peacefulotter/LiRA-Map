@@ -28,55 +28,22 @@ const CarData: FC = () => {
     ])
     
     const [segments, setSegments] = useState<Segment[]>([])
-    const { pathTypes } = useSegment();
+    const { pathTypes, pathDirection } = useSegment();
 
 
     useEffect(() => {
 
-        const { dataType, aggrType, direction} = types;
+        const { dataType, aggrType} = pathTypes;
+        const direction = pathDirection;
+        console.log(direction)
         
         if ( dataType === undefined || aggrType === undefined || direction === undefined )
             return 
 
         GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggrType, direction)
             .then( setSegments )
-    }, [boundaries, types]);
+    }, [boundaries, pathTypes, pathDirection]);
 
-
-    const updateSegment = (props: SegmentProps) => {
-        const temp = [...segments];
-        const index = segments.findIndex( (segment) => segment.id === props.id )
-        temp[index] = props;
-        console.log('update segment', index, props, temp);
-        setSegments(temp);
-        activatePopUp(props);
-    }
-
-    const activatePopUp = (props: SegmentProps) => {
-        console.log('activate popup', props);
-        const popUpProps = {...props, updateSegment}
-        setSegmentProps(popUpProps);
-    }
-
-    const activateDirection = () => {
-        const {dataType, aggrType, direction} = types;
-        if(direction === -1){
-            setTypes({dataType, aggrType, direction: 0});
-        }
-        else{
-            setTypes({dataType, aggrType, direction: -1});
-        }
-    }
-
-    const switchDirection = () => {
-        const {dataType, aggrType, direction} = types;
-        if(direction === 0){
-            setTypes({dataType, aggrType, direction: 1});
-        }
-        else{
-            setTypes({dataType, aggrType, direction: 0});
-        }
-    }
 
     return (
         <div className="ml-wrapper">

@@ -11,7 +11,8 @@ import { SegTypes } from "../pages/CarData";
 
 const DEFAULT_TYPES: SegTypes = {
 	dataType: undefined,
-	aggrType: undefined
+	aggrType: undefined,
+	direction: undefined
 }
 
 interface ContextProps {
