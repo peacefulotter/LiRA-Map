@@ -11,6 +11,8 @@ export interface PointProperties {
 	weight?: number;
 	// Opacity (between 0 and 1) of a point or the entire path
 	opacity?: number;
+	// Outline of a point or an entire path
+	stroke?: boolean;
 }
 
 // Rendering properties of an entire Path
@@ -22,7 +24,8 @@ export interface PathProperties extends PointProperties {
 	dilatationFactor?: number;
 	// Palette used for coloring the path and graph
 	palette?: Palette;
-	direction?: number;
+	// Whether to show the arrow head or not, 0 no arrowhead, 1 = first dir, 2 = other dir, 3 = both dir
+	arrowHead?: number
 }
 
 export interface Measurement extends PathProperties {

@@ -8,10 +8,13 @@ import { PointData } from "../../models/path";
 import { Segment } from "../../models/segment";
 
 import '../../css/rides.css'
+import { useSegment } from "../../context/SegmentContext";
+import { PathProperties } from "../../models/properties";
 
 export interface ISegment {
-    segment: Segment;
-    onClick: (seg: Segment) => () => () => void;
+    seg: Segment;
+    onClick: () => () => void;
+    i: number
 }
 
 const getColor = (val: number, maxval: number, minval: number): string => {
@@ -21,22 +24,23 @@ const getColor = (val: number, maxval: number, minval: number): string => {
     return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
 }
 
-const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
+const SegmentPath: FC<ISegment> = ( { seg, onClick, i } ) => {
 
-    console.log(segment);
+    const { segment, segDirection, pathDirection } = useSegment()
     
+    const { positionA, positionB, value } = seg;
 
-    const { positionA, positionB, value } = segment;
+    const isSelectedSegment = segment?.id === seg.id
 
     const pointA: PointData = { lat: positionA[0], lng:  positionA[1] }
     const pointB: PointData = { lat: positionB[0], lng:  positionB[1] }
-    const path = [pointA, pointB];
+    const path = [pointA, pointB]
 
-    const properties = { 
+    const properties: PathProperties = { 
         rendererName: RendererName.line, 
         color: getColor(value, 5, 0), 
         width: 8,
-        direction: segment.direction
+        arrowHead: (isSelectedSegment ? segDirection : pathDirection) + 1
     }
 
     return (
@@ -44,7 +48,7 @@ const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
         <Path 
             path={path} 
             properties={properties}
-            onClick={onClick(segment)}
+            onClick={onClick}
         />
         </>   
     )

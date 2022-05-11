@@ -1,8 +1,7 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import { SegTypes } from "../../../pages/CarData";
 
-import { GetSegmentAndAggregateValue } from "../../../queries/DataRequests";
 import { Segment } from "../../../models/segment";
 
 import '../../../css/popupsegment.css'
@@ -17,13 +16,6 @@ export interface ISegmentPopup {
 const SegmentPopup: FC<ISegmentPopup> = ( { segment, types } ) => {
 
     const { id, way, value } = segment;
-    const { dataType, aggrType } = types;
-
-    useEffect( () => {
-        if ( id === undefined || dataType === undefined || aggrType === undefined ) return;
-        GetSegmentAndAggregateValue(dataType, aggrType, id)
-            // .then( _setSegmentProps )
-    }, [id, dataType, aggrType])
 
     return (
         <div className="seg-popup-container">

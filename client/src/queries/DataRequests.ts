@@ -4,17 +4,15 @@ import { Segment } from "../models/segment";
 
 export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], type: string, aggregation: string, direction: number): Promise<Segment[]> => {
 
-    const northEastString = points[0].lat + " " + points[0].lng;
-    const southEastString = points[1].lat + " " + points[1].lng;
-    const southWestString = points[2].lat + " " + points[2].lng;
-    const northWestString = points[3].lat + " " + points[3].lng;
-
-    let path = '/segments/polygon/'+ northEastString +';'+ southEastString +';'+ southWestString +';'+ northWestString +
-     '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
+    // const northEastString = points[0].lat + " " + points[0].lng;
+    // const southEastString = points[1].lat + " " + points[1].lng;
+    // const southWestString = points[2].lat + " " + points[2].lng;
+    // const northWestString = points[3].lat + " " + points[3].lng;
+    const bounds = points.map( p => p.lat + ' ' + p.lng ).join(';')
+    const path = '/segments/polygon/'+ bounds + '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
     console.log(path)
-    let res = await fetch(path)
-    let data = await res.json();
-    return data
+    const res = await fetch(path)
+    return await res.json();
 }
 
 

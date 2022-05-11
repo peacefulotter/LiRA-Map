@@ -13,6 +13,7 @@ import { RendererProps } from '../../../models/renderers';
 import { Palette } from '../../../models/graph';
 
 import { palette, width } from '../../../assets/properties';
+
 import '../../../assets/CustomHotline';
 
 

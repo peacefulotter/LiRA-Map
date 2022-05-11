@@ -21,20 +21,29 @@ export const setProperty = (
         || pathProperties[property] 
         || defaultValue
 }
-export const weight = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
+export const weight = (pointProperties: PointProperties | undefined, pathProperties: PathProperties): number => {
     return setProperty('weight', DEFAULT_WEIGHT, pointProperties, pathProperties)
 }
 
-export const opacity = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
+export const opacity = (pointProperties: PointProperties | undefined, pathProperties: PathProperties): number => {
     return setProperty('opacity', DEFAULT_OPACITY, pointProperties, pathProperties)
 }
 
-export const color = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
+export const color = (pointProperties: PointProperties | undefined, pathProperties: PathProperties): string => {
     return setProperty('color', DEFAULT_COLOR, pointProperties, pathProperties)
 }
 
-export const width = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
+export const width = (pointProperties: PointProperties | undefined, pathProperties: PathProperties): number => {
     return setProperty('width', DEFAULT_WIDTH, pointProperties, pathProperties)
+}
+
+export const fixProperties = (pointProperties: PointProperties | undefined, pathProperties: PathProperties) => {
+    return {
+        weight: weight(pointProperties, pathProperties),
+        opacity: opacity(pointProperties, pathProperties),
+        color: color(pointProperties, pathProperties),
+        width: width(pointProperties, pathProperties),
+    }
 }
 
 export const palette = (pathProperties: PathProperties) => pathProperties.palette || DEFAULT_PALETTE
