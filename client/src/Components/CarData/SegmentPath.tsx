@@ -23,6 +23,9 @@ const getColor = (val: number, maxval: number, minval: number): string => {
 
 const SegmentPath: FC<ISegment> = ( { segment, onClick } ) => {
 
+    console.log(segment);
+    
+
     const { positionA, positionB, value } = segment;
 
     const pointA: PointData = { lat: positionA[0], lng:  positionA[1] }

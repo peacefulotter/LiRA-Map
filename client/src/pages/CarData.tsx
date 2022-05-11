@@ -1,7 +1,5 @@
 import { FC, useState, useEffect } from "react";
 import { LatLng } from "leaflet";
-import {GiDirectionSigns} from "react-icons/gi";
-import { FaDirections } from "react-icons/fa";
 import MapWrapper from "../Components/Map/MapWrapper";
 import MapEvents from "../Components/CarData/MapEvents";
 import Segments from "../Components/CarData/Segments";
