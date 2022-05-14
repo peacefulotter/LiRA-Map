@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import MetadataPath from "../Components/Map/MetadataPath";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Graph from "../Components/Graph/Graph";
-import Checkbox from "../Components/Checkbox";
+import Panel from "../Components/RoadCondition/Panel";
 
 import { JSONProps, PointData } from "../models/path";
 import { GraphData, Palette } from "../models/graph";
@@ -14,7 +14,7 @@ import { GraphProvider } from "../context/GraphContext";
 
 import { DEFAULT_PALETTE } from "../assets/properties";
 
-import "../css/ml.css";
+import "../css/road_conditions.css";
 
 
 const IRIPalette: Palette = DEFAULT_PALETTE
@@ -25,7 +25,7 @@ interface FilterJSON {
 }
 
 
-const ML = () => {
+const RoadConditions = () => {
 
     const [paths, setPaths] = useState<JSONProps[]>([])
     const [measurements, setMeasurements] = useState<string[]>([])
@@ -76,15 +76,7 @@ const ML = () => {
                         />
                     ) } 
                 </MapWrapper>
-                <div className="ml-checkboxes">
-                    { measurements.map( (meas, i) => 
-                        <Checkbox 
-                            key={`ml-meas-cb-${i}`} 
-                            className="btn ml-checkbox" 
-                            html={<div>{meas}</div>} 
-                            onClick={onClick(i)}/>
-                    ) }
-                </div>
+                <Panel measurements={measurements} onClick={onClick}/>
             </div>
             <div className="ml-graph">
                 <Graph 
@@ -107,4 +99,4 @@ const ML = () => {
     );
 }
 
-export default React.memo(ML);
+export default RoadConditions;

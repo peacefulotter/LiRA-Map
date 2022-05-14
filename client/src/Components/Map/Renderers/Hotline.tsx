@@ -64,7 +64,7 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         
         return {
             weight: width(undefined, properties),
-            weightFunc: (a: number, b: number) => 4,
+            weightFunc: (a: number, b: number) => 10,
             outlineWidth: 0,
             palette: hotlinePal,
             min: min,
