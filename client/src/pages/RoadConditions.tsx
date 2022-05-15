@@ -15,6 +15,7 @@ import { GraphProvider } from "../context/GraphContext";
 import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/road_conditions.css";
+import { getConditions } from "../queries/postgis";
 
 
 const IRIPalette: Palette = DEFAULT_PALETTE
@@ -31,11 +32,11 @@ const RoadConditions = () => {
     const [measurements, setMeasurements] = useState<string[]>([])
 
     useEffect( () => {
-        get('/ml/files', setMeasurements)
+        get('/conditions/files', setMeasurements)
     }, [] )
 
     const addPath = (i: number) => {
-        post('/ml/file', { filename: measurements[i] }, (json: JSONProps) => {
+        post('/conditions/file', { filename: measurements[i] }, (json: JSONProps) => {
             setPaths( prev => [...prev, json] )
         } )
     }
@@ -61,6 +62,13 @@ const RoadConditions = () => {
         isChecked ? addPath(i) : delPath(i)
     }
 
+    const fetchConditions = () => {
+        getConditions('road', 0, (data: any) => {
+            console.log(data);
+            // setPaths( prev => [...prev, data] )
+        } )
+    }
+
     return (
         <GraphProvider>
 
@@ -76,7 +84,7 @@ const RoadConditions = () => {
                         />
                     ) } 
                 </MapWrapper>
-                <Panel measurements={measurements} onClick={onClick}/>
+                <Panel measurements={measurements} onClick={onClick} fetchConditions={fetchConditions}/>
             </div>
             <div className="ml-graph">
                 <Graph 
