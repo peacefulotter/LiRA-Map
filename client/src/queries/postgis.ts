@@ -2,7 +2,7 @@ import { get, post } from "./fetch"
 
 
 
-export const getWayIds = (road: string) => {
+export const getWayIds = (road: string): number[] => {
     return [
         5056416,
         358202922,
@@ -54,7 +54,8 @@ export const getWayIds = (road: string) => {
     ]
 }
 
-export const getConditions = ( road: string, zoom: number, setConditions: (data: any) => void ) => {
-    const wayIds = getWayIds(road)
-    post( '/conditions/iri', { zoom, wayIds }, setConditions )
+export const getConditions = ( roadName: string, type: string, zoom: number, setConditions: (data: any) => void ) => {
+    const wayIds = getWayIds(roadName)
+    console.log(wayIds);
+    post( '/conditions/full', { wayIds, type, zoom }, setConditions )
 }

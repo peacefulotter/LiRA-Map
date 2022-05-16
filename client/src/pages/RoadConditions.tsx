@@ -27,7 +27,6 @@ interface FilterJSON {
 
 
 const RoadConditions = () => {
-
     const [paths, setPaths] = useState<JSONProps[]>([])
     const [measurements, setMeasurements] = useState<string[]>([])
 
@@ -63,7 +62,10 @@ const RoadConditions = () => {
     }
 
     const fetchConditions = () => {
-        getConditions('road', 0, (data: any) => {
+        const roadName = 'road'
+        const type = 'IRI';
+        const zoom = 0;
+        getConditions(roadName, type, zoom, (data: any) => {
             console.log(data);
             // setPaths( prev => [...prev, data] )
         } )

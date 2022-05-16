@@ -18,10 +18,10 @@ export class RCController
         return this.service.getMLFile(filename);
     }
 
-    @Get('iri')
-    getIRIConditions( @Query() query: { zoom: number, wayIds: number[] } ): Promise<any> {
-        const { zoom, wayIds } = query;
-        return this.service.getIRIConditions(zoom, wayIds);
+    @Get('full')
+    getFullConditions( @Query() query: { wayIds: string[], type: string, zoom: number } ): Promise<any> {
+        const { wayIds, type, zoom } = query;
+        return this.service.getFullConditions(wayIds.map(id => parseInt(id, 10)), type, zoom);
     }
 
 }
