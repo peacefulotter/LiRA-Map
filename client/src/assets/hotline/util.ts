@@ -8,9 +8,6 @@ const Util = {
      */
     clipSegment: function (hotline: Hotline, a: any, b: any, bounds: any, useLastCode: any, round: any) {
         
-        console.log(a, b, bounds, useLastCode, round);
-        
-        
         let codeA = useLastCode ? hotline._lastCode : (L.LineUtil as any)._getBitCode(a, bounds);
         let codeB = (L.LineUtil as any)._getBitCode(b, bounds);
         let codeOut, p, newCode;

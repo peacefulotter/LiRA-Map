@@ -52,7 +52,7 @@ const RoadConditions = () => {
         const { p, rest } = filterPath(i)
         
         if ( p === undefined ) 
-            throw new Error('TRYING TO REMOVE PATH' +  i + 'BUT DIDNT FIND IN' + paths)
+            throw new Error('TRYING TO REMOVE PATH ' + i + ' BUT DIDNT FIND IN ' + paths.length + ' ' + paths.toString())
         
         setPaths( rest )
     }

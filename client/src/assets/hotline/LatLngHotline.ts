@@ -3,11 +3,24 @@ import Hotline from "./core";
     
 
 export default class LatLngHotline extends Hotline {
+
+    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined) {
+        super(canvas, dotHoverIndex);
+    }
+
+    draw() {
+        super._draw()
+        this._drawOutline();
+        this._drawHotline();
+        return this;
+    }
+
     /**
      * Draws the outline of the graphs.
      * @private
      */
-    _drawOutline(ctx: any) {
+    _drawOutline() {
+        const ctx = this._ctx;
         var i, j, dataLength, path, pathLength, pointStart, pointEnd;
 
         if (this._outlineWidth) {
@@ -33,7 +46,9 @@ export default class LatLngHotline extends Hotline {
         gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
     }
 
-    _addGradient(ctx: any, j: any, pointStart: any, pointEnd: any) {
+    _addGradient(j: any, pointStart: any, pointEnd: any) {
+
+        const ctx = this._ctx;
 
         const weight = this.getWeight(pointStart.i, pointEnd.i) 
         ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
@@ -43,8 +58,6 @@ export default class LatLngHotline extends Hotline {
 
         const deltaIndex = pointEnd.i - pointStart.i
         const deltaDist = pointEnd.d - pointStart.d
-
-        const hoverPoint = this.projectedData[0][this.dotHoverIndex || 0];
 
         for ( let k = pointStart.i; k <= pointEnd.i; k++ )
         {
@@ -56,6 +69,7 @@ export default class LatLngHotline extends Hotline {
 
             if ( this.dotHoverIndex )
             {
+                const hoverPoint = this.projectedData[0][this.dotHoverIndex];
                 const opacity = Math.max(1 - (Math.abs(this.dotHoverIndex - k) / deltaIndex), 0)
                 const color = this.getRGBForValue(hoverPoint.z);
                 gradient.addColorStop(dist, 'rgba(' + color.join(',') + ',' + opacity + ')');
@@ -75,7 +89,8 @@ export default class LatLngHotline extends Hotline {
      * Draws the color encoded hotline of the graphs.
      * @private
      */
-    _drawHotline(ctx: any) {
+    _drawHotline() 
+    {
         var i, j, dataLength, path, pathLength, pointStart, pointEnd;
 
         for (i = 0, dataLength = this._data.length; i < dataLength; i++) 
@@ -87,7 +102,7 @@ export default class LatLngHotline extends Hotline {
                 pointEnd = path[j];
 
                 if ( pointStart.i !== pointEnd.i )
-                    this._addGradient(ctx, j, pointStart, pointEnd);
+                    this._addGradient(j, pointStart, pointEnd);
             }
         }
     }

@@ -87,19 +87,15 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         if (coords.length === 0 || options === undefined) return;
 
         const hotline = HotlineComponent( coords, options, dotHoverIndex )
+        
         const id = L.stamp(hotline)
-        // console.log('new id', id);
+        console.log('new id', id, hotline);
         
         hotline.addTo(map)
 
         return () => { 
-            console.log(map);
-
             // map.removeLayer(hotline);
             // hotline.removeFrom(map);
-
-            const id = L.stamp(hotline);
-            // console.log('old id', id);
             
 		    // console.log((map as any)._layers[id]);
             // !map._layers[id])

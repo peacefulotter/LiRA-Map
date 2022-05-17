@@ -37,10 +37,7 @@ class Hotline {
             0.0: 'green',
             0.5: 'yellow',
             1.0: 'red'
-        };
-
-        console.log(canvas);
-        
+        };        
     
         this._canvas = typeof canvas === 'string'
             ? document.getElementById(canvas) as any
@@ -191,15 +188,13 @@ class Hotline {
     /**
      * Draws the currently set paths.
      */
-    draw() {
-        var ctx = this._ctx;
+    _draw() {
+        console.log(this);
+        
+        const ctx = this._ctx;
 
         ctx.globalCompositeOperation = 'source-over';
         ctx.lineCap = 'round';
-
-        
-        (this as any)._drawOutline(ctx);
-        (this as any)._drawHotline(ctx);
 
         return this;
     }
@@ -207,9 +202,9 @@ class Hotline {
     /**
      * Gets the RGB values of a given z value of the current palette.
      * @param {number} value - Value to get the color for, should be between min and max.
-     * @returns {Array.<number>} The RGB values as an array [r, g, b]
+     * @returns {[number, number, number]} The RGB values as an array [r, g, b]
      */
-    getRGBForValue(value: number) {
+    getRGBForValue(value: number): [number, number, number] {
         var valueRelative = Math.min(Math.max((value - this._min) / (this._max - this._min), 0), 0.999);
         var paletteIndex = Math.floor(valueRelative * 256) * 4;
 
@@ -224,7 +219,5 @@ class Hotline {
         return this._weightFunc ? this._weightFunc(a, b) : this._weight
     }
 }
-
-// Hotline.prototype = prototypes;
 
 export default Hotline;

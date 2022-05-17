@@ -1,4 +1,6 @@
+import L from 'leaflet';
 import { HotlineOptions } from '../../models/path';
+import { InputHotlineData } from './core';
 import hotlineRenderer, { Renderer } from './renderer';
 import Util from "./util";
 
@@ -58,6 +60,7 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
             }
         }
         
+        console.log(result);
         this._renderer._hotline.projectedData = [...result];
     },
 
@@ -70,19 +73,16 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
             return;
         }
 
+
+        console.log(this);
+        console.log(this._bounds);
+        console.log(this._pxBounds);
+
         this._parts = [];
 
-        console.log(this.options);
-        console.log(this.statics);
-        
-        
-
-        var parts = this._parts,
-                bounds = this._renderer._bounds,
-                i, j, k, len, len2, segment, points;
-
-        console.log(this._renderer, this._renderer._bounds);
-        
+        const parts = this._parts;
+        const bounds = this._pxBounds;
+        let i, j, k, len, len2, segment, points;
 
         for (i = 0, k = 0, len = this._rings.length; i < len; i++) {
             points = this._rings[i];
@@ -110,23 +110,15 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
 } ) as HotlineType
 
 
-const HotlineComponent = (data: [number, number, number][], options: HotlineOptions, dotHoverIndex: number | undefined) => {
+const HotlineComponent = (data: InputHotlineData, options: HotlineOptions, dotHoverIndex: number | undefined) => {
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
     const HotlineRenderer = hotlineRenderer(dotHoverIndex)
-	// const renderer = new HotlineRenderer
-    // const r = renderer(options as any)
     console.log(HotlineRenderer);
     console.log(new HotlineRenderer());
-
-    console.log('========');
-
+    
     const Hotline = _hotline( HotlineRenderer )
-    console.log(Hotline);
-
-    console.log('========');
-
 
 	return new Hotline(data, options)
 };
