@@ -1,10 +1,14 @@
 import L from 'leaflet';
 import { HotlineOptions } from '../../models/path';
-import { InputHotlineData } from './core';
+import Hotline, { InputHotlineData } from './core';
 import hotlineRenderer, { Renderer } from './renderer';
 import Util from "./util";
 
-type HotlineType =  (new (...args: any[]) => any) & any
+// FIXME: fix types
+
+type HotlineClass = new (data: InputHotlineData, options?: HotlineOptions) => Hotline
+
+type HotlineType =  (new (...args: any[]) => any) & HotlineClass
 
 
 const getRenderer = (RendererClass: Renderer) => (opts?: any) => 
@@ -110,7 +114,7 @@ const HotlineComponent = (data: InputHotlineData, options: HotlineOptions, dotHo
 
     const HotlineRenderer = hotlineRenderer(dotHoverIndex)
     
-    const Hotline = _hotline( HotlineRenderer )
+    const Hotline: HotlineType = _hotline( HotlineRenderer )
 
 	const hotline = new Hotline(data, options)
 

@@ -14,6 +14,7 @@ import { Palette } from '../../../models/graph';
 import { palette, width } from '../../../assets/properties';
 
 import HotlineComponent from '../../../assets/hotline/hotline';
+import { InputHotlineData } from '../../../assets/hotline/core';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -43,7 +44,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
 
 const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
 
-    const [coords, setCoords] = useState<[number, number, number][]>([])
+    const [coords, setCoords] = useState<InputHotlineData>([])
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
@@ -83,33 +84,18 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
     }, [path])
 
     useEffect( () => {
-        if (coords.length === 0 || options === undefined) return;
+        if ( coords.length === 0 ) return;
 
         const hotline = HotlineComponent( coords, options, dotHoverIndex )
             .addTo(map)
         const id = L.stamp(hotline)
 
         return () => { 
-
             // console.log(hotline._renderer._container);
-            console.log(id);
-            
             hotline.remove()
             map.removeLayer(hotline);
-            hotline._renderer._destroyContainer()
-            console.log(map);
-            
-
-            // hotline.remove()
-            
-            // map.removeLayer(hotline);
+            // hotline._renderer._destroyContainer()
             // hotline.removeFrom(map);
-            
-		    // console.log((map as any)._layers[id]);
-            // !map._layers[id])
-
-            // map.removeLayer(hotline);
-            // map.invalidateSize()
         }
 
     }, [map, options, coords, dotHoverIndex])
