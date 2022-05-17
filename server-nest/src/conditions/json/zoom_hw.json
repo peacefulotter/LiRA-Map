@@ -3,7 +3,7 @@
         "rendererName": "hotline",
         "name": "zoom_hw",
         "color": "red",
-        "width": "5",
+        "width": 5,
         "hasValue": true
     },
     "path": [

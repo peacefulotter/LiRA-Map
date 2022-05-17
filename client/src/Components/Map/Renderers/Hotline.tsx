@@ -14,7 +14,7 @@ import { Palette } from '../../../models/graph';
 
 import { palette, width } from '../../../assets/properties';
 
-import '../../../assets/CustomHotline';
+import HotlineComponent from '../../../assets/hotline/hotline';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -54,7 +54,7 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
     })
     
     const options: HotlineOptions = useMemo( () => { 
-        console.log('MEMO OPTIONS');
+        // console.log('MEMO OPTIONS');
 
         const p = palette(properties)
         const min = p[0].stopValue            || minY || 0
@@ -85,10 +85,10 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
 
     useEffect( () => {
         if (coords.length === 0 || options === undefined) return;
-        
-        const hotline = L.Hotline( coords, options, dotHoverIndex )
+
+        const hotline = HotlineComponent( coords, options, dotHoverIndex )
         const id = L.stamp(hotline)
-        console.log('new id', id);
+        // console.log('new id', id);
         
         hotline.addTo(map)
 
@@ -99,7 +99,7 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
             // hotline.removeFrom(map);
 
             const id = L.stamp(hotline);
-            console.log('old id', id);
+            // console.log('old id', id);
             
 		    // console.log((map as any)._layers[id]);
             // !map._layers[id])
