@@ -20,24 +20,25 @@ export default class LatLngHotline extends Hotline {
      * @private
      */
     _drawOutline() {
-        const ctx = this._ctx;
-        var i, j, dataLength, path, pathLength, pointStart, pointEnd;
 
-        if (this._outlineWidth) {
-            for (i = 0, dataLength = this._data.length; i < dataLength; i++) {
-                path = this._data[i];
+        if ( !this._outlineWidth ) return;
 
-                for (j = 1, pathLength = path.length; j < pathLength; j++) {
-                    pointStart = path[j - 1];
-                    pointEnd = path[j];
+        for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
+        {
+            let path = this._data[i];
 
-                    ctx.lineWidth = this._outlineWidth;
-                    ctx.strokeStyle = this._outlineColor;
-                    ctx.beginPath();
-                    ctx.moveTo(pointStart.x, pointStart.y);
-                    ctx.lineTo(pointEnd.x, pointEnd.y);
-                    ctx.stroke();
-                }
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            {
+                let pointStart = path[j - 1];
+                let pointEnd = path[j];
+                
+                const ctx = this._ctx;
+                ctx.lineWidth = this._outlineWidth;
+                ctx.strokeStyle = this._outlineColor;
+                ctx.beginPath();
+                ctx.moveTo(pointStart.x, pointStart.y);
+                ctx.lineTo(pointEnd.x, pointEnd.y);
+                ctx.stroke();
             }
         }
     }
@@ -91,15 +92,13 @@ export default class LatLngHotline extends Hotline {
      */
     _drawHotline() 
     {
-        var i, j, dataLength, path, pathLength, pointStart, pointEnd;
-
-        for (i = 0, dataLength = this._data.length; i < dataLength; i++) 
+        for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
         {
-            path = this._data[i];
-            for (j = 1, pathLength = path.length; j < pathLength; j++) 
+            const path = this._data[i];
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
             {
-                pointStart = path[j - 1];
-                pointEnd = path[j];
+                const pointStart = path[j - 1];
+                const pointEnd = path[j];
 
                 if ( pointStart.i !== pointEnd.i )
                     this._addGradient(j, pointStart, pointEnd);

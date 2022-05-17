@@ -7,7 +7,6 @@ import Util from "./util";
 type HotlineType =  (new (...args: any[]) => any) & any
 
 
-
 const getRenderer = (RendererClass: Renderer) => (opts?: any) => 
     L.Browser.canvas ? new RendererClass(opts) : null
 
@@ -60,7 +59,6 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
             }
         }
         
-        console.log(result);
         this._renderer._hotline.projectedData = [...result];
     },
 
@@ -73,22 +71,18 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
             return;
         }
 
-
-        console.log(this);
-        console.log(this._bounds);
-        console.log(this._pxBounds);
-
         this._parts = [];
 
         const parts = this._parts;
         const bounds = this._pxBounds;
-        let i, j, k, len, len2, segment, points;
 
-        for (i = 0, k = 0, len = this._rings.length; i < len; i++) {
-            points = this._rings[i];
+        for (let i = 0, k = 0, len = this._rings.length; i < len; i++) 
+        {
+            const points = this._rings[i];
 
-            for (j = 0, len2 = points.length; j < len2 - 1; j++) {
-                segment = Util.clipSegment(this._renderer._hotline, points[j], points[j + 1], bounds, j, true);
+            for (let j = 0, len2 = points.length; j < len2 - 1; j++) 
+            {
+                const segment = Util.clipSegment(this._renderer._hotline, points[j], points[j + 1], bounds, j, true);
 
                 if ( segment === undefined ) { continue; }
 
@@ -115,12 +109,12 @@ const HotlineComponent = (data: InputHotlineData, options: HotlineOptions, dotHo
         throw new Error('no Browser canvas')
 
     const HotlineRenderer = hotlineRenderer(dotHoverIndex)
-    console.log(HotlineRenderer);
-    console.log(new HotlineRenderer());
     
     const Hotline = _hotline( HotlineRenderer )
 
-	return new Hotline(data, options)
+	const hotline = new Hotline(data, options)
+
+    return hotline
 };
 
 

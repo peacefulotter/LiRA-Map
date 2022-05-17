@@ -189,8 +189,6 @@ class Hotline {
      * Draws the currently set paths.
      */
     _draw() {
-        console.log(this);
-        
         const ctx = this._ctx;
 
         ctx.globalCompositeOperation = 'source-over';

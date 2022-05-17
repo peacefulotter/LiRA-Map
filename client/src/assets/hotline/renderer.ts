@@ -12,6 +12,11 @@ const hotlineRenderer = (dotHoverIndex: number | undefined) => L.Canvas.extend( 
         this._hotline = new LatLngHotline(this._container, dotHoverIndex);
     },
 
+    _destroyContainer: function() {
+        (L.Canvas.prototype as any)._destroyContainer.call(this)
+        console.log('DESTROY');
+    },
+
     _update: function () {
         (L.Canvas.prototype as any)._update.call(this);
         this._hotline.width(this._container.width);

@@ -2,7 +2,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import L from 'leaflet'
-import 'Leaflet.MultiOptionsPolyline'
 
 import ArrowHead from './ArrowHead';
 
@@ -49,8 +48,8 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
     const { dotHoverIndex, minY, maxY } = useGraph()
 
     const map = useMapEvents({
-        layeradd: (e: any) => console.log('LAYER ADD'),
-        layerremove: (e: any) => console.log('LAYER REMOVE')
+        // layeradd: (e: any) => console.log('LAYER ADD'),
+        // layerremove: (e: any) => console.log('LAYER REMOVE')
     })
     
     const options: HotlineOptions = useMemo( () => { 
@@ -87,20 +86,29 @@ const Hotline: FC<RendererProps> = ( { path, properties, onClick  } ) => {
         if (coords.length === 0 || options === undefined) return;
 
         const hotline = HotlineComponent( coords, options, dotHoverIndex )
-        
+            .addTo(map)
         const id = L.stamp(hotline)
-        console.log('new id', id, hotline);
-        
-        hotline.addTo(map)
 
         return () => { 
+
+            // console.log(hotline._renderer._container);
+            console.log(id);
+            
+            hotline.remove()
+            map.removeLayer(hotline);
+            hotline._renderer._destroyContainer()
+            console.log(map);
+            
+
+            // hotline.remove()
+            
             // map.removeLayer(hotline);
             // hotline.removeFrom(map);
             
 		    // console.log((map as any)._layers[id]);
             // !map._layers[id])
-            
-            map.removeLayer(hotline);
+
+            // map.removeLayer(hotline);
             // map.invalidateSize()
         }
 
