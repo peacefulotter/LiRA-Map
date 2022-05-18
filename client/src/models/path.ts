@@ -15,6 +15,8 @@ export interface PointData extends LatLng {
 // A Path is a collection of points
 export type Path = PointData[]
 
+export type Metadata =  { [key: string]: any }
+
 export interface Bounds {
     minX?: number;
     maxX?: number;
@@ -28,7 +30,7 @@ export interface PathProps {
 	path: Path;
 	bounds?: Bounds;
 	properties: PathProperties;
-	metadata?: {[key: string]: any}
+	metadata?: Metadata;
 	onClick?: PathEventHandler
 }
 
@@ -42,7 +44,7 @@ export interface BoundedPath {
 // for instance, JSON files follow this format
 export interface JSONProps extends BoundedPath {
 	properties: Measurement;
-	metadata?: {[key: string]: any}
+	metadata?: Metadata;
 }
 
 
