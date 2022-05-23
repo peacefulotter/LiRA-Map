@@ -1,15 +1,15 @@
 
 import { Canvas } from 'leaflet'
-import LatLngHotline from './LatLngHotline';
+import Hotline from './core/Hotline';
 
 
 export type Renderer = (new (...args: any[]) => any) & typeof Canvas
 
-const hotlineRenderer = (dotHoverIndex: number | undefined) => L.Canvas.extend( { 
+const getHotlineRenderer = (getHotline: (container: HTMLElement) => Hotline) => L.Canvas.extend( { 
     
     _initContainer: function () {
         (L.Canvas.prototype as any)._initContainer.call(this);
-        this._hotline = new LatLngHotline(this._container, dotHoverIndex);
+        this._hotline = getHotline(this._container)
     },
 
     _destroyContainer: function() {
@@ -64,4 +64,4 @@ const hotlineRenderer = (dotHoverIndex: number | undefined) => L.Canvas.extend( 
     }
 } ) as Renderer;
 
-export default hotlineRenderer;
+export default getHotlineRenderer;

@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { TripConditions } from './models.rc';
 import { RCService } from './rc.service';
 
 
@@ -19,9 +20,9 @@ export class RCController
     }
 
     @Get('full')
-    getFullConditions( @Query() query: { wayIds: string[], type: string, zoom: number } ): Promise<any> {
-        const { wayIds, type, zoom } = query;
-        return this.service.getFullConditions(wayIds.map(id => parseInt(id, 10)), type, zoom);
+    getFullConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<TripConditions> {
+        const { road, type, zoom } = query;
+        return this.service.getFullConditions(road, type, zoom);
     }
 
 }

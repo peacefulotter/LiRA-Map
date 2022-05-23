@@ -1,21 +1,21 @@
 import L from 'leaflet';
 import { HotlineOptions } from '../../models/path';
-import Hotline, { InputHotlineData } from './core';
+import Hotline, { InputHotlineData } from './core/Hotline';
 import hotlineRenderer, { Renderer } from './renderer';
 import Util from "./util";
 
 // FIXME: fix types
 
-type HotlineClass = new (data: InputHotlineData, options?: HotlineOptions) => Hotline
+export type HotlineClass = new (data: InputHotlineData, options?: HotlineOptions) => Hotline
 
-type HotlineType =  (new (...args: any[]) => any) & HotlineClass
+export type HotlineType =  (new (...args: any[]) => any) & HotlineClass
 
 
 const getRenderer = (RendererClass: Renderer) => (opts?: any) => 
     L.Browser.canvas ? new RendererClass(opts) : null
 
 
-const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
+const getLeafletHotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
     statics: {
         Renderer: RendererClass,
         renderer: getRenderer(RendererClass)
@@ -108,18 +108,4 @@ const _hotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
 } ) as HotlineType
 
 
-const HotlineComponent = (data: InputHotlineData, options: HotlineOptions, dotHoverIndex: number | undefined) => {
-    if ( !L.Browser.canvas ) 
-        throw new Error('no Browser canvas')
-
-    const HotlineRenderer = hotlineRenderer(dotHoverIndex)
-    
-    const Hotline: HotlineType = _hotline( HotlineRenderer )
-
-	const hotline = new Hotline(data, options)
-
-    return hotline
-};
-
-
-export default HotlineComponent;
+export default getLeafletHotline

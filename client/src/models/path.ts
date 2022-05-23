@@ -59,3 +59,23 @@ export interface HotlineOptions {
 	palette?: HotlinePalette;
 	onclick?: (e: any) => void;
 }
+
+
+export interface Way {
+	way_id: number;
+	geometry: LatLng[];
+	length: number;
+}
+
+export interface ConditionPoint {
+	way_dist: number;
+	value: number;
+}
+
+export type ZoomConditions = { [key: number]: ConditionPoint[] }
+
+export interface Conditions {
+	ways: Way[];
+	zoom: ZoomConditions;
+	roads: JSONProps;
+}

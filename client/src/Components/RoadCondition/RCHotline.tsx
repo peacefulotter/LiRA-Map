@@ -2,36 +2,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import L from 'leaflet'
-
-import ArrowHead from './ArrowHead';
-
-import { useGraph } from '../../../context/GraphContext';
-
-import { HotlineOptions, HotlinePalette, PointData } from '../../../models/path';
-import { Renderer } from '../../../models/renderers';
-import { Palette } from '../../../models/graph';
-
-import { palette, width } from '../../../assets/properties';
-
-import { InputHotlineData } from '../../../assets/hotline/core/Hotline';
-import LeafletLatLngHotline from '../../../assets/hotline/LeafletLatLngHotline';
-
-
-// const _weightFunc = useCallback( (a: number, b: number) => {
-    //     const c = dotHoverIndex ? dotHoverIndex >= a && dotHoverIndex < b : false
-    //     // console.log(dotHoverIndex, a, b, c);
-    //     return c ? 10 : 4
-    //     // TODO path[a:b].properties (average?)
-    //     // return dotHoverIndex 
-    //     //     ?  dotHoverIndex >= a && dotHoverIndex < b
-    //     //         ? 10
-    //     //         : 0
-    //     //     :  width(path[a].properties, properties)
-    //     // console.log(zoom);
-    //     // const formula = ((i * 10) / coords.length) + 4
-    //     // const dilatation = (i: number) => Math.pow((i + length) / length, dilatationFactor)
-    //     // + Math.max(zoom / 5, 2)
-    // }, [dotHoverIndex])
+import { Palette } from '../../models/graph';
+import { HotlineOptions, HotlinePalette, PointData } from '../../models/path';
+import { Renderer } from '../../models/renderers';
+import { useGraph } from '../../context/GraphContext';
+import { palette, width } from '../../assets/properties';
+import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
+import ArrowHead from '../Map/Renderers/ArrowHead';
+import { InputHotlineData } from '../../assets/hotline/core/Hotline';
 
 
 const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
@@ -42,7 +20,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const Hotline: Renderer = ( { path, properties, onClick  } ) => {
+const RCHotline: Renderer = ( { path, properties, onClick  } ) => {
 
     const [coords, setCoords] = useState<InputHotlineData>([])
 
@@ -86,7 +64,8 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
     useEffect( () => {
         if ( coords.length === 0 ) return;
 
-        const hotline = LeafletLatLngHotline( coords, options, dotHoverIndex )
+        const dists: any[] = []
+        const hotline = LeafletDistHotline( coords, options, dotHoverIndex, dists )
 
         hotline.addTo(map)
 
@@ -108,4 +87,4 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
     return <ArrowHead key={Math.random()} origin={origin} end={end} />;
 }
 
-export default Hotline;
+export default RCHotline;

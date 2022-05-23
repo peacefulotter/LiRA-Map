@@ -7,9 +7,9 @@ import { InjectConnection, Knex } from 'nestjs-knex';
 import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 
-import axios from 'axios'
-import { LatLon, Way } from './models.rc';
-import { LatLng } from 'src/models';
+import { MapWayConditions, RoadConditions, TripConditions, Way  } from './models.rc';
+import { RendererName } from '../models';
+import axios from 'axios';
 
 @Injectable()
 export class RCService 
@@ -32,84 +32,100 @@ export class RCService
         return JSON.parse(file)
     }
 
-    async getWays(wayIds: number[])
+    async getWays(roadName: string): Promise<Way[]>
     {
-        const url = `http://lira-osm.compute.dtu.dk/api/interpreter?data=[out:json];way(id:${wayIds.join(',')});out%20geom;`
+        const ways: any = await this.knex()
+            .select( this.knex.raw('id, ST_Length(geom::geography) as length') )
+            .from( 'way' )
+            .where( { official_ref: roadName } )
+
+        const wayIds = ways.map( (way: any) => way.id )
+        
+        const url = `http://lira-osm.compute.dtu.dk/api/interpreter?data=[out:json];way(id:${wayIds.join(',')});out geom;`
         const res = await axios.get(url)
-        console.log(wayIds);
 
-        const getSegmentLength = (seg1: LatLon, seg2: LatLon) => {
-            const lat1 = seg1.lat;
-            const lon1 = seg1.lon;
-            const lat2 = seg2.lat;
-            const lon2 = seg2.lon;
-
-            const toRad = (deg: number) => deg * Math.PI / 180
-
-            const φ1 = toRad(lat1);
-            const φ2 = toRad(lat2);
-            const Δφ = toRad(lat2 - lat1)
-            const Δλ = toRad(lon2 - lon1)
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return 6371e3 * c; // in metres
+        const { elements } = res.data
+        const endnodes = elements.map( ({nodes}, i: number) => [nodes[0], nodes[nodes.length - 1], i] )
+        
+        let orderedNodes = [endnodes[0]]
+        console.log(elements.map(({nodes}) => nodes));
+        
+        
+        // FIXME
+        for ( let j = 0; j < endnodes.length; j++ )
+        {
+            let head = orderedNodes[0]
+            let tail = orderedNodes[orderedNodes.length - 1]
+            // console.log(orderedNodes.length, endnodes.length, orderedNodes, head, tail);
+            
+            for ( let i = 0; i < endnodes.length; i++ )
+            {
+                const cur = endnodes[i]
+                if ( cur[0] === tail[1] )
+                {
+                    orderedNodes.push( cur )
+                }
+                else if ( cur[1] === head[0] )
+                {
+                    orderedNodes.splice(0, 0, cur)
+                }
+            }
         }
 
-        const getWayLength = (nodes: LatLon[]) => nodes.reduce( (prev, next) => {
-            return [ 
-                prev[1] === undefined ? 0 : prev[0] + getSegmentLength(prev[1], next), 
-                next
-            ]
-        }, [0, undefined] as [number, LatLon | undefined] )[0]
+        console.log(orderedNodes);
+        
+            
 
-        return res.data.elements
-            .map( (way: any) => {
-                return { 
-                    way_id: way.id, 
-                    geometry: way.geometry.map( (node: LatLon) => { return { lat: node.lat, lng: node.lon } }), 
-                    length: getWayLength(way.geometry) 
-                }
-            } )
-            .sort( (a: Way, b: Way) => {
-                return wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id)
-            })
+        
+        const geoms = new Map(
+            res.data.elements.map( ({id, geometry}) => [id, geometry.map(({lat, lon}) => ({lat, lng: lon}))] )
+        );
+
+        return ways.map( ({id, length}) => ({ id: parseInt(id, 10), length, geom: geoms.get(parseInt(id, 10)) }) )
     }
 
-    async getRoadConditions(wayIds: number[], type: string) 
+    async getRoadConditions(wayIds: number[], type: string): Promise<RoadConditions>
     {
-        return await this.knex
+        const res = await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'road_conditions' )
             .where( { 'type': type } )
             .whereIn( 'way_id', wayIds )
-            .orderBy( ['way_id', 'way_dist'] );
+            .orderBy( 'way_dist' );
+
+        return res.sort( (a, b) => wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id) )
     }
 
-    async getZoomConditions(wayIds: number[], type: string, zoom: number)
+    async getZoomConditions(wayIds: number[], type: string, zoom: number): Promise<RoadConditions>
     {
-        return await this.knex
-            .select( [ 'way_id', 'way_dist', 'value', 'zoom' ] )
+        const res = await this.knex
+            .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'zoom_conditions' )
             .where( { 'type': type, 'zoom': zoom } )
             .whereIn( 'way_id', wayIds )
-            .orderBy( ['way_id', 'way_dist'] );
+            .orderBy( 'way_dist' )
+
+        return res.sort( (a, b) => wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id) )
     }
 
-    async getFullConditions(wayIds: number[], type: string, zoom: number)
+    async getFullConditions(roadName: string, type: string, zoomLevel: number): Promise<TripConditions>
     {
-        const ways = await this.getWays(wayIds)
+        // const wayIds: number[] = [5056416,358202922,358202917,273215212,117882081,24449371,5056434,205390176,205390170,2860952,23474957,729386233,35221934,35913117,878636806,878636808,26361334,38154645,38072846,527276167,527276166,30219634,25949335,25949338,205636596,9512945,85205854,219657886,263681425,263681427,219657881,263276626,271780210,25075330,5056369,5056367,5056375,5056380,5056381,5056366,219657806,219657811,23000641,98479074,98479020,23000640,29057944]
+        const ways = await this.getWays(roadName)
+        console.log(ways);
+        
+        const wayIds = ways.map( way => way.id )
+
         const roadCond = await this.getRoadConditions(wayIds, type)
-        const zoomCond = await this.getZoomConditions(wayIds, type, zoom) 
+        const zoom = await this.getZoomConditions(wayIds, type, zoomLevel) 
 
-
-        const waySort = (arr: any[]) => arr
-            .sort( (a, b) => a.way_dist - b.way_dist )
-            .sort( (a, b) => wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id) )
-
-        return {
-            "ways": ways,
-            "road": waySort(roadCond),
-            "zoom": waySort(zoomCond)
+        const road: MapWayConditions = {
+            properties: { dbName: 'blob', name: roadName, rendererName: RendererName.hotline },
+            path: roadCond
         }
+
+        return { ways, road, zoom }
     }
 }
+
+

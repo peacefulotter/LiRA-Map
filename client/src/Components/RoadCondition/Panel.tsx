@@ -1,7 +1,6 @@
-import { FC } from "react"
-import { getConditions, getWayIds } from "../../queries/postgis";
-import Checkbox from "../Checkbox"
 
+import { FC } from "react"
+import Checkbox from "../Checkbox"
 
 
 interface IPanel {

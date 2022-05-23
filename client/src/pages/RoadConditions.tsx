@@ -15,7 +15,7 @@ import { GraphProvider } from "../context/GraphContext";
 import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/road_conditions.css";
-import { getConditions } from "../queries/postgis";
+import { getConditions } from "../queries/conditions";
 
 
 const IRIPalette: Palette = DEFAULT_PALETTE
@@ -28,6 +28,7 @@ interface FilterJSON {
 
 const RoadConditions = () => {
     const [paths, setPaths] = useState<JSONProps[]>([])
+    const [conditions, setConditions] = useState<JSONProps[]>([])
     const [measurements, setMeasurements] = useState<string[]>([])
 
     useEffect( () => {
@@ -62,7 +63,7 @@ const RoadConditions = () => {
     }
 
     const fetchConditions = () => {
-        const roadName = 'road'
+        const roadName = 'M3'
         const type = 'IRI';
         const zoom = 0;
         getConditions(roadName, type, zoom, (data: any) => {

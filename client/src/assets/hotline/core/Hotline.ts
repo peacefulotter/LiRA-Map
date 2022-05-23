@@ -1,9 +1,9 @@
-import { HotlinePalette } from "../../models/path";
+import { HotlinePalette } from "../../../models/path";
 
 export type InputHotlinePoint = [number, number, number]
 export type InputHotlineData = InputHotlinePoint[]
 
-export interface HotlinePoint { x: number, y: number, z: number, i: number }
+export interface HotlinePoint { x: number, y: number, z: number, i: number };
 export type HotlineData = HotlinePoint[]
 
 /**
@@ -12,7 +12,7 @@ export type HotlineData = HotlinePoint[]
 	 * @param {HTMLElement | string} canvas - &lt;canvas> element or its id
 	 * to initialize the instance on.
 	 */
-class Hotline {
+abstract class Hotline {
 
     _canvas: HTMLCanvasElement;
     _ctx: CanvasRenderingContext2D;
@@ -188,11 +188,14 @@ class Hotline {
     /**
      * Draws the currently set paths.
      */
-    _draw() {
+    draw() {
         const ctx = this._ctx;
 
         ctx.globalCompositeOperation = 'source-over';
         ctx.lineCap = 'round';
+
+        this._drawOutline();
+        this._drawHotline();
 
         return this;
     }
@@ -215,6 +218,79 @@ class Hotline {
 
     getWeight(a: number, b: number) {
         return this._weightFunc ? this._weightFunc(a, b) : this._weight
+    }
+
+    /**
+     * Draws the outline of the graphs.
+     * @private
+     */
+    _drawOutline() {
+
+        if ( !this._outlineWidth ) return;
+
+        for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
+        {
+            let path = this._data[i];
+
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            {
+                let pointStart = path[j - 1];
+                let pointEnd = path[j];
+                
+                const ctx = this._ctx;
+                ctx.lineWidth = this._outlineWidth;
+                ctx.strokeStyle = this._outlineColor;
+                ctx.beginPath();
+                ctx.moveTo(pointStart.x, pointStart.y);
+                ctx.lineTo(pointEnd.x, pointEnd.y);
+                ctx.stroke();
+            }
+        }
+    }
+
+    _addColorGradient(gradient: any, rgb: number[], dist: number) {
+        gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
+    }
+
+    abstract computeGradient(gradient: CanvasGradient, pointStart: any, pointEnd: any): any;
+
+    _addGradient(pointStart: any, pointEnd: any) {
+
+        const ctx = this._ctx;
+
+        const weight = this.getWeight(pointStart.i, pointEnd.i) 
+        ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
+
+        // Create a gradient for each segment, pick start and end colors from palette gradient
+        const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+
+       this.computeGradient(gradient, pointStart, pointEnd)
+
+        ctx.strokeStyle = gradient;
+        ctx.beginPath();
+        ctx.moveTo(pointStart.x, pointStart.y);
+        ctx.lineTo(pointEnd.x, pointEnd.y);
+        ctx.stroke();
+    }
+
+    /**
+     * Draws the color encoded hotline of the graphs.
+     * @private
+     */
+    _drawHotline() 
+    {
+        for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
+        {
+            const path = this._data[i];
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            {
+                const pointStart = path[j - 1];
+                const pointEnd = path[j];
+
+                if ( pointStart.i !== pointEnd.i )
+                    this._addGradient(pointStart, pointEnd);
+            }
+        }
     }
 }
 
