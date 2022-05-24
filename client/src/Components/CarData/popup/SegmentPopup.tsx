@@ -25,7 +25,10 @@ const SegmentPopup: FC<ISegmentPopup> = ( { segment, types, direction,setSegment
         if ( id === undefined || dataType === undefined || aggrType === undefined ) return;
         console.log(direction)
         GetSegmentAndAggregateValue(dataType, aggrType, id, direction)
-            .then( setSegment )
+            .then(res => {
+                if(res.length !== 0)
+                    setSegment(res[0]);
+            })
     }, [id, dataType, aggrType, direction])
 
     return (

@@ -22,14 +22,15 @@ export const GetDataTypes = async (): Promise<string[]> => {
     const path = '/types/aggregatedValues/types'
     const res = await fetch(path);
     const data = await res.json();
-    return data.map( (elt: any) => elt.Type );
+    console.log(data)
+    return data.map( (elt: any) => elt.name );
 }
 
 export const GetAggregationTypes = async (dataType: string): Promise<string[]> => {
     const path = '/types/aggregatedValues/aggregation' + '?type=' + dataType;
     const res = await fetch(path);
     const data = await res.json();
-    return data.map( (elt: any) => elt.Aggregation );
+    return data.map( (elt: any) => elt.name );
 }
 
 export const GetDataTypesOfSegment = async (segment_id: number): Promise<string[]> => {
@@ -46,10 +47,11 @@ export const GetAggregationTypesOfSegment = async (dataType: string, segment_id:
     return data.map( (elt: any) => elt.Aggregation );
 }
 
-export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number, direction:number): Promise<Segment> => {
+export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number, direction:number): Promise<Segment[]> => {
     const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
     console.log(path)
     const res = await fetch(path)
+    console.log(res)
     const data = await res.json();
     return data;
 }
