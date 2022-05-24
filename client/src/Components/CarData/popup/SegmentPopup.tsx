@@ -25,13 +25,14 @@ const SegmentPopup: FC<ISegmentPopup> = ( { segment, types, direction,setSegment
     useEffect( () => {
         if ( id === undefined || dataType === undefined || aggrType === undefined ) return;
         console.log(direction)
-        GetSegmentAndAggregateValue(dataType, aggrType, id, direction)
+        GetSegmentAndAggregateValue(dataType.id, aggrType.id, id, direction)
             .then(res => {
                 if(res.length !== 0)
                     setSegment(res[0]);
             })
+        
     }, [id, dataType, aggrType, direction])
-
+    console.log(dataType)
     return (
         <div className="seg-popup-container">
             <div className="seg-popup-section seg-center-section">
@@ -39,7 +40,7 @@ const SegmentPopup: FC<ISegmentPopup> = ( { segment, types, direction,setSegment
                 <div className="seg-title">Way: <b>{way}</b></div>
             </div>
             <div className="seg-popup-section seg-center-section">
-                <div className="seg-data">{value} Newtons</div>
+                <div className="seg-data">{value} {dataType?.units}</div>
             </div>
         </div>
     );

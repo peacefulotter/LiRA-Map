@@ -7,10 +7,22 @@ import Toolbars from "../Components/CarData/toolbar/Toolbars";
 
 import { SegmentProvider } from "../context/SegmentContext";
 
+export interface ComputedValueType{
+    id:number,
+    name:string,
+    description:string,
+    units?:string
+}
+
+export interface AggregationMethod{
+    id:number,
+    name:string,
+    description:string,
+}
 
 export interface SegTypes {
-    dataType: [number, string] | undefined;
-    aggrType: [number, string] | undefined;
+    dataType: ComputedValueType | undefined;
+    aggrType: AggregationMethod | undefined;
     direction: number | undefined;
 }
 

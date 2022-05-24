@@ -26,7 +26,7 @@ const Segments: FC<ISegments> = ( { boundaries } ) => {
         if ( dataType === undefined || aggrType === undefined || pathDirection === undefined )
             return 
 
-        GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggrType, pathDirection)
+        GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType.id, aggrType.id, pathDirection)
             .then( setSegments )
 
     }, [boundaries, pathTypes, pathDirection]);

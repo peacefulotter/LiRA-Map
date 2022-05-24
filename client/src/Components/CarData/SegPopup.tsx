@@ -3,7 +3,7 @@
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
-import { SegTypes } from "../../pages/CarData";
+import { AggregationMethod, ComputedValueType, SegTypes } from "../../pages/CarData";
 import usePopup from "../Popup";
 import Checkbox from "../Checkbox";
 
@@ -12,9 +12,9 @@ import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
 
 interface ICheckboxes {
     typeName: string;
-    types: [number, string][];
-    type: [number, string] | undefined;
-    onClick: (type: [number, string]) => (isChecked: boolean) => void;
+    types: ComputedValueType[] | AggregationMethod[];
+    type: ComputedValueType | AggregationMethod | undefined;
+    onClick: (type: ComputedValueType | AggregationMethod) => (isChecked: boolean) => void;
 }
 
 const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
@@ -23,12 +23,12 @@ const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
     return (
         <div className="swal-checkboxes">
             <p className="swal-cb-name">{typeName}:</p>
-            { types.map( (t: [number, string], i: number) => {
+            { types.map( (t: ComputedValueType | AggregationMethod, i: number) => {
                 return <Checkbox 
                     key={`swal-cb-${typeName}-${i}`}
                     forceState={t === type}
                     className='seg-checkbox'
-                    html={<p>{t[1]}</p>}
+                    html={<p>{t.name}</p>}
                     onClick={onClick(t)} />
             } ) }
         </div>
@@ -43,8 +43,8 @@ interface IPopupWrapper {
 const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
 
     
-    const [dataTypes, setDataTypes] = useState<[number, string][]>([]);
-    const [aggrTypes, setAggrTypes] = useState<[number, string][]>([]);
+    const [dataTypes, setDataTypes] = useState<ComputedValueType[]>([]);
+    const [aggrTypes, setAggrTypes] = useState<AggregationMethod[]>([]);
 
     // force child components to rerender
     const [copy, setCopy] = useState<SegTypes>({...state})
@@ -52,7 +52,7 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
     var direction = -1;
 
 
-    const updateState = (dataType: [number, string] | undefined, aggrType: [number, string] | undefined, direction: number | undefined ) => {
+    const updateState = (dataType: ComputedValueType | undefined, aggrType: AggregationMethod | undefined, direction: number | undefined ) => {
         const newState = { dataType, aggrType, direction}
         setState( newState )
         setCopy( newState )
@@ -62,12 +62,12 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
         GetDataTypes().then( setDataTypes )
     }, [] );
 
-    const dataTypeOnClick = (type: [number, string]) => () => {
+    const dataTypeOnClick = (type: ComputedValueType) => () => {
         updateState( type, undefined, direction)
-        GetAggregationTypes(type).then( setAggrTypes )
+        GetAggregationTypes(type.id).then( setAggrTypes )
     }
 
-    const aggregationTypeOnClick = (type: [number, string]) => () => {
+    const aggregationTypeOnClick = (type: AggregationMethod) => () => {
         updateState( dataType, type, direction)
     }
 

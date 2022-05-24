@@ -11,7 +11,7 @@ export class TypesService {
 
     async getAggregatedValuesTypes():Promise<[number, string][]>{
         
-        return await this.knex.raw('SELECT DISTINCT "computed_values_types"."id", "computed_values_types"."name"' 
+        return await this.knex.raw('SELECT DISTINCT "computed_values_types"."id", "computed_values_types"."name", "computed_values_types"."description", "computed_values_types"."units"' 
         +' FROM "aggregated_values" INNER JOIN "computed_values_types" ON "aggregated_values"."cv_type" = "computed_values_types"."id"')
             .then(res => {
                 return res.rows;
@@ -21,7 +21,7 @@ export class TypesService {
     async getAggregationTypes(dataType: number):Promise<[number, string][]>{
        
 
-        return await this.knex.raw('SELECT DISTINCT "aggregation_methods"."id", "aggregation_methods"."name"' 
+        return await this.knex.raw('SELECT DISTINCT "aggregation_methods"."id", "aggregation_methods"."name", "aggregation_methods"."description"' 
         +' FROM "aggregated_values" INNER JOIN "aggregation_methods" ON "aggregated_values"."aggregation_method" = "aggregation_methods"."id"'
         +' WHERE "aggregated_values"."cv_type" = ' + dataType)
             .then(res => {
@@ -31,7 +31,7 @@ export class TypesService {
 
     async getAggregatedValuesTypesOfSegment(segment_id: number):Promise<[number, string][]>{
         
-        return await this.knex.raw('SELECT DISTINCT "computed_values_types"."id", "computed_values_types"."name"' 
+        return await this.knex.raw('SELECT DISTINCT "computed_values_types"."id", "computed_values_types"."name", "computed_values_types"."description", "computed_values_types"."units"' 
         +' FROM "aggregated_values" INNER JOIN "computed_values_types" ON "aggregated_values"."cv_type" = "computed_values_types"."id"'
         +' WHERE "aggregated_values"."segment" = ' + segment_id)
             .then(res => {
@@ -43,7 +43,7 @@ export class TypesService {
        
         let typeString = "'" + dataType + "'";
 
-        return await this.knex.raw('SELECT DISTINCT "aggregation_methods"."id", "aggregation_methods"."name"' 
+        return await this.knex.raw('SELECT DISTINCT "aggregation_methods"."id", "aggregation_methods"."name", "aggregation_methods"."description"' 
         +' FROM "aggregated_values" INNER JOIN "aggregation_methods" ON "aggregated_values"."aggregation_method" = "aggregation_methods"."id"'
         +' INNER JOIN "computed_values_types" ON "computed_values_types"."id" = "aggregated_values"."cv_type"'
         +' WHERE "aggregated_values"."segment" = ' + segment_id + ' AND "computed_values_types"."name" = ' + typeString)

@@ -3,7 +3,7 @@
 
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
-import { SegTypes } from "../../../pages/CarData";
+import { AggregationMethod, ComputedValueType, SegTypes } from "../../../pages/CarData";
 import Checkboxes from "../Checkboxes";
 
 import { GetAggregationTypes, GetDataTypes } from "../../../queries/DataRequests";
@@ -16,12 +16,12 @@ interface IPopupWrapper {
 
 const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     
-    const [dataTypes, setDataTypes] = useState<[number, string][]>([]);
-    const [aggrTypes, setAggrTypes] = useState<[number, string][]>([]);
+    const [dataTypes, setDataTypes] = useState<ComputedValueType[]>([]);
+    const [aggrTypes, setAggrTypes] = useState<AggregationMethod[]>([]);
 
     const { dataType, aggrType } = types;
     var direction = -1;
-    const fetchAggrTypes = (dt: [number, string]) => GetAggregationTypes(dt).then( (at) => {
+    const fetchAggrTypes = (dt: ComputedValueType) => GetAggregationTypes(dt.id).then( (at) => {
         console.log(dt, at);
         setAggrTypes(at); 
     })
@@ -35,11 +35,11 @@ const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
             fetchAggrTypes(dataType)
     }, [dataType])
 
-    const dataTypeOnClick = (dataType: [number, string]) => () => {
+    const dataTypeOnClick = (dataType: ComputedValueType) => () => {
         setTypes( { dataType, aggrType: undefined, direction: direction } )
     }
 
-    const aggregationTypeOnClick = (aggrType: [number, string]) => () => {
+    const aggregationTypeOnClick = (aggrType: AggregationMethod) => () => {
         setTypes( { dataType, aggrType, direction} )
     }
 
