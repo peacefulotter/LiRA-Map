@@ -1,41 +1,27 @@
 
 
 
-import { LatLng } from 'Leaflet.MultiOptionsPolyline';
 import { Polyline } from 'react-leaflet';
-import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
+import { fixProperties } from '../../../assets/properties';
 import { Renderer } from '../../../models/renderers';
 import ArrowHead from './ArrowHead';
 
 
 const Line: Renderer = ( { path, properties, onClick } ) => {
 
-    const { color, width, opacity, direction } = properties
+    const _properties = fixProperties(undefined, properties) 
+    const { arrowHead } = properties;
 
-    const options = {
-        color: color || DEFAULT_COLOR,
-        weight: width || DEFAULT_WIDTH,
-        opacity: opacity || DEFAULT_OPACITY
-    }
-
-    var origin = path[path.length - 2];
-    var end = path[path.length - 1];
-
-    if (direction === 0){
-        origin = path[1];
-        end = path[0];  
-    }
+    const origin = path[path.length - 2];
+    const end = path[path.length - 1];  
     
     return <Polyline  
         positions={path}
-        pathOptions={options}
+        pathOptions={_properties}
         eventHandlers={{'click': onClick(0)}} 
     >
-        {
-        direction !== -1 &&
-            <ArrowHead origin={origin} end={end} />
-        }
-        
+        { arrowHead === 1 || arrowHead === 3 ? <ArrowHead origin={origin} end={end} /> : null }
+        { arrowHead === 2 || arrowHead === 3 ? <ArrowHead origin={end} end={origin} /> : null }
     </Polyline>
 }
 

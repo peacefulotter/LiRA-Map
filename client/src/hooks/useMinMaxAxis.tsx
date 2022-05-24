@@ -45,8 +45,6 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
 
         const realMinMax = firstUpdate ? newMinMax : update(minMaxAxis, newMinMax)
 
-        console.log(bounds, newMinMax);
-        
         setFirstUpdate(false)
         setMinMaxAxis( realMinMax )
         setLabels( prev => { return { ...prev, [label]: realMinMax } } )

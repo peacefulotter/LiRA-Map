@@ -17,30 +17,27 @@ import { RidesService } from './rides/rides.service';
 import { MeasurementsController } from './measurements/measurements.controller';
 import { MeasurementsService } from './measurements/measurements.service';
 
-import { MLController } from './ml/ml.controller';
-import { MLService } from './ml/ml.service';
+import { RCController } from './conditions/rc.controller';
+import { RCService } from './conditions/rc.service';
 
-import { LIRA_DB_CONFIG, VISUAL_DB_CONFIG } from './database';
+import { LIRA_DB_CONFIG, POSTGIS_DB_CONFIG, VISUAL_DB_CONFIG } from './database';
 
+
+const database = (config: any, name: string) => {
+	return KnexModule.forRootAsync( {
+		useFactory: () => ( { config } )
+	}, name )
+}
 
 @Module( {
 	imports: [
 		ConfigModule.forRoot(), 
-
-		KnexModule.forRootAsync( {
-			useFactory: () => ( {
-				config: LIRA_DB_CONFIG,
-			} ),
-		}, 'lira-main' ),
-
-		KnexModule.forRootAsync( {
-			useFactory: () => ( {
-				config: VISUAL_DB_CONFIG,
-			} ),
-		}, 'lira-vis' ),
+		database(LIRA_DB_CONFIG, 'lira-main'),
+		database(VISUAL_DB_CONFIG, 'lira-vis'),
+		database(POSTGIS_DB_CONFIG, 'postgis'),
 	],
-	controllers: [AppController, SegmentsController, TypesController, RidesController, MeasurementsController, MLController],
-	providers: [AppService, SegmentsService, ConfigService, TypesService, RidesService, MeasurementsService, MLService],
+	controllers: [AppController, SegmentsController, TypesController, RidesController, MeasurementsController, RCController],
+	providers: [AppService, SegmentsService, ConfigService, TypesService, RidesService, MeasurementsService, RCService],
 } )
 
 export class AppModule {}

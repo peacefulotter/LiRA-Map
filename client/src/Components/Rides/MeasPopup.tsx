@@ -102,6 +102,7 @@ const useMeasPopup = ( value: RideMeasurement ) => {
                 icon: 'success',
                 timer: 1500,
                 timerProgressBar: true,
+                toast: true
             } )
         })
 

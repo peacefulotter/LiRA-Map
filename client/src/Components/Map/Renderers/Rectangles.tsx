@@ -4,7 +4,7 @@ import { Rectangle } from "react-leaflet";
 import { LatLngBounds } from 'leaflet'
 
 import Points from "./Points";
-import { color, opacity, weight, width } from "../../../assets/properties";
+import { fixProperties } from "../../../assets/properties";
 import { Renderer, PointProps } from "../../../models/renderers";
 
 
@@ -14,7 +14,9 @@ const Rectangles: Renderer = ( props ) => {
 
 const CRectangle: FC<PointProps> = ( { lat, lng, pointProperties, pathProperties, onClick, i } ) => {
 
-    const size: number = width(pointProperties, pathProperties) / 10_000;
+    const { width, color, weight, opacity } = fixProperties(pointProperties, pathProperties)
+
+    const size: number = width / 10_000;
     const bounds: LatLngBounds = new LatLngBounds(
         [lat - size / 2, lng - size / 2],
         [lat + size / 3, lng + size / 1.2]
@@ -22,9 +24,9 @@ const CRectangle: FC<PointProps> = ( { lat, lng, pointProperties, pathProperties
         
     return <Rectangle
         bounds={bounds} 
-        color={color(pointProperties, pathProperties)}
-        weight={weight(pointProperties, pathProperties)}
-        opacity={opacity(pointProperties, pathProperties)}
+        color={color}
+        weight={weight}
+        opacity={opacity}
         eventHandlers={{'click': onClick(i)}}/>
 }
 

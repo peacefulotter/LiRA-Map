@@ -9,7 +9,12 @@ export const get = (path: string, callback: (data: any) => void): void => {
 
 export const post = (path: string, obj: object, callback: (data: any) => void): void => {
     axios.get(path, {
-        params: obj
+        params: obj,
+        paramsSerializer: params => {
+            return  Object.keys(params)
+                .map( (key: any) => new URLSearchParams(`${key}=${params[key]}`) )
+                .join("&")
+        }
     }).then(res => callback(res.data));
 }
 
