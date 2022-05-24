@@ -32,7 +32,28 @@ const Segments: FC<ISegments> = ( { boundaries } ) => {
     }, [boundaries, pathTypes, pathDirection]);
 
 
+    const getMaxAndMinValue = () => {
+
+        var max_value:number = -1;
+        var min_value:number = -1;
+
+        segments.forEach(segment => {
+            if(min_value === -1 || segment.value < min_value){
+                min_value = segment.value;
+            }
+
+            if(max_value === -1 || segment.value > max_value){
+                max_value = segment.value;
+            }
+        });
+
+        return [max_value, min_value]
+    }
+
+
     const onClick = (seg: Segment) => () => () => setSegment(seg)
+
+    const [max_value, min_value] = getMaxAndMinValue();
 
     return (
         <>
@@ -41,7 +62,9 @@ const Segments: FC<ISegments> = ( { boundaries } ) => {
                 key={`segment-${i}`} 
                 i={i}
                 seg={seg} 
-                onClick={onClick(seg)} 
+                onClick={onClick(seg)}
+                max_value = {max_value}
+                min_value = {min_value} 
             />
         ) }
         </>

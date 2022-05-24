@@ -14,7 +14,9 @@ import { PathProperties } from "../../models/properties";
 export interface ISegment {
     seg: Segment;
     onClick: () => () => void;
-    i: number
+    i: number;
+    max_value: number;
+    min_value: number;
 }
 
 const getColor = (val: number, maxval: number, minval: number): string => {
@@ -24,7 +26,7 @@ const getColor = (val: number, maxval: number, minval: number): string => {
     return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
 }
 
-const SegmentPath: FC<ISegment> = ( { seg, onClick, i } ) => {
+const SegmentPath: FC<ISegment> = ( { seg, onClick, i, max_value, min_value } ) => {
 
     const { segment, segDirection, pathDirection } = useSegment()
     
@@ -38,7 +40,7 @@ const SegmentPath: FC<ISegment> = ( { seg, onClick, i } ) => {
 
     const properties: PathProperties = { 
         rendererName: RendererName.line, 
-        color: getColor(value, 5, 0), 
+        color: getColor(value, max_value, min_value), 
         width: 8,
         arrowHead: (isSelectedSegment ? segDirection : pathDirection) + 1
     }
