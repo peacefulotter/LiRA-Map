@@ -14,7 +14,7 @@ export class SegmentsController {
 
 
     @Get('/polygon/:points')
-    getSegmentsInPolygon(@Param() params, @Query() query: { type: string, aggregation: string, direction: number }): Promise<SegmentWithAggregatedValue[]>{
+    getSegmentsInPolygon(@Param() params, @Query() query: { type: number, aggregation: number, direction: number }): Promise<SegmentWithAggregatedValue[]>{
         const pointsList = params.points.split(";")
         const type = query.type;
         const direction = query.direction;
@@ -23,7 +23,7 @@ export class SegmentsController {
     }
 
     @Get(':segment_id')
-    getSegmentAndValue(@Param() params, @Query() query: { type: string, aggregation: string, direction:number }): Promise<SegmentWithAggregatedValue[]>{
+    getSegmentAndValue(@Param() params, @Query() query: { type: number, aggregation: number, direction:number }): Promise<SegmentWithAggregatedValue[]>{
         const segment_id = params.segment_id
         const type = query.type;
         const aggregation = query.aggregation;

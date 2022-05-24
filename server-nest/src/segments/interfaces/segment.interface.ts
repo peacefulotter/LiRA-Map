@@ -7,7 +7,5 @@ export interface Segment {
 
 export interface SegmentWithAggregatedValue extends Segment{
   count:number,
-  type:string,
-  aggregation:string,
   value:number
 }

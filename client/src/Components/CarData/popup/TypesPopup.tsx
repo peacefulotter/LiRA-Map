@@ -16,12 +16,12 @@ interface IPopupWrapper {
 
 const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     
-    const [dataTypes, setDataTypes] = useState<string[]>([]);
-    const [aggrTypes, setAggrTypes] = useState<string[]>([]);
+    const [dataTypes, setDataTypes] = useState<[number, string][]>([]);
+    const [aggrTypes, setAggrTypes] = useState<[number, string][]>([]);
 
     const { dataType, aggrType } = types;
     var direction = -1;
-    const fetchAggrTypes = (dt: string) => GetAggregationTypes(dt).then( (at) => {
+    const fetchAggrTypes = (dt: [number, string]) => GetAggregationTypes(dt).then( (at) => {
         console.log(dt, at);
         setAggrTypes(at); 
     })
@@ -35,11 +35,11 @@ const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
             fetchAggrTypes(dataType)
     }, [dataType])
 
-    const dataTypeOnClick = (dataType: string) => () => {
+    const dataTypeOnClick = (dataType: [number, string]) => () => {
         setTypes( { dataType, aggrType: undefined, direction: direction } )
     }
 
-    const aggregationTypeOnClick = (aggrType: string) => () => {
+    const aggregationTypeOnClick = (aggrType: [number, string]) => () => {
         setTypes( { dataType, aggrType, direction} )
     }
 

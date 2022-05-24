@@ -12,9 +12,9 @@ import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
 
 interface ICheckboxes {
     typeName: string;
-    types: string[];
-    type: string | undefined;
-    onClick: (type: string) => (isChecked: boolean) => void;
+    types: [number, string][];
+    type: [number, string] | undefined;
+    onClick: (type: [number, string]) => (isChecked: boolean) => void;
 }
 
 const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
@@ -23,12 +23,12 @@ const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
     return (
         <div className="swal-checkboxes">
             <p className="swal-cb-name">{typeName}:</p>
-            { types.map( (t: string, i: number) => {
+            { types.map( (t: [number, string], i: number) => {
                 return <Checkbox 
                     key={`swal-cb-${typeName}-${i}`}
                     forceState={t === type}
                     className='seg-checkbox'
-                    html={<p>{t}</p>}
+                    html={<p>{t[1]}</p>}
                     onClick={onClick(t)} />
             } ) }
         </div>
@@ -43,8 +43,8 @@ interface IPopupWrapper {
 const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
 
     
-    const [dataTypes, setDataTypes] = useState<string[]>([]);
-    const [aggrTypes, setAggrTypes] = useState<string[]>([]);
+    const [dataTypes, setDataTypes] = useState<[number, string][]>([]);
+    const [aggrTypes, setAggrTypes] = useState<[number, string][]>([]);
 
     // force child components to rerender
     const [copy, setCopy] = useState<SegTypes>({...state})
@@ -52,7 +52,7 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
     var direction = -1;
 
 
-    const updateState = (dataType: string | undefined, aggrType: string | undefined, direction: number | undefined ) => {
+    const updateState = (dataType: [number, string] | undefined, aggrType: [number, string] | undefined, direction: number | undefined ) => {
         const newState = { dataType, aggrType, direction}
         setState( newState )
         setCopy( newState )
@@ -62,12 +62,12 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
         GetDataTypes().then( setDataTypes )
     }, [] );
 
-    const dataTypeOnClick = (type: string) => () => {
+    const dataTypeOnClick = (type: [number, string]) => () => {
         updateState( type, undefined, direction)
         GetAggregationTypes(type).then( setAggrTypes )
     }
 
-    const aggregationTypeOnClick = (type: string) => () => {
+    const aggregationTypeOnClick = (type: [number, string]) => () => {
         updateState( dataType, type, direction)
     }
 

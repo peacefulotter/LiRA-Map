@@ -9,8 +9,8 @@ import { SegmentProvider } from "../context/SegmentContext";
 
 
 export interface SegTypes {
-    dataType: string | undefined;
-    aggrType: string | undefined;
+    dataType: [number, string] | undefined;
+    aggrType: [number, string] | undefined;
     direction: number | undefined;
 }
 
