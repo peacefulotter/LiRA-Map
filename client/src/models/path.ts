@@ -63,19 +63,25 @@ export interface HotlineOptions {
 
 export interface Way {
 	way_id: number;
-	geometry: LatLng[];
+	geom: LatLng[];
 	length: number;
 }
 
 export interface ConditionPoint {
+	way_id: string;
 	way_dist: number;
 	value: number;
 }
 
-export type ZoomConditions = { [key: number]: ConditionPoint[] }
+export type RoadConditions = ConditionPoint[]
 
-export interface Conditions {
-	ways: Way[];
-	zoom: ZoomConditions;
-	roads: JSONProps;
+export interface MapRoadConditions {
+	properties: Measurement;
+	conditions: RoadConditions
+}
+
+export interface WayConditions {
+	way: Way;
+	zoom: MapRoadConditions;
+	road: RoadConditions;
 }

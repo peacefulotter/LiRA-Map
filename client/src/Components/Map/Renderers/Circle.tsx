@@ -14,7 +14,6 @@ export const createCircle = (
     onClick: (e: any) => void
 ) => {
 
-
     const { width, weight, opacity, color } = fixProperties(pointProperties, pathProperties)
 
     return <Circle
@@ -28,7 +27,8 @@ export const createCircle = (
 
 const RCircle: Renderer = ( { path, properties, onClick } ) =>  {   
     const { lat, lng } = path[0]
-    return createCircle(lat, lng, path[0].properties, properties, onClick(0))
+    const clickEvent = onClick ? onClick(0) : (e: any) => {}
+    return createCircle(lat, lng, path[0].properties, properties, clickEvent)
 }
 
 export default RCircle;

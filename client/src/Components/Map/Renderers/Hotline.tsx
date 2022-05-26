@@ -13,8 +13,8 @@ import { Palette } from '../../../models/graph';
 
 import { palette, width } from '../../../assets/properties';
 
-import { InputHotlineData } from '../../../assets/hotline/core/Hotline';
 import LeafletLatLngHotline from '../../../assets/hotline/LeafletLatLngHotline';
+import { LatLngInput } from '../../../assets/hotline/core/LatLngHotline';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -44,7 +44,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
 
 const Hotline: Renderer = ( { path, properties, onClick  } ) => {
 
-    const [coords, setCoords] = useState<InputHotlineData>([])
+    const [coords, setCoords] = useState<LatLngInput>([])
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 

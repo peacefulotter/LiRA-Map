@@ -1,21 +1,24 @@
 import L from 'leaflet';
 import { HotlineOptions } from '../../models/path';
-import Hotline, { InputHotlineData } from './core/Hotline';
-import hotlineRenderer, { Renderer } from './renderer';
+import Hotline from './core/Hotline';
+import { Renderer } from './renderer';
 import Util from "./util";
 
-// FIXME: fix types
 
-export type HotlineClass = new (data: InputHotlineData, options?: HotlineOptions) => Hotline
-
-export type HotlineType =  (new (...args: any[]) => any) & HotlineClass
+export type HotlineClass<InputT, DataT> = new (data: InputT, options?: HotlineOptions) => Hotline<DataT>
 
 
 const getRenderer = (RendererClass: Renderer) => (opts?: any) => 
     L.Browser.canvas ? new RendererClass(opts) : null
 
 
-const getLeafletHotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
+const getLeafletHotline = <InputT, DataT>( 
+
+    RendererClass: Renderer, 
+    projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void 
+
+) => L.Polyline.extend( {
+
     statics: {
         Renderer: RendererClass,
         renderer: getRenderer(RendererClass)
@@ -42,25 +45,18 @@ const getLeafletHotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
     /**
      * Just like the Leaflet version, but with support for a z coordinate.
      */
-    _projectLatlngs: function (latlngs: any, result: any, projectedBounds: any) {
-        const len = latlngs.length;
-        var i, ring;
-
-        if (latlngs[0] instanceof L.LatLng) {
-            ring = [];
-            for (i = 0; i < len; i++) {
-                ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
-                // Add the altitude of the latLng as the z coordinate to the point
-                ring[i].z = latlngs[i].alt;
-                ring[i].i = i
-                // ring[i].d = distances[i];
-                projectedBounds.extend(ring[i]);
-            }
-            result.push(ring);
-        } else if (Array.isArray(latlngs[0]) ) {
-            for (i = 0; i < len; i++) {
+    _projectLatlngs: function(latlngs: any, result: any, projectedBounds: any) 
+    {
+        if (Array.isArray(latlngs[0]) ) 
+        {
+            const len = latlngs.length;
+            for (let i = 0; i < len; i++) {
                 this._projectLatlngs(latlngs[i], result, projectedBounds);
             }
+        }
+        else
+        {
+            projectLatLngs(this._map, latlngs, result, projectedBounds)
         }
         
         this._renderer._hotline.projectedData = [...result];
@@ -105,7 +101,7 @@ const getLeafletHotline = ( RendererClass: Renderer ) => L.Polyline.extend( {
     _clickTolerance: function () {
         return this.options.weight / 2 + this.options.outlineWidth + (L.Browser.touch ? 10 : 0);
     }
-} ) as HotlineType
+} ) as HotlineClass<InputT, DataT>
 
 
 export default getLeafletHotline

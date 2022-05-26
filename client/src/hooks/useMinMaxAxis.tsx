@@ -26,6 +26,9 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
     const [labels, setLabels] = useState<LabelMinMax>({})
     const [minMaxAxis, setMinMaxAxis] = useState<MinMaxAxis>(defaultMinMax)
 
+    console.log(minMaxAxis);
+    
+
     const update = (prev: MinMaxAxis, cur: MinMaxAxis): MinMaxAxis => {
         return [
             Math.min(prev[0], cur[0]),
@@ -44,6 +47,9 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
         ]
 
         const realMinMax = firstUpdate ? newMinMax : update(minMaxAxis, newMinMax)
+
+        console.log(bounds, newMinMax, realMinMax);
+        
 
         setFirstUpdate(false)
         setMinMaxAxis( realMinMax )

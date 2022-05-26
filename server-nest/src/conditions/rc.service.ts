@@ -7,7 +7,7 @@ import { InjectConnection, Knex } from 'nestjs-knex';
 import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 
-import { MapWayConditions, RoadConditions, TripConditions, Way  } from './models.rc';
+import { MapRoadConditions, RoadConditions, TripConditions, Way  } from './models.rc';
 import { RendererName } from '../models';
 import axios from 'axios';
 
@@ -86,45 +86,45 @@ export class RCService
 
     async getRoadConditions(wayIds: number[], type: string): Promise<RoadConditions>
     {
-        const res = await this.knex
+        return await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'road_conditions' )
             .where( { 'type': type } )
             .whereIn( 'way_id', wayIds )
             .orderBy( 'way_dist' );
-
-        return res.sort( (a, b) => wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id) )
     }
 
     async getZoomConditions(wayIds: number[], type: string, zoom: number): Promise<RoadConditions>
     {
-        const res = await this.knex
+        return await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'zoom_conditions' )
             .where( { 'type': type, 'zoom': zoom } )
             .whereIn( 'way_id', wayIds )
             .orderBy( 'way_dist' )
-
-        return res.sort( (a, b) => wayIds.indexOf(a.way_id) - wayIds.indexOf(b.way_id) )
     }
 
     async getFullConditions(roadName: string, type: string, zoomLevel: number): Promise<TripConditions>
     {
         // const wayIds: number[] = [5056416,358202922,358202917,273215212,117882081,24449371,5056434,205390176,205390170,2860952,23474957,729386233,35221934,35913117,878636806,878636808,26361334,38154645,38072846,527276167,527276166,30219634,25949335,25949338,205636596,9512945,85205854,219657886,263681425,263681427,219657881,263276626,271780210,25075330,5056369,5056367,5056375,5056380,5056381,5056366,219657806,219657811,23000641,98479074,98479020,23000640,29057944]
-        const ways = await this.getWays(roadName)
-        console.log(ways);
-        
+        const ways: Way[] = await this.getWays(roadName)
         const wayIds = ways.map( way => way.id )
 
-        const roadCond = await this.getRoadConditions(wayIds, type)
-        const zoom = await this.getZoomConditions(wayIds, type, zoomLevel) 
+        const roads: RoadConditions = await this.getRoadConditions(wayIds, type)
+        const zooms: RoadConditions = await this.getZoomConditions(wayIds, type, zoomLevel) 
 
-        const road: MapWayConditions = {
-            properties: { dbName: 'blob', name: roadName, rendererName: RendererName.hotline },
-            path: roadCond
-        }
+        const filterCondition = (rcs: RoadConditions, id: number) => rcs.filter(rc => parseInt(rc.way_id, 10) === id)
 
-        return { ways, road, zoom }
+        const toMapConditions = (id: number): MapRoadConditions => ({
+            properties: { dbName: 'blob-'+id, name: roadName, rendererName: RendererName.hotline },
+            conditions: filterCondition(zooms, id)
+        })
+
+        return ways.map( way => ({
+            way, 
+            zoom: toMapConditions(way.id), 
+            road: filterCondition(roads, way.id)
+        }))
     }
 }
 

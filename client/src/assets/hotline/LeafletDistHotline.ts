@@ -1,15 +1,27 @@
 
 import L from 'leaflet'
 
-import { InputHotlineData } from './core/Hotline';
-import DistHotline from './core/DistHotline';
+import DistHotline, { DistData, DistInput } from './core/DistHotline';
 
-import getLeafletHotline, { HotlineType } from './hotline';
+import getLeafletHotline from './hotline';
 import getHotlineRenderer from './renderer';
 
-import { HotlineOptions } from '../../models/path';
+import { HotlineOptions, RoadConditions } from '../../models/path';
 
-const LeafletDistHotline = (data: InputHotlineData, options: HotlineOptions, dotHoverIndex: number | undefined, dists: any) => {
+const projectLatLngs = (_map: any, latlngs: any, result: any, projectedBounds: any) => {
+    const len = latlngs.length;
+    const ring = [];
+    for (let i = 0; i < len; i++) 
+    {
+        ring[i] = _map.latLngToLayerPoint(latlngs[i]);
+        ring[i].z = null
+        ring[i].i = i
+        projectedBounds.extend(ring[i]);
+    }
+    result.push(ring);
+}
+
+const LeafletDistHotline = (geom: DistInput, conditions: RoadConditions, options: HotlineOptions, dotHoverIndex: number | undefined, dists: any) => {
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
@@ -17,9 +29,9 @@ const LeafletDistHotline = (data: InputHotlineData, options: HotlineOptions, dot
     
     const HotlineRenderer = getHotlineRenderer(getHotline)
 
-    const Hotline: HotlineType = getLeafletHotline( HotlineRenderer )
+    const Hotline = getLeafletHotline<DistInput, DistData>( HotlineRenderer, projectLatLngs )
 
-    return new Hotline(data, options)
+    return new Hotline(geom, options) as any
 };
 
 

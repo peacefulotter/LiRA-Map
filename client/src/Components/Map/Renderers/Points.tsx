@@ -12,6 +12,7 @@ interface Props extends RendererProps {
     Used to render Rectangles and Circles
 */
 const Points: FC<Props> = ( { path, properties, onClick, PointElt } ) => {
+    const clickEvent = onClick ? onClick : (i: number) => (e: any) => {};
     return (
         <>
         {
@@ -22,7 +23,7 @@ const Points: FC<Props> = ( { path, properties, onClick, PointElt } ) => {
                     lng={point.lng} 
                     pointProperties={point.properties}
                     pathProperties={properties} 
-                    onClick={onClick}
+                    onClick={clickEvent}
                     i={i} />
             } )
         }

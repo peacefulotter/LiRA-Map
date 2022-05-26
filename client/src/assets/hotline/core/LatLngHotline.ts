@@ -1,14 +1,20 @@
 
-import Hotline, { HotlinePoint } from "./Hotline";
+import Hotline from "./Hotline";
 
-    
-export default class LatLngHotline extends Hotline {
+
+export type LatLngInputPoint = [number, number, number]
+export type LatLngInput = LatLngInputPoint[]
+
+export interface LatLngPoint { x: number, y: number, z: number, i: number };
+export type LatLngData = LatLngPoint[]
+
+export default class LatLngHotline extends Hotline<LatLngData> {
 
     constructor(canvas: HTMLElement, dotHoverIndex: number | undefined) {
         super(canvas, dotHoverIndex);
     }
 
-    computeGradient(gradient: CanvasGradient, pointStart: HotlinePoint, pointEnd: HotlinePoint) 
+    computeGradient(gradient: CanvasGradient, pointStart: LatLngPoint, pointEnd: LatLngPoint) 
     {
 
         const deltaIndex = pointEnd.i - pointStart.i

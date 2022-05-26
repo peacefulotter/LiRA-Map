@@ -7,20 +7,22 @@ export interface Way {
 }
 
 export interface ConditionPoint {
+    way_id: string;
 	way_dist: number;
 	value: number;
 }
 
 export type RoadConditions = ConditionPoint[]
-export type WayConditions = { [key: number]: RoadConditions }
 
-export interface MapWayConditions { 
-    path: RoadConditions;
-    properties: Measurement
+export interface MapRoadConditions { 
+    properties: Measurement;
+    conditions: RoadConditions;
 }
 
-export interface TripConditions {
-	ways: Way[];
-	zoom: RoadConditions;
-	road: MapWayConditions;
+export interface TripCondition {
+	way: Way;
+	zoom: MapRoadConditions;
+	road: RoadConditions;
 }
+
+export type TripConditions = TripCondition[]

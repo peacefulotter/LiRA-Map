@@ -26,11 +26,14 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
         if ( svg === undefined || axis === undefined ) return;
 
         const _bounds: Bounds = {
-            minX: bounds?.minX || Math.min(...data.map( d => d[0] )),
-            maxX: bounds?.maxX || Math.max(...data.map( d => d[0] )),
-            minY: bounds?.minY || Math.min(...data.map( d => d[1] )),
-            maxY: bounds?.maxY || Math.max(...data.map( d => d[1] )),
+            minX: bounds ? bounds.minX : Math.min(...data.map( d => d[0] )),
+            maxX: bounds ? bounds.maxX : Math.max(...data.map( d => d[0] )),
+            minY: bounds ? bounds.minY : Math.min(...data.map( d => d[1] )),
+            maxY: bounds ? bounds.maxY : Math.max(...data.map( d => d[1] )),
         }
+
+        console.log(bounds, _bounds);
+        
         
         addMinMax(label, _bounds)
 

@@ -6,7 +6,7 @@ const Util = {
      * This is just a copy of the original Leaflet version that support a third z coordinate.
      * @see {@link http://leafletjs.com/reference.html#lineutil-clipsegment|Leaflet}
      */
-    clipSegment: function (hotline: Hotline, a: any, b: any, bounds: any, useLastCode: any, round: any) {
+    clipSegment: function (hotline: Hotline<any>, a: any, b: any, bounds: any, useLastCode: any, round: any) {
         
         let codeA = useLastCode ? hotline._lastCode : (L.LineUtil as any)._getBitCode(a, bounds);
         let codeB = (L.LineUtil as any)._getBitCode(b, bounds);

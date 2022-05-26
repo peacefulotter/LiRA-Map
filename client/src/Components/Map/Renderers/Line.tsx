@@ -18,7 +18,7 @@ const Line: Renderer = ( { path, properties, onClick } ) => {
     return <Polyline  
         positions={path}
         pathOptions={_properties}
-        eventHandlers={{'click': onClick(0)}} 
+        eventHandlers={{'click': onClick ? onClick(0) : () => {}}} 
     >
         { arrowHead === 1 || arrowHead === 3 ? <ArrowHead origin={origin} end={end} /> : null }
         { arrowHead === 2 || arrowHead === 3 ? <ArrowHead origin={end} end={origin} /> : null }

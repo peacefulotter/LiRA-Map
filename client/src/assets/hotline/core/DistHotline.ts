@@ -6,7 +6,15 @@ interface DistVal {
     value: number;
 }
 
-export default class DistHotline extends Hotline {
+
+export type DistInputPoint = [number, number]
+export type DistInput = DistInputPoint[]
+
+export interface DistPoint { x: number, y: number, z: number, i: number };
+export type DistData = DistPoint[]
+
+
+export default class DistHotline extends Hotline<DistData> {
 
     dists: DistVal[][]
 
@@ -15,7 +23,7 @@ export default class DistHotline extends Hotline {
         this.dists = dists;
     }
 
-    computeGradient(gradient: CanvasGradient, pointStart: any, pointEnd: any) 
+    computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint) 
     {
 
         const wayIndex = pointStart.i

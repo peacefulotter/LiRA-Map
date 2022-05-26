@@ -1,10 +1,7 @@
+
+
 import { HotlinePalette } from "../../../models/path";
 
-export type InputHotlinePoint = [number, number, number]
-export type InputHotlineData = InputHotlinePoint[]
-
-export interface HotlinePoint { x: number, y: number, z: number, i: number };
-export type HotlineData = HotlinePoint[]
 
 /**
 	 * Core renderer.
@@ -12,7 +9,7 @@ export type HotlineData = HotlinePoint[]
 	 * @param {HTMLElement | string} canvas - &lt;canvas> element or its id
 	 * to initialize the instance on.
 	 */
-abstract class Hotline {
+abstract class Hotline<DataT> {
 
     _canvas: HTMLCanvasElement;
     _ctx: CanvasRenderingContext2D;
@@ -24,11 +21,11 @@ abstract class Hotline {
     _outlineColor: string;
     _min: number;
     _max: number;
-    _data: HotlineData[];
+    _data: DataT[];
     _palette: Uint8ClampedArray;
 
     _lastCode: any;
-    projectedData: HotlineData[]
+    projectedData: DataT[]
     dotHoverIndex: number | undefined;
 
     constructor(canvas: HTMLElement, dotHoverIndex: number | undefined)
@@ -171,7 +168,7 @@ abstract class Hotline {
      * Sets the data that gets drawn on the canvas.
      * @param {(Path|Path[])} data - A single path or an array of paths.
      */
-    data(data: HotlineData[]) {
+    data(data: DataT[]) {
         this._data = data;
         return this;
     }
@@ -180,7 +177,7 @@ abstract class Hotline {
      * Adds a path to the list of paths.
      * @param {Path} path
      */
-    add(path: HotlineData) {
+    add(path: DataT) {
         this._data.push(path);
         return this;
     }
@@ -230,12 +227,12 @@ abstract class Hotline {
 
         for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
         {
-            let path = this._data[i];
+            let path = this._data[i] as any; // ==== fixme
 
             for (let j = 1, pathLength = path.length; j < pathLength; j++) 
             {
-                let pointStart = path[j - 1];
-                let pointEnd = path[j];
+                let pointStart = path[j - 1] as any;
+                let pointEnd = path[j] as any;
                 
                 const ctx = this._ctx;
                 ctx.lineWidth = this._outlineWidth;
@@ -281,7 +278,7 @@ abstract class Hotline {
     {
         for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
         {
-            const path = this._data[i];
+            const path = this._data[i] as any;
             for (let j = 1, pathLength = path.length; j < pathLength; j++) 
             {
                 const pointStart = path[j - 1];

@@ -14,9 +14,9 @@ export enum RendererName {
 
 export interface RendererProps {
     path: Path;
-    bounds?: Bounds;
     properties: PathProperties;
-    onClick: PathEventHandler;
+    bounds?: Bounds;
+    onClick?: PathEventHandler;
 }
 
 export interface PointProps extends LatLng {

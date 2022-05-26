@@ -5,7 +5,7 @@ import Hotline from './core/Hotline';
 
 export type Renderer = (new (...args: any[]) => any) & typeof Canvas
 
-const getHotlineRenderer = (getHotline: (container: HTMLElement) => Hotline) => L.Canvas.extend( { 
+const getHotlineRenderer = <DataT>(getHotline: (container: HTMLElement) => Hotline<DataT>) => L.Canvas.extend( { 
     
     _initContainer: function () {
         (L.Canvas.prototype as any)._initContainer.call(this);
@@ -14,7 +14,6 @@ const getHotlineRenderer = (getHotline: (container: HTMLElement) => Hotline) => 
 
     _destroyContainer: function() {
         (L.Canvas.prototype as any)._destroyContainer.call(this)
-        console.log('DESTROY');
     },
 
     _update: function () {
