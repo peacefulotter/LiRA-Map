@@ -14,6 +14,41 @@ export default class LatLngHotline extends Hotline<LatLngData> {
         super(canvas, dotHoverIndex);
     }
 
+    _drawHotline(): void 
+    {
+        for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
+        {
+            const path = this._data[i] as any;
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            {
+                const pointStart = path[j - 1];
+                const pointEnd = path[j];
+
+                if ( pointStart.i !== pointEnd.i )
+                    this._addGradient(pointStart, pointEnd);
+            }
+        }
+    }
+
+    _addGradient(pointStart: any, pointEnd: any) {
+
+        const ctx = this._ctx;
+
+        const weight = this.getWeight(pointStart.i, pointEnd.i) 
+        ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
+
+        // Create a gradient for each segment, pick start and end colors from palette gradient
+        const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+
+       this.computeGradient(gradient, pointStart, pointEnd)
+
+        ctx.strokeStyle = gradient;
+        ctx.beginPath();
+        ctx.moveTo(pointStart.x, pointStart.y);
+        ctx.lineTo(pointEnd.x, pointEnd.y);
+        ctx.stroke();
+    }
+
     computeGradient(gradient: CanvasGradient, pointStart: LatLngPoint, pointEnd: LatLngPoint) 
     {
 

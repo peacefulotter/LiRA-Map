@@ -32,12 +32,46 @@ export class RCService
         return JSON.parse(file)
     }
 
+    // const endnodes = elements.map( ({nodes}, i: number) => [nodes[0], nodes[nodes.length - 1], i] )
+        
+    // let orderedNodes = [endnodes[0]]
+    // console.log(elements.map(({nodes}) => nodes));
+    
+    
+    // // FIXME
+    // for ( let j = 0; j < endnodes.length; j++ )
+    // {
+    //     let head = orderedNodes[0]
+    //     let tail = orderedNodes[orderedNodes.length - 1]
+    //     // console.log(orderedNodes.length, endnodes.length, orderedNodes, head, tail);
+        
+    //     for ( let i = 0; i < endnodes.length; i++ )
+    //     {
+    //         const cur = endnodes[i]
+    //         if ( cur[0] === tail[1] )
+    //         {
+    //             orderedNodes.push( cur )
+    //         }
+    //         else if ( cur[1] === head[0] )
+    //         {
+    //             orderedNodes.splice(0, 0, cur)
+    //         }
+    //     }
+    // }
+
+    // console.log(orderedNodes);
+    
+    // const geoms = new Map(
+    //     res.data.elements.map( ({id, geometry}) => [id, geometry.map(({lat, lon}) => ({lat, lng: lon}))] )
+    // );
+
     async getWays(roadName: string): Promise<Way[]>
     {
         const ways: any = await this.knex()
             .select( this.knex.raw('id, ST_Length(geom::geography) as length') )
             .from( 'way' )
             .where( { official_ref: roadName } )
+            .orderBy( 'id' )
 
         const wayIds = ways.map( (way: any) => way.id )
         
@@ -45,42 +79,10 @@ export class RCService
         const res = await axios.get(url)
 
         const { elements } = res.data
-        console.log(res.data);
-        
-        // const endnodes = elements.map( ({nodes}, i: number) => [nodes[0], nodes[nodes.length - 1], i] )
-        
-        // let orderedNodes = [endnodes[0]]
-        // console.log(elements.map(({nodes}) => nodes));
-        
-        
-        // // FIXME
-        // for ( let j = 0; j < endnodes.length; j++ )
-        // {
-        //     let head = orderedNodes[0]
-        //     let tail = orderedNodes[orderedNodes.length - 1]
-        //     // console.log(orderedNodes.length, endnodes.length, orderedNodes, head, tail);
-            
-        //     for ( let i = 0; i < endnodes.length; i++ )
-        //     {
-        //         const cur = endnodes[i]
-        //         if ( cur[0] === tail[1] )
-        //         {
-        //             orderedNodes.push( cur )
-        //         }
-        //         else if ( cur[1] === head[0] )
-        //         {
-        //             orderedNodes.splice(0, 0, cur)
-        //         }
-        //     }
-        // }
+        const geometries = elements.map( elt => elt.geometry )
+        console.log(geometries);
 
-        // console.log(orderedNodes);
-        
-        // const geoms = new Map(
-        //     res.data.elements.map( ({id, geometry}) => [id, geometry.map(({lat, lon}) => ({lat, lng: lon}))] )
-        // );
-
-        return ways.map( ({id, length}, i) => ({ id: parseInt(id, 10), length, geom: elements[i] }) ) //geoms.get(parseInt(id, 10))
+        return ways.map( ({id, length}, i) => ({ id: parseInt(id, 10), length, geom: geometries[i] }) ) //geoms.get(parseInt(id, 10))
     }
 
     async getRoadConditions(wayIds: number[], type: string): Promise<RoadConditions>
@@ -107,12 +109,13 @@ export class RCService
     {
         // const wayIds: number[] = [5056416,358202922,358202917,273215212,117882081,24449371,5056434,205390176,205390170,2860952,23474957,729386233,35221934,35913117,878636806,878636808,26361334,38154645,38072846,527276167,527276166,30219634,25949335,25949338,205636596,9512945,85205854,219657886,263681425,263681427,219657881,263276626,271780210,25075330,5056369,5056367,5056375,5056380,5056381,5056366,219657806,219657811,23000641,98479074,98479020,23000640,29057944]
         const ways: Way[] = await this.getWays(roadName)
-        console.log(ways);
-        
         const wayIds = ways.map( way => way.id )
 
         const roads: RoadConditions = await this.getRoadConditions(wayIds, type)
         const zooms: RoadConditions = await this.getZoomConditions(wayIds, type, zoomLevel) 
+
+        console.log(zooms);
+        
 
         const filterCondition = (rcs: RoadConditions, id: number) => rcs.filter(rc => parseInt(rc.way_id, 10) === id)
 
@@ -121,11 +124,15 @@ export class RCService
             conditions: filterCondition(zooms, id)
         })
 
-        return ways.map( way => ({
-            way, 
-            zoom: toMapConditions(way.id), 
-            road: filterCondition(roads, way.id).map( ({way_id, way_dist,value}) => ({way_id, way_dist: way_dist * way.length, value}) )
-        }))
+        return ways
+            .map( way => ({
+                way, 
+                zoom: toMapConditions(way.id), 
+                road: filterCondition(roads, way.id).map( ({way_id, way_dist,value}) => ({way_id, way_dist: way_dist * way.length, value}) )
+            }))
+            .filter( ({zoom}) => 
+                zoom.conditions.length > 0 
+            )
     }
 }
 

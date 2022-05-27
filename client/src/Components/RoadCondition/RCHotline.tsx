@@ -3,16 +3,19 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import L from 'leaflet'
 import { Palette } from '../../models/graph';
-import { HotlineOptions, HotlinePalette, PointData, RoadConditions } from '../../models/path';
+import { Geometry, HotlineOptions, HotlinePalette, PointData, RoadConditions } from '../../models/path';
 import { RendererProps } from '../../models/renderers';
 import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
 import ArrowHead from '../Map/Renderers/ArrowHead';
 import { DistInput } from '../../assets/hotline/core/DistHotline';
+import { Measurement } from '../../models/properties';
 
-interface RCRendererProps extends RendererProps {
+interface RCRendererProps {
+    geometry: Geometry
     conditions: RoadConditions
+    properties: Measurement;
 }
 
 const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
@@ -23,7 +26,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const RCHotline: FC<RCRendererProps> = ( { path, conditions, properties  } ) => {
+const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } ) => {
 
     const [coords, setCoords] = useState<DistInput>([])
 
@@ -58,20 +61,28 @@ const RCHotline: FC<RCRendererProps> = ( { path, conditions, properties  } ) => 
     //     hotline.redraw(options)
     // }, [options])
 
-    useEffect( () => {
-        if ( path === undefined || path.length === 0 ) return;
-        setCoords( path.map( (p: PointData) => [p.lat, p.lng]) )
-    }, [path])
+    // useEffect( () => {
+    //     if ( geometry === undefined || geometry.length === 0 ) return;
+    //     console.log(path, conditions);
+        
+    //     setCoords( path.map( (p: PointData) => [p.lat, p.lng]) )
+    // }, [path])
 
     useEffect( () => {
-        if ( coords.length === 0 ) return;
+        if ( geometry.length === 0 ) return;
 
-        const dists: any[] = []
-        const hotline = LeafletDistHotline( coords, conditions, options, dotHoverIndex, dists )
+        console.log(geometry, conditions);
+        
+
+        const hotline = LeafletDistHotline( geometry, conditions, options, dotHoverIndex )
 
         hotline.addTo(map)
 
+
         const id = L.stamp(hotline)
+
+        console.log(id);
+        
 
         return () => { 
             // console.log(hotline._renderer._container);
@@ -84,9 +95,9 @@ const RCHotline: FC<RCRendererProps> = ( { path, conditions, properties  } ) => 
     }, [map, options, coords, dotHoverIndex])
 
 
-    const origin = path[path.length - 2]
-    const end = path[path.length - 1]
-    return <ArrowHead key={Math.random()} origin={origin} end={end} />;
+    // const origin = path[path.length - 2]
+    // const end = path[path.length - 1]
+    return null // <ArrowHead key={Math.random()} origin={origin} end={end} />;
 }
 
 export default RCHotline;

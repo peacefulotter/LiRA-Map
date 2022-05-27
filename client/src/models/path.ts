@@ -61,9 +61,16 @@ export interface HotlineOptions {
 }
 
 
+export interface LatLon {
+	lat: number;
+	lon: number;
+}
+
+export type Geometry = LatLon[]
+
 export interface Way {
 	id: number;
-	geom: LatLng[];
+	geom: Geometry;
 	length: number;
 }
 

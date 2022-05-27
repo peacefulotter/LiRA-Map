@@ -72,7 +72,7 @@ const RoadConditions = () => {
         const zoom = 5;
         getConditions(roadName, type, zoom, (data: WayConditions[]) => {
             console.log(data);
-            setWays( data.slice(0, 10) )
+            setWays( data.slice(0, 2) )
         } )
     }
 
@@ -82,16 +82,16 @@ const RoadConditions = () => {
         <div className="ml-wrapper">
             <div className="ml-map">
                 <MapWrapper>
-                    {/* { ways.map( ({way, zoom}, i: number) => {
-                        console.log(ways, way, zoom);
+                    { ways.map( ({way, zoom}, i: number) => {
+                        console.log(zoom.conditions);
                         
                         return <RCHotline 
                             key={`ml-path-${i}`}
                             properties={{...zoom.properties, palette: IRIPalette}}
-                            path={way.geom}
+                            geometry={way.geom}
                             conditions={zoom.conditions}
                         />
-                    } ) }  */}
+                    } ) } 
                 </MapWrapper>
                 <Panel measurements={measurements} onClick={onClick} fetchConditions={fetchConditions}/>
             </div>
@@ -101,9 +101,7 @@ const RoadConditions = () => {
                     labelY="IRI"
                     palette={IRIPalette}
                     plots={ 
-                        ways
-                            .filter( ({zoom}) => zoom.conditions.length > 0 )
-                            .map( ({way, road}, i: number) => {
+                        ways.map( ({way, road}, i: number) => {
                                 const bounds: Bounds = {
                                     minX: 0, // Math.min(...zoom.conditions.map(c => c.way_dist)),
                                     maxX: way.length,
@@ -111,17 +109,15 @@ const RoadConditions = () => {
                                     maxY: 10,// Math.max(...zoom.conditions.map(c => c.value)),
                                 }
 
-                                console.log(
-                                    Math.min(...road.map(c => c.way_dist)), 
-                                    Math.max(...road.map(c => c.way_dist)),
-                                    Math.min(...road.map(c => c.value)),
-                                    Math.max(...road.map(c => c.value))
-                                );
+                                // console.log(
+                                //     Math.min(...road.map(c => c.way_dist)), 
+                                //     Math.max(...road.map(c => c.way_dist)),
+                                //     Math.min(...road.map(c => c.value)),
+                                //     Math.max(...road.map(c => c.value))
+                                // );
                                 
                                 const data: GraphData = road.map((p: ConditionPoint, i: number) => [p.way_dist, p.value, i])
                                 const label = `way-${way.id}`
-                                console.log(data);
-                                
                                 return { data, bounds, label, i }
                             } ) 
                     }

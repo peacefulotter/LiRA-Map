@@ -1,4 +1,6 @@
 
+import { text } from "d3";
+import { RoadConditions } from "../../../models/path";
 import Hotline from "./Hotline";
 
 interface DistVal {
@@ -16,26 +18,64 @@ export type DistData = DistPoint[]
 
 export default class DistHotline extends Hotline<DistData> {
 
-    dists: DistVal[][]
+    conditions: RoadConditions;
 
-    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined, dists: DistVal[][]) {
+    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined, conditions: RoadConditions) {
         super(canvas, dotHoverIndex);
-        this.dists = dists;
+        this.conditions = conditions;
+    }
+
+    _drawHotline(): void 
+    {
+        const ctx = this._ctx;
+        const dataLength = this._data.length
+
+        ctx.beginPath();
+
+        for (let i = 0; i < dataLength; i++) 
+        {
+            const path = this._data[i] as any;
+            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            {
+                const pointStart = path[j - 1];
+                const pointEnd = path[j];
+
+                console.log(pointStart, pointEnd);
+                
+
+                if ( pointStart.i !== pointEnd.i )
+                    this._addGradient(pointStart, pointEnd);
+            }
+        }
+
+        ctx.closePath()
+    }
+
+    _addGradient(pointStart: any, pointEnd: any) {
+
+        const ctx = this._ctx;
+
+        const weight = this.getWeight(pointStart.i, pointEnd.i) 
+        ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
+
+        const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+        this.computeGradient(gradient, pointStart, pointEnd)
+
+        ctx.strokeStyle = gradient;
+        ctx.moveTo(pointStart.x, pointStart.y);
+        ctx.lineTo(pointEnd.x, pointEnd.y);
+        ctx.stroke();
     }
 
     computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint) 
     {
-
-        const wayIndex = pointStart.i
-        const segDists = this.dists[wayIndex] 
-
-        for ( let i = 0; i < segDists.length; i++ )
+        for ( let i = 0; i < this.conditions.length; i++ )
         {
             // const point = this.projectedData[0][k]
-            const { dist, value } = segDists[i]
+            const { way_dist, value } = this.conditions[i]
 
             const rgb = this.getRGBForValue(value);
-            this._addColorGradient(gradient, rgb, dist)
+            this._addColorGradient(gradient, rgb, way_dist)
 
             // if ( this.dotHoverIndex )
             // {
