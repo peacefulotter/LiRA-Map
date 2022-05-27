@@ -1,11 +1,11 @@
 
-import { FC, useEffect } from "react"
+import { FC, useEffect, useRef } from "react"
 
 import { addLine, remLine } from "../../assets/graph/line"
 
 import { useGraph } from "../../context/GraphContext";
 
-import { GraphAxis, GraphData, SVG } from "../../models/graph"
+import { AddMinMaxFunc, GraphAxis, GraphData, SVG } from "../../models/graph"
 import { Bounds } from "../../models/path";
 
 
@@ -19,7 +19,7 @@ interface ILine {
 
 const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
-    const { addMinMax, remMinMax, setDotHoverIndex } = useGraph()
+    const { maxX, addMinMax, remMinMax, setDotHoverIndex } = useGraph()
 
     useEffect( () => {
 
@@ -32,9 +32,6 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
             maxY: bounds ? bounds.maxY : Math.max(...data.map( d => d[1] )),
         }
 
-        console.log(bounds, _bounds);
-        
-        
         addMinMax(label, _bounds)
 
         addLine(svg, data, axis, label, i, setDotHoverIndex)
@@ -47,7 +44,7 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
             remMinMax(label)
         }
 
-    }, [svg, axis, data, label, addMinMax, remMinMax, bounds, i, setDotHoverIndex])
+    }, [svg, axis, data, label, bounds, i, setDotHoverIndex])
 
     return null
 

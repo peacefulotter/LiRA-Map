@@ -1,5 +1,5 @@
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { AddMinMaxFunc, MinMaxAxis, RemMinMaxFunc } from "../models/graph";
 import { Bounds } from "../models/path";
 
@@ -20,14 +20,13 @@ const defaultMinMax: MinMaxAxis = [
 const min = (_min?: number) => _min !== undefined ? _min : Number.MAX_SAFE_INTEGER
 const max = (_max?: number) => _max !== undefined ? _max : Number.MIN_SAFE_INTEGER
 
+let syncMinMax = defaultMinMax
+
 const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
 
+    const [minMaxAxis, setMinMaxAxis] = useState<MinMaxAxis>(defaultMinMax)
     const [firstUpdate, setFirstUpdate] = useState<boolean>(true)
     const [labels, setLabels] = useState<LabelMinMax>({})
-    const [minMaxAxis, setMinMaxAxis] = useState<MinMaxAxis>(defaultMinMax)
-
-    console.log(minMaxAxis);
-    
 
     const update = (prev: MinMaxAxis, cur: MinMaxAxis): MinMaxAxis => {
         return [
@@ -38,7 +37,7 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
         ]
     }
 
-    const addMinMax = useCallback( (label: string, bounds: Bounds) => {
+    const addMinMax = (label: string, bounds: Bounds) => {
 
         const { minX, maxX, minY, maxY } = bounds;
         
@@ -46,31 +45,30 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
             min(minX), max(maxX), min(minY), max(maxY) 
         ]
 
-        const realMinMax = firstUpdate ? newMinMax : update(minMaxAxis, newMinMax)
-
-        console.log(bounds, newMinMax, realMinMax);
-        
+        const realMinMax = firstUpdate ? newMinMax : update(syncMinMax, newMinMax)
 
         setFirstUpdate(false)
         setMinMaxAxis( realMinMax )
-        setLabels( prev => { return { ...prev, [label]: realMinMax } } )
-
-    }, [setLabels, setMinMaxAxis, firstUpdate, setFirstUpdate] )
-
+        syncMinMax = realMinMax
+        setLabels( prev => ({ ...prev, [label]: realMinMax }) )
+    }
 
     const remMinMax = useCallback( (label: string) => {
         
-        const temp = {...labels}
-        delete temp[label]
-        
-        setLabels( temp )
-
-        const _minMaxAxis = Object.values(temp).reduce( update, defaultMinMax )
-        setMinMaxAxis(_minMaxAxis)
-
-    }, [setLabels, setMinMaxAxis] )
-
+            const temp = {...labels}
+            delete temp[label]
+            
+            setLabels( temp )
     
+            const _minMaxAxis = Object.values(temp).reduce( update, defaultMinMax )
+            setMinMaxAxis(_minMaxAxis)
+
+            if ( Object.keys(temp).length === 1 )
+                setFirstUpdate(true)
+    
+    }, [labels, minMaxAxis] )
+
+
     return [minMaxAxis, addMinMax, remMinMax]
 }
 

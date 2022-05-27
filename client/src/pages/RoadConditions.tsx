@@ -62,7 +62,11 @@ const RoadConditions = () => {
         // isChecked ? addPath(i) : delPath(i)
     }
 
-    const fetchConditions = () => {
+    const fetchConditions = (isChecked: boolean) => {
+        if ( !isChecked ) {
+            setWays([])
+            return;
+        }
         const roadName = 'M3'
         const type = 'IRI';
         const zoom = 5;
@@ -99,23 +103,23 @@ const RoadConditions = () => {
                     plots={ 
                         ways
                             .filter( ({zoom}) => zoom.conditions.length > 0 )
-                            .map( ({zoom, road}, i: number) => {
+                            .map( ({way, road}, i: number) => {
                                 const bounds: Bounds = {
                                     minX: 0, // Math.min(...zoom.conditions.map(c => c.way_dist)),
-                                    maxX: 1, // Math.max(...zoom.conditions.map(c => c.way_dist)),
+                                    maxX: way.length,
                                     minY: 0, // Math.min(...zoom.conditions.map(c => c.value)),
                                     maxY: 10,// Math.max(...zoom.conditions.map(c => c.value)),
                                 }
 
                                 console.log(
-                                    Math.min(...zoom.conditions.map(c => c.way_dist)), 
-                                    Math.max(...zoom.conditions.map(c => c.way_dist)),
-                                    Math.min(...zoom.conditions.map(c => c.value)),
-                                    Math.max(...zoom.conditions.map(c => c.value))
+                                    Math.min(...road.map(c => c.way_dist)), 
+                                    Math.max(...road.map(c => c.way_dist)),
+                                    Math.min(...road.map(c => c.value)),
+                                    Math.max(...road.map(c => c.value))
                                 );
                                 
-                                const data: GraphData = zoom.conditions.map((p: ConditionPoint, i: number) => [p.way_dist, p.value, i])
-                                const label = zoom.properties.name + Math.round(Math.random() * 10000)
+                                const data: GraphData = road.map((p: ConditionPoint, i: number) => [p.way_dist, p.value, i])
+                                const label = `way-${way.id}`
                                 console.log(data);
                                 
                                 return { data, bounds, label, i }

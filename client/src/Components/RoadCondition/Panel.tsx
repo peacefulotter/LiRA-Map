@@ -6,7 +6,7 @@ import Checkbox from "../Checkbox"
 interface IPanel {
     measurements: string[] 
     onClick: (i: number) => (isChecked: boolean) => void;
-    fetchConditions: () => void;
+    fetchConditions: (isChecked: boolean) => void;
 }
 
 

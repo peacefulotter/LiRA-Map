@@ -62,7 +62,7 @@ export interface HotlineOptions {
 
 
 export interface Way {
-	way_id: number;
+	id: number;
 	geom: LatLng[];
 	length: number;
 }
