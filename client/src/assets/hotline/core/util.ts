@@ -1,5 +1,5 @@
 import L from 'leaflet'
-import Hotline from "./core/Hotline";
+import Hotline from "../renderers/Hotline";
 
 const Util = {
     /**

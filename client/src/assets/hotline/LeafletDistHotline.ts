@@ -1,15 +1,15 @@
 
-import L from 'leaflet'
+import L, { LatLng, Map } from 'leaflet'
 
-import DistHotline, { DistData } from './core/DistHotline';
+import DistHotline, { DistData } from './renderers/DistHotline';
 
-import { HotPolyline } from './hotline';
+import { HotPolyline } from './core/HotPolyline';
 
 import { Geometry, HotlineOptions, RoadConditions } from '../../models/path';
 
-const projectLatLngs = (_map: any, latlngs: any, result: any, projectedBounds: any) => {
+const projectLatLngs = (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
-    const ring = [];
+    const ring: any[] = [];
     for (let i = 0; i < len; i++) 
     {
         ring[i] = _map.latLngToLayerPoint(latlngs[i]);
@@ -19,19 +19,21 @@ const projectLatLngs = (_map: any, latlngs: any, result: any, projectedBounds: a
     result.push(ring);
 }
 
-const LeafletDistHotline = (geom: Geometry, conditions: RoadConditions, options: HotlineOptions) => {
+const LeafletDistHotline = (
+    geom: Geometry, conditions: RoadConditions, options: HotlineOptions
+)
+: [HotPolyline<DistData>, DistHotline] => 
+{
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
     const coords = geom.map(g => ({lat: g.lat, lng: g.lon}))
 
-    const getHotline = (canvas: HTMLElement) => new DistHotline(canvas, conditions);
-    
-    const hotline = new HotPolyline<DistData>(getHotline, projectLatLngs, coords, options) // getLeafletHotline<Geometry, DistData>( getHotline, projectLatLngs )
+    const hotline = new DistHotline(conditions, options)
 
-    // const hotline = new Hotline(geom, options) as DistHotline
+    const polyline = new HotPolyline<DistData>(hotline, projectLatLngs, coords) 
 
-    return hotline as any;
+    return [polyline, hotline];
 };
 
 

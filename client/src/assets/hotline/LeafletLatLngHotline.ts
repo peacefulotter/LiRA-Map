@@ -1,13 +1,13 @@
 
-import L from 'leaflet'
+import L, { Map, LatLng } from 'leaflet'
 import { HotlineOptions } from '../../models/path';
-import LatLngHotline, { LatLngData, LatLngInput } from './core/LatLngHotline';
-import { HotPolyline } from './hotline';
+import { HotPolyline } from './core/HotPolyline';
+import LatLngHotline, { LatLngData, LatLngInput } from './renderers/LatLngHotline';
 
 
-const projectLatLngs = (_map: any, latlngs: any, result: any, projectedBounds: any) => {
+const projectLatLngs = (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
-    const ring = [];
+    const ring: any[] = [];
     for (let i = 0; i < len; i++) 
     {
         ring[i] = _map.latLngToLayerPoint(latlngs[i]);
@@ -18,15 +18,19 @@ const projectLatLngs = (_map: any, latlngs: any, result: any, projectedBounds: a
     result.push(ring);
 }
 
-const LeafletLatLngHotline = (coords: LatLngInput, options: HotlineOptions) => {
+const LeafletLatLngHotline = (
+    coords: LatLngInput, options: HotlineOptions
+)
+: [HotPolyline<LatLngData>, LatLngHotline] => 
+{
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
-    const getHotline = (canvas: HTMLElement) => new LatLngHotline(canvas);
+    const hotline = new LatLngHotline(options)
 
-    const hotline = new HotPolyline<LatLngData>(getHotline, projectLatLngs, coords, options) 
+    const polyline = new HotPolyline<LatLngData>(hotline, projectLatLngs, coords) 
 
-    return hotline
+    return [polyline, hotline]
 };
 
 

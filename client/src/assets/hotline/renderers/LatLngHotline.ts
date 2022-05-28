@@ -1,6 +1,7 @@
 
 import { LatLngExpression } from 'leaflet'
-import Hotline from "./Hotline";
+import { HotlineOptions } from '../../../models/path';
+import Hotline from './Hotline';
 
 
 export type LatLngInput = LatLngExpression[]
@@ -9,6 +10,7 @@ export interface LatLngPoint { x: number, y: number, z: number, i: number };
 export type LatLngData = LatLngPoint[]
 
 export default class LatLngHotline extends Hotline<LatLngData> {
+
 
     _drawHotline(): void 
     {
@@ -26,7 +28,10 @@ export default class LatLngHotline extends Hotline<LatLngData> {
         }
     }
 
-    _addGradient(pointStart: any, pointEnd: any) {
+    _addGradient(pointStart: LatLngPoint, pointEnd: LatLngPoint) 
+    {
+
+        if ( this._ctx === undefined ) return;
 
         const ctx = this._ctx;
 

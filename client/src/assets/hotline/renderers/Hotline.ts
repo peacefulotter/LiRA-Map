@@ -1,7 +1,16 @@
 
 
-import { HotlinePalette } from "../../../models/path";
+import { HotlineOptions, HotlinePalette } from "../../../models/path";
 
+
+
+export type HotlineClass<DataT> = new (options?: HotlineOptions) => Hotline<DataT>; 
+
+const defaultPalette = {
+    0.0: 'green',
+    0.5: 'yellow',
+    1.0: 'red'
+}; 
 
 /**
 	 * Core renderer.
@@ -11,13 +20,14 @@ import { HotlinePalette } from "../../../models/path";
 	 */
 abstract class Hotline<DataT> extends L.Renderer {
 
-    _canvas: HTMLCanvasElement;
-    _ctx: CanvasRenderingContext2D;
-    _width: number;
-    _height: number;
+    _canvas: HTMLCanvasElement | undefined;
+    _ctx: CanvasRenderingContext2D | undefined;
+    _width: number | undefined;
+    _height: number | undefined;
+
     _weight: number;
     _weightFunc: ((a: number, b: number) => number) | undefined;
-    _outlineWidth: number;
+    _outlineWidth: number | undefined;
     _outlineColor: string;
     _min: number;
     _max: number;
@@ -28,37 +38,37 @@ abstract class Hotline<DataT> extends L.Renderer {
     projectedData: DataT[]
     isHover: number | undefined;
 
-    constructor(canvas: HTMLElement)
+    constructor(options?: HotlineOptions)
     {
         super()
-        const defaultPalette = {
-            0.0: 'green',
-            0.5: 'yellow',
-            1.0: 'red'
-        };        
-    
-        this._canvas = typeof canvas === 'string'
-            ? document.getElementById(canvas) as any
-            : canvas;
-    
-        this._ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
-        this._width = this._canvas.width;
-        this._height = this._canvas.height;
-    
-        this._weight = 5;
-        this._weightFunc = undefined
-        this._outlineWidth = 1;
+        this._weight = options?.weight || 5;
+        this._weightFunc = options?.weightFunc
+        this._outlineWidth = options?.outlineWidth;
         this._outlineColor = 'black';
     
-        this._min = 0;
-        this._max = 1;
+        this._min = options?.min || 0;
+        this._max = options?.max || 1;
+
+        console.log(options, this._min, this._max);
+        
     
         this._data = [];
         this.projectedData = []
         this.isHover = undefined;
     
         this._palette = new Uint8ClampedArray()
-        this.palette(defaultPalette);
+        this.palette(options?.palette || defaultPalette);
+    }
+
+    setCanvas(canvas: HTMLCanvasElement)
+    {
+        this._canvas = typeof canvas === 'string'
+            ? document.getElementById(canvas) as any
+            : canvas;
+    
+        this._ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        this._width = canvas.width;
+        this._height = canvas.height;
     }
 
     setHover(isHover: number | undefined)
@@ -85,42 +95,42 @@ abstract class Hotline<DataT> extends L.Renderer {
         return this;
     }
 
-    /**
-     * Sets the weight of the path.
-     * @param {number} weight - Weight of the path in px.
-     */
-    weight(weight: number) {
-        this._weight = weight;
-        return this;
-    }
+    // /**
+    //  * Sets the weight of the path.
+    //  * @param {number} weight - Weight of the path in px.
+    //  */
+    // weight(weight: number) {
+    //     this._weight = weight;
+    //     return this;
+    // }
 
 
-    /**
-     * Sets the weight function for the path.
-     * @param {(a: number, b: number) => number} weightFunc - Weight Function for the path in px.
-     */
-     weightFunc(weightFunc: (a: number, b: number) => number) {
-        this._weightFunc = weightFunc;
-        return this;
-    }
+    // /**
+    //  * Sets the weight function for the path.
+    //  * @param {(a: number, b: number) => number} weightFunc - Weight Function for the path in px.
+    //  */
+    //  weightFunc(weightFunc: (a: number, b: number) => number) {
+    //     this._weightFunc = weightFunc;
+    //     return this;
+    // }
 
-    /**
-     * Sets the width of the outline around the path.
-     * @param {number} outlineWidth - Width of the outline in px.
-     */
-    outlineWidth(outlineWidth: number) {
-        this._outlineWidth = outlineWidth;
-        return this;
-    }
+    // /**
+    //  * Sets the width of the outline around the path.
+    //  * @param {number} outlineWidth - Width of the outline in px.
+    //  */
+    // outlineWidth(outlineWidth: number) {
+    //     this._outlineWidth = outlineWidth;
+    //     return this;
+    // }
 
-    /**
-     * Sets the color of the outline around the path.
-     * @param {string} outlineColor - A CSS color value.
-     */
-    outlineColor(outlineColor: string) {
-        this._outlineColor = outlineColor;
-        return this;
-    }
+    // /**
+    //  * Sets the color of the outline around the path.
+    //  * @param {string} outlineColor - A CSS color value.
+    //  */
+    // outlineColor(outlineColor: string) {
+    //     this._outlineColor = outlineColor;
+    //     return this;
+    // }
 
     /**
      * Sets the palette gradient.
@@ -148,23 +158,23 @@ abstract class Hotline<DataT> extends L.Renderer {
         return this;
     }
 
-    /**
-     * Sets the value used at the start of the palette gradient.
-     * @param {number} min
-     */
-    min(min: number) {
-        this._min = min;
-        return this;
-    }
+    // /**
+    //  * Sets the value used at the start of the palette gradient.
+    //  * @param {number} min
+    //  */
+    // min(min: number) {
+    //     this._min = min;
+    //     return this;
+    // }
 
-    /**
-     * Sets the value used at the end of the palette gradient.
-     * @param {number} max
-     */
-    max(max: number) {
-        this._max = max;
-        return this;
-    }
+    // /**
+    //  * Sets the value used at the end of the palette gradient.
+    //  * @param {number} max
+    //  */
+    // max(max: number) {
+    //     this._max = max;
+    //     return this;
+    // }
 
     /**
      * A path to rander as a hotline.
@@ -194,6 +204,8 @@ abstract class Hotline<DataT> extends L.Renderer {
      */
     draw() {
         const ctx = this._ctx;
+
+        if ( ctx === undefined ) return;
 
         ctx.globalCompositeOperation = 'source-over';
         ctx.lineCap = 'round';
@@ -230,7 +242,7 @@ abstract class Hotline<DataT> extends L.Renderer {
      */
     _drawOutline() {
 
-        if ( !this._outlineWidth ) return;
+        if ( this._ctx === undefined || !this._outlineWidth ) return;
 
         for (let i = 0, dataLength = this._data.length; i < dataLength; i++) 
         {

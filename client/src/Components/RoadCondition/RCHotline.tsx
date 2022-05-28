@@ -1,17 +1,14 @@
 
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
-import L from 'leaflet'
 import { Palette } from '../../models/graph';
 import { Geometry, HotlineOptions, HotlinePalette, PointData, RoadConditions } from '../../models/path';
-import { RendererProps } from '../../models/renderers';
 import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
 import ArrowHead from '../Map/Renderers/ArrowHead';
-import DistHotline, { DistInput } from '../../assets/hotline/core/DistHotline';
+import DistHotline from '../../assets/hotline/renderers/DistHotline';
 import { Measurement } from '../../models/properties';
-import Hotline from '../../assets/hotline/core/Hotline';
 
 interface RCRendererProps {
     geometry: Geometry
@@ -56,23 +53,21 @@ const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } )
     useEffect( () => {
         if ( hotline === undefined ) return;
         console.log(dotHoverIndex);
-        console.log(hotline);
-        
         hotline.setHover(dotHoverIndex)
     }, [dotHoverIndex])
 
     useEffect( () => {
         if ( geometry.length === 0 ) return;
 
-        const _hotline = LeafletDistHotline( geometry, conditions, options )
-
-        _hotline.addTo(map)
+        const [polyline, _hotline] = LeafletDistHotline( geometry, conditions, options )
+        
+        polyline.addTo(map)
 
         setHotline(_hotline)
 
         return () => { 
-            _hotline.remove()
-            map.removeLayer(_hotline);
+            polyline.remove()
+            map.removeLayer(polyline);
         }
     }, [map])
 

@@ -1,35 +1,33 @@
-import L from 'leaflet';
-import { HotlineOptions } from '../../models/path';
-import Hotline from './core/Hotline';
-import { HotlineRenderer } from './renderer';
+import L, { LatLng, Map } from 'leaflet';
+
+import { HotlineCanvas } from '../canvas/HotlineCanvas';
+import { HotlineOptions } from '../../../models/path';
+import Hotline, { HotlineClass } from '../renderers/Hotline';
+
 import Util from "./util";
 
 
 export class HotPolyline<DataT> extends L.Polyline {
 
-    projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void
-    _renderer: HotlineRenderer<DataT>
+    projectLatLngs: (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => void
+    _renderer: HotlineCanvas<DataT>
 
     constructor(
-        getHotline: (canvas: HTMLElement) => Hotline<DataT>,
+        hotline: Hotline<DataT>,
         projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void, 
         coords: L.LatLngExpression[] | L.LatLngExpression[], 
-        options: HotlineOptions
     ) {
-        const renderer = new HotlineRenderer<DataT>(getHotline)
-        const _options = {
-            ...options,
-            renderer, // getRenderer(RendererClass)(),
-        }
-        super(coords, _options)
+        const renderer = new HotlineCanvas<DataT>(hotline)
+        super( coords, { renderer } )
 
         this.projectLatLngs = projectLatLngs;
-        this._renderer = new HotlineRenderer<DataT>(getHotline)
+        this._renderer = renderer;
     }
 
     setHover(dotHover: number | undefined) {
         if ( this._renderer._hotline === undefined ) return;
         this._renderer._hotline.setHover(dotHover)
+        this.redraw()
     }
 
     getRGBForValue(value: number) {

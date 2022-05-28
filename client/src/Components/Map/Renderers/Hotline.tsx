@@ -14,7 +14,7 @@ import { Palette } from '../../../models/graph';
 import { palette, width } from '../../../assets/properties';
 
 import LeafletLatLngHotline from '../../../assets/hotline/LeafletLatLngHotline';
-import { LatLngInput } from '../../../assets/hotline/core/LatLngHotline';
+import { LatLngInput } from '../../../assets/hotline/renderers/LatLngHotline';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -76,13 +76,13 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
     useEffect( () => {
         if ( coords.length === 0 ) return;
 
-        const hotline = LeafletLatLngHotline( coords, options )
+        const [polyline, _] = LeafletLatLngHotline( coords, options )
 
-        hotline.addTo(map)
+        polyline.addTo(map)
 
         return () => { 
-            hotline.remove()
-            map.removeLayer(hotline);
+            polyline.remove()
+            map.removeLayer(polyline);
         }
 
     }, [map, options, coords, dotHoverIndex])

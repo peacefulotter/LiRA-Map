@@ -1,16 +1,9 @@
 
-import { text } from "d3";
-import { RoadConditions } from "../../../models/path";
+import { HotlineOptions, RoadConditions } from "../../../models/path";
 import Hotline from "./Hotline";
 
-interface DistVal {
-    dist: number;
-    value: number;
-}
 
-
-export type DistInputPoint = [number, number]
-export type DistInput = DistInputPoint[]
+export type DistInput = [number, number][]
 
 export interface DistPoint { x: number, y: number, i: number };
 export type DistData = DistPoint[]
@@ -20,20 +13,23 @@ export default class DistHotline extends Hotline<DistData> {
 
     conditions: RoadConditions;
 
-    constructor(canvas: HTMLElement, conditions: RoadConditions) {
-        super(canvas);
+    constructor(conditions: RoadConditions, options?: HotlineOptions) {
+        super(options)
         this.conditions = conditions;
+    }
+
+    setConditions(conditions: RoadConditions)
+    {
+        this.conditions = conditions
     }
 
     _drawHotline(): void 
     {
-        const ctx = this._ctx;
         const dataLength = this._data.length
 
         for (let i = 0; i < dataLength; i++) 
         {
             const path = this._data[i] as any;
-            console.log(path.length);
             
             for (let j = 1; j < path.length; j++) 
             {
@@ -50,6 +46,8 @@ export default class DistHotline extends Hotline<DistData> {
     }
 
     _addGradient(pointStart: DistPoint, pointEnd: DistPoint) {
+
+        if ( this._ctx === undefined ) return;
 
         const ctx = this._ctx;
         ctx.beginPath();
@@ -75,7 +73,9 @@ export default class DistHotline extends Hotline<DistData> {
             const { way_dist, value } = this.conditions[i]
 
             const rgb = this.getRGBForValue(value);
-            this._addColorGradient(gradient, rgb, way_dist)
+            this.isHover 
+                ? this._addColorGradient(gradient, [255, 0, 0], way_dist)
+                : this._addColorGradient(gradient, rgb, way_dist)
 
             // if ( this.dotHoverIndex )
             // {
