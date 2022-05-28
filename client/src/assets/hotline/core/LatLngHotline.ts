@@ -1,18 +1,14 @@
 
+import { LatLngExpression } from 'leaflet'
 import Hotline from "./Hotline";
 
 
-export type LatLngInputPoint = [number, number, number]
-export type LatLngInput = LatLngInputPoint[]
+export type LatLngInput = LatLngExpression[]
 
 export interface LatLngPoint { x: number, y: number, z: number, i: number };
 export type LatLngData = LatLngPoint[]
 
 export default class LatLngHotline extends Hotline<LatLngData> {
-
-    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined) {
-        super(canvas, dotHoverIndex);
-    }
 
     _drawHotline(): void 
     {
@@ -35,7 +31,7 @@ export default class LatLngHotline extends Hotline<LatLngData> {
         const ctx = this._ctx;
 
         const weight = this.getWeight(pointStart.i, pointEnd.i) 
-        ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
+        ctx.lineWidth = weight + (this.isHover ? 4 : 0)
 
         // Create a gradient for each segment, pick start and end colors from palette gradient
         const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
@@ -61,10 +57,10 @@ export default class LatLngHotline extends Hotline<LatLngData> {
 
             const rgb = this.getRGBForValue(point.z);
 
-            if ( this.dotHoverIndex )
+            if ( this.isHover )
             {
-                const hoverPoint = this.projectedData[0][this.dotHoverIndex];
-                const opacity = Math.max(1 - (Math.abs(this.dotHoverIndex - k) / deltaIndex), 0)
+                const hoverPoint = this.projectedData[0][this.isHover];
+                const opacity = Math.max(1 - (Math.abs(this.isHover - k) / deltaIndex), 0)
                 const color = this.getRGBForValue(hoverPoint.z);
                 gradient.addColorStop(dist, 'rgba(' + color.join(',') + ',' + opacity + ')');
             }

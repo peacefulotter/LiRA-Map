@@ -9,7 +9,7 @@ import { HotlinePalette } from "../../../models/path";
 	 * @param {HTMLElement | string} canvas - &lt;canvas> element or its id
 	 * to initialize the instance on.
 	 */
-abstract class Hotline<DataT> {
+abstract class Hotline<DataT> extends L.Renderer {
 
     _canvas: HTMLCanvasElement;
     _ctx: CanvasRenderingContext2D;
@@ -26,10 +26,11 @@ abstract class Hotline<DataT> {
 
     _lastCode: any;
     projectedData: DataT[]
-    dotHoverIndex: number | undefined;
+    isHover: number | undefined;
 
-    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined)
+    constructor(canvas: HTMLElement)
     {
+        super()
         const defaultPalette = {
             0.0: 'green',
             0.5: 'yellow',
@@ -54,10 +55,16 @@ abstract class Hotline<DataT> {
     
         this._data = [];
         this.projectedData = []
-        this.dotHoverIndex = dotHoverIndex;
+        this.isHover = undefined;
     
         this._palette = new Uint8ClampedArray()
         this.palette(defaultPalette);
+    }
+
+    setHover(isHover: number | undefined)
+    {
+        this.isHover = isHover;
+        this.draw()
     }
 
     /**

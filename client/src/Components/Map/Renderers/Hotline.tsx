@@ -44,18 +44,13 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
 
 const Hotline: Renderer = ( { path, properties, onClick  } ) => {
 
-    const [coords, setCoords] = useState<LatLngInput>([])
+    const map = useMapEvents({})
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
-    const map = useMapEvents({
-        // layeradd: (e: any) => console.log('LAYER ADD'),
-        // layerremove: (e: any) => console.log('LAYER REMOVE')
-    })
-    
-    const options: HotlineOptions = useMemo( () => { 
-        // console.log('MEMO OPTIONS');
+    const [coords, setCoords] = useState<LatLngInput>([])
 
+    const options: HotlineOptions = useMemo( () => { 
         const p = palette(properties)
         const min = p[0].stopValue            || minY || 0
         const max = p[p.length - 1].stopValue || maxY || 1
@@ -73,31 +68,21 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
         } 
     }, [properties, minY, maxY, onClick] )
 
-    // useEffect( () => {
-    //     if ( hotline === undefined) return
-    //     hotline.redraw(options)
-    // }, [options])
-
     useEffect( () => {
         if ( path === undefined || path.length === 0 ) return;
-        setCoords( path.map( (p: PointData) => [p.lat, p.lng, p.value || 0]) )
+        setCoords( path.map( ({lat, lng, value}) => ({lat, lng, alt: value})) )
     }, [path])
 
     useEffect( () => {
         if ( coords.length === 0 ) return;
 
-        const hotline = LeafletLatLngHotline( coords, options, dotHoverIndex )
+        const hotline = LeafletLatLngHotline( coords, options )
 
         hotline.addTo(map)
 
-        const id = L.stamp(hotline)
-
         return () => { 
-            // console.log(hotline._renderer._container);
             hotline.remove()
             map.removeLayer(hotline);
-            // hotline._renderer._destroyContainer()
-            // hotline.removeFrom(map);
         }
 
     }, [map, options, coords, dotHoverIndex])

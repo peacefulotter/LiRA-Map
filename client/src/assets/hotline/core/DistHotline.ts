@@ -12,7 +12,7 @@ interface DistVal {
 export type DistInputPoint = [number, number]
 export type DistInput = DistInputPoint[]
 
-export interface DistPoint { x: number, y: number, z: number, i: number };
+export interface DistPoint { x: number, y: number, i: number };
 export type DistData = DistPoint[]
 
 
@@ -20,8 +20,8 @@ export default class DistHotline extends Hotline<DistData> {
 
     conditions: RoadConditions;
 
-    constructor(canvas: HTMLElement, dotHoverIndex: number | undefined, conditions: RoadConditions) {
-        super(canvas, dotHoverIndex);
+    constructor(canvas: HTMLElement, conditions: RoadConditions) {
+        super(canvas);
         this.conditions = conditions;
     }
 
@@ -30,41 +30,41 @@ export default class DistHotline extends Hotline<DistData> {
         const ctx = this._ctx;
         const dataLength = this._data.length
 
-        ctx.beginPath();
-
         for (let i = 0; i < dataLength; i++) 
         {
             const path = this._data[i] as any;
-            for (let j = 1, pathLength = path.length; j < pathLength; j++) 
+            console.log(path.length);
+            
+            for (let j = 1; j < path.length; j++) 
             {
                 const pointStart = path[j - 1];
                 const pointEnd = path[j];
 
-                console.log(pointStart, pointEnd);
+                console.log('draw', pointStart, pointEnd);
                 
-
                 if ( pointStart.i !== pointEnd.i )
                     this._addGradient(pointStart, pointEnd);
             }
         }
-
-        ctx.closePath()
+       
     }
 
-    _addGradient(pointStart: any, pointEnd: any) {
+    _addGradient(pointStart: DistPoint, pointEnd: DistPoint) {
 
         const ctx = this._ctx;
+        ctx.beginPath();
 
         const weight = this.getWeight(pointStart.i, pointEnd.i) 
-        ctx.lineWidth = weight + (this.dotHoverIndex ? 4 : 0)
+        ctx.lineWidth = weight + (this.isHover ? 4 : 0)
 
         const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
         this.computeGradient(gradient, pointStart, pointEnd)
 
         ctx.strokeStyle = gradient;
         ctx.moveTo(pointStart.x, pointStart.y);
-        ctx.lineTo(pointEnd.x, pointEnd.y);
+        ctx.lineTo(pointEnd.x, pointEnd.y); 
         ctx.stroke();
+        ctx.closePath()
     }
 
     computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint) 

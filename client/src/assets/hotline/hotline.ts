@@ -1,51 +1,46 @@
 import L from 'leaflet';
 import { HotlineOptions } from '../../models/path';
 import Hotline from './core/Hotline';
-import { Renderer } from './renderer';
+import { HotlineRenderer } from './renderer';
 import Util from "./util";
 
 
-export type HotlineClass<InputT, DataT> = new (data: InputT, options?: HotlineOptions) => Hotline<DataT>
+export class HotPolyline<DataT> extends L.Polyline {
 
+    projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void
+    _renderer: HotlineRenderer<DataT>
 
-const getRenderer = (RendererClass: Renderer) => (opts?: any) => 
-    L.Browser.canvas ? new RendererClass(opts) : null
+    constructor(
+        getHotline: (canvas: HTMLElement) => Hotline<DataT>,
+        projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void, 
+        coords: L.LatLngExpression[] | L.LatLngExpression[], 
+        options: HotlineOptions
+    ) {
+        const renderer = new HotlineRenderer<DataT>(getHotline)
+        const _options = {
+            ...options,
+            renderer, // getRenderer(RendererClass)(),
+        }
+        super(coords, _options)
 
+        this.projectLatLngs = projectLatLngs;
+        this._renderer = new HotlineRenderer<DataT>(getHotline)
+    }
 
-const getLeafletHotline = <InputT, DataT>( 
+    setHover(dotHover: number | undefined) {
+        if ( this._renderer._hotline === undefined ) return;
+        this._renderer._hotline.setHover(dotHover)
+    }
 
-    RendererClass: Renderer, 
-    projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void 
-
-) => L.Polyline.extend( {
-
-    statics: {
-        Renderer: RendererClass,
-        renderer: getRenderer(RendererClass)
-    },
-
-    options: {
-        renderer: getRenderer(RendererClass)(),
-        min: 0,
-        max: 1,
-        palette: {
-            0.0: 'green',
-            0.5: 'yellow',
-            1.0: 'red'
-        },
-        weight: 5,
-        outlineColor: 'black',
-        outlineWidth: 1
-    },
-
-    getRGBForValue: function (value: number) {
+    getRGBForValue(value: number) {
+        if ( this._renderer._hotline === undefined ) return;
         return this._renderer._hotline.getRGBForValue(value);
-    },
+    }
 
     /**
      * Just like the Leaflet version, but with support for a z coordinate.
      */
-    _projectLatlngs: function(latlngs: any, result: any, projectedBounds: any) 
+    _projectLatlngs(latlngs: any, result: any, projectedBounds: any) 
     {
         if (Array.isArray(latlngs[0]) ) 
         {
@@ -56,29 +51,33 @@ const getLeafletHotline = <InputT, DataT>(
         }
         else
         {
-            projectLatLngs(this._map, latlngs, result, projectedBounds)
+            this.projectLatLngs(this._map, latlngs, result, projectedBounds)
         }
         
+        if ( this._renderer._hotline === undefined ) return;
         this._renderer._hotline.projectedData = [...result];
-    },
+    }
 
     /**
      * Just like the Leaflet version, but uses `Util.clipSegment()`.
      */
-    _clipPoints: function () {
+    _clipPoints () {
+
+        if ( this._renderer._hotline === undefined ) return;
+    
         if (this.options.noClip) {
-            this._parts = this._rings;
+            (this as any)._parts = (this as any)._rings;
             return;
         }
 
-        this._parts = [];
+        (this as any)._parts = [];
 
-        const parts = this._parts;
-        const bounds = this._pxBounds;
+        const parts = (this as any)._parts;
+        const bounds = (this as any)._pxBounds;
 
-        for (let i = 0, k = 0, len = this._rings.length; i < len; i++) 
+        for (let i = 0, k = 0, len = (this as any)._rings.length; i < len; i++) 
         {
-            const points = this._rings[i];
+            const points = (this as any)._rings[i];
 
             for (let j = 0, len2 = points.length; j < len2 - 1; j++) 
             {
@@ -96,12 +95,9 @@ const getLeafletHotline = <InputT, DataT>(
                 }
             }
         }
-    },
-
-    _clickTolerance: function () {
-        return this.options.weight / 2 + this.options.outlineWidth + (L.Browser.touch ? 10 : 0);
     }
-} ) as HotlineClass<InputT, DataT>
 
-
-export default getLeafletHotline
+    _clickTolerance() {
+        return (this as any).options.weight / 2 + (this as any).options.outlineWidth + (L.Browser.touch ? 10 : 0);
+    }
+}

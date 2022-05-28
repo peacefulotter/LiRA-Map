@@ -9,8 +9,9 @@ import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
 import ArrowHead from '../Map/Renderers/ArrowHead';
-import { DistInput } from '../../assets/hotline/core/DistHotline';
+import DistHotline, { DistInput } from '../../assets/hotline/core/DistHotline';
 import { Measurement } from '../../models/properties';
+import Hotline from '../../assets/hotline/core/Hotline';
 
 interface RCRendererProps {
     geometry: Geometry
@@ -28,18 +29,13 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
 
 const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } ) => {
 
-    const [coords, setCoords] = useState<DistInput>([])
-
     const { dotHoverIndex, minY, maxY } = useGraph()
 
-    const map = useMapEvents({
-        // layeradd: (e: any) => console.log('LAYER ADD'),
-        // layerremove: (e: any) => console.log('LAYER REMOVE')
-    })
+    const map = useMapEvents({})
+
+    const [hotline, setHotline] = useState<DistHotline>()
     
     const options: HotlineOptions = useMemo( () => { 
-        // console.log('MEMO OPTIONS');
-
         const p = palette(properties)
         const min = p[0].stopValue            || minY || 0
         const max = p[p.length - 1].stopValue || maxY || 1
@@ -56,43 +52,29 @@ const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } )
         } 
     }, [properties, minY, maxY] )
 
-    // useEffect( () => {
-    //     if ( hotline === undefined) return
-    //     hotline.redraw(options)
-    // }, [options])
 
-    // useEffect( () => {
-    //     if ( geometry === undefined || geometry.length === 0 ) return;
-    //     console.log(path, conditions);
+    useEffect( () => {
+        if ( hotline === undefined ) return;
+        console.log(dotHoverIndex);
+        console.log(hotline);
         
-    //     setCoords( path.map( (p: PointData) => [p.lat, p.lng]) )
-    // }, [path])
+        hotline.setHover(dotHoverIndex)
+    }, [dotHoverIndex])
 
     useEffect( () => {
         if ( geometry.length === 0 ) return;
 
-        console.log(geometry, conditions);
-        
+        const _hotline = LeafletDistHotline( geometry, conditions, options )
 
-        const hotline = LeafletDistHotline( geometry, conditions, options, dotHoverIndex )
+        _hotline.addTo(map)
 
-        hotline.addTo(map)
-
-
-        const id = L.stamp(hotline)
-
-        console.log(id);
-        
+        setHotline(_hotline)
 
         return () => { 
-            // console.log(hotline._renderer._container);
-            hotline.remove()
-            map.removeLayer(hotline);
-            // hotline._renderer._destroyContainer()
-            // hotline.removeFrom(map);
+            _hotline.remove()
+            map.removeLayer(_hotline);
         }
-
-    }, [map, options, coords, dotHoverIndex])
+    }, [map])
 
 
     // const origin = path[path.length - 2]

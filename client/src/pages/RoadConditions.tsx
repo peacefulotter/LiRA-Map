@@ -72,7 +72,7 @@ const RoadConditions = () => {
         const zoom = 5;
         getConditions(roadName, type, zoom, (data: WayConditions[]) => {
             console.log(data);
-            setWays( data.slice(0, 2) )
+            setWays( data.slice(0, 1) )
         } )
     }
 
@@ -83,8 +83,6 @@ const RoadConditions = () => {
             <div className="ml-map">
                 <MapWrapper>
                     { ways.map( ({way, zoom}, i: number) => {
-                        console.log(zoom.conditions);
-                        
                         return <RCHotline 
                             key={`ml-path-${i}`}
                             properties={{...zoom.properties, palette: IRIPalette}}

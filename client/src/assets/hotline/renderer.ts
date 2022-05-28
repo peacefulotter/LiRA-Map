@@ -1,41 +1,53 @@
 
-import { Canvas } from 'leaflet'
+import { Canvas, RendererOptions } from 'leaflet'
 import Hotline from './core/Hotline';
 
 
 export type Renderer = (new (...args: any[]) => any) & typeof Canvas
 
-const getHotlineRenderer = <DataT>(getHotline: (container: HTMLElement) => Hotline<DataT>) => L.Canvas.extend( { 
-    
-    _initContainer: function () {
+export class HotlineRenderer<DataT> extends L.Canvas 
+{
+    _hotline: Hotline<DataT> | undefined
+    getHotline: (container: HTMLElement) => Hotline<DataT>;
+
+    constructor(getHotline: (container: HTMLElement) => Hotline<DataT>, options?: RendererOptions | undefined)
+    {
+        super(options)
+        this.getHotline = getHotline;
+    }
+
+    _initContainer() {
         (L.Canvas.prototype as any)._initContainer.call(this);
-        this._hotline = getHotline(this._container)
-    },
+        this._hotline = this.getHotline((this as any)._container)
+    }
 
-    _destroyContainer: function() {
+    _destroyContainer() {
         (L.Canvas.prototype as any)._destroyContainer.call(this)
-    },
+    }
 
-    _update: function () {
+    _update() {
         (L.Canvas.prototype as any)._update.call(this);
-        this._hotline.width(this._container.width);
-        this._hotline.height(this._container.height);
-    },
+        if (this._hotline === undefined) return;
+        this._hotline.width((this as any)._container.width);
+        this._hotline.height((this as any)._container.height);
+    }
 
-    _updatePoly: function (layer: any) {
+    _updatePoly(layer: any) {
 
         const parts = layer._parts;
 
-        if ( !this._drawing || !parts.length ) { return; }
+        if ( !(this as any)._drawing || !parts.length ) { return; }
 
         this._updateOptions(layer);
 
-        this._hotline
+        (this as any)._hotline
             .data(parts)
             .draw();
-    },
+    }
 
-    _updateOptions: function (layer: any) {
+    _updateOptions(layer: any) {
+
+        if ( this._hotline === undefined ) return;
 
         const { options } = layer;
 
@@ -61,6 +73,4 @@ const getHotlineRenderer = <DataT>(getHotline: (container: HTMLElement) => Hotli
             this._hotline.palette(options.palette);
         }
     }
-} ) as Renderer;
-
-export default getHotlineRenderer;
+}
