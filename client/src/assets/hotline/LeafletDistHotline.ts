@@ -5,7 +5,7 @@ import DistHotline, { DistData } from './renderers/DistHotline';
 
 import { HotPolyline } from './core/HotPolyline';
 
-import { Geometry, HotlineOptions, RoadConditions } from '../../models/path';
+import { Geometry, HotlineOptions, WayConditions } from '../../models/path';
 
 const projectLatLngs = (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
@@ -20,7 +20,7 @@ const projectLatLngs = (_map: Map, latlngs: LatLng[], result: any, projectedBoun
 }
 
 const LeafletDistHotline = (
-    geom: Geometry, conditions: RoadConditions, options: HotlineOptions
+    geom: Geometry, conditions: WayConditions, options: HotlineOptions
 )
 : [HotPolyline<DistData>, DistHotline] => 
 {

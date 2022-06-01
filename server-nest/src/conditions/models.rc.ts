@@ -12,17 +12,10 @@ export interface ConditionPoint {
 	value: number;
 }
 
-export type RoadConditions = ConditionPoint[]
+export type WayConditions = ConditionPoint[]
 
-export interface MapRoadConditions { 
-    properties: Measurement;
-    conditions: RoadConditions;
-}
-
-export interface TripCondition {
+export interface MapConditions {
 	way: Way;
-	zoom: MapRoadConditions;
-	road: RoadConditions;
+	properties: Measurement;
+	conditions: WayConditions
 }
-
-export type TripConditions = TripCondition[]

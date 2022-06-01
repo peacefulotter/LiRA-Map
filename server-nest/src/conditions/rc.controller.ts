@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { TripConditions } from './models.rc';
+import { MapConditions, WayConditions } from './models.rc';
 import { RCService } from './rc.service';
 
 
@@ -19,10 +19,16 @@ export class RCController
         return this.service.getMLFile(filename);
     }
 
-    @Get('full')
-    getFullConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<TripConditions> {
+    @Get('ways')
+    getWaysConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<MapConditions[]> {
         const { road, type, zoom } = query;
-        return this.service.getFullConditions(road, type, zoom);
+        return this.service.getWaysConditions(road, type, zoom);
+    }
+
+    @Get('way')
+    getWayConditions( @Query() query: { wayId: number, type: string } ): Promise<WayConditions> {
+        const { wayId, type } = query;
+        return this.service.getWayRoadConditions(wayId, type);
     }
 
 }

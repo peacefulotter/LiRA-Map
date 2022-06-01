@@ -1,5 +1,5 @@
 
-import { HotlineOptions, RoadConditions } from "../../../models/path";
+import { HotlineOptions, WayConditions } from "../../../models/path";
 import Hotline from "./Hotline";
 
 
@@ -11,14 +11,14 @@ export type DistData = DistPoint[]
 
 export default class DistHotline extends Hotline<DistData> {
 
-    conditions: RoadConditions;
+    conditions: WayConditions;
 
-    constructor(conditions: RoadConditions, options?: HotlineOptions) {
+    constructor(conditions: WayConditions, options?: HotlineOptions) {
         super(options)
         this.conditions = conditions;
     }
 
-    setConditions(conditions: RoadConditions)
+    setConditions(conditions: WayConditions)
     {
         this.conditions = conditions
     }
@@ -36,7 +36,7 @@ export default class DistHotline extends Hotline<DistData> {
                 const pointStart = path[j - 1];
                 const pointEnd = path[j];
 
-                console.log('draw', pointStart, pointEnd);
+                // console.log('draw', pointStart, pointEnd);
                 
                 if ( pointStart.i !== pointEnd.i )
                     this._addGradient(pointStart, pointEnd);

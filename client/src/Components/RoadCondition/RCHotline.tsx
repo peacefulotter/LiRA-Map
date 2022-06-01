@@ -2,7 +2,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { Palette } from '../../models/graph';
-import { Geometry, HotlineOptions, HotlinePalette, PointData, RoadConditions } from '../../models/path';
+import { Geometry, HotlineOptions, HotlinePalette, MapConditions } from '../../models/path';
 import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
@@ -11,9 +11,8 @@ import DistHotline from '../../assets/hotline/renderers/DistHotline';
 import { Measurement } from '../../models/properties';
 
 interface RCRendererProps {
-    geometry: Geometry
-    conditions: RoadConditions
-    properties: Measurement;
+    condition: MapConditions;
+    onClick: () => void
 }
 
 const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
@@ -24,7 +23,10 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } ) => {
+const RCHotline: FC<RCRendererProps> = ( { condition, onClick  } ) => {
+
+    const { way, conditions, properties } = condition
+    const { geom } = way;
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
@@ -57,9 +59,14 @@ const RCHotline: FC<RCRendererProps> = ( { geometry, conditions, properties  } )
     }, [dotHoverIndex])
 
     useEffect( () => {
-        if ( geometry.length === 0 ) return;
+        if ( hotline === undefined ) return;
+        hotline.setConditions(conditions)
+    }, [conditions])
 
-        const [polyline, _hotline] = LeafletDistHotline( geometry, conditions, options )
+    useEffect( () => {
+        if ( geom.length === 0 ) return;
+
+        const [polyline, _hotline] = LeafletDistHotline( geom, conditions, options )
         
         polyline.addTo(map)
 
