@@ -2,7 +2,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { Palette } from '../../models/graph';
-import { Geometry, HotlineOptions, HotlinePalette, MapConditions } from '../../models/path';
+import { HotlineOptions, HotlinePalette, Node, WayConditions } from '../../models/path';
 import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
@@ -11,7 +11,9 @@ import DistHotline from '../../assets/hotline/renderers/DistHotline';
 import { Measurement } from '../../models/properties';
 
 interface RCRendererProps {
-    condition: MapConditions;
+    nodes: Node[];
+    conditions: WayConditions;
+    properties: Measurement;
     onClick: () => void
 }
 
@@ -23,10 +25,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const RCHotline: FC<RCRendererProps> = ( { condition, onClick  } ) => {
-
-    const { way, conditions, properties } = condition
-    const { geom } = way;
+const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClick  } ) => {
 
     const { dotHoverIndex, minY, maxY } = useGraph()
 
@@ -64,9 +63,9 @@ const RCHotline: FC<RCRendererProps> = ( { condition, onClick  } ) => {
     }, [conditions])
 
     useEffect( () => {
-        if ( geom.length === 0 ) return;
+        if ( nodes.length === 0 ) return;
 
-        const [polyline, _hotline] = LeafletDistHotline( geom, conditions, options )
+        const [polyline, _hotline] = LeafletDistHotline( nodes, conditions, options )
         
         polyline.addTo(map)
 

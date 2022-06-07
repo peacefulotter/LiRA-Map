@@ -1,15 +1,13 @@
-import  { useEffect, useState } from "react";
+import  { useState } from "react";
 
-import RCHotline from "../Components/RoadCondition/RCHotline";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Panel from "../Components/RoadCondition/Panel";
 import Graph from "../Components/Graph/Graph";
 
-import { Bounds, ConditionPoint, MapConditions , Way, WayConditions } from "../models/path";
+import { Bounds, ConditionPoint, WayConditions } from "../models/path";
 import { GraphData, Palette, Plot } from "../models/graph";
 
-import { post } from "../queries/fetch";
-import { getConditions, getWays } from "../queries/conditions";
+import { getConditions } from "../queries/conditions";
 
 import { GraphProvider } from "../context/GraphContext";
 
@@ -24,22 +22,19 @@ const IRIPalette: Palette = DEFAULT_PALETTE
 const RoadConditions = () => {
     
     const [plot, setPlot] = useState<Plot>()
-    // const [measurements, setMeasurements] = useState<string[]>([])
 
-    const onClick = (way: Way) => () => {
+    const onClick = (way_id: string, way_length: number) => () => {
 
-        const { id, length } = way;
-
-        getConditions(id, 'IRI', (wc: WayConditions) => {
+        getConditions(way_id, 'IRI', (wc: WayConditions) => {
 
             const bounds: Bounds = {
                 minX: 0, // Math.min(...zoom.conditions.map(c => c.way_dist)),
-                maxX: length,
+                maxX: way_length,
                 minY: 0, // Math.min(...zoom.conditions.map(c => c.value)),
                 maxY: 10,// Math.max(...zoom.conditions.map(c => c.value)),
             }
     
-            const data: GraphData = wc.map((p: ConditionPoint, i: number) => [p.way_dist * length, p.value, i])
+            const data: GraphData = wc.map((p: ConditionPoint, i: number) => [p.way_dist * way_length, p.value, i])
             const label = `way-graph`
 
             setPlot( { bounds, data, label } )

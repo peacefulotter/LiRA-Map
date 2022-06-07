@@ -1,10 +1,12 @@
-import { LatLng, Measurement } from "src/models";
+import { Measurement } from "src/models";
 
-export interface Way {
-    id: number;
-    geom: LatLng[];
-    length: number;
+export interface Node {
+    lat: number;
+	lng: number;
+	way_dist: number;
 }
+
+export type Ways = Map<string, Node[]>
 
 export interface ConditionPoint {
     way_id: string;
@@ -15,7 +17,9 @@ export interface ConditionPoint {
 export type WayConditions = ConditionPoint[]
 
 export interface MapConditions {
-	way: Way;
+	way_id: string;
+	way_length: number;
+	nodes: Node[];
 	properties: Measurement;
-	conditions: WayConditions
+	conditions: WayConditions;
 }

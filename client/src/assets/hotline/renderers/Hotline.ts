@@ -49,9 +49,6 @@ abstract class Hotline<DataT> extends L.Renderer {
         this._min = options?.min || 0;
         this._max = options?.max || 1;
 
-        console.log(options, this._min, this._max);
-        
-    
         this._data = [];
         this.projectedData = []
         this.isHover = undefined;

@@ -1,12 +1,12 @@
 
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useZoom } from '../../context/ZoomContext';
-import { MapConditions, Way } from '../../models/path';
+import { MapConditions } from '../../models/path';
 import { getWays } from '../../queries/conditions';
 import RCHotline from './RCHotline';
 
 interface IWays {
-    onClick: (way: Way) => () => void;
+    onClick: (way_id: string, way_length: number) => () => void;
 }
 
 const Ways: FC<IWays> = ( { onClick } ) => {
@@ -31,18 +31,21 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         console.log(z);
         
         getWays(roadName, type, z, (data: MapConditions[]) => {
-            console.log(data[0].conditions.length, data);
-            setConditions( data.slice(0, 5) )
-            setTimeout( onClick(data[0].way), 100 )
+            const { way_id, way_length, conditions } = data[0]
+            console.log(conditions.length, data);
+            setConditions( data )
+            setTimeout( onClick(way_id, way_length), 100 )
         } )
     }
     return (
         <>
-        { conditions.map( (condition: MapConditions, i: number) => {
+        { conditions.map( ({way_id, way_length, nodes, conditions, properties}: MapConditions, i: number) => {
             return <RCHotline 
                 key={`ml-path-${i}`}
-                condition={condition}
-                onClick={onClick(condition.way)}
+                nodes={nodes}
+                conditions={conditions}
+                properties={properties}
+                onClick={onClick(way_id, way_length)}
             />
         } ) } 
         </>

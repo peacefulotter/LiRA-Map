@@ -61,21 +61,16 @@ export interface HotlineOptions {
 }
 
 
-export interface LatLon {
-	lat: number;
-	lon: number;
+export interface Node {
+    lat: number;
+	lng: number;
+	way_dist: number;
 }
 
-export type Geometry = LatLon[]
-
-export interface Way {
-	id: number;
-	geom: Geometry;
-	length: number;
-}
+export type Ways = { [key: string]: Node[] }
 
 export interface ConditionPoint {
-	way_id: string;
+    way_id: string;
 	way_dist: number;
 	value: number;
 }
@@ -83,7 +78,9 @@ export interface ConditionPoint {
 export type WayConditions = ConditionPoint[]
 
 export interface MapConditions {
-	way: Way;
+	way_id: string;
+	way_length: number;
+	nodes: Node[];
 	properties: Measurement;
-	conditions: WayConditions
+	conditions: WayConditions;
 }

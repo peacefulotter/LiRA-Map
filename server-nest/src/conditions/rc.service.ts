@@ -8,8 +8,7 @@ import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 
 import { RendererName } from '../models';
-import axios from 'axios';
-import { MapConditions, Way, WayConditions } from './models.rc';
+import { MapConditions, WayConditions, Ways, Node } from './models.rc';
 
 @Injectable()
 export class RCService 
@@ -65,31 +64,40 @@ export class RCService
     //     res.data.elements.map( ({id, geometry}) => [id, geometry.map(({lat, lon}) => ({lat, lng: lon}))] )
     // );
 
-    async getWays(roadName: string): Promise<Way[]>
+    groupBy<T, Q>(arr: T[], key: string, map: (value: T) => Q) {
+        return arr.reduce( (acc, cur) => {
+            const k = cur[key]
+            const v = map(cur)
+            acc.get(k)?.push(v) ?? acc.set(k, [v]);
+            return acc;
+        }, new Map<string, Q[]>());
+    }   
+
+    async getWays(roadName: string): Promise<[Ways, Map<string, number>]>
     {
-        const ways: any = await this.knex()
+        //         select 
+        // 	ST_AsGeoJSON((ST_DumpPoints(geom)).geom)::json->'coordinates' as pos, 
+        // 	ST_LineLocatePoint(geom, (ST_DumpPoints(geom)).geom) as way_dist 
+        // from way where id='100211823'
+        const ways: any[] = await this.knex()
+            .select( this.knex.raw('id as way_id, ST_AsGeoJSON((ST_DumpPoints(geom)).geom)::json->\'coordinates\' as pos, ST_LineLocatePoint(geom, (ST_DumpPoints(geom)).geom) as way_dist') )
+            .from( 'way' )  
+            .where( { official_ref: roadName } )
+            .orderBy( this.knex.raw('id::integer') as any )
+
+        const way_lengths: any[] = await this.knex()
             .select( this.knex.raw('id, ST_Length(geom::geography) as length') )
             .from( 'way' )
             .where( { official_ref: roadName } )
             .orderBy( this.knex.raw('id::integer') as any )
 
-        const wayIds = ways.map( (way: any) => way.id )
-        
-        console.log('Querying Overpass server');
-        
-        const url = `http://lira-osm.compute.dtu.dk/api/interpreter?data=[out:json];way(id:${wayIds.join(',')});out geom;`
-        const res = await axios.get(url)
-
-        const { elements } = res.data
-
-        console.log(wayIds);
-        
-        console.log(elements.map( elt => elt.id ));
+        console.log(way_lengths);
         
 
-        return ways.map( ({id, length}, i: number) => (
-            { id: parseInt(id, 10), length, geom: elements[i].geometry }
-        ) )
+        return [
+            this.groupBy<any, Node>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[0], lng: cur.pos[1], way_dist: cur.way_dist }) ),
+            way_lengths.reduce( (acc, cur) => ({ ...acc, [cur.id]: cur.length }), {}),
+        ]
     }
 
     async getWaysRoadConditions(wayIds: number[], type: string): Promise<WayConditions>
@@ -111,7 +119,7 @@ export class RCService
             .orderBy( 'way_dist' );
     }
 
-    async getZoomConditions(wayIds: number[], type: string, zoom: number): Promise<WayConditions>
+    async getZoomConditions(wayIds: string[], type: string, zoom: number): Promise<WayConditions>
     {
         return await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
@@ -124,22 +132,28 @@ export class RCService
     async getWaysConditions(roadName: string, type: string, zoomLevel: number): Promise<MapConditions[]>
     {
         console.log('Fetching ways');
-        const ways: Way[] = await this.getWays(roadName)
-        const wayIds = ways.map( way => way.id )
+        const [ways, way_lengths] = await this.getWays(roadName)
+        console.log(ways);
+        console.log(way_lengths);
+        
+        const wayIds = Array.from(ways.keys())
+
+        console.log(wayIds);
+        
 
         console.log('Fetching zooms');
         const zooms = await this.getZoomConditions(wayIds, type, zoomLevel) 
         console.log(zooms.length);
-        
 
-        const toMapConditions = (way: Way): MapConditions => ({
-            way,
-            properties: { dbName: 'blob-'+way.id, name: roadName, rendererName: RendererName.hotline },
-            conditions: zooms.filter(rc => parseInt(rc.way_id, 10) === way.id)
-        })
 
-        return ways
-            .map( way => toMapConditions(way) )
+        return Array.from(ways.entries())
+            .map( ([way_id, nodes]) => ({
+                way_id,
+                way_length: way_lengths[way_id],
+                nodes,
+                properties: { dbName: way_id, name: roadName, rendererName: RendererName.hotline },
+                conditions: zooms.filter(rc => rc.way_id === way_id)
+            }))
             .filter( ({conditions}) => conditions.length > 0 )
     }
 }
