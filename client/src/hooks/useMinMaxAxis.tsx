@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { AddMinMaxFunc, MinMaxAxis, RemMinMaxFunc } from "../models/graph";
 import { Bounds } from "../models/path";
 

@@ -92,43 +92,6 @@ abstract class Hotline<DataT> extends L.Renderer {
         return this;
     }
 
-    // /**
-    //  * Sets the weight of the path.
-    //  * @param {number} weight - Weight of the path in px.
-    //  */
-    // weight(weight: number) {
-    //     this._weight = weight;
-    //     return this;
-    // }
-
-
-    // /**
-    //  * Sets the weight function for the path.
-    //  * @param {(a: number, b: number) => number} weightFunc - Weight Function for the path in px.
-    //  */
-    //  weightFunc(weightFunc: (a: number, b: number) => number) {
-    //     this._weightFunc = weightFunc;
-    //     return this;
-    // }
-
-    // /**
-    //  * Sets the width of the outline around the path.
-    //  * @param {number} outlineWidth - Width of the outline in px.
-    //  */
-    // outlineWidth(outlineWidth: number) {
-    //     this._outlineWidth = outlineWidth;
-    //     return this;
-    // }
-
-    // /**
-    //  * Sets the color of the outline around the path.
-    //  * @param {string} outlineColor - A CSS color value.
-    //  */
-    // outlineColor(outlineColor: string) {
-    //     this._outlineColor = outlineColor;
-    //     return this;
-    // }
-
     /**
      * Sets the palette gradient.
      * @param {Object.<number, string>} palette  - Gradient definition.
@@ -155,28 +118,6 @@ abstract class Hotline<DataT> extends L.Renderer {
         return this;
     }
 
-    // /**
-    //  * Sets the value used at the start of the palette gradient.
-    //  * @param {number} min
-    //  */
-    // min(min: number) {
-    //     this._min = min;
-    //     return this;
-    // }
-
-    // /**
-    //  * Sets the value used at the end of the palette gradient.
-    //  * @param {number} max
-    //  */
-    // max(max: number) {
-    //     this._max = max;
-    //     return this;
-    // }
-
-    /**
-     * A path to rander as a hotline.
-     * @typedef Array.<{x:number, y:number, z:number}> Path - Array of x, y and z coordinates.
-     */
 
     /**
      * Sets the data that gets drawn on the canvas.

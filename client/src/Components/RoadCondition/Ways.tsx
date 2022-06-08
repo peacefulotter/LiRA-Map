@@ -18,28 +18,21 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         fetchWays()
     }, [zoom] )
 
-    // const addPath = (i: number) => {
-    //     post('/conditions/file', { filename: measurements[i] }, (json: MapConditions) => {
-    //         setConditions( prev => [...prev, json] )
-    //     } )
-    // }
-
     const fetchWays = () => {
         const roadName = 'M3'
         const type = 'IRI';
         const z = Math.max(0, zoom - 12)
-        console.log(z);
         
         getWays(roadName, type, z, (data: MapConditions[]) => {
-            const { way_id, way_length, conditions } = data[0]
+            const { way_id, way_length, conditions } = data[1]
             console.log(conditions.length, data);
-            setConditions( data.slice(1, 2) )
+            setConditions( data )
             setTimeout( onClick(way_id, way_length), 100 )
         } )
     }
     return (
         <>
-        { conditions.map( ({way_id, way_length, nodes, conditions, properties}: MapConditions, i: number) => {
+        {/* { conditions.map( ({way_id, way_length, nodes, conditions, properties}: MapConditions, i: number) => {
             return <RCHotline 
                 key={`ml-path-${i}`}
                 nodes={nodes}
@@ -47,7 +40,18 @@ const Ways: FC<IWays> = ( { onClick } ) => {
                 properties={properties}
                 onClick={onClick(way_id, way_length)}
             />
-        } ) } 
+        } ) }  */}
+    
+        {
+            conditions.length > 0 
+                ? <RCHotline 
+                    nodes={conditions.map(({nodes}) => nodes)}
+                    conditions={conditions.map(({conditions}) => conditions)}
+                    properties={conditions[0].properties}
+                    onClick={onClick(conditions[0].way_id, conditions[0].way_length)}
+                />
+                : null
+        }
         </>
     )
 }

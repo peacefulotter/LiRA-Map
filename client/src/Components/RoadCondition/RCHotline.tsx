@@ -11,8 +11,8 @@ import DistHotline from '../../assets/hotline/renderers/DistHotline';
 import { Measurement } from '../../models/properties';
 
 interface RCRendererProps {
-    nodes: Node[];
-    conditions: WayConditions;
+    nodes: Node[][];
+    conditions: WayConditions[];
     properties: Measurement;
     onClick: () => void
 }
@@ -58,13 +58,14 @@ const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClic
 
     useEffect( () => {
         if ( hotline === undefined ) return;
+        console.log('CONDITIONS UPDATE');
         hotline.setConditions(conditions)
     }, [conditions])
 
     useEffect( () => {
         if ( nodes.length === 0 ) return;
 
-        const [polyline, _hotline] = LeafletDistHotline( [nodes], conditions, options )
+        const [polyline, _hotline] = LeafletDistHotline( nodes, conditions, options )
         
         polyline.addTo(map)
 

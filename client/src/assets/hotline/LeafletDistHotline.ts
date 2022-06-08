@@ -1,5 +1,5 @@
 
-import L, { LatLng, Map } from 'leaflet'
+import L, { Map } from 'leaflet'
 
 import DistHotline, { DistData } from './renderers/DistHotline';
 
@@ -21,7 +21,7 @@ const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds
 }
 
 const LeafletDistHotline = (
-    nodes: Node[][], conditions: WayConditions, options: HotlineOptions
+    nodes: Node[][], conditions: WayConditions[], options: HotlineOptions
 )
 : [HotPolyline<Node, DistData>, DistHotline] => 
 {
