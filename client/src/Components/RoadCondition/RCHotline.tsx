@@ -7,10 +7,13 @@ import { useGraph } from '../../context/GraphContext';
 import { palette, width } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
 import ArrowHead from '../Map/Renderers/ArrowHead';
-import DistHotline from '../../assets/hotline/renderers/DistHotline';
+import DistHotline, { DistData } from '../../assets/hotline/renderers/DistHotline';
 import { Measurement } from '../../models/properties';
+import { HotPolyline } from '../../assets/hotline/core/HotPolyline';
 
 interface RCRendererProps {
+    way_ids: string[];
+    way_lengths: number[];
     nodes: Node[][];
     conditions: WayConditions[];
     properties: Measurement;
@@ -25,13 +28,14 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClick  } ) => {
+const RCHotline: FC<RCRendererProps> = ( { way_ids, way_lengths, nodes, conditions, properties, onClick  } ) => {
 
-    const { dotHoverIndex, minY, maxY } = useGraph()
+    const { dotHover, minY, maxY } = useGraph()
 
     const map = useMapEvents({})
 
     const [hotline, setHotline] = useState<DistHotline>()
+    const [hotPolyline, setHotPolyline] = useState<HotPolyline<Node, DistData>>()
     
     const options: HotlineOptions = useMemo( () => { 
         const p = palette(properties)
@@ -41,7 +45,7 @@ const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClic
         const hotlinePal = toHotlinePalette(p, max)
         
         return {
-            weight: width(undefined, properties),
+            weight: width(undefined, properties) + 2,
             outlineWidth: 0,
             palette: hotlinePal,
             min: min,
@@ -51,29 +55,28 @@ const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClic
 
 
     useEffect( () => {
-        if ( hotline === undefined ) return;
-        console.log(dotHoverIndex);
-        hotline.setHover(dotHoverIndex)
-    }, [dotHoverIndex])
+        if ( hotPolyline === undefined ) return;
+        hotPolyline.setHover(dotHover)
+    }, [dotHover])
 
     useEffect( () => {
         if ( hotline === undefined ) return;
-        console.log('CONDITIONS UPDATE');
         hotline.setConditions(conditions)
     }, [conditions])
 
     useEffect( () => {
         if ( nodes.length === 0 ) return;
 
-        const [polyline, _hotline] = LeafletDistHotline( nodes, conditions, options )
+        const [_hotPolyline, _hotline] = LeafletDistHotline( nodes, conditions, way_ids, way_lengths, options )
         
-        polyline.addTo(map)
+        _hotPolyline.addTo(map)
 
         setHotline(_hotline)
+        setHotPolyline(_hotPolyline)
 
         return () => { 
-            polyline.remove()
-            map.removeLayer(polyline);
+            _hotPolyline.remove()
+            map.removeLayer(_hotPolyline);
         }
     }, [map])
 

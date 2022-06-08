@@ -13,23 +13,26 @@ export class HotlineCanvas<DataT> extends L.Canvas
         this._hotline = hotline;
     }
 
-    _initContainer() {
+    _initContainer() 
+    {
         (L.Canvas.prototype as any)._initContainer.call(this);
         this._hotline.setCanvas((this as any)._container)
     }
 
-    _destroyContainer() {
+    _destroyContainer() 
+    {
         (L.Canvas.prototype as any)._destroyContainer.call(this)
     }
 
-    _update() {
+    _update() 
+    {
         (L.Canvas.prototype as any)._update.call(this);
         this._hotline.width((this as any)._container.width);
         this._hotline.height((this as any)._container.height);
     }
 
-    _updatePoly(layer: any) {
-
+    _updatePoly(layer: any) 
+    {
         const parts = layer._parts;
 
         if ( !(this as any)._drawing || !parts.length ) { return; }

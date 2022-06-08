@@ -26,6 +26,11 @@ export interface Plot {
     label: string;
 }
 
+export interface DotHover {
+    label: string;
+    x: number;
+}
+
 // Palette - Gradient
 export interface PaletteColor { offset: number; color: string; stopValue?: number }
 export type Palette = PaletteColor[]

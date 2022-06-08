@@ -1,4 +1,5 @@
 import L, { Map } from 'leaflet';
+import { DotHover } from '../../../models/graph';
 
 import { HotlineCanvas } from '../canvas/HotlineCanvas';
 import Hotline from '../renderers/Hotline';
@@ -25,15 +26,11 @@ export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Pol
         this._renderer = renderer;
     }
 
-    setHover(dotHover: number | undefined) {
+    setHover(dotHover: DotHover | undefined) {
         if ( this._renderer._hotline === undefined ) return;
         this._renderer._hotline.setHover(dotHover)
+        this._renderer._update()
         this.redraw()
-    }
-
-    getRGBForValue(value: number) {
-        if ( this._renderer._hotline === undefined ) return;
-        return this._renderer._hotline.getRGBForValue(value);
     }
 
     /**

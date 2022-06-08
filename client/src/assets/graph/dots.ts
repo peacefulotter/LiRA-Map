@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Axis, GraphData, SVG } from "../../models/graph"
+import { Axis, DotHover, GraphData, SVG } from "../../models/graph"
 import Dot from "./dot";
 import Layer from "./layer";
 
@@ -11,7 +11,7 @@ class Dots extends Layer {
         super(svg, label, 'dots')
     }
 
-    add(data: GraphData, [x, y]: [Axis, Axis], color: string, setDotHoverIndex: Dispatch<SetStateAction<number | undefined>> ) 
+    add(data: GraphData, [x, y]: [Axis, Axis], color: string, label: string, setDotHoverIndex: Dispatch<SetStateAction<DotHover | undefined>> ) 
     {
         const _svg = this.svg
             .append('g')
@@ -21,7 +21,7 @@ class Dots extends Layer {
             .data(data)
             .enter()
         
-        Dot.add(_svg, [x, y], color, setDotHoverIndex)
+        Dot.add(_svg, [x, y], color, label, setDotHoverIndex)
 
         return this;
     }

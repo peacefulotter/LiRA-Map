@@ -10,7 +10,7 @@ class Layer {
     constructor(svg: SVG, label: string, name: string) {
         this.svg = svg;
         this.label = label;
-        this.id = `${this.label}-${name}`
+        this.id = `${name}-${this.label}`
         this.class = `svg-${name}`
     }
 

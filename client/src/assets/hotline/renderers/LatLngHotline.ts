@@ -34,7 +34,7 @@ export default class LatLngHotline extends Hotline<LatLngData> {
 
         const ctx = this._ctx;
 
-        ctx.lineWidth = this._weight + (this.isHover ? 4 : 0)
+        ctx.lineWidth = this._weight + (this.dotHover === undefined ? 0 : 4)
 
         // Create a gradient for each segment, pick start and end colors from palette gradient
         const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
@@ -60,15 +60,15 @@ export default class LatLngHotline extends Hotline<LatLngData> {
 
             const rgb = this.getRGBForValue(point.z);
 
-            if ( this.isHover )
-            {
-                const hoverPoint = this.projectedData[0][this.isHover];
-                const opacity = Math.max(1 - (Math.abs(this.isHover - k) / deltaIndex), 0)
-                const color = this.getRGBForValue(hoverPoint.z);
-                gradient.addColorStop(dist, 'rgba(' + color.get().join(',') + ',' + opacity + ')');
-            }
-            else
-                this._addColorGradient(gradient, rgb, dist)
+            // if ( this.dotHover )
+            // {
+            //     const hoverPoint = this.projectedData[0][this.isHover];
+            //     const opacity = Math.max(1 - (Math.abs(this.isHover - k) / deltaIndex), 0)
+            //     const color = this.getRGBForValue(hoverPoint.z);
+            //     gradient.addColorStop(dist, 'rgba(' + color.get().join(',') + ',' + opacity + ')');
+            // }
+            // else
+            this._addColorGradient(gradient, rgb, dist, "way_id")
         }
     }
 }

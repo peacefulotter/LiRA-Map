@@ -19,7 +19,7 @@ interface ILine {
 
 const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
-    const { addMinMax, remMinMax, setDotHoverIndex } = useGraph()
+    const { addMinMax, remMinMax, setDotHover } = useGraph()
 
     useEffect( () => {
 
@@ -34,7 +34,7 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
         addMinMax(label, _bounds)
 
-        addLine(svg, data, axis, label, i, setDotHoverIndex)
+        addLine(svg, data, axis, label, i, setDotHover)
 
         return () => {
             if ( svg === undefined )
@@ -44,7 +44,7 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
             remMinMax(label)
         }
 
-    }, [svg, axis, data, label, bounds, i, setDotHoverIndex])
+    }, [svg, axis, data, label, bounds, i, setDotHover])
 
     return null
 

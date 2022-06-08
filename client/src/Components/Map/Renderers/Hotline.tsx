@@ -46,7 +46,7 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
 
     const map = useMapEvents({})
 
-    const { dotHoverIndex, minY, maxY } = useGraph()
+    const { dotHover, minY, maxY } = useGraph()
 
     const [coords, setCoords] = useState<LatLngInput>([])
 
@@ -84,7 +84,7 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
             map.removeLayer(polyline);
         }
 
-    }, [map, options, coords, dotHoverIndex])
+    }, [map, options, coords, dotHover])
 
 
     const origin = path[path.length - 2]

@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 import useMinMaxAxis from "../hooks/useMinMaxAxis";
-import { AddMinMaxFunc, RemMinMaxFunc } from "../models/graph";
+import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from "../models/graph";
 
 
 interface ContextProps {
@@ -19,8 +19,8 @@ interface ContextProps {
     addMinMax: AddMinMaxFunc;
 	remMinMax: RemMinMaxFunc;
 
-	dotHoverIndex: number | undefined;
-	setDotHoverIndex: Dispatch<SetStateAction<number | undefined>>;
+	dotHover: DotHover | undefined;
+	setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -28,7 +28,7 @@ const GraphContext = createContext({} as ContextProps);
 export const GraphProvider = ({ children }: any) => {
 
 	const [minMaxAxis, addMinMax, remMinMax] = useMinMaxAxis()
-	const [dotHoverIndex, setDotHoverIndex] = useState<number>()
+	const [dotHover, setDotHover] = useState<DotHover>()
 
 	const [minX, maxX, minY, maxY] = minMaxAxis
 
@@ -37,7 +37,7 @@ export const GraphProvider = ({ children }: any) => {
 			value={{
 				minX, maxX, minY, maxY,
 				addMinMax, remMinMax,
-				dotHoverIndex, setDotHoverIndex
+				dotHover, setDotHover
 			}}
 		>
 			{children}

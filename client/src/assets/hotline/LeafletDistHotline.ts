@@ -21,14 +21,16 @@ const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds
 }
 
 const LeafletDistHotline = (
-    nodes: Node[][], conditions: WayConditions[], options: HotlineOptions
+    nodes: Node[][], conditions: WayConditions[], 
+    way_ids: string[], way_lengths: number[],
+    options: HotlineOptions
 )
 : [HotPolyline<Node, DistData>, DistHotline] => 
 {
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
-    const hotline = new DistHotline(conditions, options)
+    const hotline = new DistHotline(conditions, way_ids, way_lengths, options)
 
     const polyline = new HotPolyline<Node, DistData>(hotline, projectLatLngs, nodes) 
 

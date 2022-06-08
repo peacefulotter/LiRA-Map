@@ -1,5 +1,4 @@
 
-import { start } from "repl";
 import { ConditionPoint, HotlineOptions, WayConditions } from "../../../models/path";
 import RGB from "../utils/RGB";
 import Hotline from "./Hotline";
@@ -10,30 +9,21 @@ export type DistInput = [number, number][]
 export interface DistPoint { x: number, y: number, i: number, way_dist: number };
 export type DistData = DistPoint[]
 
-// interface Edge {
-//     gradient: CanvasGradient;
-//     start: DistPoint;
-//     end: DistPoint;
-//     cur: Condition | null;
-//     grad_dist: 0 | 1; 
-// }
-
-interface Condition {
-    way_dist: number;
-    rgb: RGB;
-}
-
 type Edge = RGB;
 
 export default class DistHotline extends Hotline<DistData> {
 
     conditionss: WayConditions[];
+    way_ids: string[];
+    way_lengths: number[];
     edgess: Edge[][];
 
-    constructor(conditionss: WayConditions[], options?: HotlineOptions) {
+    constructor(conditionss: WayConditions[], way_ids: string[], way_lengths: number[], options?: HotlineOptions) {
         super(options)
         this.conditionss = conditionss;
-        this.edgess = []
+        this.way_ids = way_ids;
+        this.way_lengths = way_lengths;
+        this.edgess = [];
     }
 
     private getEdges(conditionss: WayConditions[])
@@ -79,27 +69,42 @@ export default class DistHotline extends Hotline<DistData> {
             const path = this._data[i];
             const conditions = this.conditionss[i];
             const edges = this.edgess[i]
+            const way_id = this.way_ids[i];
+            const way_length = this.way_lengths[i];
             
             for (let j = 1; j < path.length; j++) 
             {
                 const start = path[j - 1];
                 const end = path[j];
                 
-                const gradient = this._addGradient(ctx, start, end, conditions);
+                const gradient = this._addGradient(ctx, start, end, conditions, way_id);
                 
-                this._addColorGradient(gradient, edges[start.i], 0)
-                this._addColorGradient(gradient, edges[end.i],   1)
-
-                this.drawGradient(ctx, gradient, start, end)
+                this._addColorGradient(gradient, edges[start.i], 0, way_id)
+                this._addColorGradient(gradient, edges[end.i],   1, way_id)
+                
+                this.drawGradient(ctx, gradient, way_id, way_length, start, end)
             }
         }
 
     }
 
-    drawGradient(ctx: CanvasRenderingContext2D, gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint)
-    {
+    drawGradient(
+        ctx: CanvasRenderingContext2D, gradient: CanvasGradient, 
+        way_id: string, way_length: number, 
+        pointStart: DistPoint, pointEnd: DistPoint
+    ) {
         ctx.beginPath();
-        ctx.lineWidth = this._weight + (this.isHover ? 4 : 0)
+        const hoverWeight = this.dotHover !== undefined 
+            && this.dotHover.label === way_id 
+            && (pointStart.way_dist * way_length) <= this.dotHover.x 
+            && (pointEnd.way_dist * way_length) >= this.dotHover.x 
+            ? 10
+            : 0
+
+        if ( this.dotHover !== undefined  && this.dotHover.label === way_id )
+            console.log( pointStart.way_dist * way_length, this.dotHover.x, pointEnd.way_dist * way_length );
+            
+        ctx.lineWidth = this._weight + hoverWeight
         ctx.strokeStyle = gradient;
         ctx.moveTo(pointStart.x, pointStart.y);
         ctx.lineTo(pointEnd.x, pointEnd.y); 
@@ -107,15 +112,15 @@ export default class DistHotline extends Hotline<DistData> {
         ctx.closePath()
     }
 
-    _addGradient( ctx: CanvasRenderingContext2D, start: DistPoint, end: DistPoint, conditions: WayConditions ): CanvasGradient
+    _addGradient( ctx: CanvasRenderingContext2D, start: DistPoint, end: DistPoint, conditions: WayConditions, way_id: string ): CanvasGradient
     {
 
         const gradient: CanvasGradient = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
-        this.computeGradient(gradient, start, end, conditions)
+        this.computeGradient(gradient, start, end, conditions, way_id)
         return gradient
     }
 
-    computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint, conditions: WayConditions )
+    computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint, conditions: WayConditions, way_id: string )
     {
         const start_dist = pointStart.way_dist
         const end_dist = pointEnd.way_dist
@@ -128,10 +133,9 @@ export default class DistHotline extends Hotline<DistData> {
             else if ( way_dist > end_dist ) return;
 
             const rgb = this.getRGBForValue(value);
-            const color = this.isHover ? new RGB(255, 0, 0) : rgb
             const dist = (way_dist - start_dist) / (end_dist - start_dist)
             
-            this._addColorGradient(gradient, color, dist)
+            this._addColorGradient(gradient, rgb, dist, way_id)
         }
     }
 }

@@ -4,7 +4,7 @@ import { getColors } from "./color";
 import Dots from "./dots";
 import Path from "./path";
 
-import { Axis, GraphData, SVG } from "../../models/graph";
+import { Axis, DotHover, GraphData, SVG } from "../../models/graph";
 import { Dispatch, SetStateAction } from 'react';
 
 
@@ -18,9 +18,9 @@ class Line {
         this.dots = new Dots(svg, label)
     }
 
-    add(data: GraphData, axis: [Axis, Axis], color: string, setDotHoverIndex: Dispatch<SetStateAction<number | undefined>> ) {
+    add(data: GraphData, axis: [Axis, Axis], color: string, label: string, setDotHover: Dispatch<SetStateAction<DotHover | undefined>> ) {
         this.path.add(data, axis, color)
-        this.dots.add(data, axis, color, setDotHoverIndex)
+        this.dots.add(data, axis, color, label, setDotHover)
         return this;
     }
 
@@ -38,13 +38,13 @@ export const addLine = (
     axis: [Axis, Axis],
     label: string,
     i: number,
-    setDotHoverIndex: Dispatch<SetStateAction<number | undefined>>
+    setDotHover: Dispatch<SetStateAction<DotHover | undefined>>
 ) =>  {
     const colors = getColors(0)
     const color = colors[i % colors.length]
 
     const line = new Line(svg, label)
-        .add(data, axis, color, setDotHoverIndex)
+        .add(data, axis, color, label, setDotHover)
 
     const mouseOverLine = () => {
         line.path.allMouseOver()

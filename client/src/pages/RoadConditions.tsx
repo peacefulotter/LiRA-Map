@@ -35,7 +35,7 @@ const RoadConditions = () => {
             }
     
             const data: GraphData = wc.map((p: ConditionPoint, i: number) => [p.way_dist * way_length, p.value, i])
-            const label = `way-graph`
+            const label = way_id
 
             setPlot( { bounds, data, label } )
         })
@@ -58,7 +58,6 @@ const RoadConditions = () => {
                     labelY="IRI"
                     palette={IRIPalette}
                     plots={plot ? [plot] : []}
-                        
                 />
             </div>
         </div>

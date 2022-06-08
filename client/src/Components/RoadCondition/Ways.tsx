@@ -45,6 +45,8 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         {
             conditions.length > 0 
                 ? <RCHotline 
+                    way_ids={conditions.map(({way_id}) => way_id)}
+                    way_lengths={conditions.map(({way_length}) => way_length)}
                     nodes={conditions.map(({nodes}) => nodes)}
                     conditions={conditions.map(({conditions}) => conditions)}
                     properties={conditions[0].properties}

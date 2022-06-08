@@ -1,5 +1,6 @@
 
 
+import { DotHover } from "../../../models/graph";
 import { HotlineOptions, HotlinePalette } from "../../../models/path";
 import RGB from "../utils/RGB";
 
@@ -27,7 +28,6 @@ abstract class Hotline<DataT> extends L.Renderer {
     _height: number | undefined;
 
     _weight: number;
-    _weightFunc: ((a: number, b: number) => number) | undefined;
     _outlineWidth: number | undefined;
     _outlineColor: string;
     _min: number;
@@ -37,7 +37,7 @@ abstract class Hotline<DataT> extends L.Renderer {
 
     _lastCode: any;
     projectedData: DataT[]
-    isHover: number | undefined;
+    dotHover: DotHover | undefined;
 
     constructor(options?: HotlineOptions)
     {
@@ -51,7 +51,7 @@ abstract class Hotline<DataT> extends L.Renderer {
 
         this._data = [];
         this.projectedData = []
-        this.isHover = undefined;
+        this.dotHover = undefined;
     
         this._palette = new Uint8ClampedArray()
         this.palette(options?.palette || defaultPalette);
@@ -68,9 +68,9 @@ abstract class Hotline<DataT> extends L.Renderer {
         this._height = canvas.height;
     }
 
-    setHover(isHover: number | undefined)
+    setHover(dotHover: DotHover | undefined)
     {
-        this.isHover = isHover;
+        this.dotHover = dotHover;
         this.draw()
     }
 
@@ -198,8 +198,11 @@ abstract class Hotline<DataT> extends L.Renderer {
         }
     }
 
-    _addColorGradient(gradient: any, rgb: RGB, dist: number) {
-        gradient.addColorStop(dist, 'rgb(' + rgb.get().join(',') + ')');
+    _addColorGradient(gradient: any, rgb: RGB, dist: number, way_id: string) {
+        const opacity = this.dotHover !== undefined && this.dotHover.label !== way_id 
+            ? 0.3
+            : 1
+        gradient.addColorStop(dist, `rgba(${rgb.get().join(',')},${opacity})`);
     }
 
 
