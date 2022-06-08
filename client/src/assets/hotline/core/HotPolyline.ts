@@ -1,25 +1,26 @@
-import L, { LatLng, Map } from 'leaflet';
+import L, { Map } from 'leaflet';
 
 import { HotlineCanvas } from '../canvas/HotlineCanvas';
-import { HotlineOptions } from '../../../models/path';
-import Hotline, { HotlineClass } from '../renderers/Hotline';
+import Hotline from '../renderers/Hotline';
 
 import Util from "./util";
 
 
-export class HotPolyline<DataT> extends L.Polyline {
+export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Polyline {
 
-    projectLatLngs: (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => void
+    coords: CoordT[] | CoordT[][]
+    projectLatLngs: (_map: Map, latlngs: CoordT[], result: any, projectedBounds: any) => void
     _renderer: HotlineCanvas<DataT>
 
     constructor(
         hotline: Hotline<DataT>,
         projectLatLngs: (_map: any, latlngs: any, result: any, projectedBounds: any) => void, 
-        coords: L.LatLngExpression[] | L.LatLngExpression[], 
+        coords: CoordT[] | CoordT[][], 
     ) {
         const renderer = new HotlineCanvas<DataT>(hotline)
         super( coords, { renderer } )
 
+        this.coords = coords;
         this.projectLatLngs = projectLatLngs;
         this._renderer = renderer;
     }
@@ -38,18 +39,15 @@ export class HotPolyline<DataT> extends L.Polyline {
     /**
      * Just like the Leaflet version, but with support for a z coordinate.
      */
-    _projectLatlngs(latlngs: any, result: any, projectedBounds: any) 
+    _projectLatlngs(latlngs: CoordT[] | CoordT[][], result: any, projectedBounds: any) 
     {
-        if (Array.isArray(latlngs[0]) ) 
+        if (Array.isArray(this.coords[0]) ) 
         {
-            const len = latlngs.length;
-            for (let i = 0; i < len; i++) {
-                this._projectLatlngs(latlngs[i], result, projectedBounds);
-            }
+            this.coords.forEach( coords => this.projectLatLngs(this._map, coords as CoordT[], result, projectedBounds) )
         }
         else
         {
-            this.projectLatLngs(this._map, latlngs, result, projectedBounds)
+            this.projectLatLngs(this._map, this.coords as CoordT[], result, projectedBounds)
         }
         
         if ( this._renderer._hotline === undefined ) return;

@@ -54,7 +54,6 @@ export interface HotlineOptions {
 	min?: number;
 	max?: number;
 	weight?: number;
-	weightFunc?: (a: number, b: number) => number;
 	outlineWidth?: number;
 	palette?: HotlinePalette;
 	onclick?: (e: any) => void;

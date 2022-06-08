@@ -1,12 +1,20 @@
 
 import { HotlineOptions, WayConditions } from "../../../models/path";
+import RGB from "../utils/RGB";
 import Hotline from "./Hotline";
 
 
 export type DistInput = [number, number][]
 
-export interface DistPoint { x: number, y: number, i: number };
+export interface DistPoint { x: number, y: number, i: number, way_dist: number };
 export type DistData = DistPoint[]
+
+interface Hole {
+    gradient: CanvasGradient;
+    start: DistPoint;
+    end: DistPoint;
+    gradient_dist: number; 
+}
 
 
 export default class DistHotline extends Hotline<DistData> {
@@ -21,11 +29,17 @@ export default class DistHotline extends Hotline<DistData> {
     setConditions(conditions: WayConditions)
     {
         this.conditions = conditions
+        console.log(conditions);
     }
 
     _drawHotline(): void 
     {
+        console.log('\n\n\n');
+        
         const dataLength = this._data.length
+
+        let prevRGB: RGB | null = null;
+        let holes: Hole[] = []
 
         for (let i = 0; i < dataLength; i++) 
         {
@@ -35,29 +49,43 @@ export default class DistHotline extends Hotline<DistData> {
             {
                 const pointStart = path[j - 1];
                 const pointEnd = path[j];
-
-                // console.log('draw', pointStart, pointEnd);
                 
                 if ( pointStart.i !== pointEnd.i )
-                    this._addGradient(pointStart, pointEnd);
+                    [holes, prevRGB] = this._addGradient(pointStart, pointEnd, prevRGB, holes);
             }
         }
-       
     }
 
-    _addGradient(pointStart: DistPoint, pointEnd: DistPoint) {
+    calcColor(gradient: CanvasGradient, a: DistPoint, b: DistPoint, rgbaA: RGB, rgbB: RGB, edge_dist: number, gradient_dist: number)
+    {
+        const A = (1 - a.way_dist)
+        const B =  (1 - b.way_dist) + edge_dist
+        const C = (A + B)
+        const color = rgbaA.mul( A / C ).add( rgbB.mul( B / C ) )
+        this._addColorGradient( gradient, color, gradient_dist )
+    }
 
-        if ( this._ctx === undefined ) return;
+    resolveHoles( ctx: CanvasRenderingContext2D, holes: Hole[], a: RGB, b: RGB, incr: number )
+    {
+        const n = 2 * holes.length + 1 - incr
+        console.log('SOLVING', holes.length, n, a, b);
+        
+        holes.forEach( ({gradient, start, end}, x) => {
+            const _x = 2 * x
+            const s: RGB =  b.sub( a ).mul( _x / n ).add( a )           //  (_x / n) * (b + a) - a;
+            const e: RGB = b.sub( a ).mul( (_x + 1) / n ).add( a ) // ((_x + 1) / n) * (b + a) - a;
+            console.log(...s.get(), ...e.get());
+            
+            this._addColorGradient(gradient, s, 0)
+            this._addColorGradient(gradient, e, 1)
+            this.drawGradient( ctx, gradient, start, end )
+        })
+    }
 
-        const ctx = this._ctx;
+    drawGradient(ctx: CanvasRenderingContext2D, gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint)
+    {
         ctx.beginPath();
-
-        const weight = this.getWeight(pointStart.i, pointEnd.i) 
-        ctx.lineWidth = weight + (this.isHover ? 4 : 0)
-
-        const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
-        this.computeGradient(gradient, pointStart, pointEnd)
-
+        ctx.lineWidth = this._weight + (this.isHover ? 4 : 0)
         ctx.strokeStyle = gradient;
         ctx.moveTo(pointStart.x, pointStart.y);
         ctx.lineTo(pointEnd.x, pointEnd.y); 
@@ -65,28 +93,73 @@ export default class DistHotline extends Hotline<DistData> {
         ctx.closePath()
     }
 
-    computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint) 
+    _addGradient(start: DistPoint, end: DistPoint, prev: RGB | null, holes: Hole[] ): [Hole[], RGB | null]
     {
+        const ctx = this._ctx;
+        if ( ctx === undefined ) return [[], null];
+
+        const gradient: CanvasGradient = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+        const [first, last] = this.computeGradient(gradient, start, end, prev)
+
+        console.log(holes.length, prev, first, last);
+
+        const hole: Hole = { gradient, start, end, gradient_dist: 0 }
+
+        if ( holes.length > 0 && prev !== null && first !== null )
+        {
+            if (last !== null ) // first and last are not null => solve all holes
+            {
+                this.resolveHoles(ctx, holes, prev, first, 1)
+            }
+            else // last is null => solve all holes, but cur is a new one
+            {
+                this.resolveHoles(ctx, holes, prev, first, 0)
+                return [ [hole], first ]
+            }
+        } 
+        // new hole + can't solve any
+        else if ( first === null && last === null )
+            return [[...holes, hole], prev]
+
+        this.drawGradient(ctx, gradient, start, end)
+
+        return [[], last]
+    }
+
+    computeGradient(gradient: CanvasGradient, pointStart: DistPoint, pointEnd: DistPoint, prev: RGB | null): [RGB | null, RGB | null] 
+    {
+        const start_dist = pointStart.way_dist
+        const end_dist = pointEnd.way_dist
+
+        let first: RGB | null = null;
+        let last: RGB | null = null;
+    
         for ( let i = 0; i < this.conditions.length; i++ )
         {
-            // const point = this.projectedData[0][k]
-            const { way_dist, value } = this.conditions[i]
+            const { way_dist, value } = this.conditions[i]            
+
+            if ( way_dist < start_dist )
+                continue
+            else if ( way_dist > end_dist )
+                return [first, last]
 
             const rgb = this.getRGBForValue(value);
-            this.isHover 
-                ? this._addColorGradient(gradient, [255, 0, 0], way_dist)
-                : this._addColorGradient(gradient, rgb, way_dist)
+            const color = this.isHover ? new RGB(255, 0, 0) : rgb
+            const dist = (way_dist - start_dist) / (end_dist - start_dist)
 
-            // if ( this.dotHoverIndex )
-            // {
-            //     const hoverPoint = ???;  // this.projectedData[0][this.dotHoverIndex];
-            //     const opacity = Math.max(1 - (Math.abs(this.dotHoverIndex - k) / (deltaDist * 10)), 0)
-            //     const color = this.getRGBForValue(hoverPoint.z);
-            //     gradient.addColorStop(dist, 'rgba(' + color.join(',') + ',' + opacity + ')');
-            // }
-            // else
-            //     this._addColorGradient(gradient, rgb, dist)
+            this._addColorGradient(gradient, color, dist)
+
+            if ( first === null ) 
+            {
+                first = color
+                if ( prev !== null )
+                    this._addColorGradient(gradient, prev, 0)
+            }
+            else
+                last = color
         }
+
+        return [first, last]
     }
 }
 

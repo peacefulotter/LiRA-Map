@@ -1,6 +1,7 @@
 
 
 import { HotlineOptions, HotlinePalette } from "../../../models/path";
+import RGB from "../utils/RGB";
 
 
 
@@ -42,7 +43,6 @@ abstract class Hotline<DataT> extends L.Renderer {
     {
         super()
         this._weight = options?.weight || 5;
-        this._weightFunc = options?.weightFunc
         this._outlineWidth = options?.outlineWidth;
         this._outlineColor = 'black';
     
@@ -216,21 +216,17 @@ abstract class Hotline<DataT> extends L.Renderer {
     /**
      * Gets the RGB values of a given z value of the current palette.
      * @param {number} value - Value to get the color for, should be between min and max.
-     * @returns {[number, number, number]} The RGB values as an array [r, g, b]
+     * @returns {RGB} The RGB values as an array [r, g, b]
      */
-    getRGBForValue(value: number): [number, number, number] {
+    getRGBForValue(value: number): RGB {
         var valueRelative = Math.min(Math.max((value - this._min) / (this._max - this._min), 0), 0.999);
         var paletteIndex = Math.floor(valueRelative * 256) * 4;
 
-        return [
+        return new RGB(
             this._palette[paletteIndex],
             this._palette[paletteIndex + 1],
             this._palette[paletteIndex + 2]
-        ];
-    }
-
-    getWeight(a: number, b: number) {
-        return this._weightFunc ? this._weightFunc(a, b) : this._weight
+        );
     }
 
     /**
@@ -261,8 +257,8 @@ abstract class Hotline<DataT> extends L.Renderer {
         }
     }
 
-    _addColorGradient(gradient: any, rgb: number[], dist: number) {
-        gradient.addColorStop(dist, 'rgb(' + rgb.join(',') + ')');
+    _addColorGradient(gradient: any, rgb: RGB, dist: number) {
+        gradient.addColorStop(dist, 'rgb(' + rgb.get().join(',') + ')');
     }
 
 

@@ -42,7 +42,6 @@ const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClic
         
         return {
             weight: width(undefined, properties),
-            weightFunc: (a: number, b: number) => 10,
             outlineWidth: 0,
             palette: hotlinePal,
             min: min,
@@ -65,7 +64,7 @@ const RCHotline: FC<RCRendererProps> = ( { nodes, conditions, properties, onClic
     useEffect( () => {
         if ( nodes.length === 0 ) return;
 
-        const [polyline, _hotline] = LeafletDistHotline( nodes, conditions, options )
+        const [polyline, _hotline] = LeafletDistHotline( [nodes], conditions, options )
         
         polyline.addTo(map)
 

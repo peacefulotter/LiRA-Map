@@ -95,7 +95,7 @@ export class RCService
         
 
         return [
-            this.groupBy<any, Node>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[0], lng: cur.pos[1], way_dist: cur.way_dist }) ),
+            this.groupBy<any, Node>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }) ),
             way_lengths.reduce( (acc, cur) => ({ ...acc, [cur.id]: cur.length }), {}),
         ]
     }

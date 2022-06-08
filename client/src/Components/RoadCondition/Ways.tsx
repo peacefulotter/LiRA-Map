@@ -33,7 +33,7 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         getWays(roadName, type, z, (data: MapConditions[]) => {
             const { way_id, way_length, conditions } = data[0]
             console.log(conditions.length, data);
-            setConditions( data )
+            setConditions( data.slice(1, 2) )
             setTimeout( onClick(way_id, way_length), 100 )
         } )
     }

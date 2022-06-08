@@ -1,6 +1,5 @@
 
 import { LatLngExpression } from 'leaflet'
-import { HotlineOptions } from '../../../models/path';
 import Hotline from './Hotline';
 
 
@@ -35,8 +34,7 @@ export default class LatLngHotline extends Hotline<LatLngData> {
 
         const ctx = this._ctx;
 
-        const weight = this.getWeight(pointStart.i, pointEnd.i) 
-        ctx.lineWidth = weight + (this.isHover ? 4 : 0)
+        ctx.lineWidth = this._weight + (this.isHover ? 4 : 0)
 
         // Create a gradient for each segment, pick start and end colors from palette gradient
         const gradient: CanvasGradient = ctx.createLinearGradient(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
@@ -67,7 +65,7 @@ export default class LatLngHotline extends Hotline<LatLngData> {
                 const hoverPoint = this.projectedData[0][this.isHover];
                 const opacity = Math.max(1 - (Math.abs(this.isHover - k) / deltaIndex), 0)
                 const color = this.getRGBForValue(hoverPoint.z);
-                gradient.addColorStop(dist, 'rgba(' + color.join(',') + ',' + opacity + ')');
+                gradient.addColorStop(dist, 'rgba(' + color.get().join(',') + ',' + opacity + ')');
             }
             else
                 this._addColorGradient(gradient, rgb, dist)
