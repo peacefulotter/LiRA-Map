@@ -2,7 +2,7 @@ import {  MapConditions, WayConditions } from "../models/path"
 import { get, post } from "./fetch"
 
 
-export const getWays = ( road: string, type: string, zoom: number, setWays: (data: MapConditions[]) => void ) => {
+export const getWays = ( road: string, type: string, zoom: number, setWays: (data: MapConditions) => void ) => {
     post( '/conditions/ways', { road, type, zoom }, setWays )
 }
 

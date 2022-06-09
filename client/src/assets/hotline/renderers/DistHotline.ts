@@ -1,5 +1,5 @@
 
-import { ConditionPoint, HotlineOptions, WayConditions } from "../../../models/path";
+import { ConditionPoint, HotlineOptions, MapCondition, MapConditions, WayConditions } from "../../../models/path";
 import RGB from "../utils/RGB";
 import Hotline from "./Hotline";
 
@@ -13,20 +13,18 @@ type Edge = RGB;
 
 export default class DistHotline extends Hotline<DistData> {
 
-    conditionss: WayConditions[];
     way_ids: string[];
-    way_lengths: number[];
+    mcs: MapConditions;
     edgess: Edge[][];
 
-    constructor(conditionss: WayConditions[], way_ids: string[], way_lengths: number[], options?: HotlineOptions) {
+    constructor(mcs: MapConditions, options?: HotlineOptions) {
         super(options)
-        this.conditionss = conditionss;
-        this.way_ids = way_ids;
-        this.way_lengths = way_lengths;
+        this.way_ids = Object.keys(mcs)
+        this.mcs = mcs;
         this.edgess = [];
     }
 
-    private getEdges(conditionss: WayConditions[])
+    private getEdges(mcs: MapConditions)
     {
         let i = 0
 
@@ -46,15 +44,16 @@ export default class DistHotline extends Hotline<DistData> {
 
         return this.projectedData.map( (data, j) => {
             i = 0;
-            const conditions = conditionss[j]
+            const way_id = this.way_ids[j]
+            const { conditions } = mcs[way_id]
             return data.map( d => this.getRGBForValue(getValue(d, conditions)) ) 
         })
     }
 
-    setConditions(conditionss: WayConditions[])
+    setConditions(mcs: MapConditions)
     {
-        this.conditionss = conditionss
-        this.edgess = this.getEdges(conditionss)
+        this.mcs = mcs
+        this.edgess = this.getEdges(mcs)
     }
 
     _drawHotline(): void 
@@ -67,10 +66,10 @@ export default class DistHotline extends Hotline<DistData> {
         for (let i = 0; i < dataLength; i++) 
         {
             const path = this._data[i];
-            const conditions = this.conditionss[i];
             const edges = this.edgess[i]
+
             const way_id = this.way_ids[i];
-            const way_length = this.way_lengths[i];
+            const { conditions, way_length } = this.mcs[way_id]
             
             for (let j = 1; j < path.length; j++) 
             {

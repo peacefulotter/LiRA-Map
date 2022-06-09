@@ -1,4 +1,4 @@
-import { Measurement } from "src/models";
+import { Measurement, RendererName } from "src/models";
 
 export interface Node {
     lat: number;
@@ -9,17 +9,19 @@ export interface Node {
 export type Ways = Map<string, Node[]>
 
 export interface ConditionPoint {
-    way_id: string;
 	way_dist: number;
 	value: number;
 }
 
 export type WayConditions = ConditionPoint[]
 
-export interface MapConditions {
-	way_id: string;
+export type WayId = string;
+
+export interface MapCondition {
 	way_length: number;
 	nodes: Node[];
-	properties: Measurement;
 	conditions: WayConditions;
 }
+
+export type MapConditions = { [key: WayId]: MapCondition }
+

@@ -7,8 +7,8 @@ import Hotline from '../renderers/Hotline';
 import Util from "./util";
 
 
-export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Polyline {
-
+export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Polyline 
+{
     coords: CoordT[] | CoordT[][]
     projectLatLngs: (_map: Map, latlngs: CoordT[], result: any, projectedBounds: any) => void
     _renderer: HotlineCanvas<DataT>
@@ -26,7 +26,8 @@ export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Pol
         this._renderer = renderer;
     }
 
-    setHover(dotHover: DotHover | undefined) {
+    setHover(dotHover: DotHover | undefined) 
+    {
         if ( this._renderer._hotline === undefined ) return;
         this._renderer._hotline.setHover(dotHover)
         this._renderer._update()
@@ -54,8 +55,8 @@ export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Pol
     /**
      * Just like the Leaflet version, but uses `Util.clipSegment()`.
      */
-    _clipPoints () {
-
+    _clipPoints () 
+    {
         if ( this._renderer._hotline === undefined ) return;
     
         if (this.options.noClip) {

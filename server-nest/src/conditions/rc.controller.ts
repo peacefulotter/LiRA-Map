@@ -20,9 +20,9 @@ export class RCController
     }
 
     @Get('ways')
-    getWaysConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<MapConditions[]> {
+    getMapConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<MapConditions> {
         const { road, type, zoom } = query;
-        return this.service.getWaysConditions(road, type, zoom);
+        return this.service.getMapConditions(road, type, zoom);
     }
 
     @Get('way')

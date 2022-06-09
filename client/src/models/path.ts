@@ -3,7 +3,7 @@
 import { Palette } from "./graph";
 import { LatLng } from "./models";
 import { Measurement, PathProperties, PointProperties } from "./properties";
-import { PathEventHandler } from "./renderers";
+import { PathEventHandler, RendererName } from "./renderers";
 
 // rendering properties, and optionally, a value and some metadata (like timestamp)
 export interface PointData extends LatLng {
@@ -69,17 +69,19 @@ export interface Node {
 export type Ways = { [key: string]: Node[] }
 
 export interface ConditionPoint {
-    way_id: string;
 	way_dist: number;
 	value: number;
 }
 
 export type WayConditions = ConditionPoint[]
 
-export interface MapConditions {
-	way_id: string;
+export type WayId = string;
+
+export interface MapCondition {
 	way_length: number;
 	nodes: Node[];
-	properties: Measurement;
 	conditions: WayConditions;
 }
+
+export type MapConditions = { [key: WayId]: MapCondition }
+

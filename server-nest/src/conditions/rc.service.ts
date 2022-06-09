@@ -7,8 +7,7 @@ import { InjectConnection, Knex } from 'nestjs-knex';
 import { promisify } from 'util';
 const readdirAsync = promisify( readdir )
 
-import { RendererName } from '../models';
-import { MapConditions, WayConditions, Ways, Node } from './models.rc';
+import { MapConditions, WayConditions, Ways, Node, MapCondition } from './models.rc';
 
 @Injectable()
 export class RCService 
@@ -86,28 +85,27 @@ export class RCService
             .orderBy( this.knex.raw('id::integer') as any )
 
         const way_lengths: any[] = await this.knex()
-            .select( this.knex.raw('id, ST_Length(geom::geography) as length') )
+            .select( this.knex.raw('id, ST_Length(geom::geography) as length') ) 
             .from( 'way' )
             .where( { official_ref: roadName } )
-            .orderBy( this.knex.raw('id::integer') as any )
 
-        console.log(way_lengths);
-        
+            .orderBy( this.knex.raw('id::integer') as any )
 
         return [
             this.groupBy<any, Node>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }) ),
-            way_lengths.reduce( (acc, cur) => ({ ...acc, [cur.id]: cur.length }), {}),
+            way_lengths.reduce( (acc, {id, length}) => { acc.set(id, length); return acc }, new Map<string, number>()),
         ]
     }
 
-    async getWaysRoadConditions(wayIds: number[], type: string): Promise<WayConditions>
+    async getWaysRoadConditions(wayIds: number[], type: string): Promise<Map<string, WayConditions>>
     {
-        return await this.knex
+        const res = await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'road_conditions' )
             .where( { 'type': type } )
             .whereIn( 'way_id', wayIds )
             .orderBy( 'way_dist' );
+        return this.groupBy( res, 'way_id', ({way_dist, value}) => ({way_dist, value}) )
     }
 
     async getWayRoadConditions(wayId: number, type: string): Promise<WayConditions>
@@ -119,42 +117,33 @@ export class RCService
             .orderBy( 'way_dist' );
     }
 
-    async getZoomConditions(wayIds: string[], type: string, zoom: number): Promise<WayConditions>
+    async getZoomConditions(wayIds: string[], type: string, zoom: number): Promise<Map<string, WayConditions>>
     {
-        return await this.knex
+        const res = await this.knex
             .select( [ 'way_id', 'way_dist', 'value' ] )
             .from( 'zoom_conditions' )
             .where( { 'type': type, 'zoom': zoom } )
             .whereIn( 'way_id', wayIds )
             .orderBy( 'way_dist' )
+        return this.groupBy( res, 'way_id', ({way_dist, value}) => ({way_dist, value}) )
     }
 
-    async getWaysConditions(roadName: string, type: string, zoomLevel: number): Promise<MapConditions[]>
+    async getMapConditions(roadName: string, type: string, zoomLevel: number): Promise<MapConditions>
     {
-        console.log('Fetching ways');
         const [ways, way_lengths] = await this.getWays(roadName)
-        console.log(ways);
-        console.log(way_lengths);
-        
-        const wayIds = Array.from(ways.keys())
-
-        console.log(wayIds);
-        
-
-        console.log('Fetching zooms');
-        const zooms = await this.getZoomConditions(wayIds, type, zoomLevel) 
-        console.log(zooms.length);
-
-
-        return Array.from(ways.entries())
-            .map( ([way_id, nodes]) => ({
-                way_id,
-                way_length: way_lengths[way_id],
-                nodes,
-                properties: { dbName: way_id, name: roadName, rendererName: RendererName.hotline },
-                conditions: zooms.filter(rc => rc.way_id === way_id)
-            }))
-            .filter( ({conditions}) => conditions.length > 0 )
+        const way_ids = Array.from(ways.keys())
+        const zooms = await this.getZoomConditions(way_ids, type, zoomLevel)         
+        return way_ids.reduce( 
+            (acc, way_id) => {
+                if (zooms.has(way_id))
+                    acc[way_id] = {
+                        way_length: way_lengths.get(way_id),
+                        nodes: ways.get(way_id),
+                        conditions: zooms.get(way_id)
+                    }
+                return acc
+            }, {} as MapConditions
+        )
     }
 }
 

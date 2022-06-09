@@ -2,22 +2,15 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { Palette } from '../../models/graph';
-import { HotlineOptions, HotlinePalette, Node, WayConditions } from '../../models/path';
+import { HotlineOptions, HotlinePalette, MapConditions, Node } from '../../models/path';
 import { useGraph } from '../../context/GraphContext';
-import { palette, width } from '../../assets/properties';
+import { DEFAULT_PALETTE } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
-import ArrowHead from '../Map/Renderers/ArrowHead';
 import DistHotline, { DistData } from '../../assets/hotline/renderers/DistHotline';
-import { Measurement } from '../../models/properties';
 import { HotPolyline } from '../../assets/hotline/core/HotPolyline';
 
 interface RCRendererProps {
-    way_ids: string[];
-    way_lengths: number[];
-    nodes: Node[][];
-    conditions: WayConditions[];
-    properties: Measurement;
-    onClick: () => void
+    mcs: MapConditions
 }
 
 const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
@@ -28,7 +21,7 @@ const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
       }, {} as HotlinePalette )
 }
 
-const RCHotline: FC<RCRendererProps> = ( { way_ids, way_lengths, nodes, conditions, properties, onClick  } ) => {
+const RCHotline: FC<RCRendererProps> = ( { mcs  } ) => {
 
     const { dotHover, minY, maxY } = useGraph()
 
@@ -38,20 +31,20 @@ const RCHotline: FC<RCRendererProps> = ( { way_ids, way_lengths, nodes, conditio
     const [hotPolyline, setHotPolyline] = useState<HotPolyline<Node, DistData>>()
     
     const options: HotlineOptions = useMemo( () => { 
-        const p = palette(properties)
+        const p = DEFAULT_PALETTE
         const min = p[0].stopValue            || minY || 0
         const max = p[p.length - 1].stopValue || maxY || 1
 
         const hotlinePal = toHotlinePalette(p, max)
         
         return {
-            weight: width(undefined, properties) + 2,
+            weight: 8,
             outlineWidth: 0,
             palette: hotlinePal,
             min: min,
             max: max,
         } 
-    }, [properties, minY, maxY] )
+    }, [minY, maxY] )
 
 
     useEffect( () => {
@@ -61,13 +54,12 @@ const RCHotline: FC<RCRendererProps> = ( { way_ids, way_lengths, nodes, conditio
 
     useEffect( () => {
         if ( hotline === undefined ) return;
-        hotline.setConditions(conditions)
-    }, [conditions])
+        hotline.setConditions(mcs)
+    }, [mcs])
 
     useEffect( () => {
-        if ( nodes.length === 0 ) return;
 
-        const [_hotPolyline, _hotline] = LeafletDistHotline( nodes, conditions, way_ids, way_lengths, options )
+        const [_hotPolyline, _hotline] = LeafletDistHotline( mcs, options )
         
         _hotPolyline.addTo(map)
 
@@ -78,6 +70,7 @@ const RCHotline: FC<RCRendererProps> = ( { way_ids, way_lengths, nodes, conditio
             _hotPolyline.remove()
             map.removeLayer(_hotPolyline);
         }
+
     }, [map])
 
 

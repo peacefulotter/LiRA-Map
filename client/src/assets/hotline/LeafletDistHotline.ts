@@ -5,7 +5,7 @@ import DistHotline, { DistData } from './renderers/DistHotline';
 
 import { HotPolyline } from './core/HotPolyline';
 
-import { HotlineOptions, WayConditions, Node} from '../../models/path';
+import { HotlineOptions, Node, MapConditions} from '../../models/path';
 
 const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
@@ -20,19 +20,18 @@ const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds
     result.push(ring);
 }
 
-const LeafletDistHotline = (
-    nodes: Node[][], conditions: WayConditions[], 
-    way_ids: string[], way_lengths: number[],
-    options: HotlineOptions
-)
+const LeafletDistHotline = ( mcs: MapConditions, options: HotlineOptions )
 : [HotPolyline<Node, DistData>, DistHotline] => 
 {
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
-    const hotline = new DistHotline(conditions, way_ids, way_lengths, options)
-
-    const polyline = new HotPolyline<Node, DistData>(hotline, projectLatLngs, nodes) 
+    console.log(mcs);
+    
+    const hotline = new DistHotline(mcs, options)
+    
+    const nodess = Object.values(mcs).map( v => v.nodes )
+    const polyline = new HotPolyline<Node, DistData>(hotline, projectLatLngs, nodess) 
 
     return [polyline, hotline];
 };

@@ -12,7 +12,7 @@ interface IWays {
 const Ways: FC<IWays> = ( { onClick } ) => {
     
     const { zoom } = useZoom();
-    const [conditions, setConditions] = useState<MapConditions[]>([])
+    const [mcs, setMCs] = useState<MapConditions>()
 
     useEffect( () => {
         fetchWays()
@@ -23,13 +23,13 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         const type = 'IRI';
         const z = Math.max(0, zoom - 12)
         
-        getWays(roadName, type, z, (data: MapConditions[]) => {
-            const { way_id, way_length, conditions } = data[1]
-            console.log(conditions.length, data);
-            setConditions( data )
-            setTimeout( onClick(way_id, way_length), 100 )
+        getWays(roadName, type, z, (data: MapConditions) => {
+            console.log(data);
+            setMCs( data )
+            // setTimeout( onClick(way_ids[0], way_lengths[0]), 100 )
         } )
     }
+    
     return (
         <>
         {/* { conditions.map( ({way_id, way_length, nodes, conditions, properties}: MapConditions, i: number) => {
@@ -43,15 +43,8 @@ const Ways: FC<IWays> = ( { onClick } ) => {
         } ) }  */}
     
         {
-            conditions.length > 0 
-                ? <RCHotline 
-                    way_ids={conditions.map(({way_id}) => way_id)}
-                    way_lengths={conditions.map(({way_length}) => way_length)}
-                    nodes={conditions.map(({nodes}) => nodes)}
-                    conditions={conditions.map(({conditions}) => conditions)}
-                    properties={conditions[0].properties}
-                    onClick={onClick(conditions[0].way_id, conditions[0].way_length)}
-                />
+            mcs
+                ? <RCHotline mcs={mcs} />
                 : null
         }
         </>
