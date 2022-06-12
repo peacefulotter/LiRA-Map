@@ -71,6 +71,10 @@ export default class LatLngHotline extends Hotline<LatLngData> {
             this._addColorGradient(gradient, rgb, dist, "way_id")
         }
     }
+
+    onProjected(): void {
+        
+    }
 }
 
 

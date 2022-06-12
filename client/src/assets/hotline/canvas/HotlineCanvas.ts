@@ -9,7 +9,7 @@ export class HotlineCanvas<DataT> extends L.Canvas
 
     constructor(hotline: Hotline<DataT>, options?: RendererOptions | undefined)
     {
-        super(options);
+        super({...options, tolerance: 2000});
         this._hotline = hotline;
     }
 

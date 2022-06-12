@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { MapConditions, WayConditions } from './models.rc';
+import { MapConditions, WayConditions } from 'src/models';
 import { RCService } from './rc.service';
 
 
@@ -7,17 +7,6 @@ import { RCService } from './rc.service';
 export class RCController 
 {
     constructor(private readonly service: RCService) {}
-
-    @Get('files')
-    getMLFiles(): Promise<any> {
-        return this.service.getMLFiles();
-    }
-
-    @Get('file')
-    getMLFile( @Query() query: { filename: string } ): Promise<any> {
-        const { filename } = query;
-        return this.service.getMLFile(filename);
-    }
 
     @Get('ways')
     getMapConditions( @Query() query: { road: string, type: string, zoom: number } ): Promise<MapConditions> {

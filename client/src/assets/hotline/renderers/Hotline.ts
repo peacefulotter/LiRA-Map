@@ -14,6 +14,13 @@ const defaultPalette = {
     1.0: 'red'
 }; 
 
+const defaultWeight = 5;
+const defaultOutlineWidth = 0;
+const defaultOutlineColor = 'black';
+const defaultMin = 0;
+const defaultMax = 1;
+
+
 /**
 	 * Core renderer.
 	 * @constructor
@@ -28,7 +35,7 @@ abstract class Hotline<DataT> extends L.Renderer {
     _height: number | undefined;
 
     _weight: number;
-    _outlineWidth: number | undefined;
+    _outlineWidth: number;
     _outlineColor: string;
     _min: number;
     _max: number;
@@ -42,18 +49,27 @@ abstract class Hotline<DataT> extends L.Renderer {
     constructor(options?: HotlineOptions)
     {
         super()
-        this._weight = options?.weight || 5;
-        this._outlineWidth = options?.outlineWidth;
-        this._outlineColor = 'black';
-    
-        this._min = options?.min || 0;
-        this._max = options?.max || 1;
-
+        this._weight = defaultWeight;
+        this._outlineWidth = defaultOutlineWidth;
+        this._outlineColor = defaultOutlineColor;
+        this._min = defaultMin;
+        this._max = defaultMax;
         this._data = [];
         this.projectedData = []
         this.dotHover = undefined;
-    
         this._palette = new Uint8ClampedArray()
+
+        if ( options )
+            this.setOptions(options);
+    }
+
+    setOptions(options: HotlineOptions)
+    {
+        this._weight = options?.weight || defaultWeight;
+        this._outlineWidth = options?.outlineWidth || defaultOutlineWidth;
+        this._outlineColor = options?.outlineColor || defaultOutlineColor;
+        this._min = options?.min || defaultMin;
+        this._max = options?.max || defaultMax;
         this.palette(options?.palette || defaultPalette);
     }
 
@@ -160,8 +176,8 @@ abstract class Hotline<DataT> extends L.Renderer {
      * @returns {RGB} The RGB values as an array [r, g, b]
      */
     getRGBForValue(value: number): RGB {
-        var valueRelative = Math.min(Math.max((value - this._min) / (this._max - this._min), 0), 0.999);
-        var paletteIndex = Math.floor(valueRelative * 256) * 4;
+        const valueRelative = Math.min(Math.max((value - this._min) / (this._max - this._min), 0), 0.999);
+        const paletteIndex = Math.floor(valueRelative * 256) * 4;
 
         return new RGB(
             this._palette[paletteIndex],
@@ -202,7 +218,13 @@ abstract class Hotline<DataT> extends L.Renderer {
         const opacity = this.dotHover !== undefined && this.dotHover.label !== way_id 
             ? 0.3
             : 1
-        gradient.addColorStop(dist, `rgba(${rgb.get().join(',')},${opacity})`);
+
+        try {
+            gradient.addColorStop(dist, `rgba(${rgb.get().join(',')},${opacity})`);
+        }          
+        catch {
+            console.log(way_id, dist, rgb);
+        }  
     }
 
 
@@ -211,6 +233,8 @@ abstract class Hotline<DataT> extends L.Renderer {
      * @private
      */
     abstract _drawHotline(): void;
+
+    abstract onProjected(): void;
 }
 
 export default Hotline;

@@ -1,33 +1,13 @@
 
 import { Injectable } from '@nestjs/common';
 
-import { readdir } from 'fs'
-import { readFile } from 'fs/promises';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { promisify } from 'util';
-const readdirAsync = promisify( readdir )
-
-import { MapConditions, WayConditions, Ways, Node, MapCondition } from './models.rc';
+import { MapConditions, Node, WayConditions, Ways } from 'src/models';
 
 @Injectable()
 export class RCService 
 {
-    path: string;
-
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {
-        this.path = './src/conditions/json/'
-    }
-
-    async getMLFiles() 
-    {
-        const files = await readdirAsync( this.path )
-        return files.map( file => file.replace('.json', '') )
-    }
-
-    async getMLFile(filename: string) 
-    {
-        const file = await readFile( this.path + filename + '.json', 'utf-8' )
-        return JSON.parse(file)
     }
 
     // const endnodes = elements.map( ({nodes}, i: number) => [nodes[0], nodes[nodes.length - 1], i] )

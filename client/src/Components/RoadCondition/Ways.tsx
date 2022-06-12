@@ -6,7 +6,7 @@ import { getWays } from '../../queries/conditions';
 import RCHotline from './RCHotline';
 
 interface IWays {
-    onClick: (way_id: string, way_length: number) => () => void;
+    onClick?: (way_id: string, way_length: number) => () => void;
 }
 
 const Ways: FC<IWays> = ( { onClick } ) => {

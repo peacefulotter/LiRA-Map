@@ -26,8 +26,6 @@ const LeafletDistHotline = ( mcs: MapConditions, options: HotlineOptions )
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')
 
-    console.log(mcs);
-    
     const hotline = new DistHotline(mcs, options)
     
     const nodess = Object.values(mcs).map( v => v.nodes )

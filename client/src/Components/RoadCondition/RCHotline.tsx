@@ -8,6 +8,7 @@ import { DEFAULT_PALETTE } from '../../assets/properties';
 import LeafletDistHotline from '../../assets/hotline/LeafletDistHotline';
 import DistHotline, { DistData } from '../../assets/hotline/renderers/DistHotline';
 import { HotPolyline } from '../../assets/hotline/core/HotPolyline';
+import { useZoom } from '../../context/ZoomContext';
 
 interface RCRendererProps {
     mcs: MapConditions
@@ -26,25 +27,32 @@ const RCHotline: FC<RCRendererProps> = ( { mcs  } ) => {
     const { dotHover, minY, maxY } = useGraph()
 
     const map = useMapEvents({})
+    const { zoom } = useZoom()
 
     const [hotline, setHotline] = useState<DistHotline>()
     const [hotPolyline, setHotPolyline] = useState<HotPolyline<Node, DistData>>()
-    
-    const options: HotlineOptions = useMemo( () => { 
-        const p = DEFAULT_PALETTE
-        const min = p[0].stopValue            || minY || 0
-        const max = p[p.length - 1].stopValue || maxY || 1
 
+    const getOptions = () => {
+        const p = DEFAULT_PALETTE
+        const min = 0 // p[0].stopValue            || minY || 0
+        const max = 100 // p[p.length - 1].stopValue || maxY || 1
         const hotlinePal = toHotlinePalette(p, max)
+
+        console.log(zoom);
         
         return {
-            weight: 8,
+            weight: Math.max(zoom > 8 ? zoom - 6 : zoom - 5, 2),
             outlineWidth: 0,
             palette: hotlinePal,
             min: min,
             max: max,
-        } 
-    }, [minY, maxY] )
+        }
+    }
+    
+    useEffect( () => {
+        if ( hotline === undefined ) return;
+        hotline.setOptions(getOptions())
+    }, [minY, maxY, zoom] )
 
 
     useEffect( () => {
@@ -59,7 +67,7 @@ const RCHotline: FC<RCRendererProps> = ( { mcs  } ) => {
 
     useEffect( () => {
 
-        const [_hotPolyline, _hotline] = LeafletDistHotline( mcs, options )
+        const [_hotPolyline, _hotline] = LeafletDistHotline( mcs, getOptions() )
         
         _hotPolyline.addTo(map)
 

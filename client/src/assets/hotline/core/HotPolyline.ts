@@ -19,7 +19,7 @@ export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Pol
         coords: CoordT[] | CoordT[][], 
     ) {
         const renderer = new HotlineCanvas<DataT>(hotline)
-        super( coords, { renderer } )
+        super( coords, { renderer, interactive: true } )
 
         this.coords = coords;
         this.projectLatLngs = projectLatLngs;
@@ -40,16 +40,13 @@ export class HotPolyline<CoordT extends L.LatLngExpression, DataT> extends L.Pol
     _projectLatlngs(latlngs: CoordT[] | CoordT[][], result: any, projectedBounds: any) 
     {
         if (Array.isArray(this.coords[0]) ) 
-        {
             this.coords.forEach( coords => this.projectLatLngs(this._map, coords as CoordT[], result, projectedBounds) )
-        }
         else
-        {
             this.projectLatLngs(this._map, this.coords as CoordT[], result, projectedBounds)
-        }
         
         if ( this._renderer._hotline === undefined ) return;
         this._renderer._hotline.projectedData = [...result];
+        this._renderer._hotline.onProjected()
     }
 
     /**

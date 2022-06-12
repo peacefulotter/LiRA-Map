@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import Navbar from './Components/Navbar'
 import Trips from "./pages/Trips";
 import CarData from "./pages/CarData";
+import RoadConditions from "./pages/RoadConditions";
+import Altitude from "./pages/Altitude";
 import Login from "./pages/Login";
 
 import { ZoomProvider } from "./context/ZoomContext";
 
 import "./App.css";
-import RoadConditions from "./pages/RoadConditions";
 
 const App: FC = () => {
 
@@ -25,6 +26,10 @@ const App: FC = () => {
                     <Route 
                         exact path="/road_conditions"    
                         component={() => <ZoomProvider><RoadConditions/></ZoomProvider>} 
+                    />
+                    <Route 
+                        exact path="/altitude"    
+                        component={() => <ZoomProvider><Altitude/></ZoomProvider>} 
                     />
                     <Route exact path="/login" component={() => <Login />} />
                 </Switch>

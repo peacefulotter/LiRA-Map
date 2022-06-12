@@ -17,14 +17,18 @@ export default class DistHotline extends Hotline<DistData> {
     mcs: MapConditions;
     edgess: Edge[][];
 
-    constructor(mcs: MapConditions, options?: HotlineOptions) {
+    constructor(mcs: MapConditions, options: HotlineOptions) {
         super(options)
         this.way_ids = Object.keys(mcs)
         this.mcs = mcs;
         this.edgess = [];
     }
 
-    private getEdges(mcs: MapConditions)
+    onProjected(): void {
+        this.updateEdges();
+    }
+
+    private updateEdges()
     {
         let i = 0
 
@@ -38,22 +42,29 @@ export default class DistHotline extends Hotline<DistData> {
             if ( d.way_dist === 0 ) return conditions[0].value
             else if ( d.way_dist === 1 ) return conditions[conditions.length - 1].value
             
-            while ( conditions[i].way_dist <= d.way_dist && ++i < conditions.length ) {}
-            return calcValue(conditions[Math.max(i - 1, 0)], conditions[i], d)
+            while ( i < conditions.length && conditions[i++].way_dist <= d.way_dist ) {}
+
+            if ( i >= conditions.length - 1 ) return conditions[conditions.length - 1].value
+            
+            const i_1 = Math.max(i - 1, 0)
+            const i_2 = i
+            return calcValue(conditions[i_1], conditions[i_2], d)
         }
 
-        return this.projectedData.map( (data, j) => {
+        this.edgess = this.projectedData.map( (data, j) => {
             i = 0;
             const way_id = this.way_ids[j]
-            const { conditions } = mcs[way_id]
+            const { conditions } = this.mcs[way_id]
             return data.map( d => this.getRGBForValue(getValue(d, conditions)) ) 
         })
     }
 
     setConditions(mcs: MapConditions)
     {
+        console.log(mcs, this.projectedData);
         this.mcs = mcs
-        this.edgess = this.getEdges(mcs)
+        this.updateEdges()
+        console.log(this.edgess);
     }
 
     _drawHotline(): void 
@@ -100,9 +111,6 @@ export default class DistHotline extends Hotline<DistData> {
             ? 10
             : 0
 
-        if ( this.dotHover !== undefined  && this.dotHover.label === way_id )
-            console.log( pointStart.way_dist * way_length, this.dotHover.x, pointEnd.way_dist * way_length );
-            
         ctx.lineWidth = this._weight + hoverWeight
         ctx.strokeStyle = gradient;
         ctx.moveTo(pointStart.x, pointStart.y);
