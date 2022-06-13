@@ -69,6 +69,10 @@ export interface Node {
 
 export type Ways = { [key: string]: Node[] }
 
+export interface ValueLatLng extends LatLng {
+	value: number;
+}
+
 export interface ConditionPoint {
 	way_dist: number;
 	value: number;

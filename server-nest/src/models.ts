@@ -101,6 +101,10 @@ export interface Node {
 
 export type Ways = Map<string, Node[]>
 
+export interface ValueLatLng extends LatLng {
+	value: number;
+}
+
 export interface ConditionPoint {
 	way_dist: number;
 	value: number;

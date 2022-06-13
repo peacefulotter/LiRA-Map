@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { MapConditions, Ways, Node, WayConditions, ConditionPoint } from 'src/models';
+import { MapConditions, Ways, Node, WayConditions, ConditionPoint, ValueLatLng } from 'src/models';
 
 @Injectable()
 export class AltitudeService 
@@ -38,6 +38,13 @@ export class AltitudeService
         return this.groupBy<any, ConditionPoint>( altitudes, 'way_id', (cur: any) => (
             { value: cur.altitude, way_dist: cur.way_dist }
         ) )
+    }
+
+    async getHeatAltitudes(): Promise<ValueLatLng[]>
+    {
+        return await this.knex()
+            .select( this.knex.raw('altitude as value, x as lng, y as lat') )
+            .from(this.knex.raw('altitude, getCoord(cast(way_id as character varying), way_dist)'))
     }
 
     async getAltitudesConditions(): Promise<MapConditions>
