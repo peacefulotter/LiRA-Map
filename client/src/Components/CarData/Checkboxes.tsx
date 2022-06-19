@@ -18,7 +18,7 @@ const Checkboxes: FC<ICheckboxes> = ( { typeName, types, type, onClick } ) => {
             { types.map( (t: ComputedValueType | AggregationMethod, i: number) => {
                 return <Checkbox 
                     key={`popup-cb-${typeName}-${i}`}
-                    forceState={t === type}
+                    forceState={t.id === type?.id}
                     className='seg-checkbox'
                     html={<p>{t.name}</p>}
                     onClick={onClick(t)} />

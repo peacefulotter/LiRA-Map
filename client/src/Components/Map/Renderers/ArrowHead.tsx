@@ -14,7 +14,7 @@ const ArrowHead: FC<IArrowHead> = ( { origin, end } ) => {
 
     const options = {
         color: 'blue',
-        weight: 5
+        weight: 6
     }
 
     // inverse vec

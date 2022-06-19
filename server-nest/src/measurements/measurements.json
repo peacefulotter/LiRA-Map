@@ -27,5 +27,20 @@
         "name": "Traction Instant Consumption",
         "color": "#00d084",
         "hasValue": true
-    }
+    },
+    {
+        "rendererName": "line",
+        "dbName": "obd.spd_veh",
+        "name": "Speed",
+        "color": "#00d084",
+        "hasValue": true
+    },
+    {
+        "rendererName": "line",
+        "dbName": "acc.xyz",
+        "name": "Acceleration",
+        "color": "#00d084",
+        "hasValue": true
+    },
+    null
 ]

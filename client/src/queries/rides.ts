@@ -20,7 +20,6 @@ export const getRide = (
     const { dbName, name, hasValue } = measurement
 
     console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
-    
     post( 'rides/ride', { tripId, dbName }, (boundedPath: BoundedPath) => {            
         
         const { path } = boundedPath;

@@ -14,7 +14,7 @@ const TypesInfoPopup: FC<ITypesInfoPopup> = ( { dataType, aggrType } ) => {
     
 
     return (
-        <div className="seg-popup-container" style={{"maxWidth":"420px"}}>    
+        <div className="seg-popup-container">    
             <p style={{"textAlign":"justify"}}>{dataType.description}</p>
         </div>
     )

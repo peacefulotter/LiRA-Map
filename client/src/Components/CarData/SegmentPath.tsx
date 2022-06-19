@@ -10,6 +10,7 @@ import { Segment } from "../../models/segment";
 import '../../css/rides.css'
 import { useSegment } from "../../context/SegmentContext";
 import { PathProperties } from "../../models/properties";
+import { min } from "d3";
 
 export interface ISegment {
     seg: Segment;
@@ -38,10 +39,11 @@ const SegmentPath: FC<ISegment> = ( { seg, onClick, i, max_value, min_value } ) 
     const pointB: PointData = { lat: positionB[0], lng:  positionB[1] }
     const path = [pointA, pointB]
 
+
     const properties: PathProperties = { 
         rendererName: RendererName.line, 
         color: getColor(value, max_value, min_value), 
-        width: 8,
+        weight: (isSelectedSegment ? 12 : 6),
         arrowHead: (isSelectedSegment ? segDirection : pathDirection) + 1
     }
 

@@ -24,6 +24,9 @@ const Rides: FC = () => {
     const _metas = metas.filter( (m: RideMeta, i: number) => selectedMetas[i] )
     const _measurements = measurements.filter( (m: RideMeasurement) => m.isActive )
 
+
+    console.log(_metas)
+    console.log(_measurements)
     return (
         <ZoomProvider>
         <GraphProvider>

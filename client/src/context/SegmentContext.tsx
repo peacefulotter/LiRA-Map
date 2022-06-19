@@ -37,12 +37,12 @@ export const SegmentProvider = ({ children }: any) => {
 
 	// Path
 	const [pathTypes, setPathTypes] = useState<SegTypes>(DEFAULT_TYPES)
-	const [pathDirection, setPathDirection] = useState<number>(0)
+	const [pathDirection, setPathDirection] = useState<number>(2)
 
 	// Segment
 	const [segment, setSegment] = useState<Segment>()
 	const [segTypes,  setSegTypes]  = useState<SegTypes>(DEFAULT_TYPES)
-	const [segDirection, setSegDirection] = useState<number>(0)
+	const [segDirection, setSegDirection] = useState<number>(2)
 
 
 	return (

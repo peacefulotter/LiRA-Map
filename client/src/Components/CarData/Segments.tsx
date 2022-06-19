@@ -38,6 +38,9 @@ const Segments: FC<ISegments> = ( { boundaries } ) => {
         var min_value:number = -1;
 
         segments.forEach(segment => {
+            if(segment.value == undefined)
+                return;
+
             if(min_value === -1 || segment.value < min_value){
                 min_value = segment.value;
             }

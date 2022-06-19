@@ -27,8 +27,11 @@ const Toolbars: FC = () => {
         segment, setSegment, segTypes, setSegTypes, segDirection, setSegDirection
     } = useSegment()
 
-    if(segTypes.dataType === undefined)
+    if(segment === undefined){
         setSegTypes(pathTypes)
+        setSegDirection(pathDirection)
+    }
+        
 
     return (
         <div className='toolbar-wrapper'>
