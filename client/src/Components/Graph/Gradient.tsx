@@ -12,10 +12,6 @@ export interface IGradient {
 
 const gradientId = "line-gradient";
 
-const getOffset = (color: PaletteColor, maxY: number) => color.stopValue 
-    ? (color.stopValue / maxY) * 100 + '%'
-    : (color.offset * 100).toString() + '%'
-
 const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
 
     const { minY, maxY } = useGraph()
@@ -37,8 +33,8 @@ const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
             .selectAll("stop")
             .data(p)
             .enter().append("stop")
-            .attr("offset", (d: any) => getOffset(d, maxY) )
-            .attr("stop-color", (d: any) => d.color )
+            .attr("offset", (c: PaletteColor) => (c.t * 100).toString() + '%' )
+            .attr("stop-color", (c: PaletteColor) => `rgb(${c.r}, ${c.g}, ${c.b})` )
 
         return () => { 
             svg.select('#' + gradientId).remove() 

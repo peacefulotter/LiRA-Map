@@ -15,6 +15,9 @@
 
   --grey: rgba(100, 100, 100, 0.5);
   --lightgrey: rgba(130, 130, 130, 0.5);
+
+  --navbar-height: 50px;
+  --navbar-z-index: 999999;
 }
 
 
@@ -26,7 +29,6 @@ html, body {
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
-
 }
 
 .App {

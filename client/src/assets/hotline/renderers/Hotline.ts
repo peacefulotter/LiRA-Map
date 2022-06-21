@@ -1,18 +1,18 @@
 
 
-import { DotHover } from "../../../models/graph";
-import { HotlineOptions, HotlinePalette } from "../../../models/path";
+import { DotHover, Palette, PaletteColor } from "../../../models/graph";
+import { HotlineOptions } from "../../../models/path";
 import RGB from "../utils/RGB";
 
 
 
 export type HotlineClass<DataT> = new (options?: HotlineOptions) => Hotline<DataT>; 
 
-const defaultPalette = {
-    0.0: 'green',
-    0.5: 'yellow',
-    1.0: 'red'
-}; 
+const defaultPalette: Palette = [
+    { r: 0,   g: 255, b: 0, t: 0  },
+    { r: 255, g: 255, b: 0, t: 0.5  },
+    { r: 255, g: 0,   b: 0, t: 1  },
+]
 
 const defaultWeight = 5;
 const defaultOutlineWidth = 0;
@@ -113,7 +113,7 @@ abstract class Hotline<DataT> extends L.Renderer {
      * @param {Object.<number, string>} palette  - Gradient definition.
      * e.g. { 0.0: 'white', 1.0: 'black' }
      */
-    palette(palette: HotlinePalette) {
+    palette(palette: Palette) {
         const canvas = document.createElement('canvas'),
                  ctx = canvas.getContext('2d') as CanvasRenderingContext2D,
             gradient = ctx.createLinearGradient(0, 0, 0, 256);
@@ -121,9 +121,8 @@ abstract class Hotline<DataT> extends L.Renderer {
         canvas.width = 1;
         canvas.height = 256;
 
-        Object.keys(palette).forEach( (offset: string) => {
-            const i = parseFloat(offset)
-            gradient.addColorStop(i, palette[i]);
+        palette.forEach( (c: PaletteColor) => {
+            gradient.addColorStop(c.t, `rgb(${c.r}, ${c.g}, ${c.b})`);
         })
 
         ctx.fillStyle = gradient;

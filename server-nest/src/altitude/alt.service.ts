@@ -34,6 +34,7 @@ export class AltitudeService
         const altitudes: any[] = await this.knex()
             .select( this.knex.raw('cast(way_id as text), way_dist, altitude') )
             .from( 'altitude' )  
+            .limit(200_000)
 
         return this.groupBy<any, ConditionPoint>( altitudes, 'way_id', (cur: any) => (
             { value: cur.altitude, way_dist: cur.way_dist }
@@ -45,6 +46,7 @@ export class AltitudeService
         return await this.knex()
             .select( this.knex.raw('altitude as value, x as lng, y as lat') )
             .from(this.knex.raw('altitude, getCoord(cast(way_id as character varying), way_dist)'))
+            .limit(200_000) as any
     }
 
     async getAltitudesConditions(): Promise<MapConditions>

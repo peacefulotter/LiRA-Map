@@ -32,7 +32,7 @@ export interface DotHover {
 }
 
 // Palette - Gradient
-export interface PaletteColor { offset: number; color: string; stopValue?: number }
+export interface PaletteColor { r: number; g: number; b: number, t: number }
 export type Palette = PaletteColor[]
 export type Gradient = Selection<SVGStopElement, PaletteColor, SVGLinearGradientElement, unknown>
 

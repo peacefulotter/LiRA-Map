@@ -48,15 +48,13 @@ export interface JSONProps extends BoundedPath {
 }
 
 
-export type HotlinePalette = { [x: number]: string; };
-
 export interface HotlineOptions {
 	min?: number;
 	max?: number;
 	weight?: number;
 	outlineWidth?: number;
 	outlineColor?: string;
-	palette?: HotlinePalette;
+	palette?: Palette;
 	onclick?: (e: any) => void;
 }
 

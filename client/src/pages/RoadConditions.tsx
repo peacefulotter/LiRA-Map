@@ -1,11 +1,14 @@
 import  { useState } from "react";
 
+import PaletteEditor from "../Components/Palette/PaletteEditor";
 import MapWrapper from "../Components/Map/MapWrapper";
+import Ways from "../Components/RoadCondition/Ways";
 import Panel from "../Components/RoadCondition/Panel";
 import Graph from "../Components/Graph/Graph";
 
 import { Bounds, ConditionPoint, WayConditions } from "../models/path";
-import { GraphData, Palette, Plot } from "../models/graph";
+import { GraphData, Plot } from "../models/graph";
+import { TRGB } from "react-gradient-hook/lib/types";
 
 import { getConditions } from "../queries/conditions";
 
@@ -14,13 +17,11 @@ import { GraphProvider } from "../context/GraphContext";
 import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/road_conditions.css";
-import Ways from "../Components/RoadCondition/Ways";
 
-
-const IRIPalette: Palette = DEFAULT_PALETTE
 
 const RoadConditions = () => {
     
+    const [palette, setPalette] = useState<TRGB[]>([])
     const [plot, setPlot] = useState<Plot>()
 
     const onClick = (way_id: string, way_length: number) => () => {
@@ -44,11 +45,14 @@ const RoadConditions = () => {
 
     return (
         <GraphProvider>
-
         <div className="ml-wrapper">
+            <PaletteEditor 
+                defaultPalette={DEFAULT_PALETTE} 
+                cursorOptions={{scale: 10, grid: true, samples: 40}}
+                onChange={setPalette} />
             <div className="ml-map">
                 <MapWrapper>
-                    <Ways onClick={onClick}/>
+                    <Ways palette={palette} onClick={onClick}/>
                 </MapWrapper>
                 {/* <Panel measurements={measurements} onClick={onClick} fetchWays={fetchWays}/> */}
             </div>
@@ -56,7 +60,7 @@ const RoadConditions = () => {
                 <Graph 
                     labelX="distance (m)" 
                     labelY="IRI"
-                    palette={IRIPalette}
+                    palette={palette}
                     plots={plot ? [plot] : []}
                 />
             </div>

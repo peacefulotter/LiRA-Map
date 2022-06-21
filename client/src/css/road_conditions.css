@@ -1,19 +1,9 @@
 
-
-.ml-wrapper { 
-    height: calc(100vh - 6vh);
+.ml-wrapper {
+    height: calc(100vh - var(--navbar-height));
+    display: grid;
+    grid-template-rows: auto min(40vh, 400px);
 }
-
-.ml-map {
-    height: 60%;
-}
-
-
-.ml-graph {
-    height: 40%;
-}
-
-
 
 .panel-wrapper {
     position: absolute;

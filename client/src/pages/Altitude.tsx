@@ -9,8 +9,8 @@ import {  MapConditions, ValueLatLng } from "../models/path";
 
 import { getAltitudes, getHeat } from "../queries/altitude";
 
-
 import "../css/altitude.css";
+
 
 const Altitude = () => {
     
@@ -33,7 +33,15 @@ const Altitude = () => {
         <div className="altitude-wrapper">
             <MapWrapper>
                 { altitudes ? <RCHotline mcs={altitudes} /> : null }
-                { heat ? <Heatmap data={heat} /> : null }
+                { heat 
+                    ? <Heatmap 
+                        data={heat} 
+                        getLat={(t: ValueLatLng) => t.lat} 
+                        getLng={(t: ValueLatLng) => t.lng} 
+                        getVal={(t: ValueLatLng) => t.value} 
+                        max={147} 
+                        radius={20} /> 
+                    : null }
                 {/* { heat 
                     ? <HeatmapLayer
                         fitBoundsOnLoad

@@ -1,20 +1,17 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
-import L from 'leaflet'
 
 import ArrowHead from './ArrowHead';
 
 import { useGraph } from '../../../context/GraphContext';
 
-import { HotlineOptions, HotlinePalette, PointData } from '../../../models/path';
+import { HotlineOptions } from '../../../models/path';
 import { Renderer } from '../../../models/renderers';
-import { Palette } from '../../../models/graph';
-
-import { palette, width } from '../../../assets/properties';
 
 import LeafletLatLngHotline from '../../../assets/hotline/LeafletLatLngHotline';
 import { LatLngInput } from '../../../assets/hotline/renderers/LatLngHotline';
+import { palette, width } from '../../../assets/properties';
 
 
 // const _weightFunc = useCallback( (a: number, b: number) => {
@@ -34,13 +31,6 @@ import { LatLngInput } from '../../../assets/hotline/renderers/LatLngHotline';
     // }, [dotHoverIndex])
 
 
-const toHotlinePalette = (pal: Palette, maxY: number): HotlinePalette => {
-    return pal.reduce( (obj, cur) => {
-        const { offset, color, stopValue } = cur
-        const key: number = stopValue ? Math.max(0, Math.min(1, stopValue / maxY)) : offset
-        return {...obj, [key]: color}
-      }, {} as HotlinePalette )
-}
 
 const Hotline: Renderer = ( { path, properties, onClick  } ) => {
 
@@ -52,15 +42,13 @@ const Hotline: Renderer = ( { path, properties, onClick  } ) => {
 
     const options: HotlineOptions = useMemo( () => { 
         const p = palette(properties)
-        const min = p[0].stopValue            || minY || 0
-        const max = p[p.length - 1].stopValue || maxY || 1
+        const min = minY || 0
+        const max = maxY || 1
 
-        const hotlinePal = toHotlinePalette(p, max)
-        
         return {
             weight: width(undefined, properties),
             outlineWidth: 0,
-            palette: hotlinePal,
+            palette: p,
             min: min,
             max: max,
             onclick: onClick ? onClick(0) : undefined
