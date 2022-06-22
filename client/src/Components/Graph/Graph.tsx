@@ -32,7 +32,7 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
     const [width, height] = useSize(wrapperRef)
 
     const [axis, setAxis] = useState<[Axis, Axis]>()
-    const [zoom, setZoom] = useState<number>(2)
+    const [zoom, setZoom] = useState<number>(1)
 
     const w = width - margin.left - margin.right;
     const h = height - margin.top - margin.bottom;

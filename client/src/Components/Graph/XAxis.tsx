@@ -6,7 +6,7 @@ import { useGraph } from "../../context/GraphContext";
 import { ReactAxis } from '../../models/graph';
 
 
-const XAxis: ReactAxis = ( { svg, axis, width, height } ) => {
+const XAxis: ReactAxis = ( { svg, axis, width, height, zoom } ) => {
 
     const { maxX } = useGraph()
 
@@ -17,12 +17,12 @@ const XAxis: ReactAxis = ( { svg, axis, width, height } ) => {
         const axisX = svg
             .append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(axis[0]));
+            .call(d3.axisBottom(axis[0]).ticks(10 * zoom));
 
         return () => {
             axisX.remove()
         }
-    }, [svg, axis, width, height, maxX] ) 
+    }, [svg, axis, width, height, maxX, zoom] ) 
     
     return null
 }

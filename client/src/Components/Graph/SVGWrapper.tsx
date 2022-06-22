@@ -53,7 +53,7 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
         >
             <svg ref={ref} style={{width: w * zoom - 20 + (isLeft ? 150 : 0) + 'px', height: '100%'}}>
                 <Gradient svg={svg} axis={axis} palette={palette} />
-                <Axis svg={svg} axis={axis} width={w} height={h} />
+                <Axis svg={svg} axis={axis} width={w} height={h} zoom={zoom} />
                 { isLeft ? <Labels svg={svg} width={w} height={h} labelX={labelX} labelY={labelY}/> : null }
                 { plots && plots.map((p: Plot, i: number) => 
                     <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
