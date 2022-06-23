@@ -1,8 +1,9 @@
 
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
 
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { MapConditions, Node, WayConditions, Ways } from 'src/models';
+import { MapBounds, MapConditions, Node, WayConditions, Ways } from 'src/models';
 
 @Injectable()
 export class RCService 
@@ -125,6 +126,14 @@ export class RCService
             }, {} as MapConditions
         )
     }
+
+    // async getMapConditions( bounds: MapBounds, zoom: number ): Promise<MapConditions> 
+    // {
+    //     const url = 'http://20.67.161.99/rdcondition/getbyframe/zoom'
+    //     const res = await axios.get<MapConditions>( url, { params: { ...bounds, zoom } } )
+    //     console.log(res.data);
+    //     return res.data;
+    // }
 }
 
 

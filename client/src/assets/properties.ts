@@ -6,7 +6,7 @@ export const DEFAULT_WEIGHT = 4
 export const DEFAULT_COLOR = 'red'
 export const DEFAULT_OPACITY = 1.0
 export const DEFAULT_PALETTE: Palette = [
-    { r: 20,  g: 230, b: 20, t: 0    },
+    { r: 0,   g: 160, b: 0,  t: 0    },
     { r: 255, g: 255, b: 0,  t: 0.5  },
     { r: 255, g: 0,   b: 0,  t: 1    },
 ]

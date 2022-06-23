@@ -1,11 +1,12 @@
 
 import L, { Map } from 'leaflet'
 
-import DistHotline, { DistData } from './renderers/DistHotline';
+import DistHotline from './renderers/DistHotline';
 
 import { HotPolyline } from './core/HotPolyline';
 
-import { HotlineOptions, Node, MapConditions} from '../../models/path';
+import { Node, MapConditions} from '../../models/path';
+import { DistData, HotlineOptions, ReactHotline } from './hotline';
 
 const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
@@ -20,7 +21,7 @@ const projectLatLngs = (_map: Map, latlngs: Node[], result: any, projectedBounds
     result.push(ring);
 }
 
-const LeafletDistHotline = ( mcs: MapConditions, options: HotlineOptions )
+const LeafletDistHotline: ReactHotline<MapConditions, DistData, Node, DistHotline> = ( mcs: MapConditions, options: HotlineOptions )
 : [HotPolyline<Node, DistData>, DistHotline] => 
 {
     if ( !L.Browser.canvas ) 

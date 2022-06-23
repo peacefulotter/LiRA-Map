@@ -1,27 +1,26 @@
 
-import L, { Map, LatLng, LatLngExpression } from 'leaflet'
-import { HotlineOptions } from '../../models/path';
+import L, { Map, LatLngExpression } from 'leaflet'
 import { HotPolyline } from './core/HotPolyline';
-import LatLngHotline, { LatLngData, LatLngInput } from './renderers/LatLngHotline';
+import { HotlineOptions, LatLngData, LatLngInput, ReactHotline } from './hotline';
+import LatLngHotline from './renderers/LatLngHotline';
 
 
-const projectLatLngs = (_map: Map, latlngs: LatLng[], result: any, projectedBounds: any) => {
+const projectLatLngs = (_map: Map, latlngs: any[], result: any, projectedBounds: any) => {
     const len = latlngs.length;
     const ring: any[] = [];
     for (let i = 0; i < len; i++) 
     {
         ring[i] = _map.latLngToLayerPoint(latlngs[i]);
-        ring[i].z = latlngs[i].alt;
+        ring[i].z = latlngs[i].value;
         ring[i].i = i
         projectedBounds.extend(ring[i]);
     }
     result.push(ring);
 }
 
-const LeafletLatLngHotline = (
+const LeafletLatLngHotline: ReactHotline<LatLngInput, LatLngData, LatLngExpression, LatLngHotline> = (
     coords: LatLngInput, options: HotlineOptions
-)
-: [HotPolyline<LatLngExpression, LatLngData>, LatLngHotline] => 
+) => 
 {
     if ( !L.Browser.canvas ) 
         throw new Error('no Browser canvas')

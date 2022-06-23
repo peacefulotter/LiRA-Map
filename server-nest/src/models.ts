@@ -91,7 +91,12 @@ export type Position3D = {
 	z: number;
 }
 
-
+export interface MapBounds {
+	minLat: number;
+	maxLat: number;
+	minLon: number;
+	maxLon: number;
+}
 
 export interface Node {
     lat: number;

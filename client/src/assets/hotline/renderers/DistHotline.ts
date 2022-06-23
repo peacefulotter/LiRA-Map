@@ -1,13 +1,9 @@
 
-import { ConditionPoint, HotlineOptions, MapCondition, MapConditions, WayConditions } from "../../../models/path";
+import { ConditionPoint, MapConditions, WayConditions } from "../../../models/path";
+import { DistData, DistPoint, HotlineOptions } from "../hotline";
 import RGB from "../utils/RGB";
 import Hotline from "./Hotline";
 
-
-export type DistInput = [number, number][]
-
-export interface DistPoint { x: number, y: number, i: number, way_dist: number };
-export type DistData = DistPoint[]
 
 type Edge = RGB;
 

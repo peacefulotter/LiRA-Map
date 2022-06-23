@@ -1,12 +1,8 @@
 
 import { LatLngExpression } from 'leaflet'
+import { LatLngData, LatLngPoint } from '../hotline';
 import Hotline from './Hotline';
 
-
-export type LatLngInput = LatLngExpression[]
-
-export interface LatLngPoint { x: number, y: number, z: number, i: number };
-export type LatLngData = LatLngPoint[]
 
 export default class LatLngHotline extends Hotline<LatLngData> {
 

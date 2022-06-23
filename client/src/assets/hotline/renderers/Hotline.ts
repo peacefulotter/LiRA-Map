@@ -1,12 +1,9 @@
 
 
 import { DotHover, Palette, PaletteColor } from "../../../models/graph";
-import { HotlineOptions } from "../../../models/path";
+import { HotlineOptions } from "../hotline";
 import RGB from "../utils/RGB";
 
-
-
-export type HotlineClass<DataT> = new (options?: HotlineOptions) => Hotline<DataT>; 
 
 const defaultPalette: Palette = [
     { r: 0,   g: 255, b: 0, t: 0  },
