@@ -1,21 +1,13 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { MapConditions, Ways, Node, WayConditions, ConditionPoint, ValueLatLng } from 'src/models';
+import { Ways, Node, WaysConditions, Condition, ValueLatLng } from 'src/models';
+import groupBy from '../util';
 
 @Injectable()
 export class AltitudeService 
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}
-
-    groupBy<T, Q>(arr: T[], key: string, map: (value: T) => Q) {
-        return arr.reduce( (acc, cur) => {
-            const k = cur[key]
-            const v = map(cur)
-            acc.get(k)?.push(v) ?? acc.set(k, [v]);
-            return acc;
-        }, new Map<string, Q[]>());
-    }   
 
     private async getWays(way_ids: string[]): Promise<Ways>
     {
@@ -24,19 +16,19 @@ export class AltitudeService
             .from( 'way' )  
             .whereIn( 'id', way_ids )
 
-        return this.groupBy<any, Node>( ways, 'way_id', (cur: any) => (
+        return groupBy<any, Node>( ways, 'way_id', (cur: any) => (
             { lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }
         ) )
     }
 
-    private async getAltitudes(): Promise<Map<string, WayConditions>>
+    private async getAltitudes(): Promise<{ [key: string]: Condition[]} >
     {
         const altitudes: any[] = await this.knex()
             .select( this.knex.raw('cast(way_id as text), way_dist, altitude') )
             .from( 'altitude' )  
             .limit(200_000)
 
-        return this.groupBy<any, ConditionPoint>( altitudes, 'way_id', (cur: any) => (
+        return groupBy<any, Condition>( altitudes, 'way_id', (cur: any) => (
             { value: cur.altitude, way_dist: cur.way_dist }
         ) )
     }
@@ -49,20 +41,19 @@ export class AltitudeService
             .limit(200_000) as any
     }
 
-    async getAltitudesConditions(): Promise<MapConditions>
+    async getAltitudesConditions(): Promise<WaysConditions>
     {
         const altitudes = await this.getAltitudes()
-        const way_ids = Array.from(altitudes.keys())
+        const way_ids = Object.keys(altitudes)
         const ways = await this.getWays(way_ids)
 
         return way_ids.reduce( 
             (acc, way_id) => {
-                acc[way_id] = {
-                    nodes: ways.get(way_id),
-                    conditions: altitudes.get(way_id)
-                }
+                acc.way_ids.push(way_id)
+                acc.geometry.push(ways[way_id])
+                acc.conditions.push(altitudes[way_id])
                 return acc
-            }, {} as MapConditions
+            }, { way_ids: [], geometry: [], conditions: [] } as WaysConditions
         )
     }
 }

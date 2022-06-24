@@ -1,7 +1,7 @@
 
 import { Renderer, RendererName } from '../models/renderers';
 import Circles from '../Components/Map/Renderers/Circles';
-import Hotline from '../Components/Map/Renderers/Hotline';
+import Hotline from '../Components/Map/Renderers/LatLngHotline';
 import Hotpoints from '../Components/Map/Renderers/Hotpoints';
 import Line from '../Components/Map/Renderers/Line';
 import Rectangles from '../Components/Map/Renderers/Rectangles';

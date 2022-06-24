@@ -1,42 +1,51 @@
 
 import { FC, useEffect, useState } from 'react';
 import { TRGB } from 'react-gradient-hook/lib/types';
+import { HotlineOptions } from 'react-leaflet-hotline';
+import { useGraph } from '../../context/GraphContext';
 import { useZoom } from '../../context/ZoomContext';
-import { MapConditions } from '../../models/path';
-import { getWays } from '../../queries/conditions';
-import RCHotline from './RCHotline';
+import { WaysConditions } from '../../models/path';
+import { getWaysConditions } from '../../queries/conditions';
+import DistHotline from '../Map/Renderers/DistHotline';
 
 interface IWays {
     palette: TRGB[]
+    type: string;
     onClick?: (way_id: string, way_length: number) => () => void;
 }
 
-const Ways: FC<IWays> = ( { palette, onClick } ) => {
+const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
     
     const { zoom } = useZoom();
-    const [mcs, setMCs] = useState<MapConditions>()
+    const { minY, maxY } = useGraph()
+
+    const [ways, setWays] = useState<WaysConditions>()
+    const [options, setOptions] = useState<HotlineOptions>({});
 
     useEffect( () => {
-        fetchWays()
+        setOptions( { palette, min: minY, max: maxY } )
+    }, [palette, minY, maxY])
+
+    useEffect( () => {
+        const z = Math.max(0, zoom - 12)
+        getWaysConditions(type, z, (data: WaysConditions) => {
+            console.log(data);
+            setWays( data )
+            if ( onClick )
+                setTimeout( onClick(data.way_ids[0], data.way_lengths[0]), 100 )
+        } )
     }, [zoom] )
 
-    const fetchWays = () => {
-        const roadName = 'M3'
-        const type = 'IRI';
-        const z = Math.max(0, zoom - 12)
-        
-        getWays(roadName, type, z, (data: MapConditions) => {
-            console.log(data);
-            setMCs( data )
-            const [way_id, way] = Object.entries(data)[1]
-            if ( onClick )
-                setTimeout( onClick(way_id, way.way_length), 100 )
-        } )
-    }
-    
     return (
         <>
-        { mcs ? <RCHotline mcs={mcs} palette={palette} /> : null }
+        { ways 
+            ? <DistHotline 
+                way_ids={ways.way_ids}
+                geometry={ways.geometry}
+                conditions={ways.conditions} 
+                options={options} /> 
+            : null 
+        }
         </>
     )
 }

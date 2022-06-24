@@ -1,24 +1,24 @@
 import  { useEffect, useState } from "react";
-// import HeatmapLayer from 'react-leaflet-heatmap-layer';
 
 import MapWrapper from "../Components/Map/MapWrapper";
-import RCHotline from "../Components/RoadCondition/RCHotline";
 import Heatmap from "../Components/Map/Renderers/Heatmap";
+import DistHotline from "../Components/Map/Renderers/DistHotline";
 
-import {  MapConditions, ValueLatLng } from "../models/path";
+import { ValueLatLng, WaysConditions } from "../models/path";
 
 import { getAltitudes, getHeat } from "../queries/altitude";
+
 
 import "../css/altitude.css";
 
 
 const Altitude = () => {
     
-    const [altitudes, setAltitudes] = useState<MapConditions>()
+    const [altitudes, setAltitudes] = useState<WaysConditions>()
     const [heat, setHeat] = useState<ValueLatLng[]>()
 
     useEffect( () => {
-        getAltitudes( (data: MapConditions) => {
+        getAltitudes( (data: WaysConditions) => {
             console.log(data);
             setAltitudes( data )
         } )
@@ -32,7 +32,7 @@ const Altitude = () => {
     return (
         <div className="altitude-wrapper">
             <MapWrapper>
-                { altitudes ? <RCHotline mcs={altitudes} /> : null }
+                { altitudes ? <DistHotline way_ids={altitudes.way_ids} geometry={altitudes.geometry} conditions={altitudes.conditions} /> : null }
                 { heat 
                     ? <Heatmap 
                         data={heat} 

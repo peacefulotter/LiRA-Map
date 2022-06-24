@@ -1,8 +1,8 @@
 
-import {  MapConditions, ValueLatLng } from "../models/path"
+import {  WaysConditions, ValueLatLng } from "../models/path"
 import { get } from "./fetch"
 
-export const getAltitudes = ( setAltitudes: (data: MapConditions) => void ) => {
+export const getAltitudes = ( setAltitudes: (data: WaysConditions) => void ) => {
     get( '/altitude', setAltitudes )
 }
 

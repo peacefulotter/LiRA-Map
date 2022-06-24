@@ -6,7 +6,7 @@ import Ways from "../Components/RoadCondition/Ways";
 import Panel from "../Components/RoadCondition/Panel";
 import Graph from "../Components/Graph/Graph";
 
-import { Bounds, ConditionPoint, WayConditions } from "../models/path";
+import { Bounds, Condition } from "../models/path";
 import { GraphData, Plot } from "../models/graph";
 import { TRGB } from "react-gradient-hook/lib/types";
 
@@ -24,18 +24,26 @@ const RoadConditions = () => {
     const [palette, setPalette] = useState<TRGB[]>([])
     const [plot, setPlot] = useState<Plot>()
 
+    const type = {
+        name: 'IRI',
+        min: 0,
+        max: 10,
+        grid: true,
+        samples: 40
+    }
+
     const onClick = (way_id: string, way_length: number) => () => {
 
-        getConditions(way_id, 'IRI', (wc: WayConditions) => {
+        getConditions(way_id, type.name, (wc: Condition[]) => {
 
             const bounds: Bounds = {
-                minX: 0, // Math.min(...zoom.conditions.map(c => c.way_dist)),
+                minX: 0,
                 maxX: way_length,
-                minY: 0, // Math.min(...zoom.conditions.map(c => c.value)),
-                maxY: 10,// Math.max(...zoom.conditions.map(c => c.value)),
+                minY: type.min,
+                maxY: type.max,
             }
     
-            const data: GraphData = wc.map((p: ConditionPoint, i: number) => [p.way_dist * way_length, p.value, i])
+            const data: GraphData = wc.map((p: Condition, i: number) => [p.way_dist * way_length, p.value, i])
             const label = way_id
 
             setPlot( { bounds, data, label } )
@@ -47,12 +55,12 @@ const RoadConditions = () => {
         <GraphProvider>
         <div className="ml-wrapper">
             <PaletteEditor 
-                defaultPalette={DEFAULT_PALETTE} 
-                cursorOptions={{scale: 10, grid: true, samples: 40}}
+                defaultPalette={DEFAULT_PALETTE}
+                cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
                 onChange={setPalette} />
             <div className="ml-map">
                 <MapWrapper>
-                    <Ways palette={palette} onClick={onClick}/>
+                    <Ways palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
                 {/* <Panel measurements={measurements} onClick={onClick} fetchWays={fetchWays}/> */}
             </div>

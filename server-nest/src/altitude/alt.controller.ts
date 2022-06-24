@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { MapConditions, ValueLatLng } from 'src/models';
+import { ValueLatLng, WaysConditions } from 'src/models';
 import { AltitudeService } from './alt.service';
 
 
@@ -9,7 +9,7 @@ export class AltitudeController
     constructor(private readonly service: AltitudeService) {}
 
     @Get('/')
-    getAltitudes(): Promise<MapConditions> {
+    getAltitudes(): Promise<WaysConditions> {
         return this.service.getAltitudesConditions();
     }
 

@@ -60,20 +60,17 @@ export interface ValueLatLng extends LatLng {
 	value: number;
 }
 
-export interface ConditionPoint {
+export interface Condition {
 	way_dist: number;
 	value: number;
 }
 
-export type WayConditions = ConditionPoint[]
-
 export type WayId = string;
 
-export interface MapCondition {
-	way_length: number;
-	nodes: Node[];
-	conditions: WayConditions;
+export interface WaysConditions { 
+	way_lengths: number[];
+	way_ids: WayId[];
+	geometry: Node[][];
+	conditions: Condition[][];
 }
-
-export type MapConditions = { [key: WayId]: MapCondition }
 
