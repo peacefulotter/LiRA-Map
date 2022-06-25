@@ -11,13 +11,13 @@ $ ssh <USER>@lirase2.compute.dtu.dk
 ## 2. Install global libraries
 
 ```console
-<USER>@lirase2:~$ npm install -g serve pm2
+user@lirase2:~$ npm install -g serve pm2
 ```
 
 ## 3. Clone the LiRA-Map repo
 ```console
-<USER>@lirase2:~$ git clone https://github.com/PeacefulOtter/LiRA-Map.git
-<USER>@lirase2:~$ cd LiRA-Map
+user@lirase2:~$ git clone https://github.com/PeacefulOtter/LiRA-Map.git
+user@lirase2:~$ cd LiRA-Map
 ```
 
 ## 4. Start the Client 
