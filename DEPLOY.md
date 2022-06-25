@@ -22,21 +22,21 @@ user@lirase2:~$ cd LiRA-Map
 
 ## 4. Start the Client 
 ```console
-<USER>@lirase2:~/LiRA-Map$ cd client
-<USER>@lirase2:~/LiRA-Map/client$ npm install
-<USER>@lirase2:~/LiRA-Map/client$ npm run build
-<USER>@lirase2:~/LiRA-Map/client$ pm2 serve build 3000 --spa --name client
+user@lirase2:~/LiRA-Map$ cd client
+user@lirase2:~/LiRA-Map/client$ npm install
+user@lirase2:~/LiRA-Map/client$ npm run build
+user@lirase2:~/LiRA-Map/client$ pm2 serve build 3000 --spa --name client
 ```
 
 ## 5. Setup the Server (.env file)
 
 ```console
-<USER>@lirase2:~/LiRA-Map$ cd server-nest
-<USER>@lirase2:~/LiRA-Map/server-nest$ nano .env
+user@lirase2:~/LiRA-Map$ cd server-nest
+user@lirase2:~/LiRA-Map/server-nest$ nano .env
 ```
 
 ### The .env file must follow the format:
-```md
+```
 DB_USER=<LIRA-CAR-DB-USER>
 DB_PASSWORD=<LIRA-CAR-DB-PWD>
 DB_USER_VIS=<SERGI-DB-USER>
@@ -47,7 +47,7 @@ DB_PWD_POSTGIS=<JUN-DB-USER>
 
 ## 6. Start the Server
 ```console
-<USER>@lirase2:~/LiRA-Map/server-nest$ npm install
-<USER>@lirase2:~/LiRA-Map/server-nest$ npm run build
-<USER>@lirase2:~/LiRA-Map/server-nest$ pm2 start dist/main.js --name server
+user@lirase2:~/LiRA-Map/server-nest$ npm install
+user@lirase2:~/LiRA-Map/server-nest$ npm run build
+user@lirase2:~/LiRA-Map/server-nest$ pm2 start dist/main.js --name server
 ```
