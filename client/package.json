@@ -14,7 +14,7 @@
     "react": "^17.0.1",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.1",
-    "react-gradient-hook": "^1.5.0",
+    "react-gradient-hook": "^1.5.1",
     "react-icons": "^4.3.1",
     "react-leaflet": "^3.0.0",
     "react-leaflet-hotline": "^1.2.0",
@@ -33,7 +33,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3002",
   "eslintConfig": {
     "extends": [
       "react-app",

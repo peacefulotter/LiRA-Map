@@ -1,14 +1,16 @@
 
 import axios from 'axios'
 
+const getPath = (p: string) => 'http://lirase2.compute.dtu.dk:3002' + p
+
 export const get = (path: string, callback: (data: any) => void): void => {
-    fetch(path)
+    fetch(getPath(path))
         .then(res => res.json())
         .then(data => callback(data));
 }
 
 export const post = (path: string, obj: object, callback: (data: any) => void): void => {
-    axios.get(path, {
+    axios.get(getPath(path), {
         params: obj,
         paramsSerializer: params => {
             return  Object.keys(params)
@@ -19,7 +21,7 @@ export const post = (path: string, obj: object, callback: (data: any) => void): 
 }
 
 export const put = (path: string, obj: object ): void => {
-    axios.put(path, {
+    axios.put(getPath(path), {
         params: obj
     })
 }
