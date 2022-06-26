@@ -8,13 +8,13 @@ const Zoom = () => {
     const { zoom, setZoom } = useZoom()
 
     const update = () => setZoom(map.getZoom())
-    
+
     const map = useMapEvents({
         zoom: update
     })
-   
-    useEffect( update, [map, setZoom] )
 
+    useEffect( update, [] )
+   
     return (
         <>
         <div className="map-zoom">{zoom}</div>

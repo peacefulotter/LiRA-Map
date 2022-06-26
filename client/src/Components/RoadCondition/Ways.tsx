@@ -6,6 +6,7 @@ import { useGraph } from '../../context/GraphContext';
 import { useZoom } from '../../context/ZoomContext';
 import { WaysConditions } from '../../models/path';
 import { getWaysConditions } from '../../queries/conditions';
+import useMapBounds from '../Map/Hooks/useMapBounds';
 import DistHotline from '../Map/Renderers/DistHotline';
 
 interface IWays {
