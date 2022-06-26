@@ -1,45 +1,68 @@
-import { Dispatch, SetStateAction } from "react";
 import { Axis, DotHover, GraphData, SVG } from "../../models/graph"
-import Dot from "./dot";
 import Layer from "./layer";
+import Tooltip from "./tooltip";
 
+const options = {
+    radius: 4,
+    opacity: 0,
+    hoverOpacity: 1,
+}
 
+class Dots extends Layer 
+{
+    tooltip: Tooltip | undefined;
+    setDotHover: (d: DotHover | undefined) => void;
 
-class Dots extends Layer {
-
-    constructor(svg: SVG, label: string) {
-        super(svg, label, 'dots')
-    }
-
-    add(data: GraphData, [x, y]: [Axis, Axis], color: string, label: string, setDotHoverIndex: Dispatch<SetStateAction<DotHover | undefined>> ) 
+    constructor( svg: SVG, label: string, i: number, data: GraphData, [x, y]: [Axis, Axis], setDotHover: (d: DotHover | undefined) => void, tooltip: boolean = true ) 
     {
-        const _svg = this.svg
+        super(svg, label, 'dots', 0, i)
+
+        this.tooltip = tooltip ? new Tooltip() : undefined;
+        this.setDotHover = setDotHover;
+
+        this.svg
             .append('g')
             .attr("id", this.id)
             .attr('class', this.class)
             .selectAll("dot")
             .data(data)
             .enter()
-        
-        Dot.add(_svg, [x, y], color, label, setDotHoverIndex)
-
-        return this;
+            .append("circle")
+            .attr("cx", (d: any) => x(d[0]) )
+            .attr("cy", (d: any) => y(d[1]) )
+            .attr("r", options.radius)
+            .style('opacity', options.opacity)
+            .style('fill', this.color)
+            .on('mouseover', (e: any, d: [number, number, number]) => this.dotMouveOver(e, d) )
+            .on('mouseout', (e: any, d: [number, number, number]) => this.dotMouveOut(e, d) )
     }
 
-    mouseOver() {
+    dotMouveOver( event: any, d: [number, number, number] ) 
+    {
+        this.setDotHover( { label: this.label, x: d[0] } )
+        if ( this.tooltip ) this.tooltip.mouseOver(event, d)
+    }
+
+    dotMouveOut( event: any, d: [number, number, number] )
+    {
+        this.setDotHover(undefined)
+        if ( this.tooltip ) this.tooltip.mouseOut(event, d)
+    }
+
+    dotsMouseOver() {
         return this.get()
             .selectAll('circle')
             .style('fill', "url(#line-gradient)")
             .style('z-index', 9999)
-            .style('opacity', 1)
+            .style('opacity', options.hoverOpacity)
     }
 
-    mouseOut(color: string) {
+    dotsMouseOut() {
         return this.get()
             .selectAll('circle')
-            .style('fill', color)
+            .style('fill', this.color)
             .style('z-index', 0)
-            .style('opacity', 0)
+            .style('opacity', options.opacity)
     }
 
     allMouseOver() {

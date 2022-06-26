@@ -2,9 +2,11 @@
 
 import * as d3 from "d3";
 
-class Tooltip {
+class Tooltip 
+{
 
-    static getTranslation(tooltip: HTMLElement): [number, number] {
+    getTranslation(tooltip: HTMLElement): [number, number] 
+    {
         const matrix = window
             .getComputedStyle(tooltip)
             .getPropertyValue("transform")
@@ -16,7 +18,8 @@ class Tooltip {
         return [matrix[4], matrix[5]]
     }
 
-    static mouseOver(e: any, d: any) {
+    mouseOver( e: any, d: [number, number, number] ) 
+    {
 
         const { pageX, pageY } = e;
         const xVal = Math.round(d[0])
@@ -30,7 +33,7 @@ class Tooltip {
 
         const tooltip = document.getElementById('tooltip') as HTMLElement
         const { x, y } = tooltip.getBoundingClientRect()
-        const [tX, tY] = Tooltip.getTranslation(tooltip)
+        const [tX, tY] = this.getTranslation(tooltip)
 
         const fX = tX + left - x
         const fY = tY + top - y
@@ -43,7 +46,8 @@ class Tooltip {
             .style('opacity', 1)
     }
 
-    static mouseOut(e: any, d: any) {
+    mouseOut( e: any, d: [number, number, number] ) 
+    {
         d3.select('#tooltip')
             .transition()		
             .duration(300)	

@@ -37,7 +37,7 @@ const useMinMaxAxis = (): [MinMaxAxis, AddMinMaxFunc, RemMinMaxFunc] => {
         ]
     }
 
-    const addMinMax = (label: string, bounds: Bounds) => {
+    const addMinMax = (label: string, bounds: Required<Bounds>) => {
 
         const { minX, maxX, minY, maxY } = bounds;
         

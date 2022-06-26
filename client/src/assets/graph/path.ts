@@ -1,45 +1,49 @@
 
 import * as d3 from 'd3'
-import { Axis, GraphData, SVG } from "../../models/graph"
+
 import Layer from './layer';
 
+import { Axis, GraphData, SVG } from "../../models/graph"
 
-class Path extends Layer {
+const options = {
+    strokeWidth: 2,
+    hoverStrokeWidth: 3
+}
 
-    constructor(svg: SVG, label: string) {
-        super(svg, label, 'path')
-    }
-
-    add( data: GraphData, [x, y]: [Axis, Axis], color: string)
+class Path extends Layer 
+{
+    constructor( svg: SVG, label: string, i: number, data: GraphData, [x, y]: [Axis, Axis] ) 
     {
-        this.svg
+        super(svg, label, 'path', 0, i)
+
+        svg
             .append("path")
             .attr("id", this.id)
             .attr('class', this.class)
             .datum(data as any)
             .style('position', "relative")
             .attr("fill", "none")
-            .attr("stroke", color)
-            .attr("stroke-width", 2)
+            .attr("stroke", this.color)
+            .attr("stroke-width", options.strokeWidth)
             .attr("d", d3.line()
                 .x( (d: any) =>  x(d[0]) as any )
                 .y( (d: any) => y(d[1]) as any )
             )
-        return this
     }
 
-    mouseOver(strokeWidth: number) {
+    mouseOver() 
+    {
         return this.get()
-            .style("stroke-width", strokeWidth)
+            .style("stroke-width", options.hoverStrokeWidth)
             .style('stroke', "url(#line-gradient)")
             .style('z-index', 9999)
             .style('opacity', 1.0)
     }
 
-    mouseOut(color: string) {
+    mouseOut() {
         return this.get()
-            .style("stroke-width", "2")
-            .style('stroke', color)
+            .style("stroke-width", options.strokeWidth)
+            .style('stroke', this.color)
             .style('z-index', 0)
             .style('opacity', 1.0)
     }

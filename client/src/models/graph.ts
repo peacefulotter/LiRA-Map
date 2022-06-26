@@ -1,6 +1,6 @@
 
 import { Selection } from "d3"
-import { FC } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import { Bounds } from "./path";
 
 // SVG 
@@ -39,7 +39,7 @@ export type Gradient = Selection<SVGStopElement, PaletteColor, SVGLinearGradient
 
 // MinMax
 export type MinMaxAxis = [number, number, number, number]
-export type AddMinMaxFunc = (label: string, bounds: Bounds) => void
+export type AddMinMaxFunc = (label: string, bounds: Required<Bounds>) => void
 export type RemMinMaxFunc = (label: string) => void
 
 // Callback

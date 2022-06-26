@@ -1,11 +1,11 @@
 
 import { FC, useEffect } from "react"
 
-import { addLine, remLine } from "../../assets/graph/line"
+import GLine from "../../assets/graph/line"
 
 import { useGraph } from "../../context/GraphContext";
 
-import { GraphAxis, GraphData, SVG } from "../../models/graph"
+import { DotHover, GraphAxis, GraphData, SVG } from "../../models/graph"
 import { Bounds } from "../../models/path";
 
 
@@ -25,22 +25,26 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
         if ( svg === undefined || axis === undefined ) return;
 
-        const _bounds: Bounds = {
-            minX: bounds ? bounds.minX : Math.min(...data.map( d => d[0] )),
-            maxX: bounds ? bounds.maxX : Math.max(...data.map( d => d[0] )),
-            minY: bounds ? bounds.minY : Math.min(...data.map( d => d[1] )),
-            maxY: bounds ? bounds.maxY : Math.max(...data.map( d => d[1] )),
-        }
+        const _bounds: Required<Bounds> = Object.assign( {
+            minX: Math.min(...data.map( d => d[0] )),
+            maxX: Math.max(...data.map( d => d[0] )),
+            minY: Math.min(...data.map( d => d[1] )),
+            maxY: Math.max(...data.map( d => d[1] )),
+        }, bounds || {} )
 
         addMinMax(label, _bounds)
 
-        addLine(svg, data, axis, label, i, setDotHover)
+        const onHover = (d: DotHover | undefined) => d === undefined 
+            ? setDotHover( undefined )
+            : setDotHover( { ...d, x: d.x / _bounds.maxX } )
+
+        const line = new GLine(svg, label, i, data, axis, onHover)
 
         return () => {
             if ( svg === undefined )
                 return console.log('ERROR, TRYING TO REMOVE GRAPH DATA WHILE SVG = undefined');
 
-            remLine(svg, label)
+            line.rem()
             remMinMax(label)
         }
 

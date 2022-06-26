@@ -1,17 +1,21 @@
 import { D3Callback, SVG } from "../../models/graph";
+import { getColor } from "./color";
 
-class Layer {
-
+class Layer 
+{
     public svg: SVG;
     public label: string;
     public id: string;
     public class: string;
+    public color: string;
 
-    constructor(svg: SVG, label: string, name: string) {
+    constructor(svg: SVG, label: string, name: string, paletteIndex: number, n: number) 
+    {
         this.svg = svg;
         this.label = label;
         this.id = `${name}-${this.label}`
         this.class = `svg-${name}`
+        this.color = getColor(paletteIndex, n)
     }
 
     public get = () => this.svg.select('#' + this.id)

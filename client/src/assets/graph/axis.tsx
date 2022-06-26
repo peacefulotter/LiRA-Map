@@ -5,7 +5,6 @@ export const getXAxis = (minX: number, maxX: number, width: number) => {
     return d3.scaleLinear()
         .domain([minX, maxX])
         .range([ 0, width ])
-        
 }
 
 export const getYAxis = (minY: number, maxY: number, height: number) => {

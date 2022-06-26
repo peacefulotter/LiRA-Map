@@ -1,9 +1,11 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
+
 import { Node, WaysConditions, Condition, ValueLatLng } from 'src/models';
-import { Ways } from 'src/tables';
+import { Ways } from '../tables';
 import groupBy from '../util';
+
 import { Altitudes } from './alt.tables';
 
 @Injectable()
