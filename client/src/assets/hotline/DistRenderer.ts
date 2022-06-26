@@ -17,7 +17,7 @@ export default class DistRenderer extends Renderer<DistData> {
 
     constructor( options?: HotlineOptions, ...args: any[] ) 
     {
-        super(options)
+        super({...options, onclick: (e: any) => console.log(e) })
         this.way_ids = args[0][0];
         this.conditions = args[0][1];
         this.edgess = [];

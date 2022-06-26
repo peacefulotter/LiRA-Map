@@ -104,8 +104,6 @@ export interface Node {
 	way_dist: number;
 }
 
-export type Ways = { [key: string]: Node[] }
-
 export interface ValueLatLng extends LatLng {
 	value: number;
 }

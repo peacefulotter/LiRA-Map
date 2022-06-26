@@ -15,7 +15,7 @@ export class RCController
     }
 
     @Get('way')
-    getWayConditions( @Query() query: { wayId: number, type: string } ): Promise<Condition[]> {
+    getWayConditions( @Query() query: { wayId: string, type: string } ): Promise<Condition[]> {
         const { wayId, type } = query;
         return this.service.getWayRoadConditions(wayId, type);
     }

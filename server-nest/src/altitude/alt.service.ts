@@ -1,19 +1,20 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { Ways, Node, WaysConditions, Condition, ValueLatLng } from 'src/models';
+import { Node, WaysConditions, Condition, ValueLatLng } from 'src/models';
+import { Ways } from 'src/tables';
 import groupBy from '../util';
+import { Altitudes } from './alt.tables';
 
 @Injectable()
 export class AltitudeService 
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}
 
-    private async getWays(way_ids: string[]): Promise<Ways>
+    private async getWays(way_ids: string[]): Promise<{[key: string]: Node[]}>
     {
-        const ways: any[] = await this.knex()
+        const ways: any[] = await Ways(this.knex)
             .select( this.knex.raw('cast(id as text) as way_id, ST_AsGeoJSON((ST_DumpPoints(geom)).geom)::json->\'coordinates\' as pos, ST_LineLocatePoint(geom, (ST_DumpPoints(geom)).geom) as way_dist') )
-            .from( 'way' )  
             .whereIn( 'id', way_ids )
 
         return groupBy<any, Node>( ways, 'way_id', (cur: any) => (
@@ -23,9 +24,8 @@ export class AltitudeService
 
     private async getAltitudes(): Promise<{ [key: string]: Condition[]} >
     {
-        const altitudes: any[] = await this.knex()
+        const altitudes: any[] = await Altitudes(this.knex)
             .select( this.knex.raw('cast(way_id as text), way_dist, altitude') )
-            .from( 'altitude' )  
             .limit(200_000)
 
         return groupBy<any, Condition>( altitudes, 'way_id', (cur: any) => (
