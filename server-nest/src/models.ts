@@ -91,13 +91,6 @@ export type Position3D = {
 	z: number;
 }
 
-export interface MapBounds {
-	minLat: number;
-	maxLat: number;
-	minLon: number;
-	maxLon: number;
-}
-
 export interface Node {
     lat: number;
 	lng: number;
@@ -122,4 +115,21 @@ export interface WaysConditions {
 	conditions: Condition[][];
 }
 
+
+export interface MapBounds {
+    minLat: number;
+    maxLat: number;
+    minLng: number;
+    maxLng: number;
+}
+
+// geometry: LatLng[][]
+// wayIds: WayId[]
+// conditions: 
+
+export interface BoundedCondition {
+	conditions: { condition_type: string, value: Condition[] }[];
+	length: number;
+	coordinates: { lat: number, lon: number }[]
+}
 

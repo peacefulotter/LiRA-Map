@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { Condition, Node, WaysConditions } from 'src/models';
+import { BoundedCondition, Condition, MapBounds, Node, WayId, WaysConditions } from 'src/models';
 import groupBy from '../util';
 import { RoadConditions, Ways, ZoomConditions } from '../tables';
 
@@ -12,7 +12,7 @@ export class RCService
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}  
 
-    async getWays(wayIds: string[]): Promise<[{[key: string]: Node[]}, {[key: string]: number}]>
+    async getWays(wayIds: string[]): Promise<[{[key: WayId]: Node[]}, {[key: WayId]: number}]>
     {
         
         const ways = await Ways(this.knex)
@@ -31,7 +31,7 @@ export class RCService
         ]
     }
 
-    async getWaysRoadConditions(wayIds: number[], type: string): Promise<{[key: string]: Condition[]}>
+    async getWaysRoadConditions(wayIds: number[], type: string): Promise<{[key: WayId]: Condition[]}>
     {
         const res = await RoadConditions(this.knex)
             .select( 'way_id', 'way_dist', 'value' )
@@ -49,19 +49,19 @@ export class RCService
             .orderBy( 'way_dist' );
     }
 
-    async getZoomConditions(type: string, zoom: number): Promise<{[key: string]: Condition[]}>
+    async getZoomConditions(type: string, zoom: string): Promise<{[key: WayId]: Condition[]}>
     {
         const res = await ZoomConditions(this.knex)
             .select( 'way_id', 'way_dist', 'value' )
-            .where( { 'type': type, 'zoom': zoom } )
+            .where( { 'type': type, 'zoom': parseInt(zoom, 10) } )
             .orderBy( 'way_dist' )
         return groupBy( res, 'way_id', ({way_dist, value}) => ({way_dist, value}) )
     }
 
-    async getWaysConditions(type: string, zoomLevel: number): Promise<WaysConditions>
+    async getWaysConditions(type: string, zoom: string): Promise<WaysConditions>
     {
-        const zooms = await this.getZoomConditions(type, zoomLevel) 
-        const wayIds = Object.keys(zooms)
+        const zoomConditions = await this.getZoomConditions(type, zoom) 
+        const wayIds = Object.keys(zoomConditions)
         const [ways, way_lengths] = await this.getWays(wayIds)
 
         return wayIds.reduce( 
@@ -70,20 +70,24 @@ export class RCService
                     acc.way_ids.push(way_id)
                     acc.way_lengths.push(way_lengths[way_id])
                     acc.geometry.push(ways[way_id])
-                    acc.conditions.push(zooms[way_id])
+                    acc.conditions.push(zoomConditions[way_id])
                 }
                 return acc
             }, { way_ids: [], way_lengths: [], geometry: [], conditions: [] } as WaysConditions
         )
     }
 
-    // async getMapConditions( bounds: MapBounds, zoom: number ): Promise<MapConditions> 
-    // {
-    //     const url = 'http://20.67.161.99/rdcondition/getbyframe/zoom'
-    //     const res = await axios.get<MapConditions>( url, { params: { ...bounds, zoom } } )
-    //     console.log(res.data);
-    //     return res.data;
-    // }
+
+    async getBoundedWaysConditions(bounds: MapBounds, type: string, zoom: string)
+    {
+        const { minLat, maxLat, minLng, maxLng } = bounds;
+        const url = `http://20.93.26.82/rdCondition/getbyframe/minLon/${minLng}/minLat/${minLat}/maxLon/${maxLng}/maxLat/${maxLat}/zoom/${zoom}`
+        const res = await axios.get<{[key: WayId]: BoundedCondition}>( url, { params : { type } } )
+        console.log(res.data);
+        console.log(res.data['205636596']);
+        
+        return res.data;
+    }
 }
 
 

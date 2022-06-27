@@ -17,6 +17,7 @@ import { GraphProvider } from "../context/GraphContext";
 import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/road_conditions.css";
+import BoundedWays from "../Components/RoadCondition/BoundedWays";
 
 
 const RoadConditions = () => {
@@ -60,7 +61,7 @@ const RoadConditions = () => {
                 onChange={setPalette} />
             <div className="ml-map">
                 <MapWrapper>
-                    <Ways palette={palette} type={type.name} onClick={onClick}/>
+                    <BoundedWays palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
                 {/* <Panel measurements={measurements} onClick={onClick} fetchWays={fetchWays}/> */}
             </div>

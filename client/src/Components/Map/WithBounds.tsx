@@ -1,51 +1,59 @@
 import { FC, useEffect, useState } from "react";
+import { Rectangle } from "react-leaflet";
+import { LatLngBounds } from "leaflet";
 
 import useMapBounds from "./Hooks/useMapBounds";
 
-import { MapBounds } from "../../models/map";
+import { useZoom } from "../../context/ZoomContext";
 
 interface IMapBounds {
-    onChange: (bounds: MapBounds) => void;
-    padding: number;
+    onChange: (bounds: LatLngBounds) => Promise<void>;
+    padding?: number;
 }
 
 const WithBounds: FC<IMapBounds> = ( props ) => {
 
     const { onChange, padding, children } = props;
+
+    const { zoom } = useZoom()
     
     const bounds = useMapBounds();
-    const [loadedBounds, setLoadedBounds] = useState<MapBounds>(bounds)
+    const [loadedBounds, setLoadedBounds] = useState<LatLngBounds>()
 
     const load = () => {
-        const { minLat, maxLat, minLng, maxLng } = bounds;
-        const boundsToLoad = { 
-            minLat: minLat - padding, 
-            maxLat: maxLat + padding, 
-            minLng: minLng - padding, 
-            maxLng: maxLng + padding 
-        }
-        onChange( boundsToLoad )
-        // promise?
-        setLoadedBounds( boundsToLoad )
+        console.log(' load');
+
+        if ( bounds === undefined ) return;
+
+        const boundsToLoad = bounds.pad(padding || 1)
+
+        onChange( boundsToLoad ).then( () => {
+            setLoadedBounds( boundsToLoad ) 
+        } )
     }
 
     useEffect( load, [] )
     
     useEffect( () => {
-        const inLoadedBounds = 
-            bounds.minLat >= loadedBounds.minLat &&
-            bounds.maxLat <= loadedBounds.maxLat &&
-            bounds.minLng >= loadedBounds.minLng &&
-            bounds.maxLng <= loadedBounds.maxLng
+        if ( 
+            bounds === undefined || 
+            loadedBounds === undefined || 
+            loadedBounds.contains( bounds ) 
+        ) 
+            return
 
-        if ( inLoadedBounds ) return;
-
+        console.log(' bounds');
+        
         load()
 
     }, [bounds] )
 
     return (
-        <> {children} </>
+        <> 
+        {/* { bounds && <Rectangle bounds={bounds} /> } */}
+        { loadedBounds && <Rectangle bounds={loadedBounds} color='red' /> }
+        {children} 
+        </>
     )
 }
 
