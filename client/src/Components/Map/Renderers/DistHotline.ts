@@ -10,6 +10,7 @@ import { Condition, Node, WayId } from '../../../models/path';
 import DistRenderer from '../../../assets/hotline/DistRenderer';
 import { DistData } from '../../../assets/hotline/hotline';
 import HoverHotPolyline from '../../../assets/hotline/HoverHotPolyline';
+import { useMapEvents } from 'react-leaflet';
 
 
 const getLat = (n: Node) => n.lat;
@@ -28,6 +29,10 @@ const DistHotline: FC<IDistHotline> = ( { way_ids, geometry, conditions, options
 
     const { dotHover } = useGraph()
     const { zoom } = useZoom()
+
+    const map = useMapEvents({
+        click: (e) => console.log((e.originalEvent.target as any)._leaflet_id, (renderer as any)._leaflet_id, (polyline as any)._leaflet_id)
+    })
 
     const opts = useMemo( () => ({ 
         ...options, weight: getWeight(zoom)

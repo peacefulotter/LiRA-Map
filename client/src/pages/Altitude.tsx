@@ -4,7 +4,7 @@ import MapWrapper from "../Components/Map/MapWrapper";
 import Heatmap from "../Components/Map/Renderers/Heatmap";
 import DistHotline from "../Components/Map/Renderers/DistHotline";
 
-import { ValueLatLng, WaysConditions } from "../models/path";
+import { Node, ValueLatLng, WaysConditions } from "../models/path";
 
 import { getAltitudes, getHeat } from "../queries/altitude";
 
@@ -32,27 +32,23 @@ const Altitude = () => {
     return (
         <div className="altitude-wrapper">
             <MapWrapper>
-                { altitudes ? <DistHotline way_ids={altitudes.way_ids} geometry={altitudes.geometry} conditions={altitudes.conditions} /> : null }
-                { heat 
+                { altitudes ? 
+                    <DistHotline 
+                        way_ids={altitudes.way_ids} 
+                        geometry={altitudes.geometry} 
+                        conditions={altitudes.conditions}
+                        options={{min: 0, max: 140}} /> 
+                    : null 
+                }
+                { altitudes 
                     ? <Heatmap 
-                        data={heat} 
-                        getLat={(t: ValueLatLng) => t.lat} 
-                        getLng={(t: ValueLatLng) => t.lng} 
-                        getVal={(t: ValueLatLng) => t.value} 
-                        max={147} 
+                        data={altitudes.geometry.flat()} 
+                        getLat={(t: Node) => t.lat} 
+                        getLng={(t: Node) => t.lng} 
+                        getVal={(t: Node) => 2} 
+                        max={1} 
                         radius={20} /> 
                     : null }
-                {/* { heat 
-                    ? <HeatmapLayer
-                        fitBoundsOnLoad
-                        fitBoundsOnUpdate
-                        points={heat}
-                        longitudeExtractor={(p: ValueLatLng) => p.lng}
-                        latitudeExtractor={(p: ValueLatLng) => p.lat}
-                        intensityExtractor={(p: ValueLatLng) => p.value}
-                        gradient={{ 0: 'blue', 0.5: 'white', 1.0: 'red' }} /> 
-                    : null 
-                } */}
             </MapWrapper>
         </div>
     );

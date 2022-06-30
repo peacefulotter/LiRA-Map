@@ -61,7 +61,7 @@ const RoadConditions = () => {
                 onChange={setPalette} />
             <div className="ml-map">
                 <MapWrapper>
-                    <BoundedWays palette={palette} type={type.name} onClick={onClick}/>
+                    <Ways palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
                 {/* <Panel measurements={measurements} onClick={onClick} fetchWays={fetchWays}/> */}
             </div>

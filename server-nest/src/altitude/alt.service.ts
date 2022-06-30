@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
 
-import { Node, WaysConditions, Condition, ValueLatLng } from 'src/models';
+import { Node, WaysConditions, Condition, ValueLatLng, WayId } from 'src/models';
 import { Ways } from '../tables';
 import groupBy from '../util';
 
@@ -13,7 +13,7 @@ export class AltitudeService
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}
 
-    private async getWays(way_ids: string[]): Promise<{[key: string]: Node[]}>
+    private async getWays(way_ids: string[]): Promise<{[key: WayId]: Node[]}>
     {
         const ways: any[] = await Ways(this.knex)
             .select( this.knex.raw('cast(id as text) as way_id, ST_AsGeoJSON((ST_DumpPoints(geom)).geom)::json->\'coordinates\' as pos, ST_LineLocatePoint(geom, (ST_DumpPoints(geom)).geom) as way_dist') )
@@ -24,11 +24,10 @@ export class AltitudeService
         ) )
     }
 
-    private async getAltitudes(): Promise<{ [key: string]: Condition[]} >
+    private async getAltitudes(): Promise<{ [key: WayId]: Condition[]} >
     {
         const altitudes: any[] = await Altitudes(this.knex)
             .select( this.knex.raw('cast(way_id as text), way_dist, altitude') )
-            .limit(200_000)
 
         return groupBy<any, Condition>( altitudes, 'way_id', (cur: any) => (
             { value: cur.altitude, way_dist: cur.way_dist }
@@ -40,7 +39,6 @@ export class AltitudeService
         return await this.knex()
             .select( this.knex.raw('altitude as value, x as lng, y as lat') )
             .from(this.knex.raw('altitude, getCoord(cast(way_id as character varying), way_dist)'))
-            .limit(200_000) as any
     }
 
     async getAltitudesConditions(): Promise<WaysConditions>
@@ -55,7 +53,8 @@ export class AltitudeService
                 acc.geometry.push(ways[way_id])
                 acc.conditions.push(altitudes[way_id])
                 return acc
-            }, { way_ids: [], geometry: [], conditions: [] } as WaysConditions
+            }, 
+            { way_ids: [], geometry: [], conditions: [] } as WaysConditions
         )
     }
 }

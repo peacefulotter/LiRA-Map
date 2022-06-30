@@ -24,18 +24,28 @@ const DEFAULT_HEATMAP_PALETTE: Palette = [
     { r: 255, g: 0,   b: 0,   t: 1   },
 ]
 
+const toHeatPalette = (p: Palette) => p.reduce( (acc, cur) => {
+    acc[cur.t] = `rgb(${cur.r}, ${cur.g}, ${cur.b})`
+    return acc;
+}, {} as {[key: number]: string} )
+
 const DEFAULT_RADIUS = 10;
 
 const Heatmap: HeatmapType = ( { data, getLat, getLng, getVal, max, radius, palette } ) => {
     
     const map = useMap()
 
+    console.log(data);
+
     useEffect( () => {
         const points = data.map( p => [getLat(p), getLng(p), getVal(p)] );
+
+        console.log(toHeatPalette(palette || DEFAULT_HEATMAP_PALETTE));
+        
         const layer = (L as any).heatLayer(points, {
             max: max,
             radius: radius || DEFAULT_RADIUS,
-            gradient: palette || DEFAULT_HEATMAP_PALETTE
+            gradient: toHeatPalette(palette || DEFAULT_HEATMAP_PALETTE)
         })
         layer.addTo(map);
         return () => layer.remove()

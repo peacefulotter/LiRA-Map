@@ -48,12 +48,7 @@ export default class DistRenderer extends Renderer<DistData> {
             ? 0.3
             : 1
 
-        try {
-            gradient.addColorStop(dist, `rgba(${edge.get().join(',')},${opacity})`);
-        }          
-        catch {
-            console.log(way_id, dist, edge);
-        }  
+        gradient.addColorStop(dist, `rgba(${edge.get().join(',')},${opacity})`);
     }
 
     private updateEdges()
@@ -68,12 +63,13 @@ export default class DistRenderer extends Renderer<DistData> {
 
         const getValue = (d: DistPoint, conditions: Condition[]): number => {
             if ( d.way_dist <= 0 ) return conditions[0].value
-            else if ( d.way_dist >= 1 ) return conditions[conditions.length - 1].value
+            else if ( d.way_dist >= 1 || i >= conditions.length ) return conditions[conditions.length - 1].value
             
             while ( conditions[i].way_dist <= d.way_dist && ++i < conditions.length ) {}
 
-            if ( i >= conditions.length - 1 ) return conditions[conditions.length - 1].value
-            
+            if ( i === 0 ) return conditions[0].value
+            else if ( i >= conditions.length - 1 ) return conditions[conditions.length - 1].value
+
             return calcValue(conditions[i - 1], conditions[i], d)
         }
 
@@ -160,6 +156,8 @@ export default class DistRenderer extends Renderer<DistData> {
     {
         const start_dist = pointStart.way_dist
         const end_dist = pointEnd.way_dist
+
+        if ( start_dist === end_dist ) return;
     
         for ( let i = 0; i < conditions.length; i++ )
         {
@@ -168,9 +166,9 @@ export default class DistRenderer extends Renderer<DistData> {
             if ( way_dist < start_dist ) continue;
             else if ( way_dist > end_dist ) return;
 
-            const rgb = this.getRGBForValue(value);
+            const rgb = this.getRGBForValue(value);                                                      
             const dist = (way_dist - start_dist) / (end_dist - start_dist)
-            
+
             this._addWayColorGradient(gradient, new Edge(...rgb), dist, way_id)
         }
     }
