@@ -21,7 +21,7 @@ interface IWays {
     onClick?: (way_id: string, way_length: number) => () => void;
 }
 
-const BoundedWays: FC<IWays> = ( { palette, type, onClick } ) => {
+ const BoundedWays: FC<IWays> = ( { palette, type, onClick } ) => {
     
     const { zoom } = useZoom();
     const { minY, maxY } = useGraph()
@@ -35,7 +35,6 @@ const BoundedWays: FC<IWays> = ( { palette, type, onClick } ) => {
 
     const request = async (bounds: LatLngBounds) => {
         const z = Math.max(1, zoom - 12)
-        console.log(z);
         const { data } = await getBoundedWaysConditions(toMapBounds(bounds), type, z)
         console.log(data);
         setWays( data )

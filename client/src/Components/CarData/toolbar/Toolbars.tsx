@@ -15,7 +15,7 @@ import '../../../css/toolbar.css'
 // const popup = useTypesPopup( types )
 
 // const firePopup = () => popup.fire( (types: SegTypes) => {
-//     console.log(types);
+//     console.log(typ s);
 //     setTypes(types)
 // } )
 

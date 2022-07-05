@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { BoundedCondition, Condition, MapBounds, Node, WayId, WaysConditions } from 'src/models';
+import { BoundedCondition, Condition, MapBounds, LatLngDist, WayId, WaysConditions } from 'src/models';
 import groupBy from '../util';
 import { RoadConditions, Ways, ZoomConditions } from '../tables';
 
@@ -12,7 +12,7 @@ export class RCService
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}  
 
-    async getWays(wayIds: string[]): Promise<[{[key: WayId]: Node[]}, {[key: WayId]: number}]>
+    async getWays(wayIds: string[]): Promise<[{[key: WayId]: LatLngDist[]}, {[key: WayId]: number}]>
     {
         
         const ways = await Ways(this.knex)
@@ -26,7 +26,7 @@ export class RCService
             .orderBy( this.knex.raw('id::integer') as any )
 
         return [
-            groupBy<any, Node>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }) ),
+            groupBy<any, LatLngDist>( ways, 'way_id', (cur: any) => ({ lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }) ),
             ways.reduce( (acc, cur) => { acc[cur.way_id] = cur.length; return acc }, {} )
         ]
     }
@@ -82,12 +82,22 @@ export class RCService
     {
         const { minLat, maxLat, minLng, maxLng } = bounds;
         const url = `http://20.93.26.82/rdCondition/getbyframe/minLon/${minLng}/minLat/${minLat}/maxLon/${maxLng}/maxLat/${maxLat}/zoom/${zoom}`
-        const res = await axios.get<{[key: WayId]: BoundedCondition}>( url, { params : { type } } )
-        console.log(res.data);
-        console.log(res.data['205636596']);
+        console.log(url);
         
-        return res.data;
-    }
+        const { data } = await axios.get<{[key: WayId]: BoundedCondition}>( url, { params : { type } } )
+        
+        return Object.entries(data).reduce( 
+            ( acc: WaysConditions, [way_id, bc] ) => {
+                {
+                    acc.way_ids.push(way_id)
+                    acc.way_lengths.push(bc.length)
+                    acc.geometry.push(bc.coordinates.map(({lat, lon, way_dist})=>({lat, lng: lon, way_dist})))
+                    acc.conditions.push(bc.conditions[type])
+                }
+                return acc
+            }, { way_ids: [], way_lengths: [], geometry: [], conditions: [] } as WaysConditions
+        )
+    };
 }
 
 

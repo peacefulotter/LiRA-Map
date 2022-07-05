@@ -6,6 +6,12 @@ export interface LatLng {
 	lng: number;
 }
 
+export interface LatLon {
+	lat: number;
+	lon: number;
+}
+
+
 export interface PointData extends LatLng {
 	properties?: PointProperties;
 	value?: number;
@@ -91,9 +97,11 @@ export type Position3D = {
 	z: number;
 }
 
-export interface Node {
-    lat: number;
-	lng: number;
+export interface LatLngDist extends LatLng {
+	way_dist: number;
+}
+
+export interface LatLonDist extends LatLon {
 	way_dist: number;
 }
 
@@ -111,7 +119,7 @@ export type WayId = string;
 export interface WaysConditions { 
 	way_lengths: number[];
 	way_ids: WayId[];
-	geometry: Node[][];
+	geometry: LatLngDist[][];
 	conditions: Condition[][];
 }
 
@@ -128,8 +136,8 @@ export interface MapBounds {
 // conditions: 
 
 export interface BoundedCondition {
-	conditions: { condition_type: string, value: Condition[] }[];
+	conditions: { [condition_type: string]: Condition[] };
 	length: number;
-	coordinates: { lat: number, lon: number }[]
+	coordinates: LatLonDist[]
 }
 

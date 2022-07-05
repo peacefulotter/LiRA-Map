@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
 
-import { Node, WaysConditions, Condition, ValueLatLng, WayId } from 'src/models';
+import { LatLngDist, WaysConditions, Condition, ValueLatLng, WayId } from 'src/models';
 import { Ways } from '../tables';
 import groupBy from '../util';
 
@@ -13,13 +13,13 @@ export class AltitudeService
 {
     constructor(@InjectConnection('postgis') private readonly knex: Knex) {}
 
-    private async getWays(way_ids: string[]): Promise<{[key: WayId]: Node[]}>
+    private async getWays(way_ids: string[]): Promise<{[key: WayId]: LatLngDist[]}>
     {
         const ways: any[] = await Ways(this.knex)
             .select( this.knex.raw('cast(id as text) as way_id, ST_AsGeoJSON((ST_DumpPoints(geom)).geom)::json->\'coordinates\' as pos, ST_LineLocatePoint(geom, (ST_DumpPoints(geom)).geom) as way_dist') )
             .whereIn( 'id', way_ids )
 
-        return groupBy<any, Node>( ways, 'way_id', (cur: any) => (
+        return groupBy<any, LatLngDist>( ways, 'way_id', (cur: any) => (
             { lat: cur.pos[1], lng: cur.pos[0], way_dist: cur.way_dist }
         ) )
     }

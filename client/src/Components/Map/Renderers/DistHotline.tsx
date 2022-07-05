@@ -1,5 +1,7 @@
 
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { LeafletEvent, LeafletMouseEvent } from 'leaflet'
+import { Polyline } from 'react-leaflet';
 import { HotlineOptions, useCustomHotline } from 'react-leaflet-hotline';
 
 import { useGraph } from '../../../context/GraphContext';
@@ -10,7 +12,7 @@ import { Condition, Node, WayId } from '../../../models/path';
 import DistRenderer from '../../../assets/hotline/DistRenderer';
 import { DistData } from '../../../assets/hotline/hotline';
 import HoverHotPolyline from '../../../assets/hotline/HoverHotPolyline';
-import { useMapEvents } from 'react-leaflet';
+import { HotlineEventHandlers } from 'react-leaflet-hotline/lib/types';
 
 
 const getLat = (n: Node) => n.lat;
@@ -30,20 +32,26 @@ const DistHotline: FC<IDistHotline> = ( { way_ids, geometry, conditions, options
     const { dotHover } = useGraph()
     const { zoom } = useZoom()
 
-    const map = useMapEvents({
-        click: (e) => console.log((e.originalEvent.target as any)._leaflet_id, (renderer as any)._leaflet_id, (polyline as any)._leaflet_id)
-    })
-
     const opts = useMemo( () => ({ 
         ...options, weight: getWeight(zoom)
     }), [options, zoom] )
 
-    const createHotline = useCustomHotline<Node, DistData>( DistRenderer, HoverHotPolyline )
-    const [renderer, polyline] = createHotline( geometry, getLat, getLng, getVal, opts, way_ids, conditions ) as [DistRenderer, HoverHotPolyline<Node, DistData>]
+    const eventHandlers: HotlineEventHandlers = {
+        click: (e: LeafletEvent, i: number) => {
+            console.log('here', i, e);
+        },
+        mouseover: (e: LeafletEvent, i: number) => console.log(e, i)
+    }
+
+    const { hotline } = useCustomHotline<Node, DistData>( 
+        DistRenderer, HoverHotPolyline, 
+        { data: geometry, getLat, getLng, getVal, options: opts, eventHandlers }, 
+        way_ids, conditions 
+    );
     
     useEffect( () => {
-        if ( polyline === undefined ) return;
-        polyline.setHover(dotHover)
+        if ( hotline === undefined ) return;
+        (hotline as HoverHotPolyline<Node, DistData>).setHover(dotHover)
     }, [dotHover])
 
     return null;

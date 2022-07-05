@@ -15,14 +15,10 @@ const WithBounds: FC<IMapBounds> = ( props ) => {
 
     const { onChange, padding, children } = props;
 
-    const { zoom } = useZoom()
-    
     const bounds = useMapBounds();
     const [loadedBounds, setLoadedBounds] = useState<LatLngBounds>()
 
     const load = () => {
-        console.log(' load');
-
         if ( bounds === undefined ) return;
 
         const boundsToLoad = bounds.pad(padding || 1)
@@ -42,8 +38,6 @@ const WithBounds: FC<IMapBounds> = ( props ) => {
         ) 
             return
 
-        console.log(' bounds');
-        
         load()
 
     }, [bounds] )

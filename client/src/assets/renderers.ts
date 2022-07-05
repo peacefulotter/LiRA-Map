@@ -1,11 +1,11 @@
 
 import { Renderer, RendererName } from '../models/renderers';
 import Circles from '../Components/Map/Renderers/Circles';
-import Hotline from '../Components/Map/Renderers/LatLngHotline';
 import Hotpoints from '../Components/Map/Renderers/Hotpoints';
 import Line from '../Components/Map/Renderers/Line';
 import Rectangles from '../Components/Map/Renderers/Rectangles';
 import CCircle from '../Components/Map/Renderers/Circle';
+import { Hotline } from 'react-leaflet-hotline';
 
 
 const renderers: Record<RendererName, Renderer> = {
@@ -13,7 +13,7 @@ const renderers: Record<RendererName, Renderer> = {
     'circles': Circles,
     'rectangles': Rectangles,
     'line': Line,
-    'hotline': Hotline,
+    'hotline': Hotline as any,
     'hotpoints': Hotpoints,
 }
 

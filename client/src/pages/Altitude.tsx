@@ -40,7 +40,7 @@ const Altitude = () => {
                         options={{min: 0, max: 140}} /> 
                     : null 
                 }
-                { altitudes 
+                {/* { altitudes 
                     ? <Heatmap 
                         data={altitudes.geometry.flat()} 
                         getLat={(t: Node) => t.lat} 
@@ -48,7 +48,7 @@ const Altitude = () => {
                         getVal={(t: Node) => 2} 
                         max={1} 
                         radius={20} /> 
-                    : null }
+                    : null } */}
             </MapWrapper>
         </div>
     );

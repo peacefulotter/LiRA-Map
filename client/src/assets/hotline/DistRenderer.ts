@@ -17,7 +17,7 @@ export default class DistRenderer extends Renderer<DistData> {
 
     constructor( options?: HotlineOptions, ...args: any[] ) 
     {
-        super({...options, onclick: (e: any) => console.log(e) })
+        super({...options})
         this.way_ids = args[0][0];
         this.conditions = args[0][1];
         this.edgess = [];
@@ -47,10 +47,17 @@ export default class DistRenderer extends Renderer<DistData> {
         const opacity = this.dotHover !== undefined && this.dotHover.label !== way_id 
             ? 0.3
             : 1
-
-        gradient.addColorStop(dist, `rgba(${edge.get().join(',')},${opacity})`);
+        try{
+            gradient.addColorStop(dist, `rgba(${edge.get().join(',')},${opacity})`);
+        }
+        catch
+        {
+        }
     }
 
+    /**
+     * Find the closest conditions around each edge (node for ways) and interpolate the color
+     */
     private updateEdges()
     {
         let i = 0
@@ -161,7 +168,8 @@ export default class DistRenderer extends Renderer<DistData> {
     
         for ( let i = 0; i < conditions.length; i++ )
         {
-            const { way_dist, value } = conditions[i]      
+            // const { dist: way_dist, value } = conditions[i] as any 
+            const { way_dist, value } = conditions[i] 
             
             if ( way_dist < start_dist ) continue;
             else if ( way_dist > end_dist ) return;

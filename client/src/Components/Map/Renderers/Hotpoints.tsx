@@ -6,10 +6,7 @@ import { useGraph } from '../../../context/GraphContext';
 import { PointData } from '../../../models/path';
 import { Renderer } from '../../../models/renderers';
 import useCanvas from '../Hooks/useCanvas';
-import getColor from './color';
-
-
-
+import getColor from '../color';
 
 const Hotpoints: Renderer = ( { path, properties, onClick } ) => { 
 

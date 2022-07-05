@@ -1,7 +1,7 @@
 
 
 
-const getColor = (val: any, defaultColor: string | undefined, i: number): string => {
+const getColor = (val: number, defaultColor: string | undefined, i: number): string => {
     if ( val < 0 )
         return defaultColor || 'orange';
 
