@@ -1,13 +1,13 @@
 
 import { FC, useEffect, useState } from 'react';
 import { TRGB } from 'react-gradient-hook/lib/types';
-import { HotlineOptions } from 'react-leaflet-hotline';
+import { Hotline, HotlineOptions } from 'react-leaflet-hotline';
 import { LatLngBounds } from 'leaflet';
 
 import { useGraph } from '../../context/GraphContext';
 import { useZoom } from '../../context/ZoomContext';
 
-import { WaysConditions } from '../../models/path';
+import { Node, WaysConditions } from '../../models/path';
 
 import { getBoundedWaysConditions } from '../../queries/conditions';
 

@@ -1,7 +1,6 @@
 
-import { FC, useEffect, useMemo, useState } from 'react';
-import { LeafletEvent, LeafletMouseEvent } from 'leaflet'
-import { Polyline } from 'react-leaflet';
+import { FC, useEffect, useMemo } from 'react';
+import { LeafletEvent, Polyline } from 'leaflet'
 import { HotlineOptions, useCustomHotline } from 'react-leaflet-hotline';
 
 import { useGraph } from '../../../context/GraphContext';
@@ -24,10 +23,11 @@ interface IDistHotline {
     way_ids: WayId[];
     geometry: Node[][];
     conditions: Condition[][];
-    options?: HotlineOptions
+    options?: HotlineOptions,
+    eventHandlers?: HotlineEventHandlers;
 }
 
-const DistHotline: FC<IDistHotline> = ( { way_ids, geometry, conditions, options } ) => {
+const DistHotline: FC<IDistHotline> = ( { way_ids, geometry, conditions, options, eventHandlers } ) => {
 
     const { dotHover } = useGraph()
     const { zoom } = useZoom()
@@ -36,16 +36,19 @@ const DistHotline: FC<IDistHotline> = ( { way_ids, geometry, conditions, options
         ...options, weight: getWeight(zoom)
     }), [options, zoom] )
 
-    const eventHandlers: HotlineEventHandlers = {
-        click: (e: LeafletEvent, i: number) => {
-            console.log('here', i, e);
+    const handlers: HotlineEventHandlers = {
+        mouseover: (e: LeafletEvent, i: number, p: Polyline<any, any>) => {
+            p.setStyle( { opacity: 0.5 } )
         },
-        mouseover: (e: LeafletEvent, i: number) => console.log(e, i)
+        mouseout: (e: LeafletEvent, i: number, p: Polyline<any, any>) => {
+            p.setStyle( { opacity: 0 } )
+        },
+        ...eventHandlers
     }
 
     const { hotline } = useCustomHotline<Node, DistData>( 
         DistRenderer, HoverHotPolyline, 
-        { data: geometry, getLat, getLng, getVal, options: opts, eventHandlers }, 
+        { data: geometry, getLat, getLng, getVal, options: opts, eventHandlers: handlers }, 
         way_ids, conditions 
     );
     

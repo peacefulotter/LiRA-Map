@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useCallback, useState } from "react";
 
 import PaletteEditor from "../Components/Palette/PaletteEditor";
 import MapWrapper from "../Components/Map/MapWrapper";
@@ -17,7 +17,6 @@ import { GraphProvider } from "../context/GraphContext";
 import { DEFAULT_PALETTE } from "../assets/properties";
 
 import "../css/road_conditions.css";
-import BoundedWays from "../Components/RoadCondition/BoundedWays";
 
 
 const RoadConditions = () => {
@@ -33,7 +32,7 @@ const RoadConditions = () => {
         samples: 40
     }
 
-    const onClick = (way_id: string, way_length: number) => () => {
+    const onClick = (way_id: string, way_length: number) => {
 
         getConditions(way_id, type.name, (wc: Condition[]) => {
 
