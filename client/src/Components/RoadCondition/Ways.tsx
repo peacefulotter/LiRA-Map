@@ -29,12 +29,10 @@ const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
 
     useEffect( () => {
         if ( zoom === 0 ) return;
-        getWaysConditions(type, zoom - 12, (data: WaysConditions) => {
-            console.log(data, onClick)
+        const z = Math.max(0, zoom - 12)
+        getWaysConditions(type, z, (data: WaysConditions) => {
+            console.log(data)
             setWays( data )
-            console.log(data.way_ids[0], data.way_lengths[0]);
-            if ( onClick )
-                onClick(data.way_ids[0], data.way_lengths[0])
         } )
     }, [zoom] )
 

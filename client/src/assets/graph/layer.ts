@@ -1,44 +1,38 @@
-import { D3Callback, SVG } from "../../models/graph";
+import { D3Callback, DotHover, PathOptions, SVG } from "./types";
 import { getColor } from "./color";
 
-class Layer 
+abstract class Layer<T>
 {
     public svg: SVG;
     public label: string;
     public id: string;
     public class: string;
-    public color: string;
+    public options: Required<T>;
+    public hoverOptions: Required<T>;
 
-    constructor(svg: SVG, label: string, name: string, paletteIndex: number, n: number) 
-    {
+    constructor(
+        svg: SVG, label: string, name: string,
+        defaultOptions: Required<T>, defaultHoverOptions: Required<T>, 
+        options?: T, hoverOptions?: T 
+    ) 
+    {        
         this.svg = svg;
         this.label = label;
         this.id = `${name}-${this.label}`
         this.class = `svg-${name}`
-        this.color = getColor(paletteIndex, n)
+        this.options = { ...defaultOptions, ...options }
+        this.hoverOptions = { ...defaultHoverOptions, ...hoverOptions }
     }
 
     public get = () => this.svg.select('#' + this.id)
-    public getAll = () => this.svg.selectAll('.' + this.class) 
-
-    // add() {}
     
     public rem()
     {
         this.get().remove()
     }
 
-    public onMouseOver( callback: D3Callback ) 
-    {
-        this.get().on('mouseover', callback )
-        return this;
-    }
-
-    public onMouseOut( callback: D3Callback ) 
-    {
-        this.get().on('mouseout', callback )
-        return this;
-    }
+    abstract addMouseOver( callback: D3Callback ): Layer<T>;
+    abstract addMouseOut( callback: D3Callback ): Layer<T>;
 }
 
 

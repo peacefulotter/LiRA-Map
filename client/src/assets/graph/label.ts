@@ -1,4 +1,4 @@
-import { SVG } from "../../models/graph";
+import { SVG } from "./types";
 
 
 const labelOffset = 35

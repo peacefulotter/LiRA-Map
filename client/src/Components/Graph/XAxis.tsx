@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import { useEffect } from "react";
 
 import { useGraph } from "../../context/GraphContext";
-import { ReactAxis } from '../../models/graph';
+import { ReactAxis } from '../../assets/graph/types';
 
 
 const XAxis: ReactAxis = ( { svg, axis, width, height, zoom } ) => {

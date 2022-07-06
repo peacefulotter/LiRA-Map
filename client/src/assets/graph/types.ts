@@ -1,7 +1,8 @@
 
 import { Selection } from "d3"
 import { Dispatch, FC, SetStateAction } from "react"
-import { Bounds } from "./path";
+import { Color } from "react-leaflet-hotline";
+import { Bounds } from "../../models/path";
 
 // SVG 
 export type SVG = d3.Selection<SVGGElement, unknown, null, undefined>
@@ -27,15 +28,25 @@ export interface Plot {
     label: string;
 }
 
+// Events
 export interface DotHover {
     label: string;
     x: number;
 }
 
+// Options
+export interface PathOptions {
+    stroke?: string;
+    strokeWidth?: number;
+}
+export interface DotsOptions {
+    radius?: number;
+    opacity?: number;
+    fill?: string;
+}
+
 // Palette - Gradient
-export interface PaletteColor { r: number; g: number; b: number, t: number }
-export type Palette = PaletteColor[]
-export type Gradient = Selection<SVGStopElement, PaletteColor, SVGLinearGradientElement, unknown>
+export type Gradient = Selection<SVGStopElement, Color, SVGLinearGradientElement, unknown>
 
 // MinMax
 export type MinMaxAxis = [number, number, number, number]
@@ -43,4 +54,4 @@ export type AddMinMaxFunc = (label: string, bounds: Required<Bounds>) => void
 export type RemMinMaxFunc = (label: string) => void
 
 // Callback
-export type D3Callback = (event: any, d: unknown) => void
+export type D3Callback = (event: any, d: [number, number, number]) => void

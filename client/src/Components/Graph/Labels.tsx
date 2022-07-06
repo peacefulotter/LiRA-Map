@@ -4,7 +4,7 @@ import { FC, useEffect } from "react";
 import { addLabelX, addLabelY } from '../../assets/graph/label';
 
 import { useGraph } from "../../context/GraphContext";
-import { SVG } from '../../models/graph';
+import { SVG } from '../../assets/graph/types';
 
 
 interface ILabels {

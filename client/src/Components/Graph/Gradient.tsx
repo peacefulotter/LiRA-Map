@@ -1,8 +1,10 @@
 import { FC, useEffect } from "react"
+import { Color, Palette } from "react-leaflet-hotline";
+
 import { DEFAULT_PALETTE } from "../../assets/properties";
 
 import { useGraph } from "../../context/GraphContext";
-import { Axis, Palette, PaletteColor, SVG } from "../../models/graph"
+import { Axis, SVG } from "../../assets/graph/types"
 
 export interface IGradient {
     svg: SVG | undefined;
@@ -33,8 +35,8 @@ const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
             .selectAll("stop")
             .data(p)
             .enter().append("stop")
-            .attr("offset", (c: PaletteColor) => (c.t * 100).toString() + '%' )
-            .attr("stop-color", (c: PaletteColor) => `rgb(${c.r}, ${c.g}, ${c.b})` )
+            .attr("offset", (c: Color) => (c.t * 100).toString() + '%' )
+            .attr("stop-color", (c: Color) => `rgb(${c.r}, ${c.g}, ${c.b})` )
 
         return () => { 
             svg.select('#' + gradientId).remove() 

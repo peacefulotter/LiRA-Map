@@ -3,7 +3,7 @@ import { LatLng, Map } from 'leaflet';
 import { HotlineOptions, Renderer } from 'react-leaflet-hotline';
 
 import { Condition, Node, WayId } from "../../models/path";
-import { DotHover } from '../../models/graph';
+import { DotHover } from '../graph/types';
 import { DistData, DistPoint } from "./hotline";
 import Edge from "./Edge";
 

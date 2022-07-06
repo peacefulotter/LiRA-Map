@@ -1,6 +1,4 @@
 // Represents a point containing (lat, lng) coordinates, 
-
-import { Palette } from "./graph";
 import { LatLng } from "./models";
 import { Measurement, PathProperties, PointProperties } from "./properties";
 import { PathEventHandler, RendererName } from "./renderers";

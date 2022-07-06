@@ -3,59 +3,59 @@ import * as d3 from 'd3'
 
 import Layer from './layer';
 
-import { Axis, GraphData, SVG } from "../../models/graph"
+import { Axis, D3Callback, DotHover, GraphData, PathOptions, SVG } from "./types"
+import { defaultHoverPathOptions, defaultPathOptions } from './constants';
+import { Selection } from 'd3';
 
-const options = {
-    strokeWidth: 2,
-    hoverStrokeWidth: 3
-}
 
-class Path extends Layer 
+
+class Path extends Layer<PathOptions>
 {
-    constructor( svg: SVG, label: string, i: number, data: GraphData, [x, y]: [Axis, Axis] ) 
-    {
-        super(svg, label, 'path', 0, i)
+    path: Selection<SVGPathElement, any, null, unknown>;
 
-        svg
+    constructor( 
+        svg: SVG, label: string, data: GraphData, [x, y]: [Axis, Axis],
+        options?: PathOptions, hoverOptions?: PathOptions 
+    ) 
+    {
+        super(svg, label, 'path', defaultPathOptions, defaultHoverPathOptions, options, hoverOptions)
+
+        this.path = svg
             .append("path")
             .attr("id", this.id)
             .attr('class', this.class)
             .datum(data as any)
             .style('position', "relative")
             .attr("fill", "none")
-            .attr("stroke", this.color)
-            .attr("stroke-width", options.strokeWidth)
+            .attr("stroke", this.options.stroke )
+            .attr("stroke-width", this.options.strokeWidth )
             .attr("d", d3.line()
                 .x( (d: any) =>  x(d[0]) as any )
                 .y( (d: any) => y(d[1]) as any )
             )
     }
 
+    addMouseOver(callback: any) {
+        this.path.on('mouseover', callback);
+        return this
+    }
+
+    addMouseOut(callback: any) {
+        this.path.on('mouseout', callback);
+        return this
+    }
+
     mouseOver() 
     {
-        return this.get()
-            .style("stroke-width", options.hoverStrokeWidth)
-            .style('stroke', "url(#line-gradient)")
-            .style('z-index', 9999)
-            .style('opacity', 1.0)
+        return this.path
+            .style("stroke-width", this.hoverOptions.strokeWidth )
+            .style('stroke', this.hoverOptions.stroke )
     }
 
     mouseOut() {
-        return this.get()
-            .style("stroke-width", options.strokeWidth)
-            .style('stroke', this.color)
-            .style('z-index', 0)
-            .style('opacity', 1.0)
-    }
-
-    allMouseOver() {
-        this.getAll()
-            .style('opacity', 0.2)
-    }
-
-    allMouseOut() {
-        this.getAll()
-            .style('opacity', 1.0)
+        return this.path
+            .style("stroke-width", this.options.strokeWidth )
+            .style('stroke', this.options.stroke )
     }
 }
 

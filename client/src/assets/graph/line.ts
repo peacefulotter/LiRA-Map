@@ -1,14 +1,17 @@
 
 
+import { getColor } from "./color";
 import Dots from "./dots";
 import Path from "./path";
+import Tooltip from "./tooltip";
 
-import { Axis, DotHover, GraphData, SVG } from "../../models/graph";
+import { Axis, DotHover, DotsOptions, GraphData, PathOptions, SVG } from "./types";
 
 export default class GLine 
 {
     path: Path;
     dots: Dots;
+    hitbox: Path;
 
     constructor(
         svg: SVG, 
@@ -18,33 +21,57 @@ export default class GLine
         axis: [Axis, Axis],
         onHover: (d: DotHover | undefined) => void
     ) {
-        const path = new Path(svg, label, i, data, axis)
-        const dots = new Dots(svg, label, i, data, axis, onHover)
+        const color = getColor(0, i)
+        const hoverColor = "url(#line-gradient)"
 
-        const mouseOverLine = () => {
-            path.allMouseOver()
-            dots.dotsMouseOver()
-            path.mouseOver()	
-        }
+        const pathOpts: PathOptions = { stroke: color }
+        const hoverPathOpts: PathOptions = { stroke: hoverColor }
 
-        const mouseOutLine = () => {
-            path.allMouseOut()
-            dots.dotsMouseOut()
-            path.mouseOut()
-        }
+        const dotsOpts: DotsOptions = { fill: color, radius: 6 }
+        const hoverDotsOpts: DotsOptions = { fill: hoverColor }
 
-        path.onMouseOver( mouseOverLine )
-        path.onMouseOut( mouseOutLine )
-        dots.onMouseOver( mouseOverLine )
-        dots.onMouseOut( mouseOutLine )
+        const hitboxOpts: PathOptions = { stroke: "transparent", strokeWidth: 30 }
+        const hoverHitboxOpts: PathOptions = { stroke: "transparent", strokeWidth: 30 }
+        
+        const path = new Path(svg, label, data, axis, pathOpts, hoverPathOpts )
+        const hitbox = new Path(svg, "hitbox", data, axis, hitboxOpts, hoverHitboxOpts )
+        const dots = new Dots(svg, label, data, axis, dotsOpts, hoverDotsOpts )
+
+        const tooltip = new Tooltip();
+
+        hitbox.addMouseOver( () => {
+            path.mouseOver();
+            dots.mouseOver();
+        } )
+
+        hitbox.addMouseOut( () => {
+            path.mouseOut();
+            dots.mouseOut();
+        } )
+
+        dots.addMouseOver( (e, d) => {
+            path.mouseOver();
+            dots.mouseOver();
+            tooltip.mouseOver(e, d)
+            onHover( { label, x: d[0] } )
+        } )
+
+        dots.addMouseOut( (e, d) => {
+            path.mouseOut();
+            dots.mouseOut();
+            tooltip.mouseOut()
+            onHover( undefined )
+        } )
         
         this.path = path;
         this.dots = dots;
+        this.hitbox = hitbox;
     }
 
     rem() 
     {
         this.path.rem()
         this.dots.rem()
+        this.hitbox.rem()
     }
 }

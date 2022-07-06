@@ -1,6 +1,5 @@
-import L, { Map } from 'leaflet';
 import { HotPolyline } from 'react-leaflet-hotline';
-import { DotHover } from '../../models/graph';
+import { DotHover } from '../graph/types';
 
 
 export default class HoverHotPolyline<T, U> extends HotPolyline<T, U>

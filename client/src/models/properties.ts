@@ -1,4 +1,4 @@
-import { Palette } from "./graph";
+import { Palette } from "react-leaflet-hotline";
 import { RendererName } from "./renderers";
 
 // If an attribute is defined for a point, it overwrites the properties for the path

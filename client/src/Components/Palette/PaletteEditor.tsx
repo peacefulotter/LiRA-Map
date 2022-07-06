@@ -1,8 +1,7 @@
 import { FC, useState } from "react";
 import { Gradient } from "react-gradient-hook";
 import { CursorOptions, TRGB } from "react-gradient-hook/lib/types";
-
-import { Palette } from "../../models/graph";
+import { Palette } from "react-leaflet-hotline";
 
 import '../../css/palette.css'
 

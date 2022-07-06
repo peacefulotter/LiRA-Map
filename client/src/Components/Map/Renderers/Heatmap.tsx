@@ -1,10 +1,9 @@
 
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
+import { Palette } from "react-leaflet-hotline";
 import L from 'leaflet'
 import "leaflet.heat"
-
-import { Palette } from "../../../models/graph";
 
 type IHeatmap<T> = {
     data: T[];

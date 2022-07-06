@@ -5,7 +5,7 @@ import GLine from "../../assets/graph/line"
 
 import { useGraph } from "../../context/GraphContext";
 
-import { DotHover, GraphAxis, GraphData, SVG } from "../../models/graph"
+import { DotHover, GraphAxis, GraphData, SVG } from "../../assets/graph/types"
 import { Bounds } from "../../models/path";
 
 

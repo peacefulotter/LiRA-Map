@@ -1,4 +1,4 @@
-import { Palette } from "../models/graph"
+import { Palette } from "react-leaflet-hotline"
 import { PathProperties, PointProperties } from "../models/properties"
 
 export const DEFAULT_WIDTH = 4

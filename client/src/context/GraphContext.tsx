@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 import useMinMaxAxis from "../hooks/useMinMaxAxis";
-import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from "../models/graph";
+import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from "../assets/graph/types";
 
 
 interface ContextProps {

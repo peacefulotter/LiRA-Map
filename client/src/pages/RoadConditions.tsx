@@ -1,13 +1,12 @@
-import  { useCallback, useState } from "react";
+import  { useState } from "react";
 
 import PaletteEditor from "../Components/Palette/PaletteEditor";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Ways from "../Components/RoadCondition/Ways";
-import Panel from "../Components/RoadCondition/Panel";
 import Graph from "../Components/Graph/Graph";
 
 import { Bounds, Condition } from "../models/path";
-import { GraphData, Plot } from "../models/graph";
+import { GraphData, Plot } from "../assets/graph/types";
 import { TRGB } from "react-gradient-hook/lib/types";
 
 import { getConditions } from "../queries/conditions";
@@ -62,7 +61,6 @@ const RoadConditions = () => {
                 <MapWrapper>
                     <Ways palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
-                {/* <Panel measurements={measurements} onClick={onClick} fetchWays={fetchWays}/> */}
             </div>
             <div className="ml-graph">
                 <Graph 

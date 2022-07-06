@@ -5,40 +5,5 @@
     grid-template-rows: auto min(40vh, 400px);
 }
 
-.panel-wrapper {
-    position: absolute;
-    top: 70px;
-    left: 20px;
-    max-height: 50vh;
-    z-index: 999999;
-    backdrop-filter: blur(10px);
-    padding: 10px 10px;
-    background-color: rgba(50, 50, 50, 0.8) !important;
-    border-radius: 5px;
-    overflow-y: auto;
-}
-
-.panel-checkboxes {
-    display: flex;
-    flex-direction: column;
-    row-gap: 3px;
-    max-height: 45%;
-}
-
-.panel-checkbox {
-    background: transparent !important;
-    padding: 10px 25px !important;
-    border-radius: 3px !important;
-}
-
-.panel-checkbox:hover {
-    background: rgba(50, 50, 50, 0.3) !important;
-}
-
-.panel-checkbox.btn-checked {
-    background-color: rgba(50, 50, 50, 0.95) !important;
-}
-
-
 
 

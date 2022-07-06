@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useRef, useState } from "react";
 import { FiMinus, FiPlus, FiRotateCcw } from 'react-icons/fi'
+import { Palette } from "react-leaflet-hotline";
 
 import SVGWrapper from "./SVGWrapper";
 import Tooltip from "./Tooltip";
@@ -10,7 +11,7 @@ import YAxis from "./YAxis";
 
 import { useGraph } from "../../context/GraphContext";
 import { getXAxis, getYAxis } from "../../assets/graph/axis";
-import { Axis, Palette, Plot } from "../../models/graph";
+import { Axis, Plot } from "../../assets/graph/types";
 import useSize from "../../hooks/useSize";
 
 import '../../css/graph.css'

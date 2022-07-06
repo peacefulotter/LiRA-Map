@@ -1,46 +1,50 @@
 import  { useEffect, useState } from "react";
 
+import Panel from "../Components/Altitude/Panel";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Heatmap from "../Components/Map/Renderers/Heatmap";
 import DistHotline from "../Components/Map/Renderers/DistHotline";
 
-import { Node, ValueLatLng, WaysConditions } from "../models/path";
+import { Node, WaysConditions } from "../models/path";
 
-import { getAltitudes, getHeat } from "../queries/altitude";
-
+import { getAltitudes } from "../queries/altitude";
 
 import "../css/altitude.css";
 
 
 const Altitude = () => {
     
-    const [altitudes, setAltitudes] = useState<WaysConditions>()
-    const [heat, setHeat] = useState<ValueLatLng[]>()
+    const [altitudes, setAltitudes] = useState<WaysConditions>();
+    const [showHotline, setShowHotline] = useState<boolean>(true);
+    const [showHeatmap, setShowHeatmap] = useState<boolean>(false);
 
     useEffect( () => {
         getAltitudes( (data: WaysConditions) => {
             console.log(data);
             setAltitudes( data )
         } )
-
-        // getHeat( (data: ValueLatLng[]) => {
-        //     console.log(data);
-        //     setHeat(data);
-        // } )
     }, [] )
+
+    const toggleShowHotline = () => setShowHotline(prev => !prev)
+    const toggleShowHeatmap = () => setShowHeatmap(prev => !prev)
 
     return (
         <div className="altitude-wrapper">
             <MapWrapper>
-                { altitudes ? 
-                    <DistHotline 
+                <Panel 
+                    showHotline={showHotline} 
+                    showHeatmap={showHeatmap}
+                    toggleShowHotline={toggleShowHotline} 
+                    toggleShowHeatmap={toggleShowHeatmap} />
+                { showHotline && altitudes 
+                    ? <DistHotline 
                         way_ids={altitudes.way_ids} 
                         geometry={altitudes.geometry} 
                         conditions={altitudes.conditions}
                         options={{min: 0, max: 140}} /> 
                     : null 
                 }
-                {/* { altitudes 
+                { showHeatmap && altitudes 
                     ? <Heatmap 
                         data={altitudes.geometry.flat()} 
                         getLat={(t: Node) => t.lat} 
@@ -48,7 +52,7 @@ const Altitude = () => {
                         getVal={(t: Node) => 2} 
                         max={1} 
                         radius={20} /> 
-                    : null } */}
+                    : null }
             </MapWrapper>
         </div>
     );

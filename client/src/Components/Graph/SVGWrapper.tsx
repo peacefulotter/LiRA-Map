@@ -1,10 +1,11 @@
 
 import { FC, useEffect, useRef, useState } from "react";
+import { Palette } from "react-leaflet-hotline";
 import * as d3 from 'd3'
 
 import Gradient from "./Gradient";
 
-import { Axis, Palette, Plot, ReactAxis, SVG } from "../../models/graph";
+import { Axis, Plot, ReactAxis, SVG } from "../../assets/graph/types";
 import Line from "./Line";
 import Labels from "./Labels";
 

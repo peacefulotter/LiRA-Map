@@ -11,7 +11,7 @@ import { useKeyPaths } from "../../context/PathsContext";
 import { RideMeasurement } from "../../models/properties";
 import { PointData } from "../../models/path";
 import { RideMeta } from "../../models/models";
-import { GraphData } from "../../models/graph";
+import { GraphData } from "../../assets/graph/types";
 import { ZoomProvider } from "../../context/ZoomContext";
 import { GraphProvider } from "../../context/GraphContext";
 
