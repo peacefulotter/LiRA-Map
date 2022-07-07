@@ -36,8 +36,8 @@ const OptionsSelector: FC<IOptionsSelector> = ( { onChange } ) => {
                 value={options.search} 
                 onChange={e => _onChange('search')(e.target.value)} />
 
-            <DatePicker onChange={_onChange('startDate')} value={options.startDate} />
-            <DatePicker onChange={_onChange('endDate')} value={options.endDate} />
+            <DatePicker onChange={_onChange('startDate')} value={options.startDate} className="options-date-picker" />
+            <DatePicker onChange={_onChange('endDate')} value={options.endDate} className="options-date-picker" />
 
             <Checkbox
                 className="ride-sort-cb"
