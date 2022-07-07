@@ -26,11 +26,14 @@
 
 #tooltip {
     position: absolute;
-    right: 10px;
+    top: 0px;
+    left: 0px;
     margin-top: 10px;
     font: 1.3em sans-serif;		
     opacity: 0;	
-    z-index: 999999;
+    background: var(--background);
+    padding: 10px 15px;
+    border-radius: 10px;
     transition: opacity 200ms ease;
 }
 

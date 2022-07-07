@@ -9,7 +9,7 @@ import { useKeyPaths } from "../../context/PathsContext";
 import { PopupFunc } from "../../models/popup";
 import { RideMeasurement } from "../../models/properties";
 import { RideMeta } from "../../models/models";
-import { BoundedPath, } from "../../models/path";
+import { BoundedPath } from "../../models/path";
 
 import { getRide } from "../../queries/rides";
 
