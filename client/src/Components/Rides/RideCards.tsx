@@ -13,7 +13,7 @@ import OptionsSelector from "./OptionsSelector";
 
 interface CardsProps {
     showMetas: SelectMeta[]
-    onClick: (meta: SelectMeta, isChecked: boolean) => void; 
+    onClick: (meta: SelectMeta, i: number, isChecked: boolean) => void; 
 }
 
 const Cards: FC<CardsProps> = ( { showMetas, onClick } ) => {  
@@ -25,7 +25,7 @@ const Cards: FC<CardsProps> = ( { showMetas, onClick } ) => {
                 className="ride-card-container"
                 html={<div><b>{meta.TaskId}</b><br></br>{new Date(meta.Created_Date).toLocaleDateString()}</div>}
                 onClick={(isChecked) => {
-                    onClick(meta, isChecked) 
+                    onClick(meta, index, isChecked) 
                 }} />
         </div>
     }
@@ -63,10 +63,16 @@ const RideCards: FC = ( ) => {
         setShowMetas( reversed ? temp.reverse() : temp )
     }
 
-    const onClick = ( md: SelectMeta, isChecked: boolean) =>
-        isChecked 
+    const onClick = ( md: SelectMeta, i: number, isChecked: boolean) => {
+        const temp = [...showMetas]
+        temp[i].selected = isChecked
+        setShowMetas(temp)
+        
+        return isChecked 
             ? setSelectedMetas( prev => [...prev, md] )
             : setSelectedMetas( prev => prev.filter( ({ TripId }) => md.TripId !== TripId ) )
+    }
+        
 
     return (
         <div className="ride-list">
