@@ -14,6 +14,7 @@ import { addMeasurement, editMeasurement } from "../../queries/measurements";
 
 import '../../css/ridedetails.css'
 import { useMetasCtx } from "../../context/MetasContext";
+import { RideMeta } from "../../models/models";
 
 
 const RideDetails: FC = () => {
@@ -96,10 +97,8 @@ const RideDetails: FC = () => {
 				onClick={showAddMeasurement} />
 			
 			
-			{ selectedMetas.map( (isSelected: boolean, i: number) =>
-				isSelected 
-					? <MetaData md={metas[i]} key={`md-${Math.random()}`} />
-					: null
+			{ selectedMetas.map( (meta: RideMeta, i: number) =>
+				<MetaData md={meta} key={`md-${Math.random()}`} />
 			) }
         </div>
   )

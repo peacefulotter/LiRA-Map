@@ -29,6 +29,13 @@ export interface LatLng {
 	lng: number;
 }
 
+export interface TripsOptions {
+    search: string;
+    startDate: Date;
+    endDate: Date;
+    reversed: boolean;
+}
+
 
 
 

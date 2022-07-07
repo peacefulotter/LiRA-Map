@@ -12,9 +12,8 @@ import { getRides } from "../queries/rides";
 
 interface ContextProps {
 	metas: RideMeta[];
-	selectedMetas: boolean[];
-    setSelectedMetas: Dispatch<SetStateAction<boolean[]>>;
-	toggleSelectRide: (i: number, isChecked: boolean) => void
+	selectedMetas: RideMeta[];
+    setSelectedMetas: Dispatch<SetStateAction<RideMeta[]>>;
 }
 
 const MetasContext = createContext({} as ContextProps);
@@ -22,17 +21,10 @@ const MetasContext = createContext({} as ContextProps);
 export const MetasProvider = ({ children }: any) => {
 
 	const [ metas, setMetas ] = useState<RideMeta[]>([]);
-    const [ selectedMetas, setSelectedMetas ] = useState<boolean[]>(metas.map(() => false));
+    const [ selectedMetas, setSelectedMetas ] = useState<RideMeta[]>([]);
 
     // fetch the metadata of all the rides
     useEffect( () => getRides(setMetas), [] );
-
-    const toggleSelectRide = (i: number, isChecked: boolean) => {   
-		console.log(i, isChecked);
-		const temp = [...selectedMetas];
-		temp[i] = isChecked;
-		setSelectedMetas(temp ) 
-    }
 
 	return (
 		<MetasContext.Provider
@@ -40,7 +32,6 @@ export const MetasProvider = ({ children }: any) => {
 				metas,
 				selectedMetas,
 				setSelectedMetas,
-				toggleSelectRide
 			}}
 		>
 			{children}
