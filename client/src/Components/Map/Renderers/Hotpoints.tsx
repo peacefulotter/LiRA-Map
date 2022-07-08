@@ -1,33 +1,46 @@
 import L from 'leaflet'
 import { useEffect } from 'react';
 
-import { fixProperties } from '../../../assets/properties';
 import { useGraph } from '../../../context/GraphContext';
-import { PointData } from '../../../models/path';
-import { Renderer } from '../../../models/renderers';
+
+import { IRenderer } from '../../../models/renderers';
+
 import useCanvas from '../Hooks/useCanvas';
-import getColor from '../color';
 
-const Hotpoints: Renderer = ( { path, properties, onClick } ) => { 
+import { formatEventHandlers, getColorOnPalette } from '../utils';
 
-    const [map, canvas] = useCanvas();
+function Hotcircles<T>( { data, getLat, getLng, getVal, options, eventHandlers }: IRenderer<T> )
+{ 
+    const { width, weight, opacity, palette } = options;
+
+    const [ map, canvas ] = useCanvas();
     const { minY, maxY } = useGraph()
 
     useEffect(() => {
-        path.forEach( (p: PointData, i: number) => {
-            const mappedValue: number = ((p.value || -9999) - (minY || 0)) / ((maxY || 1) - (minY || 0))
-            const { width, weight, opacity } = fixProperties(p.properties, properties)
-            return L.circle( [p.lat, p.lng], { 
+        const circles = data.map( (t: T, i: number) => {
+            const mappedValue: number = ((getVal(t, i) || -9999) - (minY || 0)) / ((maxY || 1) - (minY || 0))
+
+            const circle = L.circle( [getLat(t, i), getLng(t, i)], { 
                 renderer: canvas, 
                 radius: width,
-                color: getColor(mappedValue, properties.color, i / path.length),
+                color: getColorOnPalette(palette, mappedValue),
                 weight: weight,
                 opacity: opacity,
-            } ).on("click", onClick ? onClick(i) : () => {}).addTo(map);
-        } )
-    }, [canvas, map, minY, maxY, onClick, path, properties])
+            } )
 
-    return <></>;
+            circle.on(formatEventHandlers(eventHandlers, i))
+
+            circle.addTo(map);
+
+            return circle;
+        } )
+
+        return () => {
+            circles.forEach( c => c.remove() )
+        }
+    }, [canvas, map, minY, maxY, data, options] )
+
+    return null;
 }
 
-export default Hotpoints
+export default Hotcircles

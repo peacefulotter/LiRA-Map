@@ -28,6 +28,11 @@ export interface PathProperties extends PointProperties {
 	arrowHead?: number
 }
 
+export interface RendererOptions extends PathProperties {
+	min?: number;
+	max?: number;
+}
+
 export interface Measurement extends PathProperties {
 	// measurement as it is in the database
 	dbName: string;

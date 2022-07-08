@@ -1,18 +1,24 @@
+import { Circle as LeafletCircle } from "react-leaflet";
+import { IRenderer } from "../../../models/renderers";
+import { formatEventHandlers } from "../utils";
 
+function Circles<T>( { data, getLat, getLng, options, eventHandlers }: IRenderer<T> ) 
+{
+    const { width, weight, opacity, color } = options;
 
-import { FC } from "react";
-import { PointProps, Renderer } from "../../../models/renderers";
-
-import { createCircle } from "./Circle";
-import Points from "./Points";
-
-const Circles: Renderer = ( props ) => {
-    return <Points {...props} PointElt={CCircle} />
-}
-
-const CCircle: FC<PointProps> = ( { lat, lng, pointProperties, pathProperties, onClick, i } ) =>  {    
-    return createCircle(lat, lng, pointProperties, pathProperties, onClick(i))
+    return (
+        <>
+        { data.map( (t: T, i: number) => 
+            <LeafletCircle
+                center={[getLat(t, i), getLng(t, i)]} 
+                radius={width} 
+                weight={weight}
+                opacity={opacity}
+                color={color}
+                eventHandlers={formatEventHandlers(eventHandlers, i)}/>
+        ) }
+        </>
+    )
 }
 
 export default Circles;
-

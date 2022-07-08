@@ -1,26 +1,26 @@
 import  { useState } from "react";
+import { Palette } from "react-leaflet-hotline";
 
+import { RENDERER_PALETTE } from "../Components/Map/constants";
 import PaletteEditor from "../Components/Palette/PaletteEditor";
 import MapWrapper from "../Components/Map/MapWrapper";
 import Ways from "../Components/RoadCondition/Ways";
 import Graph from "../Components/Graph/Graph";
 
 import { Bounds, Condition } from "../models/path";
-import { GraphData, Plot } from "../assets/graph/types";
-import { TRGB } from "react-gradient-hook/lib/types";
 
 import { getConditions } from "../queries/conditions";
 
 import { GraphProvider } from "../context/GraphContext";
 
-import { DEFAULT_PALETTE } from "../assets/properties";
+import { GraphData, Plot } from "../assets/graph/types";
 
 import "../css/road_conditions.css";
 
 
 const RoadConditions = () => {
     
-    const [palette, setPalette] = useState<TRGB[]>([])
+    const [palette, setPalette] = useState<Palette>([])
     const [plot, setPlot] = useState<Plot>()
 
     const type = {
@@ -54,7 +54,7 @@ const RoadConditions = () => {
         <GraphProvider>
         <div className="ml-wrapper">
             <PaletteEditor 
-                defaultPalette={DEFAULT_PALETTE}
+                defaultPalette={RENDERER_PALETTE}
                 cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
                 onChange={setPalette} />
             <div className="ml-map">

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Polyline } from "react-leaflet";
-import { LatLng } from "../../../models/models";
+import { LatLng } from "../../models/models";
 
 interface IArrowHead {
     origin: LatLng
@@ -11,6 +11,15 @@ const length = (x: number, y: number) => Math.sqrt( x * x + y * y )
 
 
 const ArrowHead: FC<IArrowHead> = ( { origin, end } ) => {
+
+    // const { arrowHead } = options;
+
+    // const origin = path[path.length - 2];
+    // const end = path[path.length - 1];  
+
+    {/* { arrowHead === 1 || arrowHead === 3 ? <ArrowHead origin={origin} end={end} /> : null }
+        { arrowHead === 2 || arrowHead === 3 ? <ArrowHead origin={end} end={origin} /> : null } */}
+    
 
     const options = {
         color: 'blue',

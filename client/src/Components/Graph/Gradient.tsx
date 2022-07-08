@@ -1,10 +1,9 @@
 import { FC, useEffect } from "react"
 import { Color, Palette } from "react-leaflet-hotline";
 
-import { DEFAULT_PALETTE } from "../../assets/properties";
-
 import { useGraph } from "../../context/GraphContext";
 import { Axis, SVG } from "../../assets/graph/types"
+import { RENDERER_PALETTE } from "../Map/constants";
 
 export interface IGradient {
     svg: SVG | undefined;
@@ -18,7 +17,7 @@ const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
 
     const { minY, maxY } = useGraph()
 
-    const p = palette || DEFAULT_PALETTE
+    const p = palette || RENDERER_PALETTE
 
     useEffect( () => {
 

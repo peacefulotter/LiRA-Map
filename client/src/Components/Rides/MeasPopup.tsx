@@ -5,7 +5,6 @@ import { FC, useState } from "react";
 import Checkbox from "../Checkbox";
 import usePopup from "../Popup";
 import { TwitterPicker, Color, ColorResult } from 'react-color';
-import renderers from "../../assets/renderers";
 import { RendererName } from "../../models/renderers";
 import { RideMeasurement } from "../../models/properties";
 
@@ -48,7 +47,7 @@ const PopupWrapper: FC<IPopupWrapper> = ( { updateName, updateTag, updateSelecte
             <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={defaultOptions.name} onChange={changeName}/>
             <input className="sweetalert-input" placeholder="Tag.." type='text' defaultValue={defaultOptions.tag} onChange={changeTag}/>
             <div className="sweetalert-checkboxes">
-                { Object.keys(renderers).map( (rendererName: string, i: number) => 
+                { Object.keys(RendererName).map( (rendererName: string, i: number) => 
                     <Checkbox 
                         key={`sweetalert-checkbox-${i}`}
                         className='ride-metadata-checkbox'

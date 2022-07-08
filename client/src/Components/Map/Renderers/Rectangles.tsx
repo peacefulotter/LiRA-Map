@@ -1,33 +1,39 @@
 
-import { FC } from "react";
-import { Rectangle } from "react-leaflet";
+import { Rectangle as LeafletRectangle } from "react-leaflet";
 import { LatLngBounds } from 'leaflet'
 
-import Points from "./Points";
-import { fixProperties } from "../../../assets/properties";
-import { Renderer, PointProps } from "../../../models/renderers";
+import { IRenderer } from "../../../models/renderers";
+import { formatEventHandlers } from "../utils";
 
 
-const Rectangles: Renderer = ( props ) => {
-    return <Points {...props} PointElt={CRectangle}/>
-}
-
-const CRectangle: FC<PointProps> = ( { lat, lng, pointProperties, pathProperties, onClick, i } ) => {
-
-    const { width, color, weight, opacity } = fixProperties(pointProperties, pathProperties)
+function Rectangles<T>( { data, getLat, getLng, options, eventHandlers }: IRenderer<T> )
+{
+    const { width, color, weight, opacity } = options;
 
     const size: number = width / 10_000;
-    const bounds: LatLngBounds = new LatLngBounds(
-        [lat - size / 2, lng - size / 2],
-        [lat + size / 3, lng + size / 1.2]
-    );
         
-    return <Rectangle
-        bounds={bounds} 
-        color={color}
-        weight={weight}
-        opacity={opacity}
-        eventHandlers={{'click': onClick ? onClick(i) : () => {}}}/>
+    return (
+        <>
+        { data.map( (t: T, i: number) => {
+
+            const lat = getLat(t, i)
+            const lng = getLng(t, i) 
+
+            const bounds: LatLngBounds = new LatLngBounds(
+                [lat - size / 2, lng - size / 2],
+                [lat + size / 3, lng + size / 1.2]
+            );
+
+            return <LeafletRectangle
+                bounds={bounds} 
+                color={color}
+                weight={weight}
+                opacity={opacity}
+                eventHandlers={formatEventHandlers(eventHandlers, i)} />
+            } )
+        }
+        </>
+    )
 }
 
 export default Rectangles

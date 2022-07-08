@@ -1,32 +1,20 @@
 
-import { FC, useEffect, useRef, useState } from "react";
-import { Palette } from "react-leaflet-hotline";
+import { FC, ReactElement, useEffect, useRef, useState } from "react";
 import * as d3 from 'd3'
-
-import Gradient from "./Gradient";
-
-import { Axis, Plot, ReactAxis, SVG } from "../../assets/graph/types";
-import Line from "./Line";
-import Labels from "./Labels";
+import { SVG } from "../../assets/graph/types";
 
 interface ISVG {
     isLeft: boolean;
     zoom: number;
     margin: any,
     w: number;
-    h: number;
-    width: number;
     height: number;
-    labelX: string;
-    labelY: string;
-    axis: [Axis, Axis] | undefined
-    Axis: ReactAxis;
-    palette: Palette | undefined;
-    plots?: Plot[]
+    children: (svg: SVG | undefined) => ReactElement;
 }
 
-const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labelX, labelY, axis, Axis, palette, plots } ) => {
+const SVGWrapper: FC<ISVG> = ( props ) => {
 
+    const { isLeft, zoom, margin, w, height, children } = props;
     const ref = useRef(null)
     const [svg, setSVG] = useState<SVG>()
     
@@ -53,12 +41,7 @@ const SVGWrapper: FC<ISVG> = ( { isLeft, zoom, margin, w, h, width, height, labe
             style={{height: height + 'px'}}
         >
             <svg ref={ref} style={{width: w * zoom - 20 + (isLeft ? 150 : 0) + 'px', height: '100%'}}>
-                <Gradient svg={svg} axis={axis} palette={palette} />
-                <Axis svg={svg} axis={axis} width={w} height={h} zoom={zoom} />
-                { isLeft ? <Labels svg={svg} width={w} height={h} labelX={labelX} labelY={labelY}/> : null }
-                { plots && plots.map((p: Plot, i: number) => 
-                    <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
-                }
+                { children( svg ) }
             </svg>
         </div>
     )

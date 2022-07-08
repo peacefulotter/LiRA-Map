@@ -6,7 +6,7 @@ import { useGraph } from "../../context/GraphContext";
 import { ReactAxis } from '../../assets/graph/types';
 
 
-const YAxis: ReactAxis = ( { svg, axis, width, height } ) => {
+const YAxis: ReactAxis = ( { svg, axis, width, height, absolute } ) => {
 
     const { maxY } = useGraph()
 

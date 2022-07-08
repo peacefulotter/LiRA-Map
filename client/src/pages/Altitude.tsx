@@ -10,6 +10,7 @@ import { Node, WaysConditions } from "../models/path";
 import { getAltitudes } from "../queries/altitude";
 
 import "../css/altitude.css";
+import { HEATMAP_OPTIONS, RENDERER_OPTIONS } from "../Components/Map/constants";
 
 
 const Altitude = () => {
@@ -45,13 +46,17 @@ const Altitude = () => {
                     : null 
                 }
                 { showHeatmap && altitudes 
-                    ? <Heatmap 
+                    ? <Heatmap
                         data={altitudes.geometry.flat()} 
                         getLat={(t: Node) => t.lat} 
                         getLng={(t: Node) => t.lng} 
                         getVal={(t: Node) => 2} 
-                        max={1} 
-                        radius={20} /> 
+                        options={{
+                            ...RENDERER_OPTIONS, // temporary fix
+                            max: 10,
+                            width: 20, 
+                            palette: HEATMAP_OPTIONS.palette
+                        }} /> 
                     : null }
             </MapWrapper>
         </div>

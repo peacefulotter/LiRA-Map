@@ -45,6 +45,7 @@ const Rides: FC = () => {
                             key={"graph-"+i}
                             labelX="time (?)" 
                             labelY={meas.name}
+                            absolute={true}
                             plots={ 
                                 paths.hasOwnProperty(meas.name) 
                                     ? Object.entries(paths[meas.name]).map( ([taskId, dp], i: number) => {

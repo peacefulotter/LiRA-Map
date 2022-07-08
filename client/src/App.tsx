@@ -2,7 +2,7 @@ import { FC } from "react";
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 
 import Navbar from './Components/Navbar'
-import Trips from "./pages/Trips";
+import RoadMeasurements from "./pages/RoadMeasurements";
 import CarData from "./pages/CarData";
 import RoadConditions from "./pages/RoadConditions";
 import Altitude from "./pages/Altitude";
@@ -22,7 +22,7 @@ const App: FC = () => {
                 <Navbar />
                 <Switch>
                     <Route exact path="/cardata" component={() => <ZoomProvider><CarData/></ZoomProvider>} />
-                    <Route exact path="/rides" component={() => <Trips />} />
+                    <Route exact path="/rides" component={() => <RoadMeasurements />} />
                     <Route 
                         exact path="/road_conditions"    
                         component={() => <ZoomProvider><RoadConditions/></ZoomProvider>} 

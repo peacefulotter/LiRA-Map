@@ -46,7 +46,11 @@ const RideCards: FC = ( ) => {
     
     const { metas, selectedMetas, setSelectedMetas } = useMetasCtx();
 
-    const [showMetas, setShowMetas] = useState<SelectMeta[]>(metas.map(m => ({...m, selected: false})))
+    const [showMetas, setShowMetas] = useState<SelectMeta[]>([])
+
+    useEffect( () => {
+        setShowMetas( metas.map(m => ({...m, selected: false})) )
+    }, [metas])
 
     const onChange = ( { search, startDate, endDate, reversed }: TripsOptions) => {
         const temp: SelectMeta[] = metas
@@ -67,7 +71,7 @@ const RideCards: FC = ( ) => {
         const temp = [...showMetas]
         temp[i].selected = isChecked
         setShowMetas(temp)
-        
+
         return isChecked 
             ? setSelectedMetas( prev => [...prev, md] )
             : setSelectedMetas( prev => prev.filter( ({ TripId }) => md.TripId !== TripId ) )

@@ -5,21 +5,21 @@ import useMeasPopup from "./MeasPopup";
 import Checkbox from "../Checkbox";
 import MetaData from "./MetaData";
 
-import { DEFAULT_COLOR } from "../../assets/properties";
-
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
+import { useMetasCtx } from "../../context/MetasContext";
+
+import { addMeasurement, editMeasurement } from "../../queries/measurements";
 import { Measurement, RideMeasurement } from "../../models/properties";
 import { RendererName } from "../../models/renderers";
-import { addMeasurement, editMeasurement } from "../../queries/measurements";
-
-import '../../css/ridedetails.css'
-import { useMetasCtx } from "../../context/MetasContext";
 import { RideMeta } from "../../models/models";
 
+import { RENDERER_COLOR } from "../Map/constants";
+
+import '../../css/ridedetails.css'
 
 const RideDetails: FC = () => {
 
-	const { metas, selectedMetas } = useMetasCtx()
+	const { selectedMetas } = useMetasCtx()
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
@@ -44,7 +44,7 @@ const RideDetails: FC = () => {
 				setMeasurements( temp )
 				editMeasurement(newMeasurement, i)
 			}, 
-			{ name: m.name, tag: m.dbName, renderer: m.rendererName, color: m.color || DEFAULT_COLOR } 
+			{ name: m.name, tag: m.dbName, renderer: m.rendererName, color: m.color || RENDERER_COLOR } 
 		)
 	}
 
@@ -80,22 +80,19 @@ const RideDetails: FC = () => {
 
     return (
 		<div className="meta-data">
-			{
-				measurements.map( (m: Measurement, i: number) =>
-					<Checkbox 
-						key={`ride-md-checkbox-${i}`}
-						className='ride-metadata-checkbox'
-						html={getMeasurementsContent(m, i)}
-						onClick={(isChecked) => measurementClicked(i, isChecked)} />
-				)
-			}
+			{ measurements.map( (m: Measurement, i: number) =>
+				<Checkbox 
+					key={`ride-md-checkbox-${i}`}
+					className='ride-metadata-checkbox'
+					html={getMeasurementsContent(m, i)}
+					onClick={(isChecked) => measurementClicked(i, isChecked)} />
+			) }
 
 			<Checkbox 
 				className='ride-metadata-checkbox md-checkbox-add'
 				html={<div>+</div>}
 				forceState={addChecked}
 				onClick={showAddMeasurement} />
-			
 			
 			{ selectedMetas.map( (meta: RideMeta, i: number) =>
 				<MetaData md={meta} key={`md-${Math.random()}`} />

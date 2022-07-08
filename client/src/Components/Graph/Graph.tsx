@@ -11,23 +11,27 @@ import YAxis from "./YAxis";
 
 import { useGraph } from "../../context/GraphContext";
 import { getXAxis, getYAxis } from "../../assets/graph/axis";
-import { Axis, Plot } from "../../assets/graph/types";
+import { Axis, Plot, SVG } from "../../assets/graph/types";
 import useSize from "../../hooks/useSize";
 
 import '../../css/graph.css'
+import Gradient from "./Gradient";
+import Labels from "./Labels";
+import Line from "./Line";
 
 interface IGraph {
     labelX: string;
     labelY: string;
     plots?: Plot[]
-    palette?: Palette
+    palette?: Palette;
+    absolute?: boolean;
 }
 
 const margin = {top: 20, right: 30, bottom: 70, left: 100};
 const paddingRight = 50
 const zoomGap = 0.5
 
-const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
+const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute }  ) => {
 
     const wrapperRef = useRef(null)
     const [width, height] = useSize(wrapperRef)
@@ -61,15 +65,26 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette }  ) => {
             </div>
             <SVGWrapper 
                 isLeft={true} zoom={zoom}
-                margin={margin} w={w} h={h} width={width} height={height} 
-                labelX={labelX} labelY={labelY} axis={axis} Axis={YAxis} palette={palette} 
-            />
+                margin={margin} w={w}   height={height} 
+            >
+                { (svg: SVG | undefined) => <>
+                     <Gradient svg={svg} axis={axis} palette={palette} />
+                     <YAxis svg={svg} axis={axis} width={w} height={h} zoom={zoom} absolute={absolute}/>
+                     <Labels svg={svg} width={w} height={h} labelX={labelX} labelY={labelY}/>
+                </> }
+            </SVGWrapper>
             <SVGWrapper 
                 isLeft={false} zoom={zoom}
-                margin={margin} w={w + paddingRight} h={h} width={width} height={height} 
-                labelX={labelX} labelY={labelY} axis={axis} Axis={XAxis} palette={palette} 
-                plots={plots}
-            />
+                margin={margin} w={w + paddingRight}  height={height} 
+            >
+                { (svg: SVG | undefined) => <>
+                     <Gradient svg={svg} axis={axis} palette={palette} />
+                     <XAxis svg={svg} axis={axis} width={w} height={h} zoom={zoom} absolute={absolute}/>
+                     { plots && plots.map((p: Plot, i: number) => 
+                        <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
+                    }               
+                </> }
+            </SVGWrapper>
         </div>
         </>
     )
