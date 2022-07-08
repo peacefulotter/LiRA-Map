@@ -16,6 +16,7 @@ export interface IAxis {
     height: number; 
     zoom: number;
     absolute?: boolean;
+    time?: boolean;
 }
 export type ReactAxis = FC<IAxis>;
 export type Axis = d3.ScaleLinear<number, number, never>

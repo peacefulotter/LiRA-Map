@@ -3,8 +3,6 @@
 .palette-wrapper {
     position: fixed;
     top: var(--navbar-z-index);
-    left: 0;
-    width: 100vw;
     z-index: calc( var(--navbar-z-index) - 3 );
     color: var(--background);
     transform: translateY(-100%);
@@ -19,6 +17,7 @@
 .palette-container {
     background: var(--background);
     padding: 70px 0px 40px 0px;
+    overflow: hidden;
 }
 
 .palette-hover {  

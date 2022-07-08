@@ -10,6 +10,7 @@ function Circles<T>( { data, getLat, getLng, options, eventHandlers }: IRenderer
         <>
         { data.map( (t: T, i: number) => 
             <LeafletCircle
+                key={`circle-${i}`}
                 center={[getLat(t, i), getLng(t, i)]} 
                 radius={width} 
                 weight={weight}

@@ -25,6 +25,7 @@ function Rectangles<T>( { data, getLat, getLng, options, eventHandlers }: IRende
             );
 
             return <LeafletRectangle
+                key={`rectangle-${i}`}
                 bounds={bounds} 
                 color={color}
                 weight={weight}

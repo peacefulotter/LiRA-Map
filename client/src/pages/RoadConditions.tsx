@@ -53,15 +53,17 @@ const RoadConditions = () => {
     return (
         <GraphProvider>
         <div className="ml-wrapper">
-            <PaletteEditor 
-                defaultPalette={RENDERER_PALETTE}
-                cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
-                onChange={setPalette} />
             <div className="ml-map">
                 <MapWrapper>
+                    <PaletteEditor 
+                        defaultPalette={RENDERER_PALETTE}
+                        cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
+                        onChange={setPalette} />
+
                     <Ways palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
             </div>
+
             <div className="ml-graph">
                 <Graph 
                     labelX="distance (m)" 

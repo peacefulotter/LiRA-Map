@@ -6,19 +6,6 @@ class Tooltip
 {
     private id = "tooltip";
 
-    getTranslation(tooltip: HTMLElement): [number, number] 
-    {
-        const matrix = window
-            .getComputedStyle(tooltip)
-            .getPropertyValue("transform")
-            .replace('matrix(', '')
-            .replace(')', '')
-            .split(' ')
-            .map( (v: string) => parseInt(v) )
-
-        return [matrix[4], matrix[5]]
-    }
-
     mouseOver( e: any, d: [number, number, number] ) 
     {
         const { clientX, clientY } = e;
@@ -48,7 +35,7 @@ class Tooltip
     mouseOut() 
     {
         d3.select('#' + this.id)
-            .style('z-index', 0)
+            .style('z-index', -9999)
             .style("opacity", 0);
     }
 }

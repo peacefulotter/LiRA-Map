@@ -7,8 +7,6 @@ import RideDetails from "../Components/Rides/RideDetails";
 import RideCards from "../Components/Rides/RideCards";
 import Rides from "../Components/Rides/Rides";
 
-import { PathsProvider } from "../context/PathsContext";
-
 
 const Trips: FC = () => {
 
@@ -21,9 +19,7 @@ const Trips: FC = () => {
                 
                 <RideDetails  />
                 
-                <PathsProvider>
-                    <Rides />
-                </PathsProvider>
+                <Rides />
                 
             </div>
         </MetasProvider>

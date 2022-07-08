@@ -13,6 +13,7 @@ import { getMeasurements } from "../queries/measurements";
 interface ContextProps {
 	measurements: RideMeasurement[];
     setMeasurements: Dispatch<SetStateAction<RideMeasurement[]>>;
+	selectedMeasurements: RideMeasurement[];
 }
 
 const MeasurementsContext = createContext({} as ContextProps);
@@ -20,6 +21,9 @@ const MeasurementsContext = createContext({} as ContextProps);
 export const MeasurementsProvider = ({ children }: any) => {
 
 	const [ measurements, setMeasurements ] = useState<RideMeasurement[]>([])
+	const [ selectedMeasurements, setSelectedMeasurements ] = useState<RideMeasurement[]>([])
+
+	useEffect( () => setSelectedMeasurements( measurements.filter(m => m.isActive)), [measurements] )
 
 	useEffect( () => getMeasurements(setMeasurements), [] )
 
@@ -27,7 +31,8 @@ export const MeasurementsProvider = ({ children }: any) => {
 		<MeasurementsContext.Provider
 			value={{
 				measurements,
-				setMeasurements
+				setMeasurements,
+				selectedMeasurements
 			}}
 		>
 			{children}

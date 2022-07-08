@@ -25,13 +25,14 @@ interface IGraph {
     plots?: Plot[]
     palette?: Palette;
     absolute?: boolean;
+    time?: boolean;
 }
 
 const margin = {top: 20, right: 30, bottom: 70, left: 100};
 const paddingRight = 50
 const zoomGap = 0.5
 
-const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute }  ) => {
+const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute, time }  ) => {
 
     const wrapperRef = useRef(null)
     const [width, height] = useSize(wrapperRef)
@@ -79,7 +80,7 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute }  ) => {
             >
                 { (svg: SVG | undefined) => <>
                      <Gradient svg={svg} axis={axis} palette={palette} />
-                     <XAxis svg={svg} axis={axis} width={w} height={h} zoom={zoom} absolute={absolute}/>
+                     <XAxis svg={svg} axis={axis} width={w} height={h} zoom={zoom} absolute={absolute} time={time}/>
                      { plots && plots.map((p: Plot, i: number) => 
                         <Line key={'line-'+i} svg={svg} axis={axis} i={i} {...p} />) 
                     }               

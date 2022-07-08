@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react"
 import { RideMeta } from "../models/models"
-import { BoundedPath } from "../models/path"
+import { BoundedPath, Metadata } from "../models/path"
 import { PopupFunc } from "../models/popup"
 import { RideMeasurement } from "../models/properties"
-import { get, post } from "./fetch"
+import { asyncPost, get, post } from "./fetch"
 
 
 export const getRides = ( callback: Dispatch<SetStateAction<RideMeta[]>> ) => {
@@ -11,31 +11,33 @@ export const getRides = ( callback: Dispatch<SetStateAction<RideMeta[]>> ) => {
 }
 
 
-export const getRide = (
-    measurement: RideMeasurement, popup: PopupFunc,
-    tripId: string, taskId: number, 
-    callback: (dp: BoundedPath) => void
+export const getRide = async (
+    measurement: RideMeasurement, 
+    meta: Metadata, 
+    popup: PopupFunc,
 ) => {
-
     const { dbName, name, hasValue } = measurement
+    const { TripId: tripId, TaskId: taskId } = meta;
 
     console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
     
-    post( '/rides/ride', { tripId, dbName }, (boundedPath: BoundedPath) => {            
+    const { data } = await asyncPost<BoundedPath>( '/rides/ride', { tripId, dbName } )         
         
-        const { path } = boundedPath;
+    const { path } = data;
 
-        console.log("Got data for ride: ", taskId, "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
+    console.log("Got data for ride: ", taskId, "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
 
-        if ( path.length === 0 )
-            return popup( {
-                icon: "warning",
-                title: `This trip doesn't contain data for ${name}`,
-                footer: `TripId: ${tripId} | TaskId: ${taskId}`,
-                toast: true
-            } );
+    if ( path.length === 0 )
+    {
+        popup( {
+            icon: "warning",
+            title: `This trip doesn't contain data for ${name}`,
+            footer: `TripId: ${tripId} | TaskId: ${taskId}`,
+            toast: true
+        } );
 
-                    
-        callback( boundedPath )
-    })
+        return undefined;
+    }
+                
+    return data;
 }

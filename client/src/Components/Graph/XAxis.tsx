@@ -6,7 +6,7 @@ import { useGraph } from "../../context/GraphContext";
 import { ReactAxis } from '../../assets/graph/types';
 
 
-const XAxis: ReactAxis = ( { svg, axis, width, height, zoom, absolute } ) => {
+const XAxis: ReactAxis = ( { svg, axis, width, height, zoom, absolute, time } ) => {
 
     const { minX, maxX } = useGraph()
 
@@ -15,7 +15,8 @@ const XAxis: ReactAxis = ( { svg, axis, width, height, zoom, absolute } ) => {
 
         const d3Axis = d3
             .axisBottom(axis[0])
-            .tickFormat((d: d3.NumberValue, i: number) => {
+            .tickFormat( (d: d3.NumberValue) => {
+                if ( !time ) return d.toString();
                 const val = absolute ? (d as number) - minX : minX
                 const date = new Date(val);
                 const h = date.getHours() - 1;
