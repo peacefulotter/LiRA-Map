@@ -15,7 +15,7 @@ function LatLngHotline<T>( {data, getLat, getLng, getVal, options, eventHandlers
         data={data}
         getLat={getLat}
         getLng={getLng}
-        getVal={getVal}
+        getVal={getVal} 
         options={options}
         eventHandlers={handlers} />
 }
