@@ -2,18 +2,12 @@
 import { LatLngBounds, LeafletEventHandlerFnMap } from 'leaflet'
 import { LeafletEvent } from 'Leaflet.MultiOptionsPolyline'
 import { Color, Palette } from 'react-leaflet-hotline'
-import { PathProperties, PointProperties } from '../../models/properties'
 import { EventHandlers } from '../../models/renderers'
 
 export const toMapBounds = (b: LatLngBounds) => {
     const { lat: maxLat, lng: minLng } = b.getNorthWest()
     const { lat: minLat, lng: maxLng } = b.getSouthEast()
     return { minLat: minLat, maxLat: maxLat, minLng: minLng, maxLng: maxLng }
-}
-
-
-export const fixProperties = (pathProperties: PathProperties, pointProperties?: PointProperties) => {
-    return { ...pathProperties, ...pointProperties }
 }
 
 const interpolateColors = (palette: Palette, i: number, x: number): Color => {

@@ -1,20 +1,17 @@
 import { Palette } from "react-leaflet-hotline";
 import { RendererName } from "./renderers";
 
-// If an attribute is defined for a point, it overwrites the properties for the path
-export interface PointProperties {
-	// Color of a point or the entire path 
+
+// Rendering properties of an entire Path
+export interface PathProperties {
+	// Color of a path if a palette is not used 
 	color?: string;
-	// Radius or largeness of a point or the entire path
+	// Radius of a point or a line
 	width?: number;
 	// Weight (boldness) of a point or the entire path
 	weight?: number;
-	// Opacity (between 0 and 1) of a point or the entire path
+	// Opacity (between 0 and 1) of the path
 	opacity?: number;
-}
-
-// Rendering properties of an entire Path
-export interface PathProperties extends PointProperties {
 	// The name of the renderer to use - see ./renderers for the list of names
 	rendererName: RendererName;
 	// Weight can be multiplied by the dilatationFactor

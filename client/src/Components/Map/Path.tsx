@@ -14,7 +14,10 @@ const Path: FC<PathProps> = ( { path, properties, onClick } ) => {
 
     const FCRenderer = renderers(properties.rendererName) as Renderer<PointData>
 
-    const options: Required<RendererOptions> = { ...RENDERER_OPTIONS, min: minY, max: maxY, ...properties }
+    const options: Required<RendererOptions> = { ...RENDERER_OPTIONS, ...properties, min: minY, max: maxY }
+
+    console.log(options.palette);
+    
 
     return (
         <>

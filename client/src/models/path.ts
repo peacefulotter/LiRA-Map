@@ -1,11 +1,10 @@
 // Represents a point containing (lat, lng) coordinates, 
 import { LatLng } from "./models";
-import { MeasProperties, PathProperties, PointProperties } from "./properties";
+import { MeasProperties, PathProperties } from "./properties";
 import { PathEventHandler } from "./renderers";
 
 // rendering properties, and optionally, a value and some metadata (like timestamp)
 export interface PointData extends LatLng {
-	properties?: PointProperties;
 	value?: number;   	   			
 	metadata?: any;
 }

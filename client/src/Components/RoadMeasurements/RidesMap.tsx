@@ -14,11 +14,9 @@ interface IRidesMap {
     paths: MeasMetaPath;
     selectedMetas: RideMeta[];
     selectedMeasurements: ActiveMeasProperties[];
-    palette: Palette;
-    setPalette: (palette: Palette) => void;
 }
 
-const RidesMap: FC<IRidesMap> = ( { paths, selectedMetas, selectedMeasurements, palette, setPalette } ) => {
+const RidesMap: FC<IRidesMap> = ( { paths, selectedMetas, selectedMeasurements } ) => {
 
     const memoPaths = useMemo( () => {
         const temp: { meas: MeasProperties, meta: RideMeta, bp: BoundedPath }[] = []
@@ -41,7 +39,7 @@ const RidesMap: FC<IRidesMap> = ( { paths, selectedMetas, selectedMeasurements, 
                 <MetadataPath 
                     key={`ride-mp-${meta.TaskId}-${meas.name}`} 
                     path={bp.path} 
-                    properties={{...meas, palette}} 
+                    properties={meas} 
                     metadata={meta} /> 
             ) }
         </MapWrapper>

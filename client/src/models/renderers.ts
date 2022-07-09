@@ -3,7 +3,7 @@ import { Hotline, Palette } from "react-leaflet-hotline";
 import { LeafletEvent, LeafletEventHandlerFnMap } from 'leaflet';
 import { LatLng } from "./models";
 import { Path, Bounds } from "./path";
-import { PathProperties, PointProperties, RendererOptions } from "./properties";
+import { PathProperties, RendererOptions } from "./properties";
 import { HEATMAP_OPTIONS, RENDERER_PALETTE } from "../Components/Map/constants";
 
 export enum RendererName {
@@ -51,11 +51,4 @@ export interface PathRenderer {
     properties: PathProperties;
     bounds?: Bounds;
     onClick?: PathEventHandler;
-}
-
-export interface PointProps extends LatLng {
-	pointProperties: PointProperties | undefined;
-	pathProperties: PathProperties;
-	onClick: PathEventHandler;
-	i: number;
 }

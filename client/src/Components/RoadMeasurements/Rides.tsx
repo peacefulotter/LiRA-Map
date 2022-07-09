@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Palette } from "react-leaflet-hotline";
 
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { GraphProvider } from "../../context/GraphContext";
@@ -13,18 +12,15 @@ import { GraphData } from "../../assets/graph/types";
 
 import { getRide } from "../../queries/rides";
 
-import { RENDERER_PALETTE } from "../Map/constants";
 import Graph from "../Graph/Graph";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
-import PaletteEditor from "../Palette/PaletteEditor";
 
 const Rides: FC = () => {
     
     const { selectedMetas } = useMetasCtx()
     const { selectedMeasurements } = useMeasurementsCtx()
 
-    const [ palette, setPalette ] = useState<Palette>(RENDERER_PALETTE)
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
 
     const popup = usePopup()
@@ -68,9 +64,7 @@ const Rides: FC = () => {
                 <RidesMap
                     paths={paths} 
                     selectedMetas={selectedMetas} 
-                    selectedMeasurements={selectedMeasurements} 
-                    palette={palette}
-                    setPalette={setPalette} />
+                    selectedMeasurements={selectedMeasurements}  />
 
                 { selectedMeasurements.map( (measurement: ActiveMeasProperties, i: number) => measurement.hasValue && 
                     <Graph 
@@ -79,7 +73,7 @@ const Rides: FC = () => {
                         labelY={measurement.name}
                         absolute={true}
                         time={true}
-                        palette={palette}
+                        palette={measurement.palette}
                         plots={ Object.entries(paths[measurement.name] || {})
                             .map( ([TaskId, bp], j) => {
                                 const { path, bounds } = bp;
