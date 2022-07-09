@@ -11,8 +11,6 @@ export interface PointProperties {
 	weight?: number;
 	// Opacity (between 0 and 1) of a point or the entire path
 	opacity?: number;
-	// Outline of a point or an entire path
-	stroke?: boolean;
 }
 
 // Rendering properties of an entire Path
@@ -33,7 +31,7 @@ export interface RendererOptions extends PathProperties {
 	max?: number;
 }
 
-export interface Measurement extends PathProperties {
+export interface MeasProperties extends PathProperties {
 	// measurement as it is in the database
 	dbName: string;
 	// human friendly name of the measurement 
@@ -42,6 +40,6 @@ export interface Measurement extends PathProperties {
 	hasValue?: boolean;
 }
 
-export interface RideMeasurement extends Measurement {
+export interface ActiveMeasProperties extends MeasProperties {
 	isActive: boolean; // true if measurement is displayed, false otherwise
 }

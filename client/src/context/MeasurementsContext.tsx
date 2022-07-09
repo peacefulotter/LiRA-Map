@@ -7,21 +7,21 @@ import {
 	useState,
 } from "react";
 
-import { RideMeasurement } from "../models/properties";
+import { ActiveMeasProperties } from "../models/properties";
 import { getMeasurements } from "../queries/measurements";
 
 interface ContextProps {
-	measurements: RideMeasurement[];
-    setMeasurements: Dispatch<SetStateAction<RideMeasurement[]>>;
-	selectedMeasurements: RideMeasurement[];
+	measurements: ActiveMeasProperties[];
+    setMeasurements: Dispatch<SetStateAction<ActiveMeasProperties[]>>;
+	selectedMeasurements: ActiveMeasProperties[];
 }
 
 const MeasurementsContext = createContext({} as ContextProps);
 
 export const MeasurementsProvider = ({ children }: any) => {
 
-	const [ measurements, setMeasurements ] = useState<RideMeasurement[]>([])
-	const [ selectedMeasurements, setSelectedMeasurements ] = useState<RideMeasurement[]>([])
+	const [ measurements, setMeasurements ] = useState<ActiveMeasProperties[]>([])
+	const [ selectedMeasurements, setSelectedMeasurements ] = useState<ActiveMeasProperties[]>([])
 
 	useEffect( () => setSelectedMeasurements( measurements.filter(m => m.isActive)), [measurements] )
 

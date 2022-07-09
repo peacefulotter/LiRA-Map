@@ -1,9 +1,9 @@
-import { Measurement, RideMeasurement } from "../models/properties";
+import { MeasProperties, ActiveMeasProperties } from "../models/properties";
 import { get, put } from "./fetch";
 
 
-export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeasurement[]>> ) => {
-    get('/measurements', (data: Measurement[]) => {
+export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<ActiveMeasProperties[]>> ) => {
+    get('/measurements', (data: MeasProperties[]) => {
         console.log(data);
         callback( data.map( meas => { 
             return { ...meas, isActive: false } 
@@ -11,10 +11,10 @@ export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<R
     })
 }
 
-export const addMeasurement = (measurement: Measurement) => {
+export const addMeasurement = (measurement: MeasProperties) => {
 	put('/measurements/add', measurement)	
 }
 
-export const editMeasurement = (measurement: Measurement, index: number) => {
+export const editMeasurement = (measurement: MeasProperties, index: number) => {
 	put('/measurements/edit', { measurement, index } )	
 }

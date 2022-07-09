@@ -7,19 +7,19 @@ import { Palette } from "react-leaflet-hotline";
 import '../../css/palette.css'
 
 interface IPaletteEditor {
+    width: number | undefined;
     defaultPalette?: Palette;
     cursorOptions?: CursorOptions;
     onChange?: (palette: Palette) => void; 
 }
 
-const PaletteEditor: FC<IPaletteEditor> = ( { defaultPalette, cursorOptions, onChange } ) => {
+const PaletteEditor: FC<IPaletteEditor> = ( { width, defaultPalette, cursorOptions, onChange } ) => {
 
     const [show, setShow] = useState<boolean>(false)
 
-    const map = useMap()
-    const { x: width } = map.getSize();
-
     const toggleAppear = () => setShow(prev => !prev)
+
+    if ( width === undefined ) return null;
 
     return (
         <div className={`palette-wrapper ${show ? 'palette-show' : ''}`} style={{width: `${width}px`}} >

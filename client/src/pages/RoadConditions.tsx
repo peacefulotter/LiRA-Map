@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { Palette } from "react-leaflet-hotline";
 
 import { RENDERER_PALETTE } from "../Components/Map/constants";
@@ -23,6 +23,9 @@ const RoadConditions = () => {
     const [palette, setPalette] = useState<Palette>([])
     const [plot, setPlot] = useState<Plot>()
 
+    const ref = useRef<HTMLDivElement>(null)
+    const [width, setWidth] = useState<number>()
+
     const type = {
         name: 'IRI',
         min: 0,
@@ -32,34 +35,37 @@ const RoadConditions = () => {
     }
 
     const onClick = (way_id: string, way_length: number) => {
-
         getConditions(way_id, type.name, (wc: Condition[]) => {
-
             const bounds: Bounds = {
                 minX: 0,
                 maxX: way_length,
                 minY: type.min,
                 maxY: type.max,
             }
-    
             const data: GraphData = wc.map((p: Condition, i: number) => [p.way_dist * way_length, p.value, i])
             const label = way_id
-
             setPlot( { bounds, data, label } )
         })
     }
+
+    useEffect( () => {
+        if ( ref.current === null ) return;
+        const { width: w } = ref.current.getBoundingClientRect()
+        setWidth(w)
+    }, [ref])
 
 
     return (
         <GraphProvider>
         <div className="ml-wrapper">
-            <div className="ml-map">
-                <MapWrapper>
-                    <PaletteEditor 
-                        defaultPalette={RENDERER_PALETTE}
-                        cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
-                        onChange={setPalette} />
+            <div className="ml-map" ref={ref}>
+                <PaletteEditor 
+                    defaultPalette={RENDERER_PALETTE}
+                    width={width}
+                    cursorOptions={{scale: type.max, grid: type.grid, samples: type.samples}}
+                    onChange={setPalette} />
 
+                <MapWrapper>
                     <Ways palette={palette} type={type.name} onClick={onClick}/>
                 </MapWrapper>
             </div>

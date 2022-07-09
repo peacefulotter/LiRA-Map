@@ -13,18 +13,20 @@ export interface IFilter {
 
 const Filter: FC<IFilter> = ( { setTypes } ) => {
 
-    const popup = useSegPopup({
-        dataType: undefined,
-        aggrType: undefined,
-        direction : undefined
-    })
+    // const popup = useSegPopup({
+    //     dataType: undefined,
+    //     aggrType: undefined,
+    //     direction : undefined
+    // })
 
-    const firePopup = () => popup.fire( (types: SegTypes) => {
-        console.log(types);
-        setTypes(types)
-    } )
+    // const firePopup = () => popup.fire( (types: SegTypes) => {
+    //     console.log(types);
+    //     setTypes(types)
+    // } )
 
-    return <FaFilter onClick={firePopup} className="toolbar-button" />
+    // return <FaFilter onClick={firePopup} className="toolbar-button" />
+
+    return null;
 
 }
 

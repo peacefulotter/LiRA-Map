@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react"
 import { RideMeta } from "../models/models"
 import { BoundedPath, Metadata } from "../models/path"
 import { PopupFunc } from "../models/popup"
-import { RideMeasurement } from "../models/properties"
+import { ActiveMeasProperties } from "../models/properties"
 import { asyncPost, get, post } from "./fetch"
 
 
@@ -12,7 +12,7 @@ export const getRides = ( callback: Dispatch<SetStateAction<RideMeta[]>> ) => {
 
 
 export const getRide = async (
-    measurement: RideMeasurement, 
+    measurement: ActiveMeasProperties, 
     meta: Metadata, 
     popup: PopupFunc,
 ) => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 interface Props {
 	html: JSX.Element;
-  	onClick: (isChecked: boolean, e: any) => void;
+  	onClick: (isChecked: boolean, e: React.MouseEvent<HTMLDivElement>) => void;
 	className?: string;
 	forceState?: boolean;
 	style?: React.CSSProperties;

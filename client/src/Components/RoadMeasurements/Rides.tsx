@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Palette } from "react-leaflet-hotline";
 
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
@@ -6,7 +6,7 @@ import { GraphProvider } from "../../context/GraphContext";
 import { useMetasCtx } from "../../context/MetasContext";
 import { ZoomProvider } from "../../context/ZoomContext";
 
-import { RideMeasurement } from "../../models/properties";
+import { ActiveMeasProperties } from "../../models/properties";
 import { MeasMetaPath, PointData } from "../../models/path";
 
 import { GraphData } from "../../assets/graph/types";
@@ -16,17 +16,18 @@ import { getRide } from "../../queries/rides";
 import { RENDERER_PALETTE } from "../Map/constants";
 import Graph from "../Graph/Graph";
 import RidesMap from "./RidesMap";
-import usePopup from "../Popup";
+import usePopup from "../createPopup";
+import PaletteEditor from "../Palette/PaletteEditor";
 
 const Rides: FC = () => {
     
     const { selectedMetas } = useMetasCtx()
     const { selectedMeasurements } = useMeasurementsCtx()
 
-    const popup = usePopup(undefined).fire
-
     const [ palette, setPalette ] = useState<Palette>(RENDERER_PALETTE)
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
+
+    const popup = usePopup()
 
     useEffect( () => {
 
@@ -71,7 +72,7 @@ const Rides: FC = () => {
                     palette={palette}
                     setPalette={setPalette} />
 
-                { selectedMeasurements.map( (measurement: RideMeasurement, i: number) => measurement.hasValue && 
+                { selectedMeasurements.map( (measurement: ActiveMeasProperties, i: number) => measurement.hasValue && 
                     <Graph 
                         key={`graph-${i}`}
                         labelX="Time (absolute)" 

@@ -1,6 +1,6 @@
 // Represents a point containing (lat, lng) coordinates, 
 import { LatLng } from "./models";
-import { Measurement, PathProperties, PointProperties } from "./properties";
+import { MeasProperties, PathProperties, PointProperties } from "./properties";
 import { PathEventHandler } from "./renderers";
 
 // rendering properties, and optionally, a value and some metadata (like timestamp)
@@ -43,7 +43,7 @@ export interface BoundedPath {
 // This interface is used as a type for server's response
 // for instance, JSON files follow this format
 export interface JSONProps extends BoundedPath {
-	properties: Measurement;
+	properties: MeasProperties;
 	metadata?: Metadata;
 }
 

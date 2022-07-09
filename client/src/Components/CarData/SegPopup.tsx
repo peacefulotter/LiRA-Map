@@ -4,7 +4,7 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
 import { SegTypes } from "../../pages/CarData";
-import usePopup from "../Popup";
+import usePopup from "../createPopup";
 import Checkbox from "../Checkbox";
 
 import { GetAggregationTypes, GetDataTypes } from "../../queries/DataRequests";
@@ -83,23 +83,23 @@ const PopupWrapper: FC<IPopupWrapper> = ( { state, setState } ) => {
 
 const useSegPopup = (types: SegTypes) => {
 
-    const popup = usePopup(types)
+    // const popup = usePopup(types)
 
-    return { fire: ( callback: (opt: SegTypes) => void ) => {
+    // return { fire: ( callback: (opt: SegTypes) => void ) => {
 
-        popup.fire( {
-            titleText: 'Please choose the filters you wish to use',
-            showCancelButton: true,
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Add',
-            html: <PopupWrapper state={popup.state} setState={popup.setState}/>,
-        } )
-        .then( (result: any) => {
-            console.log(result, popup.state);
-            result.isConfirmed && callback(popup.state)
-        } )
+    //     popup.fire( {
+    //         titleText: 'Please choose the filters you wish to use',
+    //         showCancelButton: true,
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Add',
+    //         html: <PopupWrapper state={popup.state} setState={popup.setState}/>,
+    //     } )
+    //     .then( (result: any) => {
+    //         console.log(result, popup.state);
+    //         result.isConfirmed && callback(popup.state)
+    //     } )
 
-    } }
+    // } }
 }
 
 export default useSegPopup;
