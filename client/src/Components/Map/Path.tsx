@@ -16,9 +16,6 @@ const Path: FC<PathProps> = ( { path, properties, onClick } ) => {
 
     const options: Required<RendererOptions> = { ...RENDERER_OPTIONS, ...properties, min: minY, max: maxY }
 
-    console.log(options.palette);
-    
-
     return (
         <>
         { path.length !== 0 && FCRenderer !== undefined

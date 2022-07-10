@@ -8,7 +8,7 @@ import RideCards from "../Components/RoadMeasurements/RideCards";
 import Rides from "../Components/RoadMeasurements/Rides";
 
 
-const Trips: FC = () => {
+const RoadMeasurements = () => {
 
     return (
         <MeasurementsProvider>
@@ -27,4 +27,4 @@ const Trips: FC = () => {
   )
 }
 
-export default Trips;
+export default RoadMeasurements;

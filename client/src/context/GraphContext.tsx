@@ -16,8 +16,8 @@ interface ContextProps {
 	minY: number;
 	maxY: number;
 
-    addMinMax: AddMinMaxFunc;
-	remMinMax: RemMinMaxFunc;
+    addBounds: AddMinMaxFunc;
+	remBounds: RemMinMaxFunc;
 
 	dotHover: DotHover | undefined;
 	setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
@@ -27,16 +27,16 @@ const GraphContext = createContext({} as ContextProps);
 
 export const GraphProvider = ({ children }: any) => {
 
-	const [minMaxAxis, addMinMax, remMinMax] = useMinMaxAxis()
+	const { bounds, addBounds, remBounds } = useMinMaxAxis()
 	const [dotHover, setDotHover] = useState<DotHover>()
 
-	const [minX, maxX, minY, maxY] = minMaxAxis
+	const { minX, maxX, minY, maxY } = bounds;
 
 	return (
 		<GraphContext.Provider
 			value={{
 				minX, maxX, minY, maxY,
-				addMinMax, remMinMax,
+				addBounds, remBounds,
 				dotHover, setDotHover
 			}}
 		>

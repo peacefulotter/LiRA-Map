@@ -4,8 +4,6 @@ import { LatLngBounds } from "leaflet";
 
 import useMapBounds from "./Hooks/useMapBounds";
 
-import { useZoom } from "../../context/ZoomContext";
-
 interface IMapBounds {
     onChange: (bounds: LatLngBounds) => Promise<void>;
     padding?: number;

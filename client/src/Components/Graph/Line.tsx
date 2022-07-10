@@ -19,7 +19,7 @@ interface ILine {
 
 const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
 
-    const { addMinMax, remMinMax, setDotHover } = useGraph()
+    const { addBounds, remBounds, setDotHover } = useGraph()
 
     useEffect( () => {
 
@@ -32,7 +32,9 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
             maxY: Math.max(...data.map( d => d[1] )),
         }, bounds || {} )
 
-        addMinMax(label, _bounds)
+        console.log(_bounds);
+
+        addBounds(label, _bounds)
 
         const onHover = (d: DotHover | undefined) => d === undefined 
             ? setDotHover( undefined )
@@ -45,7 +47,7 @@ const Line: FC<ILine> = ( { svg, axis, data, bounds, label, i } ) => {
                 return console.log('ERROR, TRYING TO REMOVE GRAPH DATA WHILE SVG = undefined');
 
             line.rem()
-            remMinMax(label)
+            remBounds(label)
         }
 
     }, [svg, axis, data, label, bounds, i, setDotHover])

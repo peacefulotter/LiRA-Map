@@ -41,7 +41,7 @@ export const RENDERER_MEAS_PROPERTIES: Required<ActiveMeasProperties> = {
     ...RENDERER_OPTIONS,
     dbName: '',
     name: '',
-    hasValue: false,
+    hasValue: true,
     isActive: false,
 }
 

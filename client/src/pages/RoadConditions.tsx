@@ -42,7 +42,7 @@ const RoadConditions = () => {
                 minY: type.min,
                 maxY: type.max,
             }
-            const data: GraphData = wc.map((p: Condition, i: number) => [p.way_dist * way_length, p.value, i])
+            const data: GraphData = wc.map( p => [p.way_dist * way_length, p.value] )
             const label = way_id
             setPlot( { bounds, data, label } )
         })

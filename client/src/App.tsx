@@ -3,33 +3,28 @@ import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 
 import Navbar from './Components/Navbar'
 import RoadMeasurements from "./pages/RoadMeasurements";
-import CarData from "./pages/CarData";
 import RoadConditions from "./pages/RoadConditions";
 import Altitude from "./pages/Altitude";
+import CarData from "./pages/CarData";
 import Login from "./pages/Login";
-
-import { ZoomProvider } from "./context/ZoomContext";
 
 import "./App.css";
 
 const App: FC = () => {
-
-    // TODO: Move ZoomProvider => to ML ?
-
     return (
         <div className="App">
             <Router>
                 <Navbar />
                 <Switch>
-                    <Route exact path="/cardata" component={() => <ZoomProvider><CarData/></ZoomProvider>} />
-                    <Route exact path="/rides" component={() => <RoadMeasurements />} />
+                    <Route exact path="/cardata" component={CarData} />
+                    <Route exact path="/rides" component={RoadMeasurements} />
                     <Route 
                         exact path="/road_conditions"    
-                        component={() => <ZoomProvider><RoadConditions/></ZoomProvider>} 
+                        component={RoadConditions} 
                     />
                     <Route 
                         exact path="/altitude"    
-                        component={() => <ZoomProvider><Altitude/></ZoomProvider>} 
+                        component={Altitude} 
                     />
                     <Route exact path="/login" component={() => <Login />} />
                 </Switch>

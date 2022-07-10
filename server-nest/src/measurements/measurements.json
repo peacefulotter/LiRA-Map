@@ -27,5 +27,12 @@
         "name": "Traction Instant Consumption",
         "color": "#00d084",
         "hasValue": true
+    },
+    {
+        "rendererName": "hotline",
+        "dbName": "obd.rpm_fl",
+        "name": "RPM Frontleft",
+        "color": "#00d084",
+        "hasValue": true
     }
 ]

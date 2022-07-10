@@ -1,6 +1,6 @@
 
 import { Selection } from "d3"
-import { Dispatch, FC, SetStateAction } from "react"
+import { FC } from "react"
 import { Color } from "react-leaflet-hotline";
 import { Bounds } from "../../models/path";
 
@@ -23,7 +23,8 @@ export type Axis = d3.ScaleLinear<number, number, never>
 export type GraphAxis = [Axis, Axis]
 
 // Data format
-export type GraphData =  [number, number, number][]
+export type GraphPoint = [number, number]
+export type GraphData = GraphPoint[]
 export interface Plot {
     data: GraphData
     bounds?: Bounds;
@@ -51,9 +52,9 @@ export interface DotsOptions {
 export type Gradient = Selection<SVGStopElement, Color, SVGLinearGradientElement, unknown>
 
 // MinMax
-export type MinMaxAxis = [number, number, number, number]
+export type MinMax = [number, number]
 export type AddMinMaxFunc = (label: string, bounds: Required<Bounds>) => void
 export type RemMinMaxFunc = (label: string) => void
 
 // Callback
-export type D3Callback = (event: any, d: [number, number, number]) => void
+export type D3Callback = (event: any, d: GraphPoint) => void

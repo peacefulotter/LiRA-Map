@@ -1,12 +1,13 @@
 
 
 import * as d3 from "d3";
+import { GraphPoint } from "./types";
 
 class Tooltip 
 {
     private id = "tooltip";
 
-    mouseOver( e: any, d: [number, number, number] ) 
+    mouseOver( e: any, d: GraphPoint ) 
     {
         const { clientX, clientY } = e;
         const xVal = Math.round(d[0])

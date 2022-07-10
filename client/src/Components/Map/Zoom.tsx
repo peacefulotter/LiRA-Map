@@ -1,19 +1,10 @@
 
-import { useEffect } from "react"
-import { useMapEvents, ZoomControl } from "react-leaflet"
-import { useZoom } from "../../context/ZoomContext"
+import { ZoomControl } from "react-leaflet"
+import useZoom from "./Hooks/useZoom"
 
 const Zoom = () => {
 
-    const { zoom, setZoom } = useZoom()
-
-    const update = () => setZoom(map.getZoom())
-
-    const map = useMapEvents({
-        zoom: update
-    })
-
-    useEffect( update, [] )
+    const zoom = useZoom()
    
     return (
         <>

@@ -14,7 +14,7 @@ export interface SegTypes {
     direction: number | undefined;
 }
 
-const CarData: FC = () => {
+const CarData = () => {
 
     const [boundaries, setBoundaries] = useState<LatLng[]>([
         new LatLng(55.523966596348956, 12.030029296875002),

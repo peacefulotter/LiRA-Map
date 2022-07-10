@@ -1,12 +1,11 @@
 
 import { FC, useEffect, useState } from 'react';
 import { TRGB } from 'react-gradient-hook/lib/types';
-import { Hotline, HotlineOptions } from 'react-leaflet-hotline';
+import { HotlineOptions } from 'react-leaflet-hotline';
 import { useGraph } from '../../context/GraphContext';
-import { useZoom } from '../../context/ZoomContext';
-import { Node, WaysConditions } from '../../models/path';
+import { WaysConditions } from '../../models/path';
 import { getWaysConditions } from '../../queries/conditions';
-import useMapBounds from '../Map/Hooks/useMapBounds';
+import useZoom from '../Map/Hooks/useZoom';
 import DistHotline from '../Map/Renderers/DistHotline';
 
 interface IWays {
@@ -17,7 +16,7 @@ interface IWays {
 
 const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
     
-    const { zoom } = useZoom();
+    const zoom = useZoom();
     const { minY, maxY } = useGraph()
 
     const [ways, setWays] = useState<WaysConditions>()
@@ -28,7 +27,7 @@ const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
     }, [palette, minY, maxY])
 
     useEffect( () => {
-        if ( zoom === 0 ) return;
+        if ( zoom === undefined ) return;
         const z = Math.max(0, zoom - 12)
         getWaysConditions(type, z, (data: WaysConditions) => {
             console.log(data)

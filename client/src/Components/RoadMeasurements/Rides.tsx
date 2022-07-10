@@ -1,9 +1,8 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { GraphProvider } from "../../context/GraphContext";
 import { useMetasCtx } from "../../context/MetasContext";
-import { ZoomProvider } from "../../context/ZoomContext";
 
 import { ActiveMeasProperties } from "../../models/properties";
 import { MeasMetaPath, PointData } from "../../models/path";
@@ -57,7 +56,6 @@ const Rides: FC = () => {
     }, [selectedMetas, selectedMeasurements] )
 
     return (
-        <ZoomProvider>
         <GraphProvider>
             <div className="map-container">
 
@@ -66,21 +64,18 @@ const Rides: FC = () => {
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                { selectedMeasurements.map( (measurement: ActiveMeasProperties, i: number) => measurement.hasValue && 
+                { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue && 
                     <Graph 
                         key={`graph-${i}`}
                         labelX="Time (absolute)" 
-                        labelY={measurement.name}
+                        labelY={name}
                         absolute={true}
                         time={true}
-                        palette={measurement.palette}
-                        plots={ Object.entries(paths[measurement.name] || {})
+                        palette={palette}
+                        plots={ Object.entries(paths[name] || {})
                             .map( ([TaskId, bp], j) => {
                                 const { path, bounds } = bp;
-
-                                const data: GraphData = path.map( (p: PointData, k: number) => 
-                                    [p.metadata.timestamp, p.value || 0, k]
-                                )
+                                const data: GraphData = path.map( p => [p.metadata.timestamp, p.value || 0] )
                                 return { data, bounds, label: 'r-' + TaskId, j }
                             } ) 
                         }
@@ -88,7 +83,6 @@ const Rides: FC = () => {
                 ) }
             </div>
         </GraphProvider>
-        </ZoomProvider>
   )
 }
 
