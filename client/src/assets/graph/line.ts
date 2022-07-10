@@ -18,8 +18,10 @@ export default class GLine
         label: string,
         i: number,
         data: GraphData, 
-        axis: [Axis, Axis],
-        onHover: (d: DotHover | undefined) => void
+        xAxis: Axis,
+        yAxis: Axis,
+        onHover: (d: DotHover | undefined) => void,
+        time: boolean | undefined
     ) {
         const color = getColor(0, i)
         const hoverColor = "url(#line-gradient)"
@@ -33,11 +35,11 @@ export default class GLine
         const hitboxOpts: PathOptions = { stroke: "transparent", strokeWidth: 30 }
         const hoverHitboxOpts: PathOptions = { stroke: "transparent", strokeWidth: 30 }
         
-        const path = new Path(svg, label, data, axis, pathOpts, hoverPathOpts )
-        const hitbox = new Path(svg, "hitbox", data, axis, hitboxOpts, hoverHitboxOpts )
-        const dots = new Dots(svg, label, data, axis, dotsOpts, hoverDotsOpts )
+        const path = new Path(svg, label, data, [xAxis, yAxis], pathOpts, hoverPathOpts )
+        const hitbox = new Path(svg, "hitbox", data, [xAxis, yAxis], hitboxOpts, hoverHitboxOpts )
+        const dots = new Dots(svg, label, data, [xAxis, yAxis], dotsOpts, hoverDotsOpts )
 
-        const tooltip = new Tooltip();
+        const tooltip = new Tooltip(time);
 
         hitbox.addMouseOver( () => {
             path.mouseOver();

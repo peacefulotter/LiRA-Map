@@ -2,10 +2,17 @@
 
 import * as d3 from "d3";
 import { GraphPoint } from "./types";
+import { valToTime } from "./utils";
 
 class Tooltip 
 {
     private id = "tooltip";
+    private time: boolean | undefined;
+
+    constructor(time: boolean | undefined)
+    {
+        this.time = time;
+    }
 
     mouseOver( e: any, d: GraphPoint ) 
     {
@@ -19,10 +26,12 @@ class Tooltip
         const tX = Math.max(0, Math.min(clientX - width / 2, window.innerWidth - width))
         const tY = clientY - height * 1.5;
 
+        const x = this.time ? valToTime(xVal) : xVal;
+
         d3.select('#' + this.id)
             .html(`
                 <div>
-                    <b>x:</b> ${xVal}<br/>
+                    <b>x:</b> ${x}<br/>
                 </div>
                 <div>
                     <b>y:</b> ${yVal}

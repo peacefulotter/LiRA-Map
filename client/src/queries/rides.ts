@@ -27,9 +27,6 @@ export const getRide = async (
 
     console.log("Got data for ride: ", taskId, "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
 
-    console.log(path);
-    
-
     if ( path.length === 0 )
     {
         popup( {

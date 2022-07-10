@@ -7,7 +7,7 @@ import { RENDERER_PALETTE } from "../Map/constants";
 
 export interface IGradient {
     svg: SVG | undefined;
-    axis: [Axis, Axis] | undefined;
+    axis: Axis | undefined;
     palette: Palette | undefined;
 }
 
@@ -28,9 +28,9 @@ const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
             .attr("id", gradientId)
             .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", 0)
-            .attr("y1", axis[1](minY)) 
+            .attr("y1", axis(minY)) 
             .attr("x2", 0)
-            .attr("y2", axis[1](maxY))
+            .attr("y2", axis(maxY))
             .selectAll("stop")
             .data(p)
             .enter().append("stop")

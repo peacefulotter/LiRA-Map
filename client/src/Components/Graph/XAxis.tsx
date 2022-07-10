@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { useGraph } from "../../context/GraphContext";
 import { ReactAxis } from '../../assets/graph/types';
+import { valToTime } from '../../assets/graph/utils';
 
 
 const XAxis: ReactAxis = ( { svg, axis, width, height, zoom, absolute, time } ) => {
@@ -14,15 +15,11 @@ const XAxis: ReactAxis = ( { svg, axis, width, height, zoom, absolute, time } ) 
         if ( svg === undefined || axis === undefined ) return;
 
         const d3Axis = d3
-            .axisBottom(axis[0])
+            .axisBottom(axis)
             .tickFormat( (d: d3.NumberValue) => {
                 if ( !time ) return d.toString();
                 const val = absolute ? (d as number) - minX : minX
-                const date = new Date(val);
-                const h = date.getHours() - 1;
-                const m = date.getMinutes();
-                const s = date.getSeconds();
-                return `${h}:${m}:${s}`
+                return valToTime(val)
             } )
             .ticks(10 * zoom)
         

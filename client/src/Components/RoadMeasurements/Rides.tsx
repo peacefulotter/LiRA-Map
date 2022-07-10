@@ -7,7 +7,7 @@ import { useMetasCtx } from "../../context/MetasContext";
 import { ActiveMeasProperties } from "../../models/properties";
 import { MeasMetaPath, PointData } from "../../models/path";
 
-import { GraphData } from "../../assets/graph/types";
+import { GraphData, GraphPoint } from "../../assets/graph/types";
 
 import { getRide } from "../../queries/rides";
 
@@ -67,7 +67,7 @@ const Rides: FC = () => {
                 { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue && 
                     <Graph 
                         key={`graph-${i}`}
-                        labelX="Time (absolute)" 
+                        labelX="Time (h:m:s)" 
                         labelY={name}
                         absolute={true}
                         time={true}
@@ -75,7 +75,10 @@ const Rides: FC = () => {
                         plots={ Object.entries(paths[name] || {})
                             .map( ([TaskId, bp], j) => {
                                 const { path, bounds } = bp;
-                                const data: GraphData = path.map( p => [p.metadata.timestamp, p.value || 0] )
+                                const x = (p: PointData) => new Date(p.metadata.timestamp).getTime()
+                                const data: GraphData = path
+                                    .map( p => [x(p), p.value || 0] as GraphPoint )
+                                    .sort( ([x1, y1], [x2, y2]) => (x1 < x2) ? -1 : (x1 === x2) ? 0 : 1 )
                                 return { data, bounds, label: 'r-' + TaskId, j }
                             } ) 
                         }

@@ -16,17 +16,21 @@ const App: FC = () => {
             <Router>
                 <Navbar />
                 <Switch>
-                    <Route exact path="/cardata" component={CarData} />
-                    <Route exact path="/rides" component={RoadMeasurements} />
+                    <Route 
+                        exact path="/cardata" 
+                        component={CarData} />
+                    <Route 
+                        exact path="/rides" 
+                        component={RoadMeasurements} />
                     <Route 
                         exact path="/road_conditions"    
-                        component={RoadConditions} 
-                    />
+                        component={RoadConditions} />
                     <Route 
                         exact path="/altitude"    
-                        component={Altitude} 
-                    />
-                    <Route exact path="/login" component={() => <Login />} />
+                        component={Altitude}  />
+                    <Route 
+                        exact path="/login" 
+                        component={Login} />
                 </Switch>
             </Router>
         </div>

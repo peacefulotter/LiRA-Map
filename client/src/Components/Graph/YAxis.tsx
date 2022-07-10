@@ -16,7 +16,7 @@ const YAxis: ReactAxis = ( { svg, axis, width, height, absolute } ) => {
 
         const axisY = svg
             .append("g")
-            .call(d3.axisLeft(axis[1]))
+            .call(d3.axisLeft(axis))
             .call(g => g.select(".domain")
                 .style('stroke-width', 5)
                 .style('stroke', "url(#line-gradient)")

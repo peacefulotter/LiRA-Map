@@ -1,5 +1,4 @@
-import { D3Callback, DotHover, PathOptions, SVG } from "./types";
-import { getColor } from "./color";
+import { D3Callback, SVG } from "./types";
 
 abstract class Layer<T>
 {
