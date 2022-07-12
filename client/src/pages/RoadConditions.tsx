@@ -85,13 +85,12 @@ const RoadConditions = () => {
         datasets: [
             {
                 type: 'line' as const,
-                label: 'RC1',
+                label: plot.label,
                 borderColor: 'rgb(255, 99, 132)',
                 borderWidth: 2,
                 fill: false,
                 tension: 0.1,
                 data: plot.data.map( p => p[1] ),
-                
             }
         ]
     }
@@ -117,13 +116,9 @@ const RoadConditions = () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            position: 'top' as const,
-          },
-          title: {
-            display: true,
-          },
-         
+            legend: {
+                position: 'top' as const,
+            },
         },
         scales: {
             x: {
