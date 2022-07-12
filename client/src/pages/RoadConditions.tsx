@@ -1,5 +1,5 @@
 import  { useEffect, useRef, useState } from "react";
-import { Palette } from "react-leaflet-hotline";
+import { Color, Palette } from "react-leaflet-hotline";
 
 import { RENDERER_PALETTE } from "../Components/Map/constants";
 import PaletteEditor from "../Components/Palette/PaletteEditor";
@@ -17,7 +17,7 @@ import { GraphData, Plot } from "../assets/graph/types";
 
 import "../css/road_conditions.css";
 import { Chart, Line } from "react-chartjs-2";
-import { ChartOptions } from "chart.js";
+import { ChartOptions, ChartTypeRegistry, Plugin, ScatterDataPoint } from "chart.js";
 
 import {
   Chart as ChartJS,
@@ -29,6 +29,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { AnyObject } from "chart.js/types/basic";
 
 ChartJS.register(
   CategoryScale,
@@ -95,6 +96,23 @@ const RoadConditions = () => {
         ]
     }
 
+    const plugins: Plugin<'line'>[] = [
+        {
+            id: 'id',
+            start: (chart: ChartJS<keyof ChartTypeRegistry, number[], unknown>) => {
+                const dataset = chart.data.datasets[0];
+                const gradient = chart.ctx.createLinearGradient(0, 256, 0, 0);
+                palette.forEach( (c: Color) => {
+                    gradient.addColorStop(c.t, `rgb(${c.r}, ${c.g}, ${c.b})`);
+                })
+                dataset.borderColor = gradient;
+                dataset.backgroundColor = gradient;
+                console.log('beforeRender');
+                chart.draw()
+            }
+        }
+    ]
+
     const options: ChartOptions<'line'> = {
         responsive: true,
         maintainAspectRatio: false,
@@ -105,6 +123,7 @@ const RoadConditions = () => {
           title: {
             display: true,
           },
+         
         },
         scales: {
             x: {
@@ -165,7 +184,7 @@ const RoadConditions = () => {
             </div>
 
             <div className="ml-graph">
-                { data && <Line options={options} data={data} />  }
+                { data && <Line options={options} plugins={plugins} data={data} />  }
                 
                 {/* <Graph 
                     labelX="distance (m)" 
