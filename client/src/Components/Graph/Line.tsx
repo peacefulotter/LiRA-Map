@@ -10,7 +10,7 @@ import { Bounds } from "../../models/path";
 
 
 interface ILine {
-    svg: SVG | undefined;
+    svg: SVG;
     xAxis: Axis | undefined;
     yAxis: Axis | undefined;
     data: GraphData;
@@ -25,7 +25,7 @@ const Line: FC<ILine> = ( { svg, xAxis, yAxis, data, bounds, label, i, time } ) 
 
     useEffect( () => {
 
-        if ( svg === undefined || xAxis === undefined || yAxis === undefined ) return;
+        if ( xAxis === undefined || yAxis === undefined ) return;
 
         const _bounds: Required<Bounds> = Object.assign( {
             minX: Math.min(...data.map( d => d[0] )),

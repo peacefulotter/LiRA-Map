@@ -6,7 +6,7 @@ import { Axis, SVG } from "../../assets/graph/types"
 import { RENDERER_PALETTE } from "../Map/constants";
 
 export interface IGradient {
-    svg: SVG | undefined;
+    svg: SVG;
     axis: Axis | undefined;
     palette: Palette | undefined;
 }
@@ -21,7 +21,7 @@ const Gradient: FC<IGradient> = ( { svg, axis, palette } ) => {
 
     useEffect( () => {
 
-        if ( svg === undefined || axis === undefined ) return;
+        if ( axis === undefined ) return;
 
         svg
             .append("linearGradient")

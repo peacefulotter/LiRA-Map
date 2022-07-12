@@ -43,9 +43,6 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute, time }  
 
     const { xAxis, yAxis } = useAxis( zoom, w, h );
 
-    console.log(zoom, xAxis, yAxis );
-    
-
     return (
         <>
         <Tooltip />
@@ -54,7 +51,7 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute, time }  
             <Zoom setZoom={setZoom}/>
 
             <SVGWrapper isLeft={true} zoom={zoom} margin={margin} w={w} height={height}>
-                { (svg: SVG | undefined) => (
+                { (svg: SVG) => (
                     <>
                     <Gradient svg={svg} axis={yAxis} palette={palette} />
                     <YAxis svg={svg} axis={yAxis} width={w} height={h} zoom={zoom} absolute={absolute} />
@@ -64,7 +61,7 @@ const Graph: FC<IGraph> = ( { labelX, labelY, plots, palette, absolute, time }  
             </SVGWrapper>
            
             <SVGWrapper isLeft={false} zoom={zoom} margin={margin} w={w + paddingRight}  height={height}>
-                { (svg: SVG | undefined) => (
+                { (svg: SVG) => (
                     <>
                     <Gradient svg={svg} axis={yAxis} palette={palette} />
                     <XAxis svg={svg} axis={xAxis} width={w} height={h} zoom={zoom} absolute={absolute} time={time} />

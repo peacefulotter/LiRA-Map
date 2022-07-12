@@ -12,7 +12,7 @@ const YAxis: ReactAxis = ( { svg, axis, width, height, absolute } ) => {
 
     useEffect( () => {
 
-        if ( svg === undefined || axis === undefined ) return;
+        if ( axis === undefined ) return;
 
         const axisY = svg
             .append("g")

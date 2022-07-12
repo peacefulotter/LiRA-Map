@@ -16,6 +16,30 @@ import { GraphProvider } from "../context/GraphContext";
 import { GraphData, Plot } from "../assets/graph/types";
 
 import "../css/road_conditions.css";
+import { Chart, Line } from "react-chartjs-2";
+import { ChartOptions } from "chart.js";
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 
 
 const RoadConditions = () => {
@@ -44,6 +68,7 @@ const RoadConditions = () => {
             }
             const data: GraphData = wc.map( p => [p.way_dist * way_length, p.value] )
             const label = way_id
+            console.log('received');
             setPlot( { bounds, data, label } )
         })
     }
@@ -54,6 +79,75 @@ const RoadConditions = () => {
         setWidth(w)
     }, [ref])
 
+    const data = plot && {
+        labels: plot.data.map( (p) => p[0] ),
+        datasets: [
+            {
+                type: 'line' as const,
+                label: 'RC1',
+                borderColor: 'rgb(255, 99, 132)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.1,
+                data: plot.data.map( p => p[1] ),
+                
+            }
+        ]
+    }
+
+    const options: ChartOptions<'line'> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top' as const,
+          },
+          title: {
+            display: true,
+          },
+        },
+        scales: {
+            x: {
+                ticks: { 
+                    maxTicksLimit: 30,
+                    stepSize: 200, 
+                    callback: (tick: string | number) => '$' + Math.round(parseFloat(tick.toString())) 
+                }
+            }
+            // x: {
+            //     ticks: {
+            //         callback: (tick: number) => Math.round(tick) // (Number(tick) % 10 === 0 ? tick : null) // Replace null with "" to show gridline
+            //     }
+            // }
+        }
+      };
+
+    // const options: ChartOptions<'line'> = { 
+    //     scales: {
+    //         x: {
+    //             // type: 'time',
+    //             ticks: {
+    //                 source: 'labels', // get ticks from given labels
+    //             },
+    //             // time: {
+    //             //     minUnit: 'minute', // smallest time format
+    //             //     displayFormats: {
+    //             //         minute: "HH:mm",
+    //             //         hour: "dd/MM HH:mm",
+    //             //         day: "dd/MM",
+    //             //         week: "dd/MM",
+    //             //         month: "MMMM yyyy",
+    //             //         quarter: 'MMMM yyyy',
+    //             //         year: "yyyy",
+    //             //     }
+    //             // }
+    //         },
+    //     },
+    // }
+
+    const onGraphClick = () => {
+        console.log('graph click');
+    }
 
     return (
         <GraphProvider>
@@ -71,12 +165,14 @@ const RoadConditions = () => {
             </div>
 
             <div className="ml-graph">
-                <Graph 
+                { data && <Line options={options} data={data} />  }
+                
+                {/* <Graph 
                     labelX="distance (m)" 
                     labelY="IRI"
                     palette={palette}
                     plots={plot ? [plot] : []}
-                />
+                /> */}
             </div>
         </div>
 

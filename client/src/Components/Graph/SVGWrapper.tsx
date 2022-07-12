@@ -9,7 +9,7 @@ interface ISVG {
     margin: any,
     w: number;
     height: number;
-    children: (svg: SVG | undefined) => ReactElement;
+    children: (svg: SVG) => ReactElement;
 }
 
 const SVGWrapper: FC<ISVG> = ( props ) => {
@@ -41,7 +41,7 @@ const SVGWrapper: FC<ISVG> = ( props ) => {
             style={{height: height + 'px'}}
         >
             <svg ref={ref} style={{width: w * zoom - 20 + (isLeft ? 150 : 0) + 'px', height: '100%'}}>
-                { children( svg ) }
+                { svg && children( svg ) }
             </svg>
         </div>
     )

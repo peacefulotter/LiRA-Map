@@ -10,7 +10,7 @@ export type SVGLayer = d3.Selection<d3.BaseType, unknown, null, undefined>
 
 // Axis
 export interface IAxis { 
-    svg: SVG | undefined; 
+    svg: SVG; 
     axis: Axis | undefined, 
     width: number; 
     height: number; 

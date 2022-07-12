@@ -8,7 +8,7 @@ import { SVG } from '../../assets/graph/types';
 
 
 interface ILabels {
-    svg: SVG | undefined;
+    svg: SVG;
     width: number; 
     height: number;
     labelX: string;
@@ -22,8 +22,6 @@ const Labels: FC<ILabels> = ( { svg, width, height, labelX, labelY } ) => {
     const { maxY } = useGraph()
 
     useEffect( () => {
-
-        if ( svg === undefined ) return;
 
         const labelW = Math.min(window.innerWidth - offsetX, width)
         
