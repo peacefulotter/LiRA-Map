@@ -19,7 +19,7 @@ const PaletteEditor: FC<IPaletteEditor> = ( { width, defaultPalette, cursorOptio
 
     const toggleAppear = () => setShow(prev => !prev)
 
-    if ( width === undefined ) return null;
+    if ( width === undefined || width === 0 ) return null;
 
     return (
         <div className={`palette-wrapper ${show ? 'palette-show' : ''}`} style={{width: `${width}px`}} >

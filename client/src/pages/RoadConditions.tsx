@@ -11,6 +11,7 @@ import { ConditionType } from "../models/graph";
 import { GraphProvider } from "../context/GraphContext";
 
 import "../css/road_conditions.css";
+import { RENDERER_PALETTE } from "../Components/Map/constants";
 
 ChartJS.register(
   CategoryScale,
@@ -24,7 +25,7 @@ ChartJS.register(
 
 const RoadConditions = () => {
     
-    const [palette, setPalette] = useState<Palette>([])
+    const [palette, setPalette] = useState<Palette>(RENDERER_PALETTE)
     const [wayData, setWayData] = useState<ChartData<"line", number[], number>>()
 
     const type: ConditionType = {
