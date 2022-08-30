@@ -1,4 +1,22 @@
 
+
+
+
+/**
+ * 
+ * NOT REALLY WORKING (but almost I think) 
+ * Writing tests for this is advised
+ * 
+ * Ideally => make it work and use BoundedWays instead of Ways
+ * when dealing with large amount of data.
+ * 
+ * /!\ TO FIX: BoundedWays.tsx AND WithBounds.tsx
+ * 
+ */
+
+
+
+
 import { FC, useEffect, useState } from 'react';
 import { TRGB } from 'react-gradient-hook/lib/types';
 import { HotlineOptions } from 'react-leaflet-hotline';
@@ -21,7 +39,7 @@ interface IWays {
     onClick?: (way_id: string, way_length: number) => () => void;
 }
 
- const BoundedWays: FC<IWays> = ( { palette, type, onClick } ) => {
+const BoundedWays: FC<IWays> = ( { palette, type, onClick } ) => {
     
     const zoom = useZoom();
     const { minY, maxY } = useGraph()

@@ -11,7 +11,6 @@ const useSize = (ref:  React.MutableRefObject<null>): [number, number] => {
 
         const updateSize = () => {
             const { width, height } = (ref.current as any).getBoundingClientRect()
- 
             setWidth(width)
             setHeight(height)
         }

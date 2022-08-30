@@ -26,7 +26,7 @@ const Navbar: FC = () => {
         <div className="nav-wrapper">
             <div className="nav-container">
                 <div className="nav-block">
-                    <NavBtn  to='/rides' name='Road Measurements' />
+                    <NavBtn  to='/road_measurements' name='Road Measurements' />
                     <NavBtn  to='/road_conditions' name='Road Conditions' />
                     <NavBtn  to='/cardata' name='Cardata' />
                     <NavBtn  to='/altitude' name='Altitude' />

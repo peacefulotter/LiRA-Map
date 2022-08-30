@@ -1,5 +1,5 @@
 
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { TRGB } from 'react-gradient-hook/lib/types';
 import { HotlineOptions } from 'react-leaflet-hotline';
 import { useGraph } from '../../context/GraphContext';
@@ -35,6 +35,11 @@ const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
         } )
     }, [zoom] )
 
+    const onHotlineClick = useCallback( (_, i) => {
+        if ( ways && onClick )
+            onClick(ways.way_ids[i], ways.way_lengths[i])
+    }, [ways] )
+
     return (
         <>
         { ways 
@@ -43,9 +48,7 @@ const Ways: FC<IWays> = ( { palette, type, onClick } ) => {
                 geometry={ways.geometry}
                 conditions={ways.conditions} 
                 options={options} 
-                eventHandlers={{
-                    click: (_, i) => onClick && onClick(ways.way_ids[i], ways.way_lengths[i])
-                }}/> 
+                eventHandlers={{click: onHotlineClick}}/> 
             : null 
         }
         </>
