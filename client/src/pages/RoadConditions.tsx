@@ -25,7 +25,7 @@ ChartJS.register(
 
 const RoadConditions = () => {
     
-    const [palette, setPalette] = useState<Palette>(RENDERER_PALETTE)
+    const [palette, setPalette] = useState<Palette>([])
     const [wayData, setWayData] = useState<ChartData<"line", number[], number>>()
 
     const type: ConditionType = {
@@ -34,10 +34,6 @@ const RoadConditions = () => {
         max: 10,
         grid: true,
         samples: 40
-    }
-
-    const onGraphClick = () => {
-        console.log('graph click');
     }
 
     return (

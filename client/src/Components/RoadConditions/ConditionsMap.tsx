@@ -50,13 +50,10 @@ const ConditionsMap: FC<Props> = ( { type, palette, setPalette, setWayData } ) =
         } )
     }, [] )
 
-    console.log(palette, width, max, grid, samples);
-    
-
     return (
         <div className="ml-map" ref={ref}>
             <PaletteEditor 
-                defaultPalette={palette}
+                defaultPalette={RENDERER_PALETTE}
                 width={width}
                 cursorOptions={ { scale: max, grid, samples } }
                 onChange={setPalette} />

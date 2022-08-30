@@ -60,9 +60,19 @@ interface Props {
 }
 
 const ConditionsGraph: FC<Props> = ( { type, data, palette } ) => {
+
+    const onGraphClick = () => {
+        console.log('graph click');
+    }
+
     return (
         <div className="ml-graph">
-            { data && <Line options={options(type)} plugins={plugins(palette)} data={data} />  }
+            { data && <Line 
+                onClick={onGraphClick}
+                data={data} 
+                options={options(type)} 
+                plugins={plugins(palette)} />  
+            }
         </div>
     )
 }
