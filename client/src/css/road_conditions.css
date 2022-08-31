@@ -1,8 +1,13 @@
 
-.ml-wrapper {
+.road-conditions-wrapper {
     height: calc(100vh - var(--navbar-height));
     display: grid;
     grid-template-rows: auto min(40vh, 400px);
+}
+
+.road-conditions-graph {
+    position: relative;
+    width: 100vw;
 }
 
 

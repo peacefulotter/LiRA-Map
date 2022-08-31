@@ -51,7 +51,7 @@ const ConditionsMap: FC<Props> = ( { type, palette, setPalette, setWayData } ) =
     }, [] )
 
     return (
-        <div className="ml-map" ref={ref}>
+        <div className="road-conditions-map" ref={ref}>
             <PaletteEditor 
                 defaultPalette={RENDERER_PALETTE}
                 width={width}

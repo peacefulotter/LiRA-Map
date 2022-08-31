@@ -1,26 +1,13 @@
-import { FC, useEffect, useMemo, useRef } from "react";
-import { ActiveElement, Chart, ChartData, ChartEvent, ChartOptions, ChartTypeRegistry, Plugin } from "chart.js";
+import { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import { ChartData, Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ActiveElement, ChartEvent, ChartOptions, ChartTypeRegistry, Plugin  } from "chart.js";
 import { Color, Palette } from "react-leaflet-hotline";
 import { Line } from "react-chartjs-2";
 
 import { ConditionType } from "../../models/graph";
 
-const addPaletteChart = (palette: Palette) => (chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
-    const dataset = chart.data.datasets[0];
-    const gradient = chart.ctx.createLinearGradient(0, 256, 0, 0);
-    palette.forEach( (c: Color) => {
-        gradient.addColorStop(c.t, `rgb(${c.r}, ${c.g}, ${c.b})`);
-    })
-    dataset.borderColor = gradient;
-    dataset.backgroundColor = gradient;
-}
+Chart.register( CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend );
 
-const plugins = (palette: Palette): Plugin<'line'>[] => [ {
-    id: 'id',
-    beforeDatasetsUpdate: addPaletteChart(palette),
-} ]
-
-const options = (type: ConditionType): ChartOptions<'line'> => ({
+const options = ({name, min, max}: ConditionType): ChartOptions<'line'> => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -44,10 +31,10 @@ const options = (type: ConditionType): ChartOptions<'line'> => ({
         y: {
             title: { 
                 display: true, 
-                text: type.name
+                text: name
             },
-            min: type.min,
-            max: type.max
+            min: min,
+            max: max
         }
     }
 });
@@ -62,33 +49,46 @@ const ConditionsGraph: FC<Props> = ( { type, data, palette } ) => {
 
     const ref = useRef<Chart<"line", number[], number>>(null)
 
+    const addPaletteChart = (palette: Palette) => (chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
+        const dataset = chart.data.datasets[0];
+        const gradient = chart.ctx.createLinearGradient(0, chart.chartArea.bottom, 0, 0);
+        console.log(...palette);
+        palette.forEach( (c: Color) => {
+            gradient.addColorStop(c.t, `rgb(${c.r}, ${c.g}, ${c.b})`);
+        })
+        dataset.borderColor = gradient;
+        dataset.backgroundColor = gradient;
+    }
+
     useEffect( () => {
         if (ref.current === null ) return;
         const chart = ref.current;
         addPaletteChart(palette)(chart)
         chart.update()
-    }, [ref, palette])
+    }, [ref, data, palette])
 
     // attach events to the graph options
     const graphOptions: ChartOptions<'line'> = useMemo( () => ({
         ...options(type),
         onClick: (event: ChartEvent, elts: ActiveElement[], chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
+            if ( elts.length === 0 ) return;
             const elt = elts[0] // doesnt work if multiple datasets
             const pointIndex = elt.index
-            console.log(event);
-            console.log(elts);
+            console.log(pointIndex, event, elts);
         }
     }), [] )
 
-    const graphPlugins = useMemo<Plugin<"line">[]>( () => plugins(palette), [palette] )
+    const plugins: Plugin<"line">[] = [ {
+        id: 'id',
+    } ]
 
     return (
-        <div className="ml-graph">
+        <div className="road-conditions-graph">
             { data && <Line
                 ref={ref} 
                 data={data} 
                 options={graphOptions} 
-                plugins={graphPlugins} />  
+                plugins={plugins} />  
             }
         </div>
     )

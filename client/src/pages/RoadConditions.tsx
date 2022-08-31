@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-import { ChartData, Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import { Palette } from "react-leaflet-hotline";
+import { ChartData } from "chart.js";
 
 import ConditionsMap from "../Components/RoadConditions/ConditionsMap";
 import ConditionsGraph from "../Components/RoadConditions/ConditionsGraph";
@@ -11,17 +11,7 @@ import { ConditionType } from "../models/graph";
 import { GraphProvider } from "../context/GraphContext";
 
 import "../css/road_conditions.css";
-import { RENDERER_PALETTE } from "../Components/Map/constants";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const RoadConditions = () => {
     
@@ -38,11 +28,10 @@ const RoadConditions = () => {
 
     return (
         <GraphProvider>
-        <div className="ml-wrapper">
-            <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData} />
-            <ConditionsGraph type={type} palette={palette} data={wayData} />
-        </div>
-
+            <div className="road-conditions-wrapper">
+                <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData} />
+                <ConditionsGraph type={type} palette={palette} data={wayData} />
+            </div>
         </GraphProvider> 
     );
 }

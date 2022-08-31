@@ -3,9 +3,9 @@ import {
 	Dispatch,
 	SetStateAction,
 	useContext,
-	useRef,
 	useState,
 } from "react";
+
 import useMinMaxAxis from "../hooks/useMinMaxAxis";
 import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from "../assets/graph/types";
 
@@ -25,10 +25,12 @@ interface ContextProps {
 
 const GraphContext = createContext({} as ContextProps);
 
+// TODO: remove bounds / refactor?  -> is it needed really?
+// TODO: generalize DotHover into an "Event State" (to support for more events at once)
 export const GraphProvider = ({ children }: any) => {
 
 	const { bounds, addBounds, remBounds } = useMinMaxAxis()
-	const [dotHover, setDotHover] = useState<DotHover>()
+	const [ dotHover, setDotHover ] = useState<DotHover>()
 
 	const { minX, maxX, minY, maxY } = bounds;
 
