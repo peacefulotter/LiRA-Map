@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { NavLink } from 'react-router-dom';
 
+import { Nav } from "../models/nav";
 
 import '../css/navbar.css';
 
@@ -21,15 +22,18 @@ const NavBtn: FC<NavBtnProps> = ( { to, name } ) => {
     )
 }
 
-const Navbar: FC = () => {
+interface INavbar {
+    routes: Nav[];
+}
+
+const Navbar: FC<INavbar> = ( { routes } ) => {
     return (
         <div className="nav-wrapper">
             <div className="nav-container">
                 <div className="nav-block">
-                    <NavBtn  to='/road_measurements' name='Road Measurements' />
-                    <NavBtn  to='/road_conditions' name='Road Conditions' />
-                    <NavBtn  to='/cardata' name='Cardata' />
-                    <NavBtn  to='/altitude' name='Altitude' />
+                    { routes.map( ([path, _, name], i) => 
+                        <NavBtn key={`navbtn-${i}`} to={path} name={name} />
+                    ) }
                 </div>
                 <div className="nav-block">
                     <NavBtn  to='/login' name='Login' />

@@ -8,29 +8,27 @@ import Altitude from "./pages/Altitude";
 import CarData from "./pages/CarData";
 import Login from "./pages/Login";
 
+import { Nav } from "./models/nav";
+
 import "./App.css";
+
+const routes: Nav[] = [
+    ['/road_measurements', RoadMeasurements, 'Road Measurements'],
+    ['/road_conditions', RoadConditions, 'Road Conditions'],
+    ['/cardata', CarData, 'Cardata'],
+    ['/altitude', Altitude, 'Altitude'],
+]
 
 const App: FC = () => {
     return (
         <div className="App">
             <Router>
-                <Navbar />
+                <Navbar routes={routes} />
                 <Switch>
-                    <Route 
-                        exact path="/cardata" 
-                        component={CarData} />
-                    <Route 
-                        exact path="/rides" 
-                        component={RoadMeasurements} />
-                    <Route 
-                        exact path="/road_conditions"    
-                        component={RoadConditions} />
-                    <Route 
-                        exact path="/altitude"    
-                        component={Altitude}  />
-                    <Route 
-                        exact path="/login" 
-                        component={Login} />
+                    { routes.map( ([path, Component, _], i) =>
+                        <Route exact key={`route-${i}`} path={path} component={Component} />
+                    ) }
+                    <Route exact path='/login' component={Login} />
                 </Switch>
             </Router>
         </div>
