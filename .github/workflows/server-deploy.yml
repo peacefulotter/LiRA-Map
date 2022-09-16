@@ -10,13 +10,14 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: testing se2-c.compute.dtu.dk ssh connection
-      uses: appleboy/ssh-action@master
-      with:
-        host: se-C.compute.dtu.dk
-        key: ${{ secrets.DEPLOY_SECRET }}
-        port: 22
-        script: | 
-          cd LiRA-Map
-          git pull origin master
-          git status
+        us$es: appleboy/ssh-action@master
+        with:
+          host: se-C.compute.dtu.dk
+          key: ${{ secrets.DEPLOY_SECRET }}
+          port: 22
+          script: | 
+           cd LiRA-Map
+           git pull origin master
+           git status
