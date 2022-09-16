@@ -1,0 +1,20 @@
+name: Deployment to Server
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  job_one: 
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing se2-c.compute.dtu.dk ssh connection
+      uses: appleboy/ssh-action@master
+      with:
+        host: se-C.compute.dtu.dk
+        key: ${{ secrets.DEPLOY_SECRET }}
+        port: 22
+        script: | 
+          cd LiRA-Map
+          git pull origin master
+          git status
