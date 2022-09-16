@@ -6,8 +6,7 @@ on:
         description: 'fx 1.0.0'
         required: false
 jobs:
-  job_one: 
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
