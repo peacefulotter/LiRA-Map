@@ -1,10 +1,10 @@
-name: Deployment to Server
+name: Deploy to Firebase Hosting
 on:
-  workflow_dispatch: 
-    inputs: 
-      version:
-        description: 'Version of this release'
-
+  workflow_dispatch:
+    inputs:
+      versionNumber:
+        description: 'fx 1.0.0'
+        required: false
 jobs:
   job_one: 
     name: Deploy
