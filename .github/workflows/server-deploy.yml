@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: testing se2-c.compute.dtu.dk ssh connection
-        us$es: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: se-C.compute.dtu.dk
           key: ${{ secrets.DEPLOY_SECRET }}
