@@ -1,0 +1,27 @@
+version: "2"
+services:
+  client:
+    image: "client:latest"
+    user: "node"
+    ports:
+      3000:3000 # Map the 3000 port of our VM to the 3000 port of the docker image.
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    expose:
+      - "3000-3001"
+    command: "npm start"
+
+  server-nest:
+    image: "server-nest:latest"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    expose:
+      - "3000-3001"
+    command: "npm start"
