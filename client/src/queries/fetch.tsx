@@ -30,6 +30,10 @@ export function post<T>(path: string, obj: object, callback: (data: T) => void):
     asyncPost<T>(path, obj).then(res => callback(res.data));
 }
 
+export function post_new(path: string, body: object): Promise<AxiosResponse> {
+    return axios.post(devURL + path, body)
+}
+
 export const put = ( path: string, obj: object ): void => {
     axios.put( getPath(path), { params: obj } )
 }

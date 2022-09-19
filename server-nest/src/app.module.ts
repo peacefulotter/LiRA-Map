@@ -23,6 +23,8 @@ import { RCService } from './conditions/rc.service';
 import { AltitudeController } from './altitude/alt.controller';
 import { AltitudeService } from './altitude/alt.service';
 
+import { LoginController } from './login/LoginController';
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
@@ -53,6 +55,7 @@ const database = (config: any, name: string) => {
     MeasurementsController,
     RCController,
     AltitudeController,
+    LoginController,
   ],
   providers: [
     AppService,

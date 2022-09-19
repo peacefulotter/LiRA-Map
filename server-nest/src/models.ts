@@ -1,3 +1,8 @@
+export interface Login {
+  email: string;
+  password: string;
+}
+
 export interface LatLng {
   lat: number;
   lng: number;
