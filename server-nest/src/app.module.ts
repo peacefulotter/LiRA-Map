@@ -25,6 +25,9 @@ import { AltitudeService } from './altitude/alt.service';
 
 import { LoginController } from './login/LoginController';
 
+import { SignupController } from './signup/SignupController';
+import { SignupService } from './signup/SignupService';
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
@@ -56,6 +59,7 @@ const database = (config: any, name: string) => {
     RCController,
     AltitudeController,
     LoginController,
+    SignupController,
   ],
   providers: [
     AppService,
@@ -66,6 +70,7 @@ const database = (config: any, name: string) => {
     MeasurementsService,
     RCService,
     AltitudeService,
+    SignupService,
   ],
 })
 export class AppModule {}
