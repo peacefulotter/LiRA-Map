@@ -10,4 +10,6 @@ services:
  server-nest:
   build:
    context: ./server-nest
+  ports:
+   - 3002:3002
   command: npm start
