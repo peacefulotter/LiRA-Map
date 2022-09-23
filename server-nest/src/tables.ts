@@ -27,11 +27,3 @@ interface ZoomCondition extends RoadCondition {
 
 export const ZoomConditions = (k: Knex) =>
   k.from<ZoomCondition>('zoom_conditions');
-
-interface User {
-  email: string;
-  password: string;
-  salt: string;
-}
-
-export const Users = (k: Knex) => k.from<User>('users');

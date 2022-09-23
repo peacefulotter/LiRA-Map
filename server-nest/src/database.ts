@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const {
@@ -11,7 +11,7 @@ const {
 } = process.env;
 
 const BASE_CONFIG = {
-  client: 'pg',
+  client: "pg",
   debug: true,
   useNullAsDefault: true,
   pool: {
@@ -26,16 +26,16 @@ const BASE_CONFIG = {
   },
   log: {
     warn(msg: any) {
-      console.log('warning', msg);
+      console.log("warning", msg);
     },
     error(msg: any) {
-      console.log('error', msg);
+      console.log("error", msg);
     },
     deprecate(msg: any) {
-      console.log('deprecate', msg);
+      console.log("deprecate", msg);
     },
     debug(msg: any) {
-      console.log('debug', msg);
+      console.log("debug", msg);
     },
   },
 };
@@ -43,22 +43,22 @@ const BASE_CONFIG = {
 export const LIRA_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
-    host: 'liradb.compute.dtu.dk', // "liradbdev.compute.dtu.dk",
+    host: "liradb.compute.dtu.dk", // "liradbdev.compute.dtu.dk",
     port: 5435,
     user: DB_USER,
     password: DB_PASSWORD,
-    database: 'postgres',
+    database: "postgres3",
   },
 };
 
 export const VISUAL_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
-    host: 'liravisualization.postgres.database.azure.com',
-    port: 5432,
+    host: "liravisualization.postgres.database.azure.com",
+    port: 5437,
     user: DB_USER_VIS,
     password: DB_PASSWORD_VIS,
-    database: 'postgres',
+    database: "postgres2",
     ssl: true,
   },
 };
@@ -66,11 +66,11 @@ export const VISUAL_DB_CONFIG = {
 export const POSTGIS_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
-    host: 'liradb.postgres.database.azure.com',
-    port: 5432,
+    host: "liradb.postgres.database.azure.com",
+    port: 5436,
     user: DB_USER_POSTGIS,
     password: DB_PWD_POSTGIS,
-    database: 'postgis',
+    database: "postgis",
     ssl: true,
   },
 };

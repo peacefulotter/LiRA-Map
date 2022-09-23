@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+ client:
+  build:
+   context: ./client
+  ports:
+   - 3000:3000
+  command: npm start
+ server-nest:
+  build:
+   context: ./server-nest
+  command: npm start
+  ports:
+   - 3002:3002
+ postgres:
+  image: postgres:latest
+  restart: always
+  environment:
+   - POSTGRES_USER=root
+   - POSTGRES_PASSWORD=nest
+  ports:
+   - 3306:3306

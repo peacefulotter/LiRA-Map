@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SignupService {
-  constructor(@InjectConnection('postgis') private readonly knex: Knex) {}
+  constructor(@InjectConnection('postgres') private readonly knex: Knex) {}
 
   async createUser(email: string, password: string) {
     try {
