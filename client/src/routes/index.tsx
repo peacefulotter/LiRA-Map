@@ -31,7 +31,8 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/car/data" replace />, index: true },
-        { path: 'data', element: <CarData /> }
+        { path: 'data', element: <CarData /> },
+        { path: 'store', element: <StoreShowcase /> },
       ],
     },
     {
@@ -62,3 +63,4 @@ const RoadCondition = Loadable(lazy(() => import('../pages/RoadCondition')));
 const RoadAltitude = Loadable(lazy(() => import('../pages/RoadAltitude')));
 const CarData = Loadable(lazy(() => import('../pages/CarData')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const StoreShowcase = Loadable(lazy(() => import('../pages/showcase/StoreShowcase')));
