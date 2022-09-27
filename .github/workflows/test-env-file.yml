@@ -1,0 +1,25 @@
+name: "test-env-file"
+
+on:
+  pull_request:
+    branches:
+      [ "main" ]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Make kill-containers.sh executable
+        run: chmod +x kill-containers.sh
+
+      - name: Kill docker containers
+        run: ./kill-containers.sh
+        shell: bash
+
+      - name: Spin up docker containers
+        run: docker compose up --detach --build
