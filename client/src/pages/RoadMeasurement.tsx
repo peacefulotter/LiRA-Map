@@ -12,6 +12,13 @@ import RideDetails from "../components/RoadMeasurements/RideDetails";
 import RideCards from "../components/RoadMeasurements/RideCards";
 import Rides from "../components/RoadMeasurements/Rides";
 
+import "leaflet/dist/leaflet.css"
+import {MapContainer} from "react-leaflet";
+import "../css/map.css"
+import "../css/rides.css"
+import "../css/ridecard.css"
+import "../css/ridedetails.css"
+
 // ----------------------------------------------------------------------
 
 export default function RoadMeasurement() {
@@ -19,7 +26,6 @@ export default function RoadMeasurement() {
 
   return (
     <Page title="Road Measurement">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
           <MeasurementsProvider>
               <MetasProvider>
                   <div className="rides-wrapper">
@@ -33,7 +39,6 @@ export default function RoadMeasurement() {
                   </div>
               </MetasProvider>
           </MeasurementsProvider>
-      </Container>
     </Page>
   );
 }
