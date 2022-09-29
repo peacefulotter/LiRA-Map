@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 const {
@@ -8,6 +9,12 @@ const {
   DB_PASSWORD_VIS,
   DB_USER_POSTGIS,
   DB_PWD_POSTGIS,
+  FB_API_KEY,
+  FB_AUTH_DOMAIN,
+  FB_PROJECT_ID,
+  FB_STORAGE_BUCKET,
+  FB_MSG_SENDER_ID,
+  FB_APP_ID,
 } = process.env;
 
 const BASE_CONFIG = {
@@ -38,6 +45,15 @@ const BASE_CONFIG = {
       console.log('debug', msg);
     },
   },
+};
+
+export const FIREBASE_CONFIG = {
+  apiKey: FB_API_KEY,
+  authDomain: FB_AUTH_DOMAIN,
+  projectId: FB_PROJECT_ID,
+  storageBucket: FB_STORAGE_BUCKET,
+  messagingSenderId: FB_MSG_SENDER_ID,
+  appId: FB_APP_ID,
 };
 
 export const LIRA_DB_CONFIG = {
