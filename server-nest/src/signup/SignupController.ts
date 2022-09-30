@@ -1,15 +1,19 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { Login } from '../models';
-import { SignupService } from './SignupService';
+import { Body, Controller, Post } from "@nestjs/common";
+import { Login } from "../models";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-@Controller('/signup')
+@Controller("/signup")
 export class SignupController {
-  constructor(private readonly signupService: SignupService) {}
   @Post()
   signup(@Body() login: Login) {
-    this.signupService.createUser(login.email, login.password).then((r) => {
-      console.log(r);
-      return r;
-    });
+    console.log(login);
+    createUserWithEmailAndPassword(auth, login.email, login.password)
+      .then((userCredentials) => {
+        const user = userCredentials;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
