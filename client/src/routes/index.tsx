@@ -27,6 +27,10 @@ export default function Router() {
       element: <Login />
     },
     {
+      path: '/signup',
+      element: <Signup />
+    },
+    {
       path: '/car',
       element: <DashboardLayout />,
       children: [
@@ -64,3 +68,4 @@ const RoadAltitude = Loadable(lazy(() => import('../pages/RoadAltitude')));
 const CarData = Loadable(lazy(() => import('../pages/CarData')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const StoreShowcase = Loadable(lazy(() => import('../pages/showcase/StoreShowcase')));
+const Signup = Loadable(lazy(() => import('../pages/Signup')));

@@ -33,8 +33,6 @@ import {
   VISUAL_DB_CONFIG,
 } from "./database";
 
-import { POSTGRES_LOCAL } from "../knexfile";
-
 const database = (config: any, name: string) => {
   return KnexModule.forRootAsync(
     {
@@ -49,7 +47,6 @@ const database = (config: any, name: string) => {
     database(LIRA_DB_CONFIG, "lira-main"),
     database(VISUAL_DB_CONFIG, "lira-vis"),
     database(POSTGIS_DB_CONFIG, "postgis"),
-    database(POSTGRES_LOCAL, "test"),
   ],
   controllers: [
     AppController,

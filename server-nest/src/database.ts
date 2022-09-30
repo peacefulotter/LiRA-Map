@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
@@ -63,7 +63,7 @@ export const LIRA_DB_CONFIG = {
     port: 5435,
     user: DB_USER,
     password: DB_PASSWORD,
-    database: "postgres3",
+    database: "postgres",
   },
 };
 
@@ -71,10 +71,10 @@ export const VISUAL_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
     host: "liravisualization.postgres.database.azure.com",
-    port: 5437,
+    port: 5434,
     user: DB_USER_VIS,
     password: DB_PASSWORD_VIS,
-    database: "postgres2",
+    database: "postgres",
     ssl: true,
   },
 };
@@ -83,7 +83,7 @@ export const POSTGIS_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
     host: "liradb.postgres.database.azure.com",
-    port: 5436,
+    port: 5434,
     user: DB_USER_POSTGIS,
     password: DB_PWD_POSTGIS,
     database: "postgis",
