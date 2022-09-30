@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch  } from 'react-router-dom';
 
 import Navbar from './Components/Navbar'
 import RoadMeasurements from "./pages/RoadMeasurements";
@@ -16,6 +16,10 @@ const App: FC = () => {
             <Router>
                 <Navbar />
                 <Switch>
+                    <Route 
+
+                        exact path="/" 
+                        render={()=> <Redirect to="/road_measurements"/>}  />
                     <Route 
                         exact path="/cardata" 
                         component={CarData} />
