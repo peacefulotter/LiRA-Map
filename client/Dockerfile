@@ -7,12 +7,23 @@
 # See https://github.com/nodejs/docker-node/blob/main/README.md#how-to-use-this-image
 FROM node:lts
 
-# ENV NODE_ENV=production
-
-COPY ["package.json", "package-lock.json*", "./"]
-
-RUN npm install --legacy-peer-deps
+# The base node image sets a very verbose log level.
+#ENV NPM_CONFIG_LOGLEVEL warn
 
 COPY . .
 
-CMD [ "npm", "start" ]
+# Build for production.
+RUN npm install --legacy-peer-deps
+RUN npm run build --production
+
+# Install `serve` to run the application.
+RUN npm install -g serve
+
+COPY . .
+
+# Set the command to start the node server.
+CMD serve -p 80 -s build
+
+# Tell Docker about the port we'll run on.
+# virker ikke
+EXPOSE 80
