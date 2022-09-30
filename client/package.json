@@ -10,6 +10,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.5",
     "@rematch/core": "^2.2.0",
+    "@rematch/persist": "^2.1.2",
     "@sweetalert2/theme-dark": "^5.0.12",
     "@types/react-dom": "^18.0.6",
     "@types/react-virtualized": "^9.21.15",
