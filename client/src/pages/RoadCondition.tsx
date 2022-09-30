@@ -16,6 +16,11 @@ import { ConditionType } from "../models/graph";
 
 import { GraphProvider } from "../context/GraphContext";
 
+import "leaflet/dist/leaflet.css"
+import "../css/map.css"
+import "../css/road_conditions.css"
+import "../css/palette.css"
+
 // ----------------------------------------------------------------------
 
 export default function RoadCondition() {
@@ -34,14 +39,12 @@ export default function RoadCondition() {
 
   return (
     <Page title="Road Condition">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
           <GraphProvider>
               <div className="road-conditions-wrapper">
                   <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData} />
                   <ConditionsGraph type={type} palette={palette} data={wayData} />
               </div>
           </GraphProvider>
-      </Container>
     </Page>
   );
 }

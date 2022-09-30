@@ -18,6 +18,9 @@ import { getAltitudes } from "../queries/altitude";
 
 import { HEATMAP_OPTIONS, RENDERER_OPTIONS } from "../components/Map/constants";
 
+import "leaflet/dist/leaflet.css"
+import "../css/altitude.css"
+
 // ----------------------------------------------------------------------
 
 export default function RoadAltitude() {
@@ -39,7 +42,6 @@ export default function RoadAltitude() {
 
   return (
     <Page title="Road Altitude">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
           <div className="altitude-wrapper">
               <MapWrapper>
                   <Panel
@@ -70,7 +72,6 @@ export default function RoadAltitude() {
                       : null }
               </MapWrapper>
           </div>
-      </Container>
     </Page>
   );
 }
