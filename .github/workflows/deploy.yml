@@ -3,7 +3,10 @@ name: "deploy"
 on:
   push:
     branches:
-      [ "main" ]
+      [ "main", "test-env-files" ]
+  pull_request:
+    branches:
+      [ "main", "test-env-files" ]
 
 jobs:
   deploy:
@@ -19,6 +22,14 @@ jobs:
 
       - name: Kill docker containers
         run: ./kill-containers.sh
+        shell: bash
+
+      - name: Copy over env file to server-nest folder of cloned repo
+        run: cp ~/actions-runner/persist/.env $(pwd)/server-nest
+        shell: bash
+
+      - name: Confirm that copying .env file worked (should output 'it-worked')
+        run: cat server-nest/.env | grep "TEST_VAR.*" | cut -d "=" -f2
         shell: bash
 
       - name: Spin up docker containers
