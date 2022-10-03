@@ -24,14 +24,7 @@ export async function asyncPost<T>(
 export function get<T>(path: string, callback: (data: T) => void): void {
   fetch(getPath(path))
     .then((res) => res.json())
-    .then((data) => callback(data))
-    .catch((error) => {
-      console.log(error);
-      console.log("try again");
-      fetch(getPath(path))
-        .then((res) => res.json())
-        .then((data) => callback(data));
-    });
+    .then((data) => callback(data));
 }
 
 export function post<T>(
