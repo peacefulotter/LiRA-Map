@@ -3,10 +3,9 @@ import {ConnectionService} from "./connection.service";
 
 @Controller('connection')
 export class ConnectionController {
-    constructor(private readonly service: ConnectionService) {
-    }
+    constructor(private readonly service: ConnectionService) {}
 
-    @Get('/')
+    @Get()
     getConnection(): Promise<boolean> {
         return this.service.getConnection();
     }
