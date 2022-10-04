@@ -1,41 +1,38 @@
-import { FC } from "react";
-import { LatLng } from "Leaflet.MultiOptionsPolyline";
+import { FC } from 'react';
+import { LatLng } from 'Leaflet.MultiOptionsPolyline';
 import { useMapEvents } from 'react-leaflet';
 
 interface MapEventsProps {
-    setBoundaries: (boundaries: [LatLng, LatLng, LatLng, LatLng]) => void;
+  setBoundaries: (boundaries: [LatLng, LatLng, LatLng, LatLng]) => void;
 }
 
-const MapEvents: FC<MapEventsProps> = ( { setBoundaries }) => {
+const MapEvents: FC<MapEventsProps> = ({ setBoundaries }) => {
+  let latestZoom = 18;
+  let maxrendered = 100;
 
-    let latestZoom = 18;
-    let maxrendered = 100;
+  const map = useMapEvents({
+    zoomend() {
+      if (map.getZoom() > latestZoom || map.getZoom() >= maxrendered) {
+        return;
+      }
+      maxrendered = map.getZoom();
 
+      const bounds = map.getBounds();
+      setBoundaries([
+        bounds.getSouthWest(),
+        bounds.getSouthEast(),
+        bounds.getNorthEast(),
+        bounds.getNorthWest(),
+      ]);
+    },
+    zoomstart() {
+      latestZoom = map.getZoom();
 
-    const map = useMapEvents({
+      if (map.getZoom() < maxrendered) maxrendered = latestZoom;
+    },
+  });
 
-      
-        zoomend() {
-            if (map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
-                return;
-            }
-            maxrendered = map.getZoom();            
-                        
-            const bounds = map.getBounds();
-            setBoundaries([bounds.getSouthWest(), bounds.getSouthEast(),
-              bounds.getNorthEast(), bounds.getNorthWest()])
-                 
-        },
-        zoomstart() {
-          latestZoom = map.getZoom();
+  return null;
+};
 
-          if(map.getZoom() < maxrendered)
-            maxrendered = latestZoom;
-        },
-      })
-
-    return null
-  }
-
-
-  export default MapEvents;
+export default MapEvents;
