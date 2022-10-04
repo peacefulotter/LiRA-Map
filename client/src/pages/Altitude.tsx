@@ -18,6 +18,7 @@ const Altitude = () => {
     const [altitudes, setAltitudes] = useState<WaysConditions>();
     const [showHotline, setShowHotline] = useState<boolean>(true);
     const [showHeatmap, setShowHeatmap] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect( () => {
         getAltitudes( (data: WaysConditions) => {
