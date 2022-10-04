@@ -21,40 +21,44 @@ const Loadable = (Component: ElementType) => (props: any) => {
 };
 
 export default function Router() {
-    return useRoutes([
-        {
-            path: '/',
-            element: <Login/>
-        },
-        {
-            path: '/car',
-            element: <DashboardLayout/>,
-            children: [
-                {element: <Navigate to="/car/data" replace/>, index: true},
-                {path: 'data', element: <CarData/>},
-                {path: 'store', element: <StoreShowcase/>},
-            ],
-        },
-        {
-            path: '/road',
-            element: <DashboardLayout/>,
-            children: [
-                {element: <Navigate to="/road/measurement" replace/>, index: true},
-                {path: 'measurement', element: <RoadMeasurement/>},
-                {path: 'condition', element: <RoadCondition/>},
-                {path: 'altitude', element: <RoadAltitude/>},
-            ],
-        },
-        {
-            path: '*',
-            element: <LogoOnlyLayout/>,
-            children: [
-                {path: '404', element: <NotFound/>},
-                {path: '*', element: <Navigate to="/404" replace/>},
-            ],
-        },
-        {path: '*', element: <Navigate to="/404" replace/>},
-    ]);
+  return useRoutes([
+    {
+      path: '/',
+      element: <Login />
+    },
+    {
+      path: '/signup',
+      element: <Signup />
+    },
+    {
+      path: '/car',
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to="/car/data" replace />, index: true },
+        { path: 'data', element: <CarData /> },
+        { path: 'store', element: <StoreShowcase /> },
+      ],
+    },
+    {
+      path: '/road',
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to="/road/measurement" replace />, index: true },
+        { path: 'measurement', element: <RoadMeasurement /> },
+        { path: 'condition', element: <RoadCondition /> },
+        { path: 'altitude', element: <RoadAltitude /> },
+      ],
+    },
+    {
+      path: '*',
+      element: <LogoOnlyLayout />,
+      children: [
+        { path: '404', element: <NotFound /> },
+        { path: '*', element: <Navigate to="/404" replace /> },
+      ],
+    },
+    { path: '*', element: <Navigate to="/404" replace /> },
+  ]);
 }
 
 // Dashboard
@@ -64,3 +68,4 @@ const RoadAltitude = Loadable(lazy(() => import('../pages/RoadAltitude')));
 const CarData = Loadable(lazy(() => import('../pages/CarData')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const StoreShowcase = Loadable(lazy(() => import('../pages/showcase/StoreShowcase')));
+const Signup = Loadable(lazy(() => import('../pages/Signup')));
