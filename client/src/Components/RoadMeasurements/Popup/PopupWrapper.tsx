@@ -46,11 +46,9 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     ({ target }: any) =>
       update(key)(target.value);
 
-  const availableTagsStrings = availableTags?.map((tag) => tag.type);
-
-  const test = availableTagsStrings?.map((meas) => {
-    return <option value={meas}>{meas}</option>;
-  });
+  const tagOptions = availableTags?.map(
+    (tag) => <option value={tag.type}>{tag.type}</option>
+  );
 
   return (
     <div className="popup-wrapper">
@@ -61,15 +59,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         defaultValue={name}
         onChange={inputChange("name")}
       />
-      {/*}
-      <input
-        className="sweetalert-input"
-        placeholder="Tag.."
-        type="text"
-        defaultValue={dbName}
-        onChange={inputChange("dbName")}
-      />
-        */}
 
       <select
         className="sweetalert-input"
@@ -77,9 +66,9 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         onChange={inputChange("dbName")}
       >
         <option value="" disabled>
-          Select measurement
+          Select measurement...
         </option>
-        {test}
+        {tagOptions}
       </select>
 
       <div className="sweetalert-checkboxes">
