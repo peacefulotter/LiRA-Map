@@ -8,7 +8,7 @@ import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { useMetasCtx } from "../../context/MetasContext";
 
 import { addMeasurement } from "../../queries/measurements";
-import { MeasProperties, ActiveMeasProperties } from "../../models/properties";
+import { ActiveMeasProperties } from "../../models/properties";
 import { RideMeta } from "../../models/models";
 
 import { RENDERER_MEAS_PROPERTIES } from "../Map/constants";
@@ -17,12 +17,14 @@ import MeasCheckbox from "./MeasCheckbox";
 
 import '../../css/ridedetails.css'
 
+
 const RideDetails: FC = () => {
 
 	const { selectedMetas } = useMetasCtx()
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
+	
 	
 	const popup = useMeasPopup()
 
@@ -53,6 +55,19 @@ const RideDetails: FC = () => {
 			RENDERER_MEAS_PROPERTIES 
 		)
 	}
+	const deleteMeasurement = (e: ActiveMeasProperties, i: number) => (e: React.MouseEvent) =>{
+		e.preventDefault()
+		e.stopPropagation()
+		const temp = [...measurements]
+
+		
+		if (i > -1) { // only splice array when item is found
+				temp.splice(i, 1); // 2nd parameter means remove one item only
+		}
+		
+		setMeasurements(temp)
+		
+	}
 
     const selectMeasurement = (i: number) => (isChecked: boolean) => {        
         const temp = [...measurements]
@@ -67,7 +82,8 @@ const RideDetails: FC = () => {
 					key={`meas-checkbox-${i}`}
 					meas={m}
 					selectMeasurement={selectMeasurement(i)}
-					editMeasurement={editMeasurement(m, i)} />
+					editMeasurement={editMeasurement(m, i)} 
+					deleteMeasurement={ deleteMeasurement(m,i) } />
 			) }
 
 			<Checkbox 
@@ -81,6 +97,7 @@ const RideDetails: FC = () => {
 			) }
         </div>
   )
+	
 }
 
 export default RideDetails;
