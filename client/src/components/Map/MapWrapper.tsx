@@ -12,7 +12,8 @@ const MapWrapper = ( props : any ) => {
 	const { center, zoom, minZoom, maxZoom, scaleWidth } = MAP_OPTIONS;
 
 	return (
-		<MapContainer 
+		<MapContainer
+			style={{height: '75vh'}}
 			preferCanvas={true}
 			center={center} 
 			zoom={zoom} 

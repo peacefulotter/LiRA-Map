@@ -28,13 +28,13 @@ const Cards: FC<CardsProps> = ({showMetas, onClick}) => {
         </div>
     }
 
-    return null
-    // <List
-    //     width={170}
-    //     height={2500}
-    //     rowHeight={61}
-    //     rowRenderer={renderRow}
-    //     rowCount={showMetas.length}/>
+    // @ts-ignore
+    return <List
+         width={170}
+         height={2500}
+         rowHeight={61}
+         rowRenderer={renderRow}
+         rowCount={showMetas.length}/>
 }
 
 interface SelectMeta extends RideMeta {
@@ -48,6 +48,8 @@ const RideCards: FC = () => {
     const [showMetas, setShowMetas] = useState<SelectMeta[]>([])
 
     useEffect(() => {
+        console.log("Metas:\n");
+        console.log(metas); // ProdURL
         setShowMetas(metas.map(m => ({...m, selected: false})))
     }, [metas])
 
