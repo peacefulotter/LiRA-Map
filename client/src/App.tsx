@@ -17,7 +17,6 @@ const App: FC = () => {
                 <Navbar />
                 <Switch>
                     <Route 
-
                         exact path="/" 
                         render={()=> <Redirect to="/road_measurements"/>}  />
                     <Route 
