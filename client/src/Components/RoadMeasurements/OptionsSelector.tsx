@@ -7,7 +7,9 @@ const defaultOptions: TripsOptions = {
     search: '',
     startDate: new Date("2020-01-01"),
     endDate: new Date(),
-    reversed: false
+    reversed: false,
+    distanceKmSort: false,
+    durationSort: false
 } 
 
 interface IOptionsSelector {
@@ -22,6 +24,7 @@ const OptionsSelector: FC<IOptionsSelector> = ( { onChange } ) => {
         return function<T>(value: T) 
         {
             const temp = { ...options } as any
+            console.log(temp);
             temp[key] = value;
             setOptions(temp)
             onChange(temp)
@@ -35,6 +38,10 @@ const OptionsSelector: FC<IOptionsSelector> = ( { onChange } ) => {
                 placeholder='Search..' 
                 value={options.search} 
                 onChange={e => _onChange('search')(e.target.value)} />
+                <select>
+                    <option value = "distanceKmSort" onSelect={_onChange('distanceKmSort')}>DistanceKm{options.distanceKmSort}</option>
+                    <option value = "Duration">Duration{options.durationSort}</option>
+                </select>
 
             <DatePicker onChange={_onChange('startDate')} value={options.startDate} className="options-date-picker" />
             <DatePicker onChange={_onChange('endDate')} value={options.endDate} className="options-date-picker" />

@@ -9,6 +9,7 @@ import { RideMeta, TripsOptions } from '../../models/models'
 import '../../css/ridecard.css'
 import { useMetasCtx } from "../../context/MetasContext";
 import OptionsSelector from "./OptionsSelector";
+import { CgTemplate } from "react-icons/cg";
 
 
 interface CardsProps {
@@ -52,8 +53,15 @@ const RideCards: FC = ( ) => {
         setShowMetas( metas.map(m => ({...m, selected: false})) )
     }, [metas])
 
-    const onChange = ( { search, startDate, endDate, reversed }: TripsOptions) => {
-        const temp: SelectMeta[] = metas
+    const onChange = ( { search, startDate, endDate, reversed, distanceKmSort, durationSort}: TripsOptions) => {
+        let updatedMetas = metas
+        if(distanceKmSort == true) {
+            updatedMetas = metas.sort((a,b) => (a.DistanceKm > b.DistanceKm) ? -1 : 1)
+        }
+        if(durationSort == true) {
+            updatedMetas = metas.sort((a,b) => (a.Duration > b.Duration) ? -1 : 1)
+        }
+        const temp: SelectMeta[] = updatedMetas
             .filter( (meta: RideMeta) => {
                 const inSearch = search === "" || meta.TaskId.toString().includes(search)
                 const date = new Date(meta.Created_Date).getTime()
