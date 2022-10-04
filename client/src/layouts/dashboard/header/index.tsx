@@ -1,6 +1,7 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar } from '@mui/material';
+import {Box, Stack, AppBar, Toolbar} from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
@@ -85,6 +86,10 @@ export default function DashboardHeader({
         )}
 
         <Box sx={{ flexGrow: 1 }} />
+
+        <ErrorOutlineIcon color="success" sx={{ m: 1 }}>
+
+        </ErrorOutlineIcon>
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <AccountPopover />
