@@ -22,8 +22,8 @@ RUN npm install -g serve
 COPY . .
 
 # Set the command to start the node server.
-CMD serve -p 80 -s build
+CMD serve -p 8080 -s build
 
 # Tell Docker about the port we'll run on.
 # virker ikke
-EXPOSE 80
+EXPOSE 8080

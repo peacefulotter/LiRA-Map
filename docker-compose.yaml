@@ -5,11 +5,9 @@ services:
   build:
    context: ./client
   ports:
-   - 3000:3000
-  command: npm start
+   - "8080:8080"
  server-nest:
   build:
    context: ./server-nest
   ports:
-   - 3002:3002
-  command: npm start
+   - "3002:3002"
