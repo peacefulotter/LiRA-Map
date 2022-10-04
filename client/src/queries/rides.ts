@@ -3,11 +3,11 @@ import { RideMeta } from "../models/models"
 import { BoundedPath, Metadata } from "../models/path"
 import { PopupFunc } from "../models/popup"
 import { ActiveMeasProperties } from "../models/properties"
-import { asyncPost, getTest, post } from "./fetch"
+import { asyncPost, get, post } from "./fetch"
 
 
 export const getRides = ( callback: Dispatch<SetStateAction<RideMeta[]>> ) => {
-    getTest( 'http://lirase2.compute.dtu.dk:3002/rides', callback )
+    get( '/rides', callback )
     // Must use ProdURL to not crash
 }
 
