@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { TwitterPicker } from "react-color";
 import { Gradient } from "react-gradient-hook";
+import Select from 'react-select';
 
 import { RendererName, rendererTypes } from "../../../models/renderers";
 
@@ -49,6 +50,19 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   const tagOptions = availableTags?.map(
     (tag) => <option value={tag.type}>{tag.type}</option>
   );
+  
+  const tagOptions2 = availableTags?.map((tag) => ({
+    value: tag.type,
+    label: tag.type,
+  }))
+
+  const test = {value: 'yo', label: 'hey'}
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
 
   return (
     <div className="popup-wrapper">
@@ -60,7 +74,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         onChange={inputChange("name")}
       />
 
-      <select
+      {/*<Select
         className="sweetalert-input"
         value={dbName}
         onChange={inputChange("dbName")}
@@ -69,7 +83,14 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
           Select measurement...
         </option>
         {tagOptions}
-      </select>
+      </Select>*/}
+
+      
+      
+
+      
+      <Select className="basic-single" classNamePrefix="select" options={tagOptions2} />
+      
 
       <div className="sweetalert-checkboxes">
         {Object.keys(RendererName).map((rName: string, i: number) => (
