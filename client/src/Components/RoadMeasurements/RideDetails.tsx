@@ -22,13 +22,9 @@ const RideDetails: FC = () => {
   const { selectedMetas } = useMetasCtx();
 
   const { measurements, setMeasurements } = useMeasurementsCtx();
-  const [addChecked, setAddChecked] = useState<boolean>(false);
-
-	const { measurements, setMeasurements } = useMeasurementsCtx()
-	const [ addChecked, setAddChecked ] = useState<boolean>(false)
+  const [addChecked, setAddChecked] = useState<boolean>(false);	
 	
-	
-	const popup = useMeasPopup()
+  const popup = useMeasPopup()
 
   const editMeasurement =
     (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
@@ -100,12 +96,5 @@ const RideDetails: FC = () => {
   )
 	
 }
-
-      {selectedMetas.map((meta: RideMeta, i: number) => (
-        <MetaData md={meta} key={`md-${Math.random()}`} />
-      ))}
-    </div>
-  );
-};
 
 export default RideDetails;
