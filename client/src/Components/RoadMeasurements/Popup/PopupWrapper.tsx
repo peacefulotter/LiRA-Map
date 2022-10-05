@@ -22,6 +22,7 @@ interface IPopupWrapper {
 const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   const [state, setState] = useState(defaultOptions);
   const [availableTags, setTags] = useState<TagProperties[]>();
+  
 
   const { name, dbName, rendererName, color } = state;
 
@@ -44,25 +45,13 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const inputChange =
     (key: keyof ActiveMeasProperties) =>
-    ({ target }: any) =>
-      update(key)(target.value);
-
-  const tagOptions = availableTags?.map(
-    (tag) => <option value={tag.type}>{tag.type}</option>
-  );
+    ({ value }: any) =>
+      update(key)(value);
   
-  const tagOptions2 = availableTags?.map((tag) => ({
-    value: tag.type,
-    label: tag.type,
+  const tagOptions = availableTags?.map((tag) => ({
+    value: tag.type.toString(),
+    label: tag.type.toString()
   }))
-
-  const test = {value: 'yo', label: 'hey'}
-
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
 
   return (
     <div className="popup-wrapper">
@@ -73,25 +62,15 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         defaultValue={name}
         onChange={inputChange("name")}
       />
-
-      {/*<Select
-        className="sweetalert-input"
-        value={dbName}
-        onChange={inputChange("dbName")}
-      >
-        <option value="" disabled>
-          Select measurement...
-        </option>
-        {tagOptions}
-      </Select>*/}
-
       
+      <Select 
+        className="react-select-combobox" 
+        placeholder="Tag.."
+        value={dbName ? { value: dbName, label: dbName } : undefined}
+        onChange={inputChange("dbName")} 
+        options={tagOptions} 
+      />
       
-
-      
-      <Select className="basic-single" classNamePrefix="select" options={tagOptions2} />
-      
-
       <div className="sweetalert-checkboxes">
         {Object.keys(RendererName).map((rName: string, i: number) => (
           <Checkbox
