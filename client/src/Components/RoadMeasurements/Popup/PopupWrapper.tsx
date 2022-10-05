@@ -17,7 +17,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const { name, dbName, rendererName, color } = state;
 
-    const { name, dbName, id, rendererName, color } = state;
 
     const update = (key: keyof ActiveMeasProperties) => (val: any) => {
         const temp = { ...state } as any;
@@ -65,20 +64,5 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         </div>
     )
 }
-
-      {rendererTypes[rendererName].usePalette ? (
-        <Gradient
-          key={`gradient-${rendererName}`}
-          defaultColors={rendererTypes[rendererName].defaultPalette}
-          cursorOptions={{ grid: true, samples: 40 }}
-          pickerOptions={{ showCircles: false }}
-          onChange={update('palette')}
-        />
-      ) : (
-        <TwitterPicker color={color} onChange={(c) => update('color')(c.hex)} />
-      )}
-    </div>
-  );
-};
 
 export default PopupWrapper;

@@ -21,8 +21,6 @@ import '../../css/ridedetails.css';
 const RideDetails: FC = () => {
   const { selectedMetas } = useMetasCtx();
 
-  const { measurements, setMeasurements } = useMeasurementsCtx();
-  const [addChecked, setAddChecked] = useState<boolean>(false);
 
 	const { measurements, setMeasurements } = useMeasurementsCtx()
 	const [ addChecked, setAddChecked ] = useState<boolean>(false)
@@ -100,12 +98,5 @@ const RideDetails: FC = () => {
   )
 	
 }
-
-      {selectedMetas.map((meta: RideMeta, i: number) => (
-        <MetaData md={meta} key={`md-${Math.random()}`} />
-      ))}
-    </div>
-  );
-};
 
 export default RideDetails;
