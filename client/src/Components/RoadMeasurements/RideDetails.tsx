@@ -81,7 +81,7 @@ const RideDetails: FC = () => {
 					meas={m}
 					selectMeasurement={selectMeasurement(i)}
 					editMeasurement={editMeasurement(m, i)} 
-					deleteMeasurement={ deleteMeasurement(m,i) } />
+					deleteMeasurement={ deleteMeasurement(m) } />
 			) }
 
 			<Checkbox 
