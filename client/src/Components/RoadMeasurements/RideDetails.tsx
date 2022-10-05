@@ -21,12 +21,10 @@ import '../../css/ridedetails.css';
 const RideDetails: FC = () => {
   const { selectedMetas } = useMetasCtx();
 
-
-	const { measurements, setMeasurements } = useMeasurementsCtx()
-	const [ addChecked, setAddChecked ] = useState<boolean>(false)
+  const { measurements, setMeasurements } = useMeasurementsCtx();
+  const [addChecked, setAddChecked] = useState<boolean>(false);	
 	
-	
-	const popup = useMeasPopup()
+  const popup = useMeasPopup()
 
   const editMeasurement =
     (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {

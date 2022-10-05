@@ -17,7 +17,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const { name, dbName, rendererName, color } = state;
 
-
     const update = (key: keyof ActiveMeasProperties) => (val: any) => {
         const temp = { ...state } as any;
         temp[key] = val;
