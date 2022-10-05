@@ -1,7 +1,8 @@
-import { LatLng } from 'leaflet';
-import { Palette } from 'react-leaflet-hotline';
-import { ActiveMeasProperties, RendererOptions } from '../../models/properties';
-import { RendererName } from '../../models/renderers';
+import { LatLng } from "leaflet";
+import { Palette } from "react-leaflet-hotline";
+import { ActiveMeasProperties, RendererOptions } from "../../models/properties";
+import { RendererName } from "../../models/renderers";
+import { v4 as uuidv4 } from "uuid";
 
 // Map
 export const MAP_OPTIONS = {
@@ -15,7 +16,7 @@ export const MAP_OPTIONS = {
 // Renderer
 export const RENDERER_WIDTH = 4;
 export const RENDERER_WEIGHT = 4;
-export const RENDERER_COLOR = 'red';
+export const RENDERER_COLOR = "red";
 export const RENDERER_OPACITY = 1.0;
 export const RENDERER_PALETTE: Palette = [
   { r: 0, g: 160, b: 0, t: 0 },
@@ -24,7 +25,7 @@ export const RENDERER_PALETTE: Palette = [
 ];
 
 export const RENDERER_OPTIONS: Required<RendererOptions> = {
-  rendererName: 'hotline' as RendererName,
+  rendererName: "hotline" as RendererName,
   dilatationFactor: 1,
   arrowHead: 0,
   min: 0,
@@ -38,8 +39,9 @@ export const RENDERER_OPTIONS: Required<RendererOptions> = {
 
 export const RENDERER_MEAS_PROPERTIES: Required<ActiveMeasProperties> = {
   ...RENDERER_OPTIONS,
-  dbName: '',
-  name: '',
+  dbName: "",
+  name: "",
+  id: "",
   hasValue: true,
   isActive: false,
 };

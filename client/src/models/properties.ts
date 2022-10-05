@@ -1,5 +1,5 @@
-import { Palette } from 'react-leaflet-hotline';
-import { RendererName } from './renderers';
+import { Palette } from "react-leaflet-hotline";
+import { RendererName } from "./renderers";
 
 // Rendering properties of an entire Path
 export interface PathProperties {
@@ -34,6 +34,8 @@ export interface MeasProperties extends PathProperties {
   name: string;
   // Needs to be specified if the points have a value attached to them
   hasValue?: boolean;
+  // Adding a random uuid to each measurement created
+  id: string;
 }
 
 export interface ActiveMeasProperties extends MeasProperties {
