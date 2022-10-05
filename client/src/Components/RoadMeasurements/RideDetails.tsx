@@ -55,19 +55,17 @@ const RideDetails: FC = () => {
 			RENDERER_MEAS_PROPERTIES 
 		)
 	}
-	const deleteMeasurement = (e: ActiveMeasProperties, i: number) => (e: React.MouseEvent) =>{
+	const deleteMeasurement = (m: ActiveMeasProperties) => (e: React.MouseEvent) =>{
 		e.preventDefault()
 		e.stopPropagation()
-		const temp = [...measurements]
+		const tempArray = [...measurements]
+		const elementToRemove = m.id
 
-		
-		if (i > -1) { // only splice array when item is found
-				temp.splice(i, 1); // 2nd parameter means remove one item only
-		}
-		
-		setMeasurements(temp)
-		
+		const filteredArray = tempArray.filter(m => m.id !== elementToRemove);
+		setMeasurements(filteredArray)
 	}
+	
+
 
     const selectMeasurement = (i: number) => (isChecked: boolean) => {        
         const temp = [...measurements]

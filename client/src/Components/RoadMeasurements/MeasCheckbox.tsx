@@ -36,8 +36,7 @@ const MeasCheckbox: FC<IMeasCheckbox> = ( { meas, editMeasurement, selectMeasure
     return (
         <Checkbox 
             className='ride-metadata-checkbox'
-            html={<CheckboxHTML meas={meas} editMeasurement={editMeasurement} 
-            deleteMeasurement={ deleteMeasurement } />}
+            html={<CheckboxHTML meas={meas} editMeasurement={editMeasurement} deleteMeasurement={ deleteMeasurement } />}
             onClick={selectMeasurement} />
     )
 }
