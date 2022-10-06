@@ -1,44 +1,45 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState } from 'react';
 
-import useMeasPopup from "./Popup/useMeasPopup";
-import Checkbox from "../Checkbox";
-import MetaData from "./MetaData";
+import useMeasPopup from './Popup/useMeasPopup';
+import Checkbox from '../Checkbox';
+import MetaData from './MetaData';
 
-import { useMeasurementsCtx } from "../../context/MeasurementsContext";
-import { useMetasCtx } from "../../context/MetasContext";
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
+import { useMetasCtx } from '../../context/MetasContext';
 
 import { addMeasurement } from "../../queries/measurements";
-import { MeasProperties, ActiveMeasProperties } from "../../models/properties";
+import { ActiveMeasProperties } from "../../models/properties";
 import { RideMeta } from "../../models/models";
 
-import { RENDERER_MEAS_PROPERTIES } from "../Map/constants";
+import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
-import MeasCheckbox from "./MeasCheckbox";
+import MeasCheckbox from './MeasCheckbox';
 
-import '../../css/ridedetails.css'
+import '../../css/ridedetails.css';
+
 
 const RideDetails: FC = () => {
+  const { selectedMetas } = useMetasCtx();
 
-	const { selectedMetas } = useMetasCtx()
-
-	const { measurements, setMeasurements } = useMeasurementsCtx()
-	const [ addChecked, setAddChecked ] = useState<boolean>(false)
+  const { measurements, setMeasurements } = useMeasurementsCtx();
+  const [addChecked, setAddChecked] = useState<boolean>(false);	
 	
-	const popup = useMeasPopup()
+  const popup = useMeasPopup()
 
-	const editMeasurement = (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
+  const editMeasurement =
+    (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-		popup( 
-			(newMeas: ActiveMeasProperties) => {
-				const temp = [...measurements]
-				temp[i] = newMeas;
-				setMeasurements( temp )
-			}, 
-			{ ...RENDERER_MEAS_PROPERTIES, ...meas } 
-		)
-	}
+      popup(
+        (newMeas: ActiveMeasProperties) => {
+          const temp = [...measurements];
+          temp[i] = newMeas;
+          setMeasurements(temp);
+        },
+        { ...RENDERER_MEAS_PROPERTIES, ...meas },
+      );
+    };
 
 	const showAddMeasurement = () => {
 		setAddChecked(true) 
@@ -53,12 +54,23 @@ const RideDetails: FC = () => {
 			RENDERER_MEAS_PROPERTIES 
 		)
 	}
+	const deleteMeasurement = (m: ActiveMeasProperties) => (e: React.MouseEvent) =>{
+		e.preventDefault()
+		e.stopPropagation()
+		const tempArray = [...measurements]
+		const elementToRemove = m.id
 
-    const selectMeasurement = (i: number) => (isChecked: boolean) => {        
-        const temp = [...measurements]
-        temp[i].isActive = isChecked
-        setMeasurements(temp)
-    }
+		const filteredArray = tempArray.filter(m => m.id !== elementToRemove);
+		setMeasurements(filteredArray)
+	}
+	
+
+
+  const selectMeasurement = (i: number) => (isChecked: boolean) => {
+    const temp = [...measurements];
+    temp[i].isActive = isChecked;
+    setMeasurements(temp);
+  };
 
     return (
 		<div className="meta-data">
@@ -67,7 +79,8 @@ const RideDetails: FC = () => {
 					key={`meas-checkbox-${i}`}
 					meas={m}
 					selectMeasurement={selectMeasurement(i)}
-					editMeasurement={editMeasurement(m, i)} />
+					editMeasurement={editMeasurement(m, i)} 
+					deleteMeasurement={ deleteMeasurement(m) } />
 			) }
 
 			<Checkbox 
@@ -81,6 +94,7 @@ const RideDetails: FC = () => {
 			) }
         </div>
   )
+	
 }
 
 export default RideDetails;
