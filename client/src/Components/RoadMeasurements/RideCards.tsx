@@ -53,17 +53,22 @@ const RideCards: FC = ( ) => {
         setShowMetas( metas.map(m => ({...m, selected: false})) )
     }, [metas])
 
-    const onChange = ( { search, startDate, endDate, reversed, distanceKmSort, durationSort}: TripsOptions) => {
+    const onChange = ( { search, startDate, endDate, reversed}: TripsOptions, key: keyof TripsOptions ) => {
         let updatedMetas = metas
-        if(distanceKmSort == true) {
-            updatedMetas = metas.sort((a,b) => (a.DistanceKm > b.DistanceKm) ? -1 : 1)
-        }
-        if(durationSort == true) {
-            updatedMetas = metas.sort((a,b) => (a.Duration > b.Duration) ? -1 : 1)
-        }
         const temp: SelectMeta[] = updatedMetas
             .filter( (meta: RideMeta) => {
-                const inSearch = search === "" || meta.TaskId.toString().includes(search)
+                let inSearch;
+                console.log('key', key)
+                if (key.includes("distanceKm")) {
+                    const searchedValue = Number(search)
+                    if (searchedValue === NaN) {
+                        inSearch = search === "" || meta.TaskId.toString().includes(search)
+                    } else {
+                        inSearch = meta.DistanceKm > searchedValue
+                    }
+                } else  {
+                    inSearch = search === "" || meta.TaskId.toString().includes(search)
+                }
                 const date = new Date(meta.Created_Date).getTime()
                 const inDate = date >= startDate.getTime() && date <= endDate.getTime()
                 return inSearch && inDate

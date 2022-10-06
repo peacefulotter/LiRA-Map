@@ -8,50 +8,60 @@ const defaultOptions: TripsOptions = {
     startDate: new Date("2020-01-01"),
     endDate: new Date(),
     reversed: false,
-    distanceKmSort: false,
-    durationSort: false
-} 
+    distanceKm: 0,
+}
 
+let choice: keyof TripsOptions = 'search'
 interface IOptionsSelector {
-    onChange: ( options: TripsOptions ) => void;
+    onChange: ( options: TripsOptions, key: keyof TripsOptions ) => void;
 }
 
 const OptionsSelector: FC<IOptionsSelector> = ( { onChange } ) => {
 
     const [options, setOptions] = useState<TripsOptions>(defaultOptions)
 
-    const _onChange = (key: keyof TripsOptions) => {
+    const _onChange = (key: keyof TripsOptions, choice: keyof TripsOptions) => {
         return function<T>(value: T) 
         {
             const temp = { ...options } as any
-            console.log(temp);
             temp[key] = value;
+            console.log(key);
             setOptions(temp)
-            onChange(temp)
+            onChange(temp, choice)
         }
-    } 
-
+    }
+    
     return (
         <div className="rides-options">
+        <select onChange={o => {
+            choice = (o.target.value as keyof TripsOptions);
+            console.log(choice)
+        }}>
+            {
+             Object.keys(defaultOptions).map((key, _) => {
+                return (
+                    <option value={key}>{key}</option>
+                )
+             })   
+        
+            }
+        </select>
             <input 
                 className="ride-search-input" 
                 placeholder='Search..' 
                 value={options.search} 
-                onChange={e => _onChange('search')(e.target.value)} />
-                <select>
-                    <option value = "distanceKmSort" onSelect={_onChange('distanceKmSort')}>DistanceKm{options.distanceKmSort}</option>
-                    <option value = "Duration">Duration{options.durationSort}</option>
-                </select>
-
-            <DatePicker onChange={_onChange('startDate')} value={options.startDate} className="options-date-picker" />
-            <DatePicker onChange={_onChange('endDate')} value={options.endDate} className="options-date-picker" />
+                onChange={e => _onChange('search', choice)(e.target.value)}
+                />
+            
+            <DatePicker onChange={_onChange('startDate', choice)} value={options.startDate} className="options-date-picker" />
+            <DatePicker onChange={_onChange('endDate', choice)} value={options.endDate} className="options-date-picker" />
 
             <Checkbox
                 className="ride-sort-cb"
                 html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-                onClick={_onChange('reversed')} />
+                onClick={_onChange('reversed', choice)} />
         </div>
-        
+
     )
 }
 
