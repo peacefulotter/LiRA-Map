@@ -33,4 +33,5 @@ export interface TripsOptions {
   startDate: Date;
   endDate: Date;
   reversed: boolean;
+  distanceKm: number;
 }
