@@ -1,5 +1,5 @@
-import { Palette } from "react-leaflet-hotline";
-import { RendererName } from "./renderers";
+import { Palette } from 'react-leaflet-hotline';
+import { RendererName } from './renderers';
 
 // Rendering properties of an entire Path
 export interface PathProperties {

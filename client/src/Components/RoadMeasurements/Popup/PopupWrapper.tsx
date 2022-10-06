@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { TwitterPicker } from 'react-color';
 import { Gradient } from 'react-gradient-hook';
 import Select from 'react-select';

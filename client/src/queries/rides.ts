@@ -40,13 +40,13 @@ export const getRide = async (
   // Track position and (interpolation) has special exceptions since
   // they are supposed to not have any values
   if (
-    measurement.dbName !== 'track.pos' &&
-    measurement.dbName !== 'acc.xyz' &&
+    dbName !== 'track.pos' &&
+    dbName !== 'acc.xyz' &&
     path.filter((p) => p.value !== undefined).length === 0
   ) {
     popup({
       icon: 'warning',
-      title: `This trip doesn't contain data for ${name}`,
+      title: `This trip doesn't contain data for ${name ? name : dbName}`,
       footer: `TripId: ${tripId} | TaskId: ${taskId}`,
       toast: true,
     });
