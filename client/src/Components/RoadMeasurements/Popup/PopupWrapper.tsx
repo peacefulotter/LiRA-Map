@@ -1,20 +1,19 @@
-import { FC, useEffect, useState } from "react";
-import { TwitterPicker } from "react-color";
-import { Gradient } from "react-gradient-hook";
+import { FC, useEffect, useState } from 'react';
+import { TwitterPicker } from 'react-color';
+import { Gradient } from 'react-gradient-hook';
 import Select from 'react-select';
 
-import { RendererName, rendererTypes } from "../../../models/renderers";
+import { RendererName, rendererTypes } from '../../../models/renderers';
 
-import Checkbox from "../../Checkbox";
+import Checkbox from '../../Checkbox';
 import {
   ActiveMeasProperties,
   TagProperties,
-} from "../../../models/properties";
-import { getTags } from "../../../queries/tags";
-import { WaysConditions } from "../../../models/path";
-import { getAltitudes } from "../../../queries/altitude";
+} from '../../../models/properties';
+import { getTags } from '../../../queries/tags';
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
+
 interface IPopupWrapper {
   defaultOptions: Required<ActiveMeasProperties>;
   setOptions: (newOpts: Required<ActiveMeasProperties>) => void;
@@ -30,20 +29,18 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     temp[key] = val;
     setState(temp);
     setOptions(temp);
-      temp.id = uuidv4()
-
+    temp.id = uuidv4();
   };
 
   useEffect(() => {
     getTags((data: TagProperties[]) => {
-      console.log("Hilfe " + data);
+      console.log('Hilfe ' + data);
       data.forEach(function (value) {
         console.log(value.type);
         setTags(data);
       });
     });
   }, []);
-
 
   const inputChange =
     (key: keyof ActiveMeasProperties) =>
@@ -52,8 +49,8 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const tagOptions = availableTags?.map((tag) => ({
     value: tag.type.toString(),
-    label: tag.type.toString()
-  }))
+    label: tag.type.toString(),
+  }));
 
   return (
     <div className="popup-wrapper">
@@ -62,14 +59,14 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         placeholder="Name.."
         type="text"
         defaultValue={name}
-        onChange={inputChange("name")}
+        onChange={inputChange('name')}
       />
 
       <Select
         className="react-select-combobox"
         placeholder="Tag.."
         value={dbName ? { value: dbName, label: dbName } : undefined}
-        onChange={inputChange("dbName")}
+        onChange={inputChange('dbName')}
         options={tagOptions}
       />
 
@@ -78,9 +75,9 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
           <Checkbox
             key={`sweetalert-checkbox-${i}`}
             className="ride-metadata-checkbox"
-            html={<div style={{ textTransform: "capitalize" }}>{rName}</div>}
+            html={<div style={{ textTransform: 'capitalize' }}>{rName}</div>}
             forceState={rName === rendererName}
-            onClick={() => update("rendererName")(rName)}
+            onClick={() => update('rendererName')(rName)}
           />
         ))}
       </div>
@@ -91,10 +88,10 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
           defaultColors={rendererTypes[rendererName].defaultPalette}
           cursorOptions={{ grid: true, samples: 40 }}
           pickerOptions={{ showCircles: false }}
-          onChange={update("palette")}
+          onChange={update('palette')}
         />
       ) : (
-        <TwitterPicker color={color} onChange={(c) => update("color")(c.hex)} />
+        <TwitterPicker color={color} onChange={(c) => update('color')(c.hex)} />
       )}
     </div>
   );
