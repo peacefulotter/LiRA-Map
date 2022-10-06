@@ -38,6 +38,12 @@ export interface MeasProperties extends PathProperties {
   id: string;
 }
 
+export interface TagProperties {
+  MeasurementTypeId: string;
+  type: number;
+  Created_Date: string; // "2021-04-27T18:11:02.223Z"
+}
+
 export interface ActiveMeasProperties extends MeasProperties {
   isActive: boolean; // true if measurement is displayed, false otherwise
 }
