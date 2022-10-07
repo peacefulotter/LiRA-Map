@@ -7,16 +7,13 @@
 # See https://github.com/nodejs/docker-node/blob/main/README.md#how-to-use-this-image
 FROM node:lts
 
-COPY . .
+COPY ["package.json", "package-lock.json*", "./"]
 
 # Build for production.
 RUN npm install --legacy-peer-deps
-RUN npm run build --production
-
-# Install `serve` to run the application.
-RUN npm install -g serve
 
 COPY . .
 
-# Set the command to start the node server.
-CMD serve -p 8080 -s build
+RUN npm run build --production
+
+CMD [ "npm", "start" ]
