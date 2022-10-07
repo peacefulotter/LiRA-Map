@@ -5,6 +5,8 @@ import {Avatar, Box, Divider, MenuItem, Typography} from '@mui/material';
 // components
 import MenuPopover from '../../../components/MenuPopover';
 import {IconButtonAnimate} from '../../../components/animate';
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store";
 
 // ----------------------------------------------------------------------
 
@@ -28,11 +30,9 @@ import {IconButtonAnimate} from '../../../components/animate';
 export default function AccountPopover() {
     const [open, setOpen] = useState<HTMLElement | null>(null);
 
-    // const navigate = useNavigate();
-    //
-    // const handleNavigate = (link: string) => {
-    //     navigate(link);
-    // };
+    const { userData, userCredentials } = useSelector(
+        (state: RootState) => state.access
+    )
 
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setOpen(event.currentTarget);
@@ -82,10 +82,10 @@ export default function AccountPopover() {
             >
                 <Box sx={{my: 1.5, px: 2.5}}>
                     <Typography variant="subtitle2" noWrap>
-                        User Name
+                        {userData?.firstName} {userData?.lastName}
                     </Typography>
-                    <Typography variant="body2" sx={{color: 'text.secondary'}} noWrap>
-                        User Email
+                    <Typography variant="body2" sx={{color: 'text.secondary'}}>
+                        {userCredentials?.user?.email}
                     </Typography>
                 </Box>
 

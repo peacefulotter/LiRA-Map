@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import LoadingButton from '@mui/lab/LoadingButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
@@ -9,24 +9,33 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {post_new} from "../queries/fetch";
 import {useNavigate} from "react-router-dom";
 import Logo from "../components/Logo";
 import Page from '../components/Page';
+import {Dispatch, RootState} from "../store";
+import {useDispatch, useSelector} from "react-redux";
 
-export default function SignIn() {
+export default function Login() {
     const navigate = useNavigate();
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const dispatch = useDispatch<Dispatch>()
+
+    const { loading, success, error } = useSelector(
+        (rootState: RootState) => rootState.loading.models.access
+    )
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const loginObject = {email: data.get('email'), password: data.get('password')}
-        post_new("/login", loginObject).then(response => {
-            console.log(response.data);
-            if (response.data.userCredentials.user.uid && response.data.userData) {
-                navigate("/road/measurement");
-            }
-        })
+        const loginObject = {email: data.get('email') as string, password: data.get('password') as string}
+        await dispatch.access.login(loginObject)
+        if (error) {
+            console.log(error)
+        }
+        if (success) {
+            navigate("/road/measurement");
+        }
     };
+
     return (
         <Page title="Log in">
             <Container component="main" maxWidth="xs">
@@ -69,14 +78,15 @@ export default function SignIn() {
                             control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"
                         />
-                        <Button
+                        <LoadingButton
+                            loading={loading}
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{mt: 3, mb: 2}}
                         >
                             Sign In
-                        </Button>
+                        </LoadingButton>
                         <Grid container>
                             <Grid item>
                                 <Link href="/signup" variant="body2">
