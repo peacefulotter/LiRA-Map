@@ -21,7 +21,8 @@ export default function SignIn() {
         const data = new FormData(event.currentTarget);
         const loginObject = {email: data.get('email'), password: data.get('password')}
         post_new("/login", loginObject).then(response => {
-            if (response.data === true) {
+            console.log(response.data);
+            if (response.data.userCredentials.user.uid && response.data.userData) {
                 navigate("/road/measurement");
             }
         })
