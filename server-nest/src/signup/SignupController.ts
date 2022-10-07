@@ -4,17 +4,17 @@ import {
   HttpException,
   HttpStatus,
   Post,
-} from "@nestjs/common";
-import { Signup } from "../models";
-import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, setDoc, doc } from "firebase/firestore";
-import { firestore } from "../firebase";
-import { UserCredential } from "firebase/auth";
-import firebase from "firebase/compat";
+} from '@nestjs/common';
+import { Signup } from '../models';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, setDoc, doc } from 'firebase/firestore';
+import { firestore } from '../firebase';
+import { UserCredential } from 'firebase/auth';
+import firebase from 'firebase/compat';
 import FirebaseError = firebase.FirebaseError;
 
-@Controller("/signup")
+@Controller('/signup')
 export class SignupController {
   @Post()
   async signup(@Body() signup: Signup): Promise<string> {
@@ -43,9 +43,10 @@ export class SignupController {
     console.log(userResponse);
     return JSON.stringify(userResponse);
   }
+
   async createUser(signupData: Signup, user: UserCredential): Promise<boolean> {
     let returnValue = false;
-    const userCollection = collection(firestore, "userData");
+    const userCollection = collection(firestore, 'userData');
     const userdata = {
       firstName: signupData.firstName,
       lastName: signupData.lastName,
