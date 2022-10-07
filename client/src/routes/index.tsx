@@ -7,7 +7,6 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import LoadingScreen from '../components/LoadingScreen';
 import Login from '../pages/Login'
 
-import { getConnection } from '../queries/connection';
 
 // ----------------------------------------------------------------------
 
@@ -23,10 +22,6 @@ const Loadable = (Component: ElementType) => (props: any) => {
 };
 
 export default function Router() {
-    const [ connection, setConnection ] = useState<boolean>(false)
-
-    useEffect( () => getConnection(setConnection), [])
-
     return useRoutes([
         {
             path: '/',

@@ -16,6 +16,8 @@ import { IconButtonAnimate } from '../../../components/animate';
 //
 import AccountPopover from './AccountPopover';
 
+import Connection from '../../../components/Connection/Connection'
+
 // ----------------------------------------------------------------------
 
 type RootStyleProps = {
@@ -87,9 +89,7 @@ export default function DashboardHeader({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <ErrorOutlineIcon color="success" sx={{ m: 1 }}>
-
-        </ErrorOutlineIcon>
+        <Connection></Connection>
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <AccountPopover />
