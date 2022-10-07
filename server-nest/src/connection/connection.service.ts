@@ -6,6 +6,13 @@ export class ConnectionService {
     constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
     async getConnection(): Promise<boolean> {
+        return Promise.race([
+            this.testConnection(),
+            new Promise((resolve: (value: boolean) => void) => setTimeout(() => resolve(false), 5000))
+        ])
+    }
+
+    async testConnection(): Promise<boolean> {
         try {
             await this.knex.raw('select 1+1 as result')
         } catch (error) {
@@ -15,23 +22,5 @@ export class ConnectionService {
         }
 
         return true
-
-        /*
-        const a = new Promise((resolve: (value: boolean) => void, reject) => {
-            setTimeout(async () => {
-                try {
-                    await this.knex.raw('select 1+1 as result')
-                } catch (error) {
-                    console.error("Could not connect to DB: ", error)
-
-                    resolve(false)
-                }
-                resolve(true);
-            }, 3000);
-            resolve(false);
-        });
-
-        return await Promise.race([a]);
-        */
     }
 }
