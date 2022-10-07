@@ -19,4 +19,4 @@ RUN npm install -g serve
 COPY . .
 
 # Set the command to start the node server.
-CMD serve -p 8080 -s build
+CMD serve -p 3000 -s build

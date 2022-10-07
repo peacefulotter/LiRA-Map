@@ -5,9 +5,11 @@ services:
   build:
    context: ./client
   ports:
-   - "80:8080"
+   - 80:3000
+  expose:
+   - 3000 
  server-nest:
   build:
    context: ./server-nest
   ports:
-   - "3002:3002"
+   - 3002
