@@ -1,38 +1,80 @@
 import { createModel } from "@rematch/core";
 import { RootModel } from ".";
+import axios from "../utils/axios";
 
-interface userModel {
-    name: string;
-    accessToken: string;
-    count: number;
+export interface Access {
+    userCredentials?: UserCredentials;
+    userData?:        UserData;
 }
 
-let userState: userModel = {
-    name: "",
-    accessToken: "",
-    count: 0,
+export interface UserCredentials {
+    user?:           User;
+    providerId?:     null;
+    _tokenResponse?: TokenResponse;
+    operationType?:  string;
+}
+
+export interface TokenResponse {
+    kind?:         string;
+    localId?:      string;
+    email?:        string;
+    displayName?:  string;
+    idToken?:      string;
+    registered?:   boolean;
+    refreshToken?: string;
+    expiresIn?:    string;
+}
+
+export interface User {
+    uid?:             string;
+    email?:           string;
+    emailVerified?:   boolean;
+    isAnonymous?:     boolean;
+    providerData?:    ProviderDatum[];
+    stsTokenManager?: StsTokenManager;
+    createdAt?:       string;
+    lastLoginAt?:     string;
+    apiKey?:          string;
+    appName?:         string;
+}
+
+export interface ProviderDatum {
+    providerId?:  string;
+    uid?:         string;
+    displayName?: null;
+    email?:       string;
+    phoneNumber?: null;
+    photoURL?:    null;
+}
+
+export interface StsTokenManager {
+    refreshToken?:   string;
+    accessToken?:    string;
+    expirationTime?: number;
+}
+
+export interface UserData {
+    lastName?:  string;
+    firstName?: string;
+}
+
+let accessState: Access = {
+    userCredentials: {},
+    userData:        {}
 };
-export const user = createModel<RootModel>()({
-    state: userState, // initial state
+export const access = createModel<RootModel>()({
+    state: accessState, // initial state
     reducers: {
         // handle state changes with pure functions
-        setState(state, payload: userModel) {
+        setState(state, payload: Access) {
             return state = payload;
-        },
-        increment(state, payload: number) {
-            return { ...state, count: state.count + payload };
-        },
-        decrement(state, payload: number) {
-            return { ...state, count: state.count - payload };
         }
     },
-    // effects: (dispatch) => ({
-    //     // handle state changes with impure functions.
-    //     // use async/await for async actions
-    //     async incrementAsync(payload: number, state) {
-    //         console.log("This is current root state", state);
-    //         await new Promise((resolve) => setTimeout(resolve, 1000));
-    //         dispatch.user.increment(payload);
-    //     },
-    // }),
+    effects: (dispatch) => ({
+        async login(payload: { email: string, password: string }) {
+            axios.post('/login', payload).then((response) => {
+                dispatch.access.setState(response.data);
+            })
+        },
+    }),
 });
