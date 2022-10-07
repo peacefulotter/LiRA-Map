@@ -12,6 +12,9 @@ COPY ["package.json", "package-lock.json*", "./"]
 # Build for production.
 RUN npm install --legacy-peer-deps
 
+# Install `serve` to run the application.
+RUN npm install -g serve
+
 COPY . .
 
 # Set the command to start the node server.
