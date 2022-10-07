@@ -1,7 +1,12 @@
 name: "deploy"
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      [ "main" ]
+      
+env:
+  NODE_ENV: production
 
 jobs:
   deploy:
