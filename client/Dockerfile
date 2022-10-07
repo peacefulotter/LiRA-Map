@@ -14,6 +14,5 @@ RUN npm install --legacy-peer-deps
 
 COPY . .
 
-RUN npm run build --production
-
-CMD [ "npm", "start" ]
+# Set the command to start the node server.
+CMD serve -p 3000 -s build
