@@ -3,6 +3,13 @@ export interface Login {
   password: string;
 }
 
+export interface Signup {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface LatLng {
   lat: number;
   lng: number;

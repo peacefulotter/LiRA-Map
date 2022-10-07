@@ -2,14 +2,20 @@ version: '3.8'
 
 services:
  client:
+  ports:
+  - 80:3000
+  expose: 
+  - 3000
   build:
    context: ./client
   ports:
-   - 3000:3000
-  command: npm start
+   - 80:3000
+  expose:
+   - 3000 
  server-nest:
+  expose:
+   - 3002
   build:
    context: ./server-nest
   ports:
-   - 3002:3002
-  command: npm start
+   - 3002
