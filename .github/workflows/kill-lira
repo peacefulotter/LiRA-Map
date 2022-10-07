@@ -1,0 +1,20 @@
+name: "kill-lira"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  kill-lira:
+    name: kill-lira
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Make kill-containers.sh executable
+        run: chmod +x kill-containers.sh
+
+      - name: Kill docker containers
+        run: ./kill-containers.sh
+        shell: bash

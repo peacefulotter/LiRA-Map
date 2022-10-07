@@ -2,6 +2,10 @@ version: '3.8'
 
 services:
  client:
+  ports:
+  - 80:3000
+  expose: 
+  - 3000
   build:
    context: ./client
   ports:
@@ -9,6 +13,8 @@ services:
   expose:
    - 3000 
  server-nest:
+  expose:
+   - 3002
   build:
    context: ./server-nest
   ports:
