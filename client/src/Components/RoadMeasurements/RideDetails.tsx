@@ -49,7 +49,7 @@ const RideDetails: FC = () => {
       setMeasurements((prev) => [...prev, newMeasurement]);
       // and add the measurement to the measurements.json file
       addMeasurement(newMeasurement);
-    }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() });
+    }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() }); 
   };
   const deleteMeasurement =
     (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
