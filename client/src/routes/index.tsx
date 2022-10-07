@@ -1,4 +1,4 @@
-import {ElementType, lazy, Suspense, useEffect, useState} from 'react';
+import {ElementType, lazy, Suspense} from 'react';
 import {Navigate, useLocation, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from '../layouts/dashboard';
@@ -6,7 +6,6 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import Login from '../pages/Login'
-
 
 // ----------------------------------------------------------------------
 

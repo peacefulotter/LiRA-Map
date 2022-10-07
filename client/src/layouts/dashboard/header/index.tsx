@@ -1,7 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
 import {Box, Stack, AppBar, Toolbar} from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
