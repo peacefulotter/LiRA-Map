@@ -85,18 +85,18 @@
     font-family: 'Noto Sans JP', sans-serif;
 }
 
-.edit-meas-btn {
+.edit-meas-btn, .delete-meas-btn {
     width: 20px;
     height: 20px;
     margin-right: 4px;
     padding: 0px !important;
 }
 
-.edit-meas-btn:hover {
+.edit-meas-btn:hover, .delete-meas-btn:hover {
     stroke-width: 2;
 }
 
-.edit-meas-btn:active {
+.edit-meas-btn:active, .delete-meas-btn:active {
     width: 20px;
     height: 20px;
     padding: 1.5px 0px !important;

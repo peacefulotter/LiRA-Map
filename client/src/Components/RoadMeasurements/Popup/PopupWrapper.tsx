@@ -23,7 +23,6 @@ const PopupWrapper: FC<IPopupWrapper> = ( { defaultOptions, setOptions } ) => {
         temp[key] = val;
         setState(temp)
         setOptions(temp)
-        temp.id = uuidv4()
         
     }
 
