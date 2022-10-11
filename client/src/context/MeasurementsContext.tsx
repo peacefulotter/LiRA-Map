@@ -49,7 +49,7 @@ export const MeasurementsProvider = ({ children }: any) => {
       }}
     >
       {children}
-      {loading && <Loading />}
+      <Loading loading={loading} />
     </MeasurementsContext.Provider>
   );
 };

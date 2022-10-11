@@ -89,7 +89,7 @@ const Rides: FC = () => {
             ),
         )}
       </div>
-      {loading && <Loading />}
+      <Loading loading={loading} />
     </GraphProvider>
   );
 };

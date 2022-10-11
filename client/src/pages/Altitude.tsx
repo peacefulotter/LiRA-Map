@@ -62,7 +62,7 @@ const Altitude = () => {
           />
         ) : null}
       </MapWrapper>
-      {loading && <Loading />}
+      <Loading loading={loading} />
     </div>
   );
 };
