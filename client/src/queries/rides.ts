@@ -8,6 +8,7 @@ import { asyncPost, get, post } from "./fetch"
 
 export const getRides = ( callback: Dispatch<SetStateAction<RideMeta[]>> ) => {
     get( '/rides', callback )
+    // Must use ProdURL to not crash
 }
 
 

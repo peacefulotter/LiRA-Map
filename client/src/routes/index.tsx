@@ -1,5 +1,5 @@
-import { Suspense, lazy, ElementType } from 'react';
-import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+import {ElementType, lazy, Suspense} from 'react';
+import {Navigate, useLocation, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
@@ -10,14 +10,14 @@ import Login from '../pages/Login'
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: ElementType) => (props: any) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pathname } = useLocation();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const {pathname} = useLocation();
 
-  return (
-    <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-      <Component {...props} />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')}/>}>
+            <Component {...props} />
+        </Suspense>
+    );
 };
 
 export default function Router() {
@@ -27,12 +27,15 @@ export default function Router() {
       element: <Login />
     },
     {
+      path: '/signup',
+      element: <Signup />
+    },
+    {
       path: '/car',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/car/data" replace />, index: true },
         { path: 'data', element: <CarData /> },
-        { path: 'store', element: <StoreShowcase /> },
       ],
     },
     {
@@ -63,4 +66,4 @@ const RoadCondition = Loadable(lazy(() => import('../pages/RoadCondition')));
 const RoadAltitude = Loadable(lazy(() => import('../pages/RoadAltitude')));
 const CarData = Loadable(lazy(() => import('../pages/CarData')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
-const StoreShowcase = Loadable(lazy(() => import('../pages/showcase/StoreShowcase')));
+const Signup = Loadable(lazy(() => import('../pages/Signup')));
