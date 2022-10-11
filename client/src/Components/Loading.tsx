@@ -1,9 +1,16 @@
 import React, { FC, useEffect, useState } from 'react';
 import '../css/loading.css';
 
-const mountedStyle = { animation: 'inAnimation 250ms ease-in' };
+const mountedStyle = {
+  animationName: 'inAnimation',
+  animationDuration: '250ms',
+  animationTimingFunction: 'ease-in',
+  animationFillMode: 'forwards',
+};
 const unmountedStyle = {
-  animation: 'outAnimation 250ms ease-out',
+  animationName: 'outAnimation',
+  animationDuration: '250ms',
+  animationTimingFunction: 'ease-in',
   animationFillMode: 'forwards',
 };
 
@@ -11,7 +18,6 @@ const Loading: FC<{ loading: boolean }> = ({ loading }) => {
   const [renderLoading, setRenderLoading] = useState(loading);
 
   useEffect(() => {
-    console.log(loading);
     if (loading) setRenderLoading(true);
   }, [loading]);
 
@@ -22,7 +28,6 @@ const Loading: FC<{ loading: boolean }> = ({ loading }) => {
       className="loading"
       style={loading ? mountedStyle : unmountedStyle}
       onAnimationEnd={() => {
-        console.log('aniamtion done');
         if (!loading) setRenderLoading(false);
       }}
     >
