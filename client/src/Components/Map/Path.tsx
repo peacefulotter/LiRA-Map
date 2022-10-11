@@ -28,7 +28,7 @@ const Path: FC<PathProps> = ({ path, properties, onClick }) => {
           getLat={(t: PointData) => t.lat}
           getLng={(t: PointData) => t.lng}
           getVal={(t: PointData) =>
-            t.value !== undefined ? Math.min(1, Math.max(0.01, t.value)) : 0.01
+            t.value !== undefined ? Math.max(0.01, t.value) : 0.01
           }
           options={options}
           eventHandlers={{ click: onClick }}
