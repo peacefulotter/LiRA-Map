@@ -1,7 +1,7 @@
 import { Toast } from 'react-hot-toast';
 
 export type ToastFunc = (
-  content: { title: string; footer: string },
+  content: { title: string; footer?: string },
   options?:
     | Partial<
         Pick<

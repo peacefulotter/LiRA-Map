@@ -23,8 +23,6 @@ const Rides: FC = () => {
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
 
-  const toast = useToast();
-
   useEffect(() => {
     const updatePaths = async () => {
       setLoading(true);
@@ -40,7 +38,7 @@ const Rides: FC = () => {
           if (Object.hasOwn(paths, name) && Object.hasOwn(paths[name], TaskId))
             temp[name][TaskId] = paths[name][TaskId];
           else {
-            const bp = await getRide(meas, meta, toast);
+            const bp = await getRide(meas, meta, useToast);
             if (bp !== undefined) temp[name][TaskId] = bp;
           }
         }
