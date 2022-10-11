@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { TwitterPicker } from 'react-color';
 import { Gradient } from 'react-gradient-hook';
 import Select from 'react-select';
-import TagNames from '../../../tagNames.json';
 
 import { RendererName, rendererTypes } from '../../../models/renderers';
 
@@ -24,10 +23,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   const [state, setState] = useState(defaultOptions);
   const [availableTags, setTags] = useState<TagProperties[]>();
   const { name, dbName, rendererName, color } = state;
-  const dict = Object.assign(
-    {},
-    ...TagNames.map((name) => ({ [name.autoPiName]: name.canZeName })),
-  );
 
   const update = (key: keyof ActiveMeasProperties) => (val: any) => {
     const temp = { ...state } as any;
@@ -40,7 +35,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   useEffect(() => {
     getTags((data: TagProperties[]) => {
       data.forEach(function (value) {
-        console.log(dict);
         setTags(data);
       });
     });
@@ -58,9 +52,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const tagOptions = availableTags?.map((tag) => ({
     value: tag.type.toString(),
-    label:
-      tag.type.toString() +
-      (dict[tag.type.toString()] ? ' - ' + dict[tag.type.toString()] : ''),
+    label: tag.type.toString() + ' - ' + tag.readableName.toString(),
   }));
 
   return (
