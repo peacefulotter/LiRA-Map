@@ -4,28 +4,36 @@ on:
   push:
     branches:
       [ "main" ]
-      
-env:
-  NODE_ENV: production
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  DB_PWD_POSTGIS: ${{ secrets.DB_PWD_POSTGIS }}
-  DB_USER: ${{ secrets.DB_USER }}
-  DB_USER_POSTGIS: ${{ secrets.DB_USER_POSTGIS }}
-  FB_API_KEY: ${{ secrets.FB_API_KEY }}
-  FB_APP_ID: ${{ secrets.FB_APP_ID }}
-  FB_AUTH_DOMAIN: ${{ secrets.FB_AUTH_DOMAIN }}
-  FB_MSG_SENDER_ID: ${{ secrets.FB_MSG_SENDER_ID }}
-  FB_PROJECT_ID: ${{ secrets.FB_PROJECT_ID }}
-  FB_STORAGE_BUCKET: ${{ secrets.FB_STORAGE_BUCKET }}
 
 jobs:
   deploy:
     name: deploy
     runs-on: self-hosted
+    env:
+      NODE_ENV: production
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PWD_POSTGIS: ${{ secrets.DB_PWD_POSTGIS }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_USER_POSTGIS: ${{ secrets.DB_USER_POSTGIS }}
+      FB_API_KEY: ${{ secrets.FB_API_KEY }}
+      FB_APP_ID: ${{ secrets.FB_APP_ID }}
+      FB_AUTH_DOMAIN: ${{ secrets.FB_AUTH_DOMAIN }}
+      FB_MSG_SENDER_ID: ${{ secrets.FB_MSG_SENDER_ID }}
+      FB_PROJECT_ID: ${{ secrets.FB_PROJECT_ID }}
+      FB_STORAGE_BUCKET: ${{ secrets.FB_STORAGE_BUCKET }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Stop old containers
+        run: docker-compose rm -f
+        
+      - name: Pull latest Docker images
+        run: docker-compose pull
+
+      - name: Spin up docker containers
+        run: docker-compose up --build -d --force-recreate
 
 #      - name: Make kill-containers.sh executable
 #        run: chmod +x kill-containers.sh
@@ -41,12 +49,3 @@ jobs:
 #      - name: Confirm that copying .env file worked (should output 'it-worked')
 #        run: cat server-nest/.env | grep "TEST_VAR.*" | cut -d "=" -f2
 #        shell: bash
-
-      - name: Stop old containers
-        run: docker-compose rm -f
-        
-      - name: Pull latest Docker images
-        run: docker-compose pull
-
-      - name: Spin up docker containers
-        run: docker-compose up --build -d --force-recreate
