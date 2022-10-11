@@ -49,4 +49,4 @@ jobs:
         run: docker-compose pull
 
       - name: Spin up docker containers
-        run: docker-compose up --build -d
+        run: docker-compose up --build -d --no-cache
