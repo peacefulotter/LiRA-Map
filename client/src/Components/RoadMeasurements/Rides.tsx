@@ -13,7 +13,7 @@ import { getRide } from '../../queries/rides';
 
 import Graph from '../Graph/Graph';
 import RidesMap from './RidesMap';
-import usePopup from '../createPopup';
+import useToast from '../createToast';
 import Loading from '../Loading';
 
 const Rides: FC = () => {
@@ -23,7 +23,7 @@ const Rides: FC = () => {
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
 
-  const popup = usePopup();
+  const toast = useToast();
 
   useEffect(() => {
     const updatePaths = async () => {
@@ -40,7 +40,7 @@ const Rides: FC = () => {
           if (Object.hasOwn(paths, name) && Object.hasOwn(paths[name], TaskId))
             temp[name][TaskId] = paths[name][TaskId];
           else {
-            const bp = await getRide(meas, meta, popup);
+            const bp = await getRide(meas, meta, toast);
             if (bp !== undefined) temp[name][TaskId] = bp;
           }
         }
