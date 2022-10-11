@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+import { FiLoader } from 'react-icons/fi';
 import '../css/loading.css';
 
 const mountedStyle = {
@@ -31,7 +32,8 @@ const Loading: FC<{ loading: boolean }> = ({ loading }) => {
         if (!loading) setRenderLoading(false);
       }}
     >
-      <span>Loading...</span>
+      <FiLoader className="load-icon" />
+      <span>Loading</span>
     </div>
   );
 };
