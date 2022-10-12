@@ -54,7 +54,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     value: tag.type.toString(),
     label:
       tag.type.toString() +
-      (tag.readableName ? ' - ' + tag.readableName : '').toString(),
+      (tag.readableName ? '\n(' + tag.readableName + ')' : '').toString(),
   }));
 
   return (

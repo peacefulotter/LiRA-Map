@@ -42,7 +42,8 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: left;
-    color:black
+    color:black;
+    white-space: pre-wrap !important;
 }
 
 .gradient-wrapper {
