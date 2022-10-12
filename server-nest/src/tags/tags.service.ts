@@ -26,18 +26,17 @@ export class TagsService {
   }
 
   async getTags(): Promise<TagMeta[]> {
-    let array;
-    this.knex
+    return this.knex
       .select('*')
       .from({ public: 'MeasurementTypes' })
       .orderBy('type')
       .then((result) => {
-        array = result;
-        array.forEach((element, index) => {
-          array[index].readableName = this.getReadableName(element);
+        result.forEach((element, index) => {
+          const readableName = this.getReadableName(element);
+          result[index].readableName = readableName ? readableName : '';
         });
+        return result;
       });
-    return array;
   }
 
   private getReadableName(meta: TagMeta) {

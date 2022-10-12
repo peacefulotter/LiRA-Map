@@ -52,7 +52,9 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const tagOptions = availableTags?.map((tag) => ({
     value: tag.type.toString(),
-    label: tag.type.toString() + ' - ' + tag.readableName.toString(),
+    label:
+      tag.type.toString() +
+      (tag.readableName ? ' - ' + tag.readableName : '').toString(),
   }));
 
   return (
