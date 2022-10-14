@@ -15,6 +15,9 @@ import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
 import MeasCheckbox from './MeasCheckbox';
 
+import { v4 as uuidv4 } from "uuid";
+import '../../css/ridedetails.css';
+
 import '../../css/ridedetails.css';
 
 const RideDetails: FC = () => {
@@ -26,14 +29,15 @@ const RideDetails: FC = () => {
   const popup = useMeasPopup();
 
   const editMeasurement =
-    (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
+
+    (meas: ActiveMeasProperties) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
       popup(
         (newMeas: ActiveMeasProperties) => {
           const temp = [...measurements];
-          temp[i] = newMeas;
+          temp[temp.findIndex(m => m.id === newMeas.id)] = newMeas;
           setMeasurements(temp);
         },
         { ...RENDERER_MEAS_PROPERTIES, ...meas },
@@ -48,7 +52,8 @@ const RideDetails: FC = () => {
       setMeasurements((prev) => [...prev, newMeasurement]);
       // and add the measurement to the measurements.json file
       addMeasurement(newMeasurement);
-    }, RENDERER_MEAS_PROPERTIES);
+
+    }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() }); 
   };
   const deleteMeasurement =
     (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
@@ -61,20 +66,23 @@ const RideDetails: FC = () => {
       setMeasurements(filteredArray);
     };
 
-  const selectMeasurement = (i: number) => (isChecked: boolean) => {
+
+  const selectMeasurement = (id: string) => (isChecked: boolean) => {
     const temp = [...measurements];
-    temp[i].isActive = isChecked;
+    const selected = temp.find(m => m.id === id);
+    if (selected) selected.isActive = isChecked;
     setMeasurements(temp);
   };
 
   return (
     <div className="meta-data">
-      {measurements.map((m: ActiveMeasProperties, i: number) => (
+
+      {measurements.map((m: ActiveMeasProperties) => (
         <MeasCheckbox
-          key={`meas-checkbox-${i}`}
+          key={`meas-checkbox-${m.id}`}
           meas={m}
-          selectMeasurement={selectMeasurement(i)}
-          editMeasurement={editMeasurement(m, i)}
+          selectMeasurement={selectMeasurement(m.id)}
+          editMeasurement={editMeasurement(m)}
           deleteMeasurement={deleteMeasurement(m)}
         />
       ))}

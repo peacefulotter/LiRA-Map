@@ -3,6 +3,7 @@
         "rendererName": "circles",
         "dbName": "track.pos",
         "name": "Track Position",
+        "id": "da488f4b-1f3f-4d9b-bc7c-8744b3f303bf",
         "color": "#ff6900",
         "hasValue": false
     },
@@ -10,6 +11,7 @@
         "rendererName": "line",
         "dbName": "acc.xyz",
         "name": "Interpolation",
+        "id": "5dd96fd0-cebe-471a-90ee-31450d682002",
         "color": "#9900ef",
         "width": 1,
         "hasValue": false
@@ -18,6 +20,7 @@
         "rendererName": "hotline",
         "dbName": "obd.rpm",
         "name": "Engine RPM",
+        "id": "5ce530fd-71d8-4e1f-9911-afb223583e39",
         "color": "#7bdcb5",
         "hasValue": true
     },
@@ -25,6 +28,7 @@
         "rendererName": "hotline",
         "dbName": "obd.trac_cons",
         "name": "Traction Instant Consumption",
+        "id": "620f764f-90c7-42e6-9022-1dbf39529bca",
         "color": "#00d084",
         "hasValue": true
     },
@@ -32,6 +36,7 @@
         "rendererName": "hotline",
         "dbName": "obd.rpm_fl",
         "name": "RPM Frontleft",
+        "id": "5290f1cd-8bd1-489e-9f0c-9d4682f70ee9",
         "color": "#00d084",
         "hasValue": true
     },
