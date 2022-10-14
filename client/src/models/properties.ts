@@ -1,5 +1,5 @@
-import { Palette } from "react-leaflet-hotline";
-import { RendererName } from "./renderers";
+import { Palette } from 'react-leaflet-hotline';
+import { RendererName } from './renderers';
 
 // Rendering properties of an entire Path
 export interface PathProperties {
@@ -36,6 +36,13 @@ export interface MeasProperties extends PathProperties {
   hasValue?: boolean;
   // Adding a random uuid to each measurement created
   id: string;
+}
+
+export interface TagProperties {
+  MeasurementTypeId: string;
+  type: number;
+  Created_Date: string; // "2021-04-27T18:11:02.223Z"
+  readableName: string;
 }
 
 export interface ActiveMeasProperties extends MeasProperties {

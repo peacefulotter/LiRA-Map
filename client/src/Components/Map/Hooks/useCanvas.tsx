@@ -1,20 +1,19 @@
-
-import L from 'leaflet'
+import L from 'leaflet';
 import { useEffect } from 'react';
-import { useMap } from "react-leaflet";
-
-
+import { useMap } from 'react-leaflet';
 
 const useCanvas = (): [L.Map, L.Canvas] => {
-    const map = useMap()
-    const canvas = L.canvas({});
+  const map = useMap();
+  const canvas = L.canvas({});
 
-    useEffect( () => {
-        canvas.addTo(map)
-        return () => { canvas.removeFrom(map) }
-    }, [canvas, map])
+  useEffect(() => {
+    canvas.addTo(map);
+    return () => {
+      canvas.removeFrom(map);
+    };
+  }, [canvas, map]);
 
-    return [map, canvas];
-}
+  return [map, canvas];
+};
 
-export default useCanvas
+export default useCanvas;

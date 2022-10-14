@@ -14,9 +14,11 @@ import { RideMeta } from '../../models/models';
 import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
 import MeasCheckbox from './MeasCheckbox';
+
 import { v4 as uuidv4 } from "uuid";
 import '../../css/ridedetails.css';
 
+import '../../css/ridedetails.css';
 
 const RideDetails: FC = () => {
   const { selectedMetas } = useMetasCtx();
@@ -27,6 +29,7 @@ const RideDetails: FC = () => {
   const popup = useMeasPopup();
 
   const editMeasurement =
+
     (meas: ActiveMeasProperties) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -49,6 +52,7 @@ const RideDetails: FC = () => {
       setMeasurements((prev) => [...prev, newMeasurement]);
       // and add the measurement to the measurements.json file
       addMeasurement(newMeasurement);
+
     }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() }); 
   };
   const deleteMeasurement =
@@ -62,6 +66,7 @@ const RideDetails: FC = () => {
       setMeasurements(filteredArray);
     };
 
+
   const selectMeasurement = (id: string) => (isChecked: boolean) => {
     const temp = [...measurements];
     const selected = temp.find(m => m.id === id);
@@ -71,6 +76,7 @@ const RideDetails: FC = () => {
 
   return (
     <div className="meta-data">
+
       {measurements.map((m: ActiveMeasProperties) => (
         <MeasCheckbox
           key={`meas-checkbox-${m.id}`}

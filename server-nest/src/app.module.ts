@@ -23,24 +23,51 @@ import { RCService } from './conditions/rc.service';
 import { AltitudeController } from './altitude/alt.controller';
 import { AltitudeService } from './altitude/alt.service';
 
-import { LIRA_DB_CONFIG, POSTGIS_DB_CONFIG, VISUAL_DB_CONFIG } from './database';
+import { TagsService } from './tags/tags.service';
+import { TagsController } from './tags/tags.controller';
 
+import {
+  LIRA_DB_CONFIG,
+  POSTGIS_DB_CONFIG,
+  VISUAL_DB_CONFIG,
+} from './database';
 
 const database = (config: any, name: string) => {
-	return KnexModule.forRootAsync( {
-		useFactory: () => ( { config } )
-	}, name )
-}
+  return KnexModule.forRootAsync(
+    {
+      useFactory: () => ({ config }),
+    },
+    name,
+  );
+};
 
-@Module( {
-	imports: [
-		ConfigModule.forRoot(), 
-		database(LIRA_DB_CONFIG, 'lira-main'),
-		database(VISUAL_DB_CONFIG, 'lira-vis'),
-		database(POSTGIS_DB_CONFIG, 'postgis'),
-	],
-	controllers: [AppController, SegmentsController, TypesController, RidesController, MeasurementsController, RCController, AltitudeController],
-	providers: [AppService, SegmentsService, ConfigService, TypesService, RidesService, MeasurementsService, RCService, AltitudeService],
-} )
-
+@Module({
+  imports: [
+    ConfigModule.forRoot(),
+    database(LIRA_DB_CONFIG, 'lira-main'),
+    database(VISUAL_DB_CONFIG, 'lira-vis'),
+    database(POSTGIS_DB_CONFIG, 'postgis'),
+  ],
+  controllers: [
+    AppController,
+    SegmentsController,
+    TypesController,
+    RidesController,
+    MeasurementsController,
+    RCController,
+    AltitudeController,
+    TagsController,
+  ],
+  providers: [
+    AppService,
+    SegmentsService,
+    ConfigService,
+    TypesService,
+    RidesService,
+    MeasurementsService,
+    RCService,
+    AltitudeService,
+    TagsService,
+  ],
+})
 export class AppModule {}
