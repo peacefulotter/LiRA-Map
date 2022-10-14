@@ -16,8 +16,11 @@
     border: none;
     border-radius: 5px;
     width: 70%;
-    padding: 10px 20px;
+    padding: 7px 10px;
     margin-bottom: 20px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .sweetalert-checkboxes {
@@ -27,6 +30,20 @@
     justify-content: space-evenly;
     justify-items: center;
     margin: 20px 0px;
+}
+
+.react-select-combobox {
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    width: 70%;
+    margin-bottom: 20px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: left;
+    color:black;
+    white-space: pre-wrap !important;
 }
 
 .gradient-wrapper {

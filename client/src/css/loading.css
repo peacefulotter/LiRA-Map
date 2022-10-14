@@ -1,0 +1,51 @@
+.loading {
+  padding: 4rem;
+  background: rgba(0, 0, 0, 0.75);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  z-index: 100000000;
+  opacity: 0;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.loading span {
+  font-size: 3rem;
+}
+
+.load-icon {
+  width: 3rem;
+  height: 3rem;
+  animation: icon-spin 2s infinite linear;
+}
+
+@keyframes inAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes outAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}

@@ -1,51 +1,55 @@
-import { FC, useEffect, useState } from "react";
-import { LatLng } from "leaflet";
+import React, { FC, useEffect, useState } from 'react';
+import { LatLng } from 'leaflet';
 
-import SegmentPath from "./SegmentPath";
-import { useSegment } from "../../context/SegmentContext";
-import { Segment } from "../../models/segment";
+import SegmentPath from './SegmentPath';
+import { useSegment } from '../../context/SegmentContext';
+import { Segment } from '../../models/segment';
 
-import { GetSegmentsAndAverageValuesInAPolygon } from "../../queries/DataRequests";
+import { GetSegmentsAndAverageValuesInAPolygon } from '../../queries/DataRequests';
 
-import '../../css/rides.css'
+import '../../css/rides.css';
 
 interface ISegments {
-    boundaries: LatLng[]
+  boundaries: LatLng[];
 }
 
-const Segments: FC<ISegments> = ( { boundaries } ) => {
+const Segments: FC<ISegments> = ({ boundaries }) => {
+  const [segments, setSegments] = useState<Segment[]>([]);
 
-    const [segments, setSegments] = useState<Segment[]>([])
+  const { pathTypes, pathDirection, setSegment } = useSegment();
 
-    const { pathTypes, pathDirection, setSegment } = useSegment()
+  useEffect(() => {
+    const { dataType, aggrType } = pathTypes;
 
-    useEffect(() => {
-
-        const { dataType, aggrType} = pathTypes;
-
-        if ( dataType === undefined || aggrType === undefined || pathDirection === undefined )
-            return 
-
-        GetSegmentsAndAverageValuesInAPolygon(boundaries, dataType, aggrType, pathDirection)
-            .then( setSegments )
-
-    }, [boundaries, pathTypes, pathDirection]);
-
-
-    const onClick = (seg: Segment) => () => () => setSegment(seg)
-
-    return (
-        <>
-        { segments.map( (seg: Segment, i: number) =>
-            <SegmentPath
-                key={`segment-${i}`} 
-                i={i}
-                seg={seg} 
-                onClick={onClick(seg)} 
-            />
-        ) }
-        </>
+    if (
+      dataType === undefined ||
+      aggrType === undefined ||
+      pathDirection === undefined
     )
-}
+      return;
+
+    GetSegmentsAndAverageValuesInAPolygon(
+      boundaries,
+      dataType,
+      aggrType,
+      pathDirection,
+    ).then(setSegments);
+  }, [boundaries, pathTypes, pathDirection]);
+
+  const onClick = (seg: Segment) => () => () => setSegment(seg);
+
+  return (
+    <>
+      {segments.map((seg: Segment, i: number) => (
+        <SegmentPath
+          key={`segment-${i}`}
+          i={i}
+          seg={seg}
+          onClick={onClick(seg)}
+        />
+      ))}
+    </>
+  );
+};
 
 export default Segments;

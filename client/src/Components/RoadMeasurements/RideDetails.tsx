@@ -1,86 +1,104 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState } from 'react';
 
-import useMeasPopup from "./Popup/useMeasPopup";
-import Checkbox from "../Checkbox";
-import MetaData from "./MetaData";
+import useMeasPopup from './Popup/useMeasPopup';
+import Checkbox from '../Checkbox';
+import MetaData from './MetaData';
 
-import { useMeasurementsCtx } from "../../context/MeasurementsContext";
-import { useMetasCtx } from "../../context/MetasContext";
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
+import { useMetasCtx } from '../../context/MetasContext';
 
-import { addMeasurement } from "../../queries/measurements";
-import { MeasProperties, ActiveMeasProperties } from "../../models/properties";
-import { RideMeta } from "../../models/models";
+import { addMeasurement } from '../../queries/measurements';
+import { ActiveMeasProperties } from '../../models/properties';
+import { RideMeta } from '../../models/models';
 
-import { RENDERER_MEAS_PROPERTIES } from "../Map/constants";
+import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
-import MeasCheckbox from "./MeasCheckbox";
+import MeasCheckbox from './MeasCheckbox';
 
-import '../../css/ridedetails.css'
+import { v4 as uuidv4 } from "uuid";
+import '../../css/ridedetails.css';
+
+import '../../css/ridedetails.css';
 
 const RideDetails: FC = () => {
+  const { selectedMetas } = useMetasCtx();
 
-	const { selectedMetas } = useMetasCtx()
+  const { measurements, setMeasurements } = useMeasurementsCtx();
+  const [addChecked, setAddChecked] = useState<boolean>(false);
 
-	const { measurements, setMeasurements } = useMeasurementsCtx()
-	const [ addChecked, setAddChecked ] = useState<boolean>(false)
-	
-	const popup = useMeasPopup()
+  const popup = useMeasPopup();
 
-	const editMeasurement = (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
+  const editMeasurement =
 
-		popup( 
-			(newMeas: ActiveMeasProperties) => {
-				const temp = [...measurements]
-				temp[i] = newMeas;
-				setMeasurements( temp )
-			}, 
-			{ ...RENDERER_MEAS_PROPERTIES, ...meas } 
-		)
-	}
+    (meas: ActiveMeasProperties) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-	const showAddMeasurement = () => {
-		setAddChecked(true) 
-		popup( 
-			(newMeasurement: ActiveMeasProperties ) => {
-				setAddChecked(false) 
-				// update the state in RideDetails
-				setMeasurements( prev => [...prev, newMeasurement])
-				// and add the measurement to the measurements.json file
-				addMeasurement(newMeasurement);
-			},
-			RENDERER_MEAS_PROPERTIES 
-		)
-	}
+      popup(
+        (newMeas: ActiveMeasProperties) => {
+          const temp = [...measurements];
+          temp[temp.findIndex(m => m.id === newMeas.id)] = newMeas;
+          setMeasurements(temp);
+        },
+        { ...RENDERER_MEAS_PROPERTIES, ...meas },
+      );
+    };
 
-    const selectMeasurement = (i: number) => (isChecked: boolean) => {        
-        const temp = [...measurements]
-        temp[i].isActive = isChecked
-        setMeasurements(temp)
-    }
+  const showAddMeasurement = () => {
+    setAddChecked(true);
+    popup((newMeasurement: ActiveMeasProperties) => {
+      setAddChecked(false);
+      // update the state in RideDetails
+      setMeasurements((prev) => [...prev, newMeasurement]);
+      // and add the measurement to the measurements.json file
+      addMeasurement(newMeasurement);
 
-    return (
-		<div className="meta-data">
-			{ measurements.map( (m: ActiveMeasProperties, i: number) =>
-				<MeasCheckbox 
-					key={`meas-checkbox-${i}`}
-					meas={m}
-					selectMeasurement={selectMeasurement(i)}
-					editMeasurement={editMeasurement(m, i)} />
-			) }
+    }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() }); 
+  };
+  const deleteMeasurement =
+    (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const tempArray = [...measurements];
+      const elementToRemove = m.id;
 
-			<Checkbox 
-				className='ride-metadata-checkbox md-checkbox-add'
-				html={<div>+</div>}
-				forceState={addChecked}
-				onClick={showAddMeasurement} />
-			
-			{ selectedMetas.map( (meta: RideMeta, i: number) =>
-				<MetaData md={meta} key={`md-${Math.random()}`} />
-			) }
-        </div>
-  )
-}
+      const filteredArray = tempArray.filter((m) => m.id !== elementToRemove);
+      setMeasurements(filteredArray);
+    };
+
+
+  const selectMeasurement = (id: string) => (isChecked: boolean) => {
+    const temp = [...measurements];
+    const selected = temp.find(m => m.id === id);
+    if (selected) selected.isActive = isChecked;
+    setMeasurements(temp);
+  };
+
+  return (
+    <div className="meta-data">
+
+      {measurements.map((m: ActiveMeasProperties) => (
+        <MeasCheckbox
+          key={`meas-checkbox-${m.id}`}
+          meas={m}
+          selectMeasurement={selectMeasurement(m.id)}
+          editMeasurement={editMeasurement(m)}
+          deleteMeasurement={deleteMeasurement(m)}
+        />
+      ))}
+
+      <Checkbox
+        className="ride-metadata-checkbox md-checkbox-add"
+        html={<div>+</div>}
+        forceState={addChecked}
+        onClick={showAddMeasurement}
+      />
+
+      {selectedMetas.map((meta: RideMeta, i: number) => (
+        <MetaData md={meta} key={`md-${Math.random()}`} />
+      ))}
+    </div>
+  );
+};
 
 export default RideDetails;
