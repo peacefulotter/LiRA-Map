@@ -8,7 +8,7 @@ export class MeasurementsService {
   path: string;
 
   constructor() {
-    this.path = './src/measurements/measurements.json';
+    this.path = __dirname + '/measurements.json';
   }
 
   async writeFile(data: any) {

@@ -34,9 +34,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   useEffect(() => {
     getTags((data: TagProperties[]) => {
-      console.log('Hilfe ' + data);
       data.forEach(function (value) {
-        console.log(value.type);
         setTags(data);
       });
     });
@@ -54,7 +52,9 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
   const tagOptions = availableTags?.map((tag) => ({
     value: tag.type.toString(),
-    label: tag.type.toString(),
+    label:
+      tag.type.toString() +
+      (tag.readableName ? '\n(' + tag.readableName + ')' : '').toString(),
   }));
 
   return (

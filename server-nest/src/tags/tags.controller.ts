@@ -1,8 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Put, Query } from '@nestjs/common';
 import { TagsService } from './tags.service';
 
 import { TagMeta } from './models.tags';
-import { BoundedPath } from 'src/models';
 
 @Controller('tags')
 export class TagsController {
@@ -10,8 +9,6 @@ export class TagsController {
 
   @Get('/')
   getTags(): Promise<TagMeta[]> {
-    //return this.service.getRides();
-    console.log('Test');
     return this.service.getTags();
   }
 }
