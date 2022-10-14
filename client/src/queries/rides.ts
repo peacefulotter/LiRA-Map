@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 import { RideMeta } from '../models/models';
 import { BoundedPath, Metadata } from '../models/path';
-import { PopupFunc } from '../models/popup';
 import { ActiveMeasProperties } from '../models/properties';
+import { ToastFunc } from '../models/toast';
 import { asyncPost, get } from './fetch';
 
 export const getRides = (callback: Dispatch<SetStateAction<RideMeta[]>>) => {
@@ -12,7 +12,7 @@ export const getRides = (callback: Dispatch<SetStateAction<RideMeta[]>>) => {
 export const getRide = async (
   measurement: ActiveMeasProperties,
   meta: Metadata,
-  popup: PopupFunc,
+  toast: ToastFunc,
 ) => {
   const { dbName, name, hasValue } = measurement;
   const { TripId: tripId, TaskId: taskId } = meta;
@@ -39,16 +39,10 @@ export const getRide = async (
 
   // Track position and (interpolation) has special exceptions since
   // they are supposed to not have any values
-  if (
-    dbName !== 'track.pos' &&
-    dbName !== 'acc.xyz' &&
-    path.filter((p) => p.value !== undefined).length === 0
-  ) {
-    popup({
-      icon: 'warning',
-      title: `This trip doesn't contain data for ${name ? name : dbName}`,
+  if (hasValue && path.filter((p) => p.value !== undefined).length === 0) {
+    toast({
+      title: `This trip doesn't contain data for ${name}`,
       footer: `TripId: ${tripId} | TaskId: ${taskId}`,
-      toast: true,
     });
 
     return undefined;

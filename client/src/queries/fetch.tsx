@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import createToast from '../Components/createToast';
 
 const development =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
@@ -12,19 +13,22 @@ export async function asyncPost<T>(
   path: string,
   obj: object,
 ): Promise<AxiosResponse<T, any>> {
-  return axios.get<T>(getPath(path), {
+  const request = axios.get<T>(getPath(path), {
     params: obj,
     paramsSerializer: (params) =>
       Object.keys(params)
         .map((key: any) => new URLSearchParams(`${key}=${params[key]}`))
         .join('&'),
   });
+  request.catch(() => createToast({ title: `Connection to server failed` }));
+  return request;
 }
 
 export function get<T>(path: string, callback: (data: T) => void): void {
   fetch(getPath(path))
     .then((res) => res.json())
-    .then((data) => callback(data));
+    .then((data) => callback(data))
+    .catch(() => createToast({ title: `Connection to server failed` }));
 }
 
 export function post<T>(
@@ -36,5 +40,7 @@ export function post<T>(
 }
 
 export const put = (path: string, obj: object): void => {
-  axios.put(getPath(path), { params: obj });
+  axios
+    .put(getPath(path), { params: obj })
+    .catch(() => createToast({ title: `Connection to server failed` }));
 };

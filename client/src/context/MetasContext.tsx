@@ -42,7 +42,7 @@ export const MetasProvider = ({ children }: any) => {
       }}
     >
       {children}
-      {loading && <Loading />}
+      <Loading loading={loading} />
     </MetasContext.Provider>
   );
 };

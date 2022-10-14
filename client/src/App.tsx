@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 import Navbar from './Components/Navbar';
 import RoadMeasurements from './pages/RoadMeasurements';
@@ -32,6 +33,7 @@ const App: FC = () => {
           <Route exact path="/altitude" component={Altitude} />
           <Route exact path="/login" component={Login} />
         </Switch>
+        <Toaster containerStyle={{ zIndex: 999999 }} />
       </Router>
     </div>
   );
