@@ -15,7 +15,7 @@ import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
 import MeasCheckbox from './MeasCheckbox';
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import '../../css/ridedetails.css';
 
 import '../../css/ridedetails.css';
@@ -29,7 +29,6 @@ const RideDetails: FC = () => {
   const popup = useMeasPopup();
 
   const editMeasurement =
-
     (meas: ActiveMeasProperties) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -37,7 +36,7 @@ const RideDetails: FC = () => {
       popup(
         (newMeas: ActiveMeasProperties) => {
           const temp = [...measurements];
-          temp[temp.findIndex(m => m.id === newMeas.id)] = newMeas;
+          temp[temp.findIndex((m) => m.id === newMeas.id)] = newMeas;
           setMeasurements(temp);
         },
         { ...RENDERER_MEAS_PROPERTIES, ...meas },
@@ -46,14 +45,16 @@ const RideDetails: FC = () => {
 
   const showAddMeasurement = () => {
     setAddChecked(true);
-    popup((newMeasurement: ActiveMeasProperties) => {
-      setAddChecked(false);
-      // update the state in RideDetails
-      setMeasurements((prev) => [...prev, newMeasurement]);
-      // and add the measurement to the measurements.json file
-      addMeasurement(newMeasurement);
-
-    }, { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() }); 
+    popup(
+      (newMeasurement: ActiveMeasProperties) => {
+        setAddChecked(false);
+        // update the state in RideDetails
+        setMeasurements((prev) => [...prev, newMeasurement]);
+        // and add the measurement to the measurements.json file
+        addMeasurement(newMeasurement);
+      },
+      { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() },
+    );
   };
   const deleteMeasurement =
     (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
@@ -66,17 +67,15 @@ const RideDetails: FC = () => {
       setMeasurements(filteredArray);
     };
 
-
   const selectMeasurement = (id: string) => (isChecked: boolean) => {
     const temp = [...measurements];
-    const selected = temp.find(m => m.id === id);
+    const selected = temp.find((m) => m.id === id);
     if (selected) selected.isActive = isChecked;
     setMeasurements(temp);
   };
 
   return (
     <div className="meta-data">
-
       {measurements.map((m: ActiveMeasProperties) => (
         <MeasCheckbox
           key={`meas-checkbox-${m.id}`}

@@ -45,7 +45,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     ({ target }: any) =>
       update(key)(target.value);
 
-
   const tagChange =
     (key: keyof ActiveMeasProperties) =>
     ({ value }: any) =>
