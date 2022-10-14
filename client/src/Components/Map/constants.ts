@@ -2,6 +2,7 @@ import { LatLng } from 'leaflet';
 import { Palette } from 'react-leaflet-hotline';
 import { ActiveMeasProperties, RendererOptions } from '../../models/properties';
 import { RendererName } from '../../models/renderers';
+import { v4 as uuidv4 } from 'uuid';
 
 // Map
 export const MAP_OPTIONS = {
@@ -40,6 +41,7 @@ export const RENDERER_MEAS_PROPERTIES: Required<ActiveMeasProperties> = {
   ...RENDERER_OPTIONS,
   dbName: '',
   name: '',
+  id: '',
   hasValue: true,
   isActive: false,
 };

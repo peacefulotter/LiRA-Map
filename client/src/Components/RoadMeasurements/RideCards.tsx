@@ -9,6 +9,7 @@ import { RideMeta, TripsOptions } from '../../models/models';
 import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import OptionsSelector from './OptionsSelector';
+import { CgTemplate } from 'react-icons/cg';
 
 interface CardsProps {
   showMetas: SelectMeta[];
@@ -62,11 +63,25 @@ const RideCards: FC = () => {
     setShowMetas(metas.map((m) => ({ ...m, selected: false })));
   }, [metas]);
 
-  const onChange = ({ search, startDate, endDate, reversed }: TripsOptions) => {
-    const temp: SelectMeta[] = metas
+  const onChange = (
+    { search, startDate, endDate, reversed }: TripsOptions,
+    key: keyof TripsOptions,
+  ) => {
+    const updatedMetas = metas;
+    const temp: SelectMeta[] = updatedMetas
       .filter((meta: RideMeta) => {
-        const inSearch =
-          search === '' || meta.TaskId.toString().includes(search);
+        let inSearch;
+        console.log('key', key);
+        if (key.includes('distanceKm')) {
+          const searchedValue = Number(search);
+          if (isNaN(searchedValue)) {
+            inSearch = search === '' || meta.TaskId.toString().includes(search);
+          } else {
+            inSearch = meta.DistanceKm > searchedValue;
+          }
+        } else {
+          inSearch = search === '' || meta.TaskId.toString().includes(search);
+        }
         const date = new Date(meta.Created_Date).getTime();
         const inDate = date >= startDate.getTime() && date <= endDate.getTime();
         return inSearch && inDate;

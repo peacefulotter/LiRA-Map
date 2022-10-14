@@ -8,7 +8,7 @@ import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 import { useMetasCtx } from '../../context/MetasContext';
 
 import { addMeasurement } from '../../queries/measurements';
-import { MeasProperties, ActiveMeasProperties } from '../../models/properties';
+import { ActiveMeasProperties } from '../../models/properties';
 import { RideMeta } from '../../models/models';
 
 import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
@@ -50,6 +50,16 @@ const RideDetails: FC = () => {
       addMeasurement(newMeasurement);
     }, RENDERER_MEAS_PROPERTIES);
   };
+  const deleteMeasurement =
+    (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const tempArray = [...measurements];
+      const elementToRemove = m.id;
+
+      const filteredArray = tempArray.filter((m) => m.id !== elementToRemove);
+      setMeasurements(filteredArray);
+    };
 
   const selectMeasurement = (i: number) => (isChecked: boolean) => {
     const temp = [...measurements];
@@ -65,6 +75,7 @@ const RideDetails: FC = () => {
           meas={m}
           selectMeasurement={selectMeasurement(i)}
           editMeasurement={editMeasurement(m, i)}
+          deleteMeasurement={deleteMeasurement(m)}
         />
       ))}
 

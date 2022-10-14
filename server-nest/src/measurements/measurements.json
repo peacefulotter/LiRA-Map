@@ -1,38 +1,38 @@
 [
-    {
-        "rendererName": "circles",
-        "dbName": "track.pos",
-        "name": "Track Position",
-        "color": "#ff6900",
-        "hasValue": false
-    },
-    {
-        "rendererName": "line",
-        "dbName": "acc.xyz",
-        "name": "Interpolation",
-        "color": "#9900ef",
-        "width": 1,
-        "hasValue": false
-    },
-    {
-        "rendererName": "hotline",
-        "dbName": "obd.rpm",
-        "name": "Engine RPM",
-        "color": "#7bdcb5",
-        "hasValue": true
-    },
-    {
-        "rendererName": "hotline",
-        "dbName": "obd.trac_cons",
-        "name": "Traction Instant Consumption",
-        "color": "#00d084",
-        "hasValue": true
-    },
-    {
-        "rendererName": "hotline",
-        "dbName": "obd.rpm_fl",
-        "name": "RPM Frontleft",
-        "color": "#00d084",
-        "hasValue": true
-    }
+  {
+    "rendererName": "circles",
+    "dbName": "track.pos",
+    "name": "Track Position",
+    "color": "#ff6900",
+    "hasValue": false
+  },
+  {
+    "rendererName": "line",
+    "dbName": "acc.xyz",
+    "name": "Interpolation",
+    "color": "#9900ef",
+    "width": 1,
+    "hasValue": false
+  },
+  {
+    "rendererName": "hotline",
+    "dbName": "obd.rpm",
+    "name": "Engine RPM",
+    "color": "#7bdcb5",
+    "hasValue": true
+  },
+  {
+    "rendererName": "hotline",
+    "dbName": "obd.trac_cons",
+    "name": "Traction Instant Consumption",
+    "color": "#00d084",
+    "hasValue": true
+  },
+  {
+    "rendererName": "hotline",
+    "dbName": "obd.rpm_fl",
+    "name": "RPM Frontleft",
+    "color": "#00d084",
+    "hasValue": true
+  }
 ]

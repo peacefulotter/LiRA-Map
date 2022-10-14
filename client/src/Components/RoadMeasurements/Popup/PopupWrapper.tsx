@@ -1,11 +1,18 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { TwitterPicker } from 'react-color';
 import { Gradient } from 'react-gradient-hook';
+import Select from 'react-select';
 
 import { RendererName, rendererTypes } from '../../../models/renderers';
 
 import Checkbox from '../../Checkbox';
-import { ActiveMeasProperties } from '../../../models/properties';
+import {
+  ActiveMeasProperties,
+  TagProperties,
+} from '../../../models/properties';
+import { getTags } from '../../../queries/tags';
+
+import { v4 as uuidv4 } from 'uuid';
 
 interface IPopupWrapper {
   defaultOptions: Required<ActiveMeasProperties>;
@@ -14,7 +21,7 @@ interface IPopupWrapper {
 
 const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   const [state, setState] = useState(defaultOptions);
-
+  const [availableTags, setTags] = useState<TagProperties[]>();
   const { name, dbName, rendererName, color } = state;
 
   const update = (key: keyof ActiveMeasProperties) => (val: any) => {
@@ -22,12 +29,33 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     temp[key] = val;
     setState(temp);
     setOptions(temp);
+    temp.id = uuidv4();
   };
 
-  const inputChange =
+  useEffect(() => {
+    getTags((data: TagProperties[]) => {
+      console.log('Hilfe ' + data);
+      data.forEach(function (value) {
+        console.log(value.type);
+        setTags(data);
+      });
+    });
+  }, []);
+
+  const nameChange =
     (key: keyof ActiveMeasProperties) =>
     ({ target }: any) =>
       update(key)(target.value);
+
+  const tagChange =
+    (key: keyof ActiveMeasProperties) =>
+    ({ value }: any) =>
+      update(key)(value);
+
+  const tagOptions = availableTags?.map((tag) => ({
+    value: tag.type.toString(),
+    label: tag.type.toString(),
+  }));
 
   return (
     <div className="popup-wrapper">
@@ -36,15 +64,15 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         placeholder="Name.."
         type="text"
         defaultValue={name}
-        onChange={inputChange('name')}
+        onChange={nameChange('name')}
       />
 
-      <input
-        className="sweetalert-input"
+      <Select
+        className="react-select-combobox"
         placeholder="Tag.."
-        type="text"
-        defaultValue={dbName}
-        onChange={inputChange('dbName')}
+        value={dbName ? { value: dbName, label: dbName } : undefined}
+        onChange={tagChange('dbName')}
+        options={tagOptions}
       />
 
       <div className="sweetalert-checkboxes">

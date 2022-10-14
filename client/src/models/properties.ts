@@ -34,6 +34,14 @@ export interface MeasProperties extends PathProperties {
   name: string;
   // Needs to be specified if the points have a value attached to them
   hasValue?: boolean;
+  // Adding a random uuid to each measurement created
+  id: string;
+}
+
+export interface TagProperties {
+  MeasurementTypeId: string;
+  type: number;
+  Created_Date: string; // "2021-04-27T18:11:02.223Z"
 }
 
 export interface ActiveMeasProperties extends MeasProperties {
