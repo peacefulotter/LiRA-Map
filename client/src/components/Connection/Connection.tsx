@@ -8,7 +8,7 @@ import { green, yellow, red } from '@mui/material/colors'
 
 const Connection: FC = () => {
 
-    const [ connection, setConnection ] = useState<any>(null)
+    const [ connection, setConnection ] = useState<boolean | null>(null)
 
     useEffect(() => {
         const id = setInterval(() => getConnection(setConnection), 10000);
