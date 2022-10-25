@@ -45,6 +45,9 @@ const createToast = (
         >
           OK
         </button>
+        <button onClick={() => toast.dismiss()} className="toast-button btn">
+          Close All
+        </button>
       </div>
     ),
     {
