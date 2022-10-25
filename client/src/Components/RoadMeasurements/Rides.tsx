@@ -20,8 +20,18 @@ const Rides: FC = () => {
   const { selectedMetas } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
 
+  const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
+  const [markerSelected, setMarkerSelected] = useState<number | undefined>(
+    undefined,
+  );
+
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
+
+  const addMarker = (selected: number, markerPos: [number, number]) => {
+    setMarkerPos(markerPos);
+    setMarkerSelected(selected);
+  };
 
   useEffect(() => {
     const updatePaths = async () => {
@@ -58,6 +68,8 @@ const Rides: FC = () => {
           paths={paths}
           selectedMetas={selectedMetas}
           selectedMeasurements={selectedMeasurements}
+          markerSelected={markerSelected}
+          markerPos={markerPos}
         />
 
         {selectedMeasurements.map(
@@ -70,6 +82,7 @@ const Rides: FC = () => {
                 absolute={true}
                 time={true}
                 palette={palette}
+                addMarker={addMarker}
                 plots={Object.entries(paths[name] || {}).map(
                   ([TaskId, bp], j) => {
                     const { path, bounds } = bp;
@@ -80,7 +93,13 @@ const Rides: FC = () => {
                       .sort(([x1, y1], [x2, y2]) =>
                         x1 < x2 ? -1 : x1 === x2 ? 0 : 1,
                       );
-                    return { data, bounds, label: 'r-' + TaskId, j };
+                    return {
+                      pathData: path,
+                      data,
+                      bounds,
+                      label: 'r-' + TaskId,
+                      j,
+                    };
                   },
                 )}
               />

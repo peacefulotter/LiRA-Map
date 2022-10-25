@@ -45,13 +45,24 @@ class Path extends Layer<PathOptions> {
       );
   }
 
-  addMouseOver(callback: any) {
+  addMouseOver(
+    callback: (this: SVGPathElement, event: MouseEvent, d: any) => void,
+  ) {
     this.path.on('mouseover', callback);
     return this;
   }
 
-  addMouseOut(callback: any) {
+  addMouseOut(
+    callback: (this: SVGPathElement, event: MouseEvent, d: any) => void,
+  ) {
     this.path.on('mouseout', callback);
+    return this;
+  }
+
+  addMouseUp(
+    callback: (this: SVGPathElement, event: MouseEvent, d: any) => void,
+  ) {
+    this.path.on('mouseup', callback);
     return this;
   }
 

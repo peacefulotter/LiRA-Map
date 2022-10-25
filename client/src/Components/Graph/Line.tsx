@@ -1,8 +1,7 @@
 import { FC, useEffect } from 'react';
-
 import GLine from '../../assets/graph/line';
-
 import { useGraph } from '../../context/GraphContext';
+import { Path } from '../../models/path';
 
 import {
   Axis,
@@ -17,22 +16,26 @@ interface ILine {
   svg: SVG;
   xAxis: Axis | undefined;
   yAxis: Axis | undefined;
+  pathData: Path;
   data: GraphData;
   bounds?: Bounds;
   label: string;
   i: number;
   time: boolean | undefined;
+  addMarker: (selected: number, markerPos: [number, number]) => void;
 }
 
 const Line: FC<ILine> = ({
   svg,
   xAxis,
   yAxis,
+  pathData,
   data,
   bounds,
   label,
   i,
   time,
+  addMarker,
 }) => {
   const { addBounds, remBounds, setDotHover } = useGraph();
 
@@ -53,7 +56,18 @@ const Line: FC<ILine> = ({
         ? setDotHover(undefined)
         : setDotHover({ ...d, x: d.x / _bounds.maxX });
 
-    const line = new GLine(svg, label, i, data, xAxis, yAxis, onHover, time);
+    const line = new GLine(
+      svg,
+      label,
+      i,
+      pathData,
+      data,
+      xAxis,
+      yAxis,
+      onHover,
+      time,
+      addMarker,
+    );
 
     return () => {
       if (svg === undefined)

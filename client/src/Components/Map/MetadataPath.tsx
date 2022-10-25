@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { Marker, Popup } from 'react-leaflet';
 import { PathProps } from '../../models/path';
@@ -39,9 +39,15 @@ const getPopupLine = (key: string, value: any) => {
   );
 };
 
-const MetadataPath: FC<PathProps> = ({ path, properties, metadata }) => {
-  const [markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
-  const [selected, setSelected] = useState<number | undefined>(undefined);
+const MetadataPath: FC<PathProps> = ({
+  path,
+  properties,
+  metadata,
+  selected,
+  markerPos,
+}) => {
+  const [_markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
+  const [_selected, setSelected] = useState<number | undefined>(undefined);
 
   const onClick = (i: number) => (e: any) => {
     const { lat, lng } = e.latlng;
@@ -49,15 +55,25 @@ const MetadataPath: FC<PathProps> = ({ path, properties, metadata }) => {
     setSelected(i);
   };
 
-  const point = path[selected || 0];
+  useEffect(() => {
+    if (markerPos === undefined || selected === undefined) {
+      setSelected(undefined);
+      return;
+    }
+
+    setMarkerPos(markerPos);
+    setSelected(selected);
+  }, [selected, markerPos]);
+
+  const point = path[_selected || 0];
   const md = metadata || {};
 
   return (
     <>
       <Path path={path} properties={properties} onClick={onClick}></Path>
 
-      {selected !== undefined && (
-        <Marker position={markerPos}>
+      {_selected !== undefined && (
+        <Marker position={_markerPos}>
           <Popup>
             {getPopupLine('Properties', properties)}
             {getPopupLine('Value', point.value)}
