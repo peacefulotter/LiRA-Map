@@ -9,6 +9,9 @@ import {FormGroup, Switch} from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 
 const languages = [
     { label: 'Danish', id: 1 },
@@ -63,14 +66,18 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const Settings = () => {
+    // Tab Context
     const [value, setValue] = React.useState('1');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 
+    // Theme Switch
+    const [checked, setChecked] = React.useState(false);
+
     return (
-        <Box sx={{ width: '100%', typography: 'body1' }}>
+        <Box sx={{ width: '100%', margin: '5px', typography: 'body1' }}>
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange}>
