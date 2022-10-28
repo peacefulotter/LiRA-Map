@@ -11,6 +11,10 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {MaterialUISwitch} from '../components/MaterialUISwitch';
+import {useSelector} from "react-redux";
+import {RootState} from "../store";
+import useSettings from "../hooks/useSettings";
+import SettingsMode from '../components/settings/drawer/SettingMode'
 
 const languages = [
     { label: 'Danish', id: 1 },
@@ -18,6 +22,11 @@ const languages = [
 ];
 
 const Settings = () => {
+    // Theme Switch
+    const { themeMode, onChangeMode } = useSettings();
+
+    const isDark = themeMode === 'dark';
+
     // Tab Context
     const [value, setValue] = React.useState('1');
 
@@ -25,8 +34,8 @@ const Settings = () => {
         setValue(newValue);
     };
 
-    // Theme Switch
-    const [checked, setChecked] = React.useState(false);
+    // User information
+    const { userData, userCredentials } = useSelector((state: RootState) => state.access)
 
     return (
         <Box sx={{ width: '100%', margin: '5px', typography: 'body1' }}>
@@ -42,14 +51,13 @@ const Settings = () => {
                     <Stack spacing={2} alignItems="start">
                         <Typography variant="h5">General Info</Typography>
 
-                        <Typography variant="overline" display="block">First Name</Typography>
-                        <TextField id="outlined-basic" label="" variant="outlined" />
+                        <TextField id="outlined-basic" label="First Name" defaultValue={userData?.firstName} variant="outlined" />
 
                         <Typography variant="overline" display="block">Last Name</Typography>
-                        <TextField id="outlined-basic" label="" variant="outlined" />
+                        <TextField id="outlined-basic" label="" defaultValue={userData?.lastName} variant="outlined" />
 
                         <Typography variant="overline" display="block">Email</Typography>
-                        <TextField id="outlined-basic" label="" variant="outlined" />
+                        <TextField id="outlined-basic" label="" defaultValue={userCredentials?.user?.email} variant="outlined" />
 
                         <Button variant="contained">Save Information</Button>
                     </Stack>
@@ -85,10 +93,11 @@ const Settings = () => {
                         <Typography variant="overline" display="block">Theme switch</Typography>
                         <FormGroup>
                             <FormControlLabel
-                                control={<MaterialUISwitch sx={{ m: 1 }} checked={checked} onChange={() => setChecked((prev) => !prev)}/>}
-                                label={`${checked? 'Dark mode':'Light mode'}`}
+                                control={<MaterialUISwitch sx={{ m: 1 }} checked={isDark} onChange={() => onChangeMode}/>}
+                                label={`${isDark ? 'Dark mode' : 'Light mode'}`}
                             />
                         </FormGroup>
+                        <SettingsMode></SettingsMode>
                     </Stack>
                 </TabPanel>
             </TabContext>
