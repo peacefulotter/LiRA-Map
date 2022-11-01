@@ -22,6 +22,12 @@ const languages = [
     { label: 'English', id: 2 },
 ];
 
+const roles = [
+    { label: 'Role 1', id: 1 },
+    { label: 'Role 2', id: 2 },
+    { label: 'Role 3', id: 2 },
+];
+
 const Settings = () => {
     // Theme Switch
     const { themeMode, onToggleMode } = useSettings();
@@ -85,6 +91,15 @@ const Settings = () => {
                     <Stack spacing={2} alignItems="start">
                         <Typography variant="h5">Preferences</Typography>
 
+                        <Typography variant="overline">Role</Typography>
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-lang"
+                            options={roles}
+                            sx={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+
                         <Typography variant="overline">Language</Typography>
                         <Autocomplete
                             disablePortal
@@ -93,6 +108,7 @@ const Settings = () => {
                             sx={{ width: 300 }}
                             renderInput={(params) => <TextField {...params} />}
                         />
+
                         <Typography variant="overline">Theme</Typography>
                         <FormGroup>
                             <FormControlLabel
