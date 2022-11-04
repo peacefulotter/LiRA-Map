@@ -5,6 +5,7 @@ import {Box, Typography} from "@mui/material";
 import {RootState} from "../store";
 import {useSelector} from "react-redux";
 import CriticalRoadsTable from "../components/Dashboard/CriticalRoadsTable";
+import RoadConditionsChart from "../components/Dashboard/RoadConditionsChart";
 
 const Dashboard = () => {
 
@@ -45,6 +46,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Box sx={{ p: 2, border: '1px grey', borderRadius: '5px', boxShadow: 2 }}>
                     <Typography variant="h5">Condition of your roads</Typography>
+                    <RoadConditionsChart></RoadConditionsChart>
                 </Box>
             </Grid>
         </Grid>
