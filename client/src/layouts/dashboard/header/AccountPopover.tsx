@@ -7,6 +7,7 @@ import MenuPopover from '../../../components/MenuPopover';
 import {IconButtonAnimate} from '../../../components/animate';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store";
+import {Link} from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -101,6 +102,11 @@ export default function AccountPopover() {
 
                 <Divider sx={{borderStyle: 'dashed'}}/>
 
+                <MenuItem
+                    component={Link}
+                    to="/user/settings"
+                    sx={{m: 1}}
+                >Settings</MenuItem>
                 <MenuItem sx={{m: 1}}>Logout</MenuItem>
             </MenuPopover>
         </>
