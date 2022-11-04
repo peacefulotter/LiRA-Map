@@ -30,6 +30,9 @@ import { SignupController } from "./signup/SignupController";
 import { ConnectionController } from './connection/connection.controller';
 import { ConnectionService } from './connection/connection.service';
 
+import { EnergyController } from "./energy/EnergyController";
+import { EnergyService } from "./energy/EnergyService";
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
@@ -62,6 +65,7 @@ const database = (config: any, name: string) => {
     LoginController,
     ConnectionController,
     SignupController,
+    EnergyController,
   ],
   providers: [
     AppService,
@@ -73,6 +77,7 @@ const database = (config: any, name: string) => {
     RCService,
     AltitudeService,
     ConnectionService,
+    EnergyService,
   ],
 })
 export class AppModule {}
