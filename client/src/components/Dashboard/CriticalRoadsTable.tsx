@@ -44,16 +44,24 @@ const rows = [
     createData(0,   'Lyngbyvej',              39.7,   '...'),
     createData(1,   'Kongevejen',             25.0,   '...'),
     createData(2,   'Ekkart\'s indkørsel',    100.0,  '...'),
-    createData(3,   'LangeLinje',             60.0,   '...'),
+    createData(3,   'Langelinie',             60.0,   '...'),
     createData(4,   'Dillervejen',            16.0,   '...'),
     createData(5,   'Istegade',               43.2,   '...'),
     createData(6,   'Vejvej',                 79.0,   '...'),
     createData(7,   'Strandvejen',            90.0,   '...'),
     createData(8,   'Himmelvejen',            26.0,   '...'),
     createData(9,   'Den Kreative Vej',       1.2,    '...'),
-    createData(10,  'Endnu En Vej',           80.0,   '...'),
-    createData(11,  'LængsteVej',             19.0,   '...'),
-    createData(12,  'SuperVej',               18.0,   '...')
+    createData(10,  'Lærkevej',               80.9,   '...'),
+    createData(11,  'Birkevej',               19.5,   '...'),
+    createData(12,  'Vibevej',                52.1,   '...'),
+    createData(13,  'Østergade',              11.3,   '...'),
+    createData(14,  'Engvej',                 84.8,   '...'),
+    createData(15,  'Møllevej',               65.4,   '...'),
+    createData(16,  'Vestergade',             3.5,    '...'),
+    createData(17,  'Brumleby',               95.1,   '...'),
+    createData(18,  'Elefanten',              71.2,   '...'),
+    createData(19,  'Solvej',                 23.7,   '...'),
+    createData(20,  'Vejs Ende',              47.4,   '...'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -98,31 +106,26 @@ interface HeadCell {
     disablePadding: boolean;
     id: keyof Data;
     label: string;
-    numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
     {
         id: 'roadId',
-        numeric: true,
         disablePadding: false,
         label: 'Road ID',
     },
     {
         id: 'roadName',
-        numeric: true,
         disablePadding: false,
         label: 'Road Name',
     },
     {
         id: 'quality',
-        numeric: true,
         disablePadding: false,
         label: 'Quality',
     },
     {
         id: 'moreData',
-        numeric: true,
         disablePadding: false,
         label: 'More Data',
     },
@@ -166,7 +169,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -350,7 +352,7 @@ export default function CriticalRoadsTable() {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell align="right">{row.roadId}</TableCell>
+                                            <TableCell>{row.roadId}</TableCell>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}
@@ -359,8 +361,8 @@ export default function CriticalRoadsTable() {
                                             >
                                                 {row.roadName}
                                             </TableCell>
-                                            <TableCell align="right" style={{backgroundColor: (row.quality < 40) ? color_red : ((row.quality < 80) ? color_yellow : color_green) }}>{row.quality}</TableCell>
-                                            <TableCell align="right">{row.moreData}</TableCell>
+                                            <TableCell style={{backgroundColor: (row.quality < 40) ? color_red : ((row.quality < 80) ? color_yellow : color_green) }}>{row.quality}</TableCell>
+                                            <TableCell>{row.moreData}</TableCell>
                                         </TableRow>
                                     );
                                 })}
