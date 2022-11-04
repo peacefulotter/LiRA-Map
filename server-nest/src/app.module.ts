@@ -28,6 +28,9 @@ import { SignupController } from './signup/SignupController';
 import { ConnectionController } from './connection/connection.controller';
 import { ConnectionService } from './connection/connection.service';
 
+import { EnergyController } from "./energy/EnergyController";
+import { EnergyService } from "./energy/EnergyService";
+
 import {
     LIRA_DB_CONFIG,
     POSTGIS_DB_CONFIG,
@@ -44,34 +47,36 @@ const database = (config: any, name: string) => {
     );
 };
 @Module({
-    imports: [
-        ConfigModule.forRoot(),
-        database(LIRA_DB_CONFIG, 'lira-main'),
-        database(VISUAL_DB_CONFIG, 'lira-vis'),
-        database(POSTGIS_DB_CONFIG, 'postgis'),
-    ],
-    controllers: [
-        AppController,
-        SegmentsController,
-        TypesController,
-        RidesController,
-        MeasurementsController,
-        RCController,
-        AltitudeController,
-        LoginController,
-        ConnectionController,
-        SignupController,
-    ],
-    providers: [
-        AppService,
-        SegmentsService,
-        ConfigService,
-        TypesService,
-        RidesService,
-        MeasurementsService,
-        RCService,
-        AltitudeService,
-        ConnectionService,
-    ],
+  imports: [
+    ConfigModule.forRoot(),
+    database(LIRA_DB_CONFIG, "lira-main"),
+    database(VISUAL_DB_CONFIG, "lira-vis"),
+    database(POSTGIS_DB_CONFIG, "postgis"),
+  ],
+  controllers: [
+    AppController,
+    SegmentsController,
+    TypesController,
+    RidesController,
+    MeasurementsController,
+    RCController,
+    AltitudeController,
+    LoginController,
+    ConnectionController,
+    SignupController,
+    EnergyController,
+  ],
+  providers: [
+    AppService,
+    SegmentsService,
+    ConfigService,
+    TypesService,
+    RidesService,
+    MeasurementsService,
+    RCService,
+    AltitudeService,
+    ConnectionService,
+    EnergyService,
+  ],
 })
 export class AppModule {}
