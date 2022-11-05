@@ -8,12 +8,16 @@ import { Measurement } from '../models';
 export class EnergyService {
   constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
-  async get(tripId: string): Promise<number> {
+  private accKey = 'acc.xyz';
+  private spdKey = 'obd.spd_veh';
+  private consKey = 'obd.trac_cons';
+
+  async get(tripId: string): Promise<any> {
     const relevantMeasurements: MeasurementEntity[] = await this.knex
       .select('*')
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
-      .whereIn('T', ['acc.xyz', 'obd.spd_veh', 'obd.trac_cons'])
+      .whereIn('T', [this.accKey, this.spdKey, this.consKey])
       .orderBy('Created_Date');
 
     // For intial testing.
@@ -26,50 +30,51 @@ export class EnergyService {
     maxTimeDelta = 500,
   ): Promise<any[]> {
     const assigned: {
-      power: MeasurementEntity;
-      assigned: MeasurementEntity[];
+      power: number;
+      assigned: number[];
     }[] = [];
 
     let beforeIndex = 0;
-    let powerIndex = 0;
-    let afterIndex = 0;
+    let afterIndex;
+
+    let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consKey);
 
     let currentPower: MeasurementEntity;
 
-    while (
-      beforeIndex < sortedMeasurements.length &&
-      afterIndex < sortedMeasurements.length
+    for (
+      afterIndex = powerIndex + 1;
+      afterIndex < sortedMeasurements.length;
+      afterIndex++
     ) {
       if (
-        sortedMeasurements[afterIndex].T == 'obd.trac_cons' &&
-        powerIndex < beforeIndex
-      ) {
-        // Have reached the powerIndex INSIDE before and after index.
-        powerIndex = afterIndex;
-      } else if (
-        sortedMeasurements[afterIndex].T == 'obd.trac_cons' ||
+        sortedMeasurements[afterIndex].T == this.consKey ||
         (afterIndex == sortedMeasurements.length - 1 &&
-          sortedMeasurements[powerIndex].T == 'odb.trac_cons')
+          sortedMeasurements[powerIndex].T == this.consKey)
       ) {
         // Have reached the next powerIndex. Add the current
         currentPower = sortedMeasurements[powerIndex];
 
         assigned.push({
-          power: currentPower,
+          power: powerIndex,
           assigned: sortedMeasurements
-            .slice(beforeIndex, afterIndex + 1)
-            .filter(
-              (m) =>
+            .slice(beforeIndex, afterIndex)
+            .reduce((prev: number[], m, i) => {
+              if (
                 Math.abs(
                   m.Created_Date.getTime() -
                     currentPower.Created_Date.getTime(),
-                ) <= maxTimeDelta && m.T != 'obd.trac_cons',
-            ),
+                ) <= maxTimeDelta &&
+                m.T != this.consKey
+              ) {
+                prev.push(beforeIndex + i);
+              }
+              return prev;
+            }, [] as number[]),
         });
 
         beforeIndex = powerIndex + 1;
+        powerIndex = afterIndex;
       }
-      afterIndex++;
     }
 
     return assigned;
