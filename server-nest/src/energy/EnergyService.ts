@@ -8,11 +8,11 @@ import { Measurement } from '../models';
 export class EnergyService {
   constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
-  private accKey = 'acc.xyz';
-  private spdKey = 'obd.spd_veh';
-  private consKey = 'obd.trac_cons';
+  private readonly accKey = 'acc.xyz';
+  private readonly spdKey = 'obd.spd_veh';
+  private readonly consKey = 'obd.trac_cons';
 
-  async get(tripId: string): Promise<any> {
+  public async get(tripId: string): Promise<any> {
     const relevantMeasurements: MeasurementEntity[] = await this.knex
       .select('*')
       .from({ public: 'Measurements' })
@@ -25,7 +25,7 @@ export class EnergyService {
     return list.length;
   }
 
-  async collect(
+  private async collect(
     sortedMeasurements: MeasurementEntity[],
     maxTimeDelta = 500,
   ): Promise<any[]> {
@@ -34,12 +34,13 @@ export class EnergyService {
       assigned: number[];
     }[] = [];
 
+    let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consKey);
+    if (powerIndex == -1) {
+      return [];
+    }
+
     let beforeIndex = 0;
     let afterIndex;
-
-    let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consKey);
-
-    let currentPower: MeasurementEntity;
 
     for (
       afterIndex = powerIndex + 1;
@@ -48,11 +49,10 @@ export class EnergyService {
     ) {
       if (
         sortedMeasurements[afterIndex].T == this.consKey ||
-        (afterIndex == sortedMeasurements.length - 1 &&
-          sortedMeasurements[powerIndex].T == this.consKey)
+        afterIndex == sortedMeasurements.length - 1
       ) {
         // Have reached the next powerIndex. Add the current
-        currentPower = sortedMeasurements[powerIndex];
+        const currentPower = sortedMeasurements[powerIndex];
 
         assigned.push({
           power: powerIndex,
