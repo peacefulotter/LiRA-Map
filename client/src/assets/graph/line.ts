@@ -2,7 +2,7 @@ import { getColor } from './color';
 import Dots from './dots';
 import Path from './path';
 import Tooltip from './tooltip';
-import { Path as PathData } from '../../models/path';
+import { Path as PathData, PointData } from '../../models/path';
 
 import {
   Axis,
@@ -12,6 +12,8 @@ import {
   PathOptions,
   SVG,
 } from './types';
+import { range } from 'd3';
+import { isBreakOrContinueStatement } from 'typescript';
 
 export default class GLine {
   path: Path;
@@ -30,6 +32,7 @@ export default class GLine {
     time: boolean | undefined,
     addMarker: (selected: number, markerPos: [number, number]) => void,
   ) {
+    console.log('We are in the marker');
     const color = getColor(0, i);
     const hoverColor = 'url(#line-gradient)';
 
@@ -78,16 +81,70 @@ export default class GLine {
 
       const duration = data[data.length - 1][0] - data[0][0];
       const clickedTime = duration * clickedPercent + data[0][0];
-      for (let i = 1; i < data.length; i++) {
-        if (clickedTime <= data[i][0]) {
-          const closestIndex =
-            data[i - 1][0] > data[i][0] - clickedTime ? i : i - 1;
-          const closestPoint = pathData[closestIndex];
-          addMarker(closestIndex, [closestPoint.lat, closestPoint.lng]);
-          break;
-        }
+
+      let idx;
+      if (clickedTime < data[0][0]) {
+        idx = 0;
+      } else if (clickedTime > data[data.length - 1][0]) {
+        idx = data.length - 1;
+      } else {
+        idx = binarySearch(data, clickedTime, 0, data.length - 2, 0);
       }
+
+      const point = interpolatePoint(
+        clickedTime,
+        data[idx][0],
+        data[idx + 1][0],
+        pathData[idx],
+        pathData[idx + 1],
+      );
+      console.log('coords found');
+      addMarker(idx, [point.lat, point.lng]);
+
+      console.log('data[i] =     ' + data[idx][0]);
+      console.log('data[i + 1] = ' + data[idx + 1][0]);
     });
+
+    const binarySearch = (
+      data: GraphData,
+      target: number,
+      i: number,
+      j: number,
+      depth: number,
+    ): number => {
+      const idx = Math.floor(i + (j - i) / 2);
+      if (data[idx][0] <= target && target <= data[idx + 1][0]) {
+        return idx;
+      }
+
+      let iNew = i;
+      let jNew = j;
+      if (target < data[idx][0]) {
+        jNew = idx;
+      } else if (target > data[idx + 1][0]) {
+        iNew = idx + 1;
+      }
+
+      if (iNew === i && jNew === j) {
+        return idx + 1;
+      }
+
+      return binarySearch(data, target, iNew, jNew, depth + 1);
+    };
+
+    const interpolatePoint = (
+      value: number,
+      neigh1value: number,
+      neigh2value: number,
+      neigh1coords: PointData,
+      neigh2coords: PointData,
+    ) => {
+      const p = (value - neigh1value) / (neigh2value - neigh1value);
+      const interpolatedLat = (1 - p) * neigh1coords.lat + p * neigh2coords.lat;
+      const interpolatedLng = (1 - p) * neigh1coords.lng + p * neigh2coords.lng;
+
+      return { lat: interpolatedLat, lng: interpolatedLng };
+    };
 
     // dots.addMouseOver( (e, d) => {
     //     path.mouseOver();
