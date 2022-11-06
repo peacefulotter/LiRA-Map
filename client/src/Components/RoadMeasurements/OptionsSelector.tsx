@@ -4,18 +4,19 @@ import { TripsOptions } from '../../models/models';
 import Checkbox from '../Checkbox';
 
 const defaultOptions: TripsOptions = {
-  search: '',
-  startDate: new Date('2020-01-01'),
-  endDate: new Date(),
-  reversed: false,
-  distanceKm: 0,
+    taskId: '',
+    startDate: new Date('2020-01-01'),
+    endDate: new Date(),
+    reversed: false,
+    distanceKm: undefined,
+    startCity: "",
+    endCity: "",
+    postalCode: undefined,
 };
-
-let choice: keyof TripsOptions = 'search';
+const choice: keyof TripsOptions = 'taskId';
 interface IOptionsSelector {
   onChange: (options: TripsOptions, key: keyof TripsOptions) => void;
 }
-
 const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 
@@ -30,26 +31,37 @@ const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
   };
 
   return (
-    <div className="rides-options">
-      <select
-        onChange={(o) => {
-          choice = o.target.value as keyof TripsOptions;
-          console.log(choice);
-        }}
-      >
-        {Object.keys(defaultOptions).map((key, _) => {
-          return (
-            <option value={key} key={key}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
+      <div className="rides-options">
+          <input
+              className="ride-search-input"
+              placeholder="TaskID"
+              value={options.taskId}
+              onChange={(e) => _onChange('taskId', choice)(e.target.value)}
+          />
+
+        <input
+            className="ride-search-input"
+            placeholder="Distance Km"
+            value={options.distanceKm}
+            onChange={(e) => _onChange('distanceKm', choice)(e.target.value)}
+        />
+        <input
+        className="ride-search-input"
+        placeholder="Start City"
+        value={options.startCity}
+        onChange={(e) => _onChange('startCity', choice)(e.target.value)}
+        />
       <input
         className="ride-search-input"
-        placeholder="Search.."
-        value={options.search}
-        onChange={(e) => _onChange('search', choice)(e.target.value)}
+        placeholder="Destination City"
+        value={options.endCity}
+        onChange={(e) => _onChange('endCity', choice)(e.target.value)}
+      />
+      <input
+          className="ride-search-input"
+          placeholder="Postal Code"
+          value={options.postalCode}
+          onChange={(e) => _onChange('postalCode', choice)(e.target.value)}
       />
 
       <DatePicker

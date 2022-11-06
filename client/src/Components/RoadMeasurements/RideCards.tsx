@@ -10,6 +10,7 @@ import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import OptionsSelector from './OptionsSelector';
 import { CgTemplate } from 'react-icons/cg';
+import { filteredData } from './SearchFilterOptions';
 
 interface CardsProps {
   showMetas: SelectMeta[];
@@ -56,7 +57,7 @@ interface SelectMeta extends RideMeta {
 
 const RideCards: FC = () => {
   const { metas, selectedMetas, setSelectedMetas } = useMetasCtx();
-
+  //console.log('🇩🇰', useMetasCtx());
   const [showMetas, setShowMetas] = useState<SelectMeta[]>([]);
 
   useEffect(() => {
@@ -64,7 +65,10 @@ const RideCards: FC = () => {
   }, [metas]);
 
   const onChange = (
-    { search, startDate, endDate, reversed }: TripsOptions,
+    { taskId, postalCode, distanceKm, startCity, endCity, startDate, endDate, reversed }: TripsOptions,
+
+
+
     key: keyof TripsOptions,
   ) => {
     const updatedMetas = metas;
@@ -73,23 +77,25 @@ const RideCards: FC = () => {
         let inSearch;
         console.log('key', key);
         if (key.includes('distanceKm')) {
-          const searchedValue = Number(search);
+          const searchedValue = Number(taskId);
           if (isNaN(searchedValue)) {
-            inSearch = search === '' || meta.TaskId.toString().includes(search);
+            inSearch = taskId === '' || meta.TaskId.toString().includes(taskId);
           } else {
             inSearch = meta.DistanceKm > searchedValue;
           }
         } else {
-          inSearch = search === '' || meta.TaskId.toString().includes(search);
+          inSearch = taskId === '' || meta.TaskId.toString().includes(taskId);
         }
         const date = new Date(meta.Created_Date).getTime();
         const inDate = date >= startDate.getTime() && date <= endDate.getTime();
+        //filteredData(metas, selectedMetas);
         return inSearch && inDate;
       })
       .map((meta: RideMeta) => {
         const selected =
           selectedMetas.find(({ TripId }) => meta.TripId === TripId) !==
           undefined;
+        //console.log('🇩🇰', { ...meta, selected });
         return { ...meta, selected };
       });
     setShowMetas(reversed ? temp.reverse() : temp);

@@ -29,9 +29,13 @@ export interface LatLng {
 }
 
 export interface TripsOptions {
-  search: string;
+  taskId: string;
   startDate: Date;
   endDate: Date;
   reversed: boolean;
-  distanceKm: number;
+  distanceKm: number | undefined;
+  postalCode: number | undefined;
+  startCity: string;
+  endCity: string;
+
 }
