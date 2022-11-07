@@ -22,7 +22,6 @@ interface ILine {
   label: string;
   i: number;
   time: boolean | undefined;
-  addMarker: (selected: number, markerPos: [number, number]) => void;
 }
 
 const Line: FC<ILine> = ({
@@ -35,9 +34,8 @@ const Line: FC<ILine> = ({
   label,
   i,
   time,
-  addMarker,
 }) => {
-  const { addBounds, remBounds, setDotHover } = useGraph();
+  const { addBounds, remBounds, setDotHover, setMarkers } = useGraph();
 
   useEffect(() => {
     if (xAxis === undefined || yAxis === undefined) return;
@@ -66,7 +64,7 @@ const Line: FC<ILine> = ({
       yAxis,
       onHover,
       time,
-      addMarker,
+      setMarkers,
     );
 
     return () => {

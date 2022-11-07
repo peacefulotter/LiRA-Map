@@ -24,7 +24,6 @@ interface IGraph {
   palette?: Palette;
   absolute?: boolean;
   time?: boolean;
-  addMarker: (selected: number, markerPos: [number, number]) => void;
 }
 
 const margin = { top: 20, right: 30, bottom: 70, left: 100 };
@@ -37,7 +36,6 @@ const Graph: FC<IGraph> = ({
   palette,
   absolute,
   time,
-  addMarker,
 }) => {
   const wrapperRef = useRef(null);
   const [width, height] = useSize(wrapperRef);
@@ -112,7 +110,6 @@ const Graph: FC<IGraph> = ({
                     yAxis={yAxis}
                     i={i}
                     time={time}
-                    addMarker={addMarker}
                     {...p}
                   />
                 ))}

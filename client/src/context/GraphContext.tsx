@@ -7,7 +7,12 @@ import React, {
 } from 'react';
 
 import useMinMaxAxis from '../hooks/useMinMaxAxis';
-import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from '../assets/graph/types';
+import {
+  AddMinMaxFunc,
+  DotHover,
+  MarkersMap,
+  RemMinMaxFunc,
+} from '../assets/graph/types';
 
 interface ContextProps {
   minX: number;
@@ -20,6 +25,8 @@ interface ContextProps {
 
   dotHover: DotHover | undefined;
   setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
+  markers: MarkersMap;
+  setMarkers: Dispatch<SetStateAction<MarkersMap>>;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -29,6 +36,9 @@ const GraphContext = createContext({} as ContextProps);
 export const GraphProvider = ({ children }: any) => {
   const { bounds, addBounds, remBounds } = useMinMaxAxis();
   const [dotHover, setDotHover] = useState<DotHover>();
+  const [markers, setMarkers] = useState(
+    new Map<string, { lat: number; lng: number; index: number }>(),
+  );
 
   const { minX, maxX, minY, maxY } = bounds;
 
@@ -43,6 +53,8 @@ export const GraphProvider = ({ children }: any) => {
         remBounds,
         dotHover,
         setDotHover,
+        markers,
+        setMarkers,
       }}
     >
       {children}

@@ -14,16 +14,12 @@ interface IRidesMap {
   paths: MeasMetaPath;
   selectedMetas: RideMeta[];
   selectedMeasurements: ActiveMeasProperties[];
-  markerSelected?: number;
-  markerPos?: [number, number];
 }
 
 const RidesMap: FC<IRidesMap> = ({
   paths,
   selectedMetas,
   selectedMeasurements,
-  markerSelected,
-  markerPos,
 }) => {
   const memoPaths = useMemo(() => {
     const temp: { meas: MeasProperties; meta: RideMeta; bp: BoundedPath }[] =
@@ -49,8 +45,6 @@ const RidesMap: FC<IRidesMap> = ({
               path={bp.path}
               properties={meas}
               metadata={meta}
-              selected={markerSelected}
-              markerPos={markerPos}
             />
           ),
       )}

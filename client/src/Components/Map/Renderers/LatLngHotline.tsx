@@ -44,6 +44,7 @@ function LatLngHotline<T>({
     };
   }, [handlers]);
 
+  // TODO: This rerenders a million times when adding a marker on the map?
   console.log(data);
 
   return (

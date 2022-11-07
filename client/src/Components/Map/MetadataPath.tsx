@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { PathProps } from '../../models/path';
 import Path from './Path';
+import { useGraph } from '../../context/GraphContext';
 
 const parseMD = (mds: any) => {
   if (typeof mds === 'object' && Array.isArray(mds)) {
@@ -39,41 +40,45 @@ const getPopupLine = (key: string, value: any) => {
   );
 };
 
-const MetadataPath: FC<PathProps> = ({
-  path,
-  properties,
-  metadata,
-  selected,
-  markerPos,
-}) => {
-  const [_markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
-  const [_selected, setSelected] = useState<number | undefined>(undefined);
+const MetadataPath: FC<PathProps> = ({ path, properties, metadata }) => {
+  const [marker, setMarker] = useState<
+    | {
+        lat: number;
+        lng: number;
+        index: number;
+      }
+    | undefined
+  >(undefined);
+  const { markers, setMarkers } = useGraph();
 
   const onClick = (i: number) => (e: any) => {
     const { lat, lng } = e.latlng;
-    setMarkerPos([lat, lng]);
-    setSelected(i);
+    setMarkers(
+      (markers) =>
+        new Map(
+          markers.set('TaskID-Meas', {
+            lat,
+            lng,
+            index: i,
+          }),
+        ),
+    );
   };
 
   useEffect(() => {
-    if (markerPos === undefined || selected === undefined) {
-      setSelected(undefined);
-      return;
-    }
+    // TODO: Once graphs are individual change the key below to match this graph
+    setMarker(markers.get('TaskID-Meas'));
+  }, [markers]);
 
-    setMarkerPos(markerPos);
-    setSelected(selected);
-  }, [selected, markerPos]);
-
-  const point = path[_selected || 0];
+  const point = path[marker?.index || 0];
   const md = metadata || {};
 
   return (
     <>
       <Path path={path} properties={properties} onClick={onClick}></Path>
 
-      {_selected !== undefined && (
-        <Marker position={_markerPos}>
+      {marker !== undefined && (
+        <Marker position={[marker.lat, marker.lng]}>
           <Popup>
             {getPopupLine('Properties', properties)}
             {getPopupLine('Value', point.value)}
