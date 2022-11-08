@@ -26,13 +26,6 @@ const Rides: FC = () => {
   const [loading, setLoading] = useState(false);
   const headers = ['x', 'y'];
 
-  const csvData = [
-    ['firstname', 'lastname', 'email'],
-    ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
-    ['Raed', 'Labes', 'rl@smthing.co.com'],
-    ['Yezzi', 'Min l3b', 'ymin@cocococo.com'],
-  ];
-
   useEffect(() => {
     const updatePaths = async () => {
       setLoading(true);
@@ -83,6 +76,28 @@ const Rides: FC = () => {
     updatePaths().then(setPaths);
   }, [selectedMetas, selectedMeasurements]);
 
+  const csvData = (measurement: string, tripId: number) => {
+    const { path } = paths[measurement][tripId];
+    const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
+    const data: GraphData = path
+      .map((p) => [x(p), p.value || 0] as GraphPoint)
+      .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
+
+    const test: (string | number)[][] = [];
+    test.push(['x', 'y']);
+
+    data.forEach((datapoint) => {
+      test.push([datapoint[0], datapoint[1]]);
+    });
+
+    console.error(test);
+    console.log(csvData);
+
+    return test;
+  };
+
+  console.log('paths', paths);
+
   return (
     <GraphProvider>
       <div className="map-container">
@@ -92,38 +107,21 @@ const Rides: FC = () => {
           selectedMeasurements={selectedMeasurements}
         />
         {selectedMeasurements.map(
-          ({ hasValue, name, palette }: ActiveMeasProperties, i: number) =>
-            hasValue && (
-              <CSVLink
-                data={Object.entries(paths[name] || {}).map(([, bp], j) => {
-                  const { path, bounds } = bp;
-                  const x = (p: PointData) =>
-                    new Date(p.metadata.timestamp).getTime();
-                  const data: GraphData = path
-                    .map((p) => [x(p), p.value || 0] as GraphPoint)
-                    .sort(([x1, y1], [x2, y2]) =>
-                      x1 < x2 ? -1 : x1 === x2 ? 0 : 1,
-                    );
-
-                  const test: string[][] = [];
-                  test.push(['x', 'y']);
-
-                  data.forEach((datapoint) => {
-                    test.push([
-                      datapoint[0].toString(),
-                      datapoint[1].toString(),
-                    ]);
-                  });
-
-                  console.log(test);
-                  console.log(csvData);
-                  return test;
-                  //return { data, bounds, label: 'r-' + TaskId, j };
-                })}
-              >
-                Download me
-              </CSVLink>
-            ),
+          ({ hasValue, name }: ActiveMeasProperties, i: number) => {
+            if (!hasValue) return <></>;
+            return (
+              <>
+                {Object.keys(paths[name] || {}).map((tripId) => (
+                  <CSVLink
+                    key={`${name}-${tripId}`}
+                    data={csvData(name, parseInt(tripId))}
+                  >
+                    Download {name} - {tripId}
+                  </CSVLink>
+                ))}
+              </>
+            );
+          },
         )}
         {selectedMeasurements.map(
           ({ hasValue, name, palette }: ActiveMeasProperties, i: number) =>
