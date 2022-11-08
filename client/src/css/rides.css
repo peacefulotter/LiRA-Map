@@ -9,7 +9,7 @@
 
 .map-container {
     display: grid;
-    grid-template-rows: 65% auto;
+    grid-template-rows: 65% min-content auto;
     height: 100%;
 }
 
