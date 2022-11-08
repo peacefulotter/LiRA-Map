@@ -47,28 +47,6 @@ const Rides: FC = () => {
         }
       }
 
-      const ingo = Object.entries(csvData || {}).map(([, bp], j) => {
-        const data = [
-          {
-            x: 'test',
-            y: 'test',
-          },
-        ];
-
-        const test: string[][] = [];
-        test.push(['x', 'y']);
-
-        data.forEach((datapoint) => {
-          test.push([datapoint.x, datapoint.y]);
-        });
-
-        console.log(test);
-        console.log(csvData);
-        return test;
-        //return { data, bounds, label: 'r-' + TaskId, j };
-      });
-      console.log('hier' + ingo);
-
       setLoading(false);
       return temp;
     };
@@ -83,17 +61,17 @@ const Rides: FC = () => {
       .map((p) => [x(p), p.value || 0] as GraphPoint)
       .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
 
-    const test: (string | number)[][] = [];
-    test.push(['x', 'y']);
+    const csvData: (string | number)[][] = [];
+    csvData.push(['x', 'y']);
 
     data.forEach((datapoint) => {
-      test.push([datapoint[0], datapoint[1]]);
+      csvData.push([datapoint[0], datapoint[1]]);
     });
 
-    console.error(test);
+    console.error(csvData);
     console.log(csvData);
 
-    return test;
+    return csvData;
   };
 
   console.log('paths', paths);
