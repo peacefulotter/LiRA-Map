@@ -31,8 +31,6 @@ export interface PathProps {
   properties: PathProperties;
   metadata?: Metadata;
   onClick?: PathEventHandler;
-  selected?: number;
-  markerPos?: [number, number];
 }
 
 // used for queries

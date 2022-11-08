@@ -9,11 +9,14 @@ import {
   DotHover,
   DotsOptions,
   GraphData,
+  MarkerData,
+  MarkersRecord,
   PathOptions,
   SVG,
 } from './types';
 import { range } from 'd3';
 import { isBreakOrContinueStatement } from 'typescript';
+import { Dispatch, SetStateAction } from 'react';
 
 export default class GLine {
   path: Path;
@@ -30,7 +33,7 @@ export default class GLine {
     yAxis: Axis,
     onHover: (d: DotHover | undefined) => void,
     time: boolean | undefined,
-    addMarker: (selected: number, markerPos: [number, number]) => void,
+    useMarkers: Dispatch<{ plot: string; data: MarkerData }>,
   ) {
     console.log('We are in the marker');
     const color = getColor(0, i);
@@ -82,7 +85,7 @@ export default class GLine {
       const duration = data[data.length - 1][0] - data[0][0];
       const clickedTime = duration * clickedPercent + data[0][0];
 
-      let idx;
+      let idx: number;
       if (clickedTime < data[0][0]) {
         idx = 0;
       } else if (clickedTime > data[data.length - 1][0]) {
@@ -99,7 +102,15 @@ export default class GLine {
         pathData[idx + 1],
       );
       console.log('coords found');
-      addMarker(idx, [point.lat, point.lng]);
+      // TODO: Once graphs are individual replace the key below with the actual graph data
+      useMarkers({
+        plot: 'TaskID-Meas',
+        data: {
+          lat: point.lat,
+          lng: point.lng,
+          index: idx,
+        },
+      });
 
       console.log('data[i] =     ' + data[idx][0]);
       console.log('data[i + 1] = ' + data[idx + 1][0]);

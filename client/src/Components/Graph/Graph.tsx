@@ -24,7 +24,6 @@ interface IGraph {
   palette?: Palette;
   absolute?: boolean;
   time?: boolean;
-  addMarker: (selected: number, markerPos: [number, number]) => void;
 }
 
 const margin = { top: 20, right: 30, bottom: 70, left: 100 };
@@ -38,7 +37,6 @@ const Graph: FC<IGraph> = ({
   palette,
   absolute,
   time,
-  addMarker,
 }) => {
   const wrapperRef = useRef(null);
   const [width, height] = useSize(wrapperRef);
@@ -171,7 +169,6 @@ const Graph: FC<IGraph> = ({
                   yAxis={yAxis}
                   i={0}
                   time={time}
-                  addMarker={addMarker}
                   {...selectedPlot}
                 />
               )}
@@ -182,24 +179,5 @@ const Graph: FC<IGraph> = ({
     </>
   );
 };
-
-/*
-const getLine = (plots: Plot[], taskId: string, measName: string) => {
-  const plot = plots.find((p) => {
-    p.taskId === taskId && p.measName === measName;
-  });
-  return (
-    <Line
-      key={'line-' + 0}
-      svg={svg}
-      xAxis={xAxis}
-      yAxis={yAxis}
-      i={0}
-      time={time}
-      addMarker={addMarker}
-      {...plots[0]}
-  />
-)};
-*/
 
 export default Graph;

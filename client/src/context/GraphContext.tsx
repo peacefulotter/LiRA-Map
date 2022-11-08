@@ -3,11 +3,19 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
+  useReducer,
   useState,
 } from 'react';
 
 import useMinMaxAxis from '../hooks/useMinMaxAxis';
-import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from '../assets/graph/types';
+import {
+  AddMinMaxFunc,
+  DotHover,
+  MarkerData,
+  MarkersRecord,
+  RemMinMaxFunc,
+} from '../assets/graph/types';
 
 interface ContextProps {
   minX: number;
@@ -20,6 +28,8 @@ interface ContextProps {
 
   dotHover: DotHover | undefined;
   setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
+  markers: MarkersRecord;
+  useMarkers: Dispatch<{ plot: string; data: MarkerData }>;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -29,6 +39,23 @@ const GraphContext = createContext({} as ContextProps);
 export const GraphProvider = ({ children }: any) => {
   const { bounds, addBounds, remBounds } = useMinMaxAxis();
   const [dotHover, setDotHover] = useState<DotHover>();
+  const [markers, useMarkers] = useReducer(
+    (state: MarkersRecord, action: { plot: string; data: MarkerData }) => {
+      // If the data already is as requested then don't update
+      const existingMarker = state[action.plot];
+      if (
+        existingMarker &&
+        existingMarker.lat === action.data.lat &&
+        existingMarker.lng === action.data.lng &&
+        existingMarker.index === action.data.index
+      )
+        return state;
+      const newState = { ...state };
+      newState[action.plot] = action.data;
+      return newState;
+    },
+    {},
+  );
 
   const { minX, maxX, minY, maxY } = bounds;
 
@@ -43,6 +70,8 @@ export const GraphProvider = ({ children }: any) => {
         remBounds,
         dotHover,
         setDotHover,
+        markers,
+        useMarkers,
       }}
     >
       {children}

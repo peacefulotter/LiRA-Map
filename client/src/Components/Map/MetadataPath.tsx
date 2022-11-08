@@ -3,6 +3,8 @@ import React, { FC, useEffect, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { PathProps } from '../../models/path';
 import Path from './Path';
+import { useGraph } from '../../context/GraphContext';
+import { MarkerData } from '../../assets/graph/types';
 
 const parseMD = (mds: any) => {
   if (typeof mds === 'object' && Array.isArray(mds)) {
@@ -39,41 +41,33 @@ const getPopupLine = (key: string, value: any) => {
   );
 };
 
-const MetadataPath: FC<PathProps> = ({
-  path,
-  properties,
-  metadata,
-  selected,
-  markerPos,
-}) => {
-  const [_markerPos, setMarkerPos] = useState<[number, number]>([0, 0]);
-  const [_selected, setSelected] = useState<number | undefined>(undefined);
+const MetadataPath: FC<PathProps> = ({ path, properties, metadata }) => {
+  const { markers, useMarkers } = useGraph();
 
+  // Onclick is called 4 times
   const onClick = (i: number) => (e: any) => {
     const { lat, lng } = e.latlng;
-    setMarkerPos([lat, lng]);
-    setSelected(i);
+    useMarkers({
+      plot: 'TaskID-Meas',
+      data: {
+        lat,
+        lng,
+        index: i,
+      },
+    });
   };
 
-  useEffect(() => {
-    if (markerPos === undefined || selected === undefined) {
-      setSelected(undefined);
-      return;
-    }
-
-    setMarkerPos(markerPos);
-    setSelected(selected);
-  }, [selected, markerPos]);
-
-  const point = path[_selected || 0];
+  // TODO: Once graphs are individual change the key below to match this graph
+  const marker = markers['TaskID-Meas'];
+  const point = path[marker?.index || 0];
   const md = metadata || {};
 
   return (
     <>
       <Path path={path} properties={properties} onClick={onClick}></Path>
 
-      {_selected !== undefined && (
-        <Marker position={_markerPos}>
+      {marker !== undefined && (
+        <Marker position={[marker.lat, marker.lng]}>
           <Popup>
             {getPopupLine('Properties', properties)}
             {getPopupLine('Value', point.value)}

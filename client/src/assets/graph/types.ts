@@ -67,3 +67,11 @@ export type RemMinMaxFunc = (label: string) => void;
 
 // Callback
 export type D3Callback = (event: any, d: GraphPoint) => void;
+
+// Markers map
+export interface MarkerData {
+  lat: number;
+  lng: number;
+  index: number;
+}
+export type MarkersRecord = Record<string, MarkerData>;
