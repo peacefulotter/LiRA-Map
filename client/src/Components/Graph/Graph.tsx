@@ -16,6 +16,8 @@ import useAxis from './Hooks/useAxis';
 
 import '../../css/graph.css';
 import Zoom from './Zoom';
+import Marker from './Marker';
+import { useGraph } from '../../context/GraphContext';
 
 interface IGraph {
   labelX: string;
@@ -46,6 +48,7 @@ const Graph: FC<IGraph> = ({
   const [zoom, setZoom] = useState<number>(1);
 
   const { xAxis, yAxis } = useAxis(zoom, w, h);
+  const { markers } = useGraph();
 
   return (
     <>
@@ -103,15 +106,28 @@ const Graph: FC<IGraph> = ({
               />
               {plots &&
                 plots.map((p: Plot, i: number) => (
-                  <Line
-                    key={'line-' + i}
-                    svg={svg}
-                    xAxis={xAxis}
-                    yAxis={yAxis}
-                    i={i}
-                    time={time}
-                    {...p}
-                  />
+                  <>
+                    <Line
+                      key={'line-' + i}
+                      svg={svg}
+                      xAxis={xAxis}
+                      yAxis={yAxis}
+                      i={i}
+                      time={time}
+                      {...p}
+                    />
+                    <Marker
+                      key={'marker-' + i}
+                      svg={svg}
+                      marker={
+                        // TODO: Change this key
+                        markers['TaskID-Meas']
+                      }
+                      data={p.data}
+                      xAxis={xAxis}
+                      yAxis={yAxis}
+                    />
+                  </>
                 ))}
             </>
           )}

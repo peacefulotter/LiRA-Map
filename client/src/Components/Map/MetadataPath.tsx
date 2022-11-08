@@ -47,6 +47,7 @@ const MetadataPath: FC<PathProps> = ({ path, properties, metadata }) => {
   // Onclick is called 4 times
   const onClick = (i: number) => (e: any) => {
     const { lat, lng } = e.latlng;
+    console.log(i);
     useMarkers({
       plot: 'TaskID-Meas',
       data: {
