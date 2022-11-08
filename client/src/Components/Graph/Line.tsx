@@ -35,7 +35,7 @@ const Line: FC<ILine> = ({
   i,
   time,
 }) => {
-  const { addBounds, remBounds, setDotHover, setMarkers } = useGraph();
+  const { addBounds, remBounds, setDotHover, useMarkers } = useGraph();
 
   useEffect(() => {
     if (xAxis === undefined || yAxis === undefined) return;
@@ -64,7 +64,7 @@ const Line: FC<ILine> = ({
       yAxis,
       onHover,
       time,
-      setMarkers,
+      useMarkers,
     );
 
     return () => {

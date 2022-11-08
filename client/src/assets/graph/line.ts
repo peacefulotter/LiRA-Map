@@ -9,7 +9,8 @@ import {
   DotHover,
   DotsOptions,
   GraphData,
-  MarkersMap,
+  MarkerData,
+  MarkersRecord,
   PathOptions,
   SVG,
 } from './types';
@@ -32,7 +33,7 @@ export default class GLine {
     yAxis: Axis,
     onHover: (d: DotHover | undefined) => void,
     time: boolean | undefined,
-    setMarkers: Dispatch<SetStateAction<MarkersMap>>,
+    useMarkers: Dispatch<{ plot: string; data: MarkerData }>,
   ) {
     console.log('We are in the marker');
     const color = getColor(0, i);
@@ -102,16 +103,14 @@ export default class GLine {
       );
       console.log('coords found');
       // TODO: Once graphs are individual replace the key below with the actual graph data
-      setMarkers(
-        (markers) =>
-          new Map(
-            markers.set('TaskID-Meas', {
-              lat: point.lat,
-              lng: point.lng,
-              index: idx,
-            }),
-          ),
-      );
+      useMarkers({
+        plot: 'TaskID-Meas',
+        data: {
+          lat: point.lat,
+          lng: point.lng,
+          index: idx,
+        },
+      });
 
       console.log('data[i] =     ' + data[idx][0]);
       console.log('data[i + 1] = ' + data[idx + 1][0]);
