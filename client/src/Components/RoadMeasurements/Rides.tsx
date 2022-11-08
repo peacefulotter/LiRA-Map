@@ -61,11 +61,11 @@ const Rides: FC = () => {
       .map((p) => [x(p), p.value || 0] as GraphPoint)
       .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
 
-    const csvData: (string | number)[][] = [];
+    const csvData: string[][] = [];
     csvData.push(['x', 'y']);
 
     data.forEach((datapoint) => {
-      csvData.push([datapoint[0], datapoint[1]]);
+      csvData.push([datapoint[0].toString(), datapoint[1].toString()]);
     });
 
     console.error(csvData);
@@ -84,23 +84,7 @@ const Rides: FC = () => {
           selectedMetas={selectedMetas}
           selectedMeasurements={selectedMeasurements}
         />
-        {selectedMeasurements.map(
-          ({ hasValue, name }: ActiveMeasProperties, i: number) => {
-            if (!hasValue) return <></>;
-            return (
-              <>
-                {Object.keys(paths[name] || {}).map((tripId) => (
-                  <CSVLink
-                    key={`${name}-${tripId}`}
-                    data={csvData(name, parseInt(tripId))}
-                  >
-                    Download {name} - {tripId}
-                  </CSVLink>
-                ))}
-              </>
-            );
-          },
-        )}
+
         {selectedMeasurements.map(
           ({ hasValue, name, palette }: ActiveMeasProperties, i: number) =>
             hasValue && (
