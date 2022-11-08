@@ -20,10 +20,20 @@ const Loadable = (Component: ElementType) => (props: any) => {
     );
 };
 
+// export const ProtectedRoute = ({children}: any) => {
+//   const user = useSelector((state: RootState) => state.user)
+//   const isAuthenticated = user.email !== null && user.email !== undefined && user.email !== "";
+//   if (!isAuthenticated) {
+//     // user is not authenticated
+//     return <Navigate to="/login"/>;
+//   }
+//   return children;
+// };
+
 export default function Router() {
   return useRoutes([
     {
-      path: '/',
+      path: '/login',
       element: <Login />
     },
     {
