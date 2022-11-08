@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Palette } from 'react-leaflet-hotline';
 
 import SVGWrapper from './SVGWrapper';
@@ -29,6 +29,7 @@ interface IGraph {
 }
 
 const margin = { top: 20, right: 30, bottom: 70, left: 100 };
+const margin2 = { top: 0, right: 30, bottom: 40, left: 100 };
 const paddingRight = 50;
 
 const Graph: FC<IGraph> = ({
@@ -50,8 +51,67 @@ const Graph: FC<IGraph> = ({
   const { xAxis, yAxis } = useAxis(zoom, w, h);
   const { markers } = useGraph();
 
+  // TODO: Handle when the user selects a TaskId-measurement combination that doesn't have data (display "No data" or similar)
+  const taskIds = Array.from(new Set(plots?.map((p) => p.taskId)));
+  const measNames = Array.from(new Set(plots?.map((p) => p.measName)));
+
+  const [selectedTrip, setSelectedTrip] = useState('');
+  const [selectedMeasurement, setSelectedMeasurement] = useState('');
+  const selectedPlot = plots?.find((p) => {
+    return p.taskId === selectedTrip && p.measName === selectedMeasurement;
+  });
+
+  console.log('Height: ' + height);
+  if (wrapperRef.current) {
+    console.log((wrapperRef.current as any).getBoundingClientRect());
+  }
+
+  useEffect(() => {
+    if (
+      plots &&
+      plots.length > 0 &&
+      !plots.find((p) => p.taskId === selectedTrip)
+    ) {
+      setSelectedTrip(plots[0].taskId);
+    }
+    if (
+      plots &&
+      plots.length > 0 &&
+      !plots.find((p) => p.measName === selectedMeasurement)
+    ) {
+      setSelectedMeasurement(plots[0].measName);
+    }
+  }, [plots]);
+
   return (
     <>
+      <div>
+        <label>Trip: </label>
+        <select
+          onChange={(e) => {
+            setSelectedTrip(e.target.value);
+          }}
+        >
+          {taskIds.map((taskId) => (
+            <option key={taskId} value={taskId}>
+              {taskId}
+            </option>
+          ))}
+        </select>
+        <label>Measurement: </label>
+        <select
+          onChange={(e) => {
+            setSelectedMeasurement(e.target.value);
+          }}
+        >
+          {measNames.map((measName) => (
+            <option key={measName} value={measName}>
+              {measName}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <Tooltip />
       <div className="graph-wrapper" ref={wrapperRef}>
         <Zoom setZoom={setZoom} />
@@ -104,31 +164,30 @@ const Graph: FC<IGraph> = ({
                 absolute={absolute}
                 time={time}
               />
-              {plots &&
-                plots.map((p: Plot, i: number) => (
-                  <>
-                    <Line
-                      key={'line-' + i}
-                      svg={svg}
-                      xAxis={xAxis}
-                      yAxis={yAxis}
-                      i={i}
-                      time={time}
-                      {...p}
-                    />
-                    <Marker
-                      key={'marker-' + i}
-                      svg={svg}
-                      marker={
-                        // TODO: Change this key
-                        markers['TaskID-Meas']
-                      }
-                      data={p.data}
-                      xAxis={xAxis}
-                      yAxis={yAxis}
-                    />
-                  </>
-                ))}
+              {plots && selectedPlot && (
+                <>
+                  <Line
+                    key={'line-' + 0}
+                    svg={svg}
+                    xAxis={xAxis}
+                    yAxis={yAxis}
+                    i={0}
+                    time={time}
+                    {...selectedPlot}
+                  />
+                  <Marker
+                    key={'marker-' + 0}
+                    svg={svg}
+                    marker={
+                      // TODO: Change this key
+                      markers['TaskID-Meas']
+                    }
+                    data={selectedPlot.data}
+                    xAxis={xAxis}
+                    yAxis={yAxis}
+                  />
+                </>
+              )}
             </>
           )}
         </SVGWrapper>

@@ -86,6 +86,8 @@ const Rides: FC = () => {
                       bounds,
                       label: 'r-' + TaskId,
                       j,
+                      measName: name,
+                      taskId: TaskId,
                     };
                   },
                 )}

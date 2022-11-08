@@ -30,6 +30,9 @@ export interface Plot {
   data: GraphData;
   bounds?: Bounds;
   label: string;
+  j: number;
+  measName: string;
+  taskId: string;
 }
 
 // Events
