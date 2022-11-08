@@ -29,7 +29,31 @@ function generate(min: number, max: number) {
     return Math.random() * (max - min + 1) + min;
 }
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'];
+function getDatesInRange(start : Date, end : Date) {
+    const date = new Date(start.getTime());
+
+    let dates = [];
+
+    while(date <= end) {
+        dates.push(new Date(date));
+        date.setDate(date.getDate() + 1);
+    }
+
+    // Format dates to preferred format
+    const date_format = new Intl.DateTimeFormat('en-GB', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+
+    dates = dates.map((date) => date_format.format(date));
+
+    //console.log(dates);
+
+    return dates;
+}
+
+const labels = getDatesInRange(new Date(new Date().setDate(new Date().getDate() - 30)), new Date());
 
 export const data = {
     labels: labels,

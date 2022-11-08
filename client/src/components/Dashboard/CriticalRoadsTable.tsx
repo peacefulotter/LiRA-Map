@@ -43,9 +43,9 @@ function createData(
 const rows = [
     createData(0,   'Lyngbyvej',              39.7,   '...'),
     createData(1,   'Kongevejen',             25.0,   '...'),
-    createData(2,   'Ekkart\'s indkørsel',    100.0,  '...'),
+    createData(2,   'Henrik Dams Allé',       100.0,  '...'),
     createData(3,   'Langelinie',             60.0,   '...'),
-    createData(4,   'Dillervejen',            16.0,   '...'),
+    createData(4,   'Anker Engelunds Vej',    16.0,   '...'),
     createData(5,   'Istegade',               43.2,   '...'),
     createData(6,   'Vejvej',                 79.0,   '...'),
     createData(7,   'Strandvejen',            90.0,   '...'),
