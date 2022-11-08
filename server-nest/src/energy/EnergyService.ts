@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
 import { RideMeta } from '../rides/models.rides';
-import { MeasurementEntity, Message, Test } from './EnergyInterfaces';
+import {
+  AccelerationMessage,
+  MeasurementEntity,
+  Message,
+  SpeedMessage,
+  Test,
+} from './EnergyInterfaces';
 import { Measurement } from '../models';
+import * as Console from "console";
 
 @Injectable()
 export class EnergyService {
@@ -18,65 +25,93 @@ export class EnergyService {
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.accKey, this.spdKey, this.consKey])
-      .orderBy('Created_Date');
+      .orderBy('Created_Date')
+      .limit(30);
 
     // For intial testing.
-    const list: any[] = await this.collect(relevantMeasurements);
-    return list.length;
+    return await this.collect(relevantMeasurements);
   }
 
   private async collect(
     sortedMeasurements: MeasurementEntity[],
-    maxTimeDelta = 500,
+    maxTimeDelta = 10000,
   ): Promise<any[]> {
-    const assigned: {
-      power: number;
-      assigned: number[];
-    }[] = [];
+    const assigned: any[] = [];
 
     let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consKey);
     if (powerIndex == -1) {
       return [];
     }
 
-    let beforeIndex = 0;
-    let afterIndex;
+    let accs = [];
+    let spds = [];
 
-    for (
-      afterIndex = powerIndex + 1;
-      afterIndex < sortedMeasurements.length;
-      afterIndex++
-    ) {
-      if (
-        sortedMeasurements[afterIndex].T == this.consKey ||
-        afterIndex == sortedMeasurements.length - 1
-      ) {
+    let first = true;
+
+    for (let i = 0; i < sortedMeasurements.length; i++) {
+      const type: string = sortedMeasurements[i].T;
+
+      if (type == this.spdKey) {
+        spds.push(i);
+      } else if (type == this.accKey) {
+        accs.push(i);
+      }
+
+      if (type == this.consKey && first) {
+        first = false;
+      } else if (type == this.consKey || i == sortedMeasurements.length - 1) {
         // Have reached the next powerIndex. Add the current
         const currentPower = sortedMeasurements[powerIndex];
 
-        assigned.push({
-          power: powerIndex,
-          assigned: sortedMeasurements
-            .slice(beforeIndex, afterIndex)
-            .reduce((prev: number[], m, i) => {
-              if (
-                Math.abs(
-                  m.Created_Date.getTime() -
-                    currentPower.Created_Date.getTime(),
-                ) <= maxTimeDelta &&
-                m.T != this.consKey
-              ) {
-                prev.push(beforeIndex + i);
-              }
-              return prev;
-            }, [] as number[]),
-        });
+        let spds1 = spds
+          .sort(
+            (a, b) =>
+              Math.abs(
+                sortedMeasurements[a].Created_Date.getTime() -
+                  currentPower.Created_Date.getTime(),
+              ) -
+              Math.abs(
+                sortedMeasurements[b].Created_Date.getTime() -
+                  currentPower.Created_Date.getTime(),
+              ),
+          ).slice(0, 2);
 
-        beforeIndex = powerIndex + 1;
-        powerIndex = afterIndex;
+        let accs1 = accs
+          .sort(
+            (a, b) =>
+              Math.abs(
+                sortedMeasurements[a].Created_Date.getTime() -
+                  currentPower.Created_Date.getTime(),
+              ) -
+              Math.abs(
+                sortedMeasurements[b].Created_Date.getTime() -
+                  currentPower.Created_Date.getTime(),
+              ),
+          )
+          .slice(0, 2);
+
+        assigned.push([spds1, accs1]);
+
+        spds = spds.filter((index) => index > powerIndex);
+        accs = accs.filter((index) => index > powerIndex);
+
+        Console.log(powerIndex);
+
+        powerIndex = i;
+
+        Console.log(powerIndex);
+
       }
     }
 
     return assigned;
+  }
+
+  private timeDeltaExceeded(
+    dateA: Date,
+    dateB: Date,
+    timeDelta: number,
+  ): boolean {
+    return Math.abs(dateA.getTime() - dateB.getTime()) > timeDelta;
   }
 }
