@@ -4,7 +4,7 @@ export interface MeasurementEntity {
   T: string;
   lat: number;
   lon: number;
-  message: string;
+  message: Message;
   isComputed: boolean;
   FK_Trip: string;
   FK_MeasurementType: string;
