@@ -24,12 +24,13 @@ const Rides: FC = () => {
 
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
+  const headers = ['x', 'y'];
 
-  const [csvData, setCSVData] = useState<any>('');
-
-  const headers = [
-    { label: 'X', key: 'xKey' },
-    { label: 'Y', key: 'yKey' },
+  const csvData = [
+    ['firstname', 'lastname', 'email'],
+    ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
+    ['Raed', 'Labes', 'rl@smthing.co.com'],
+    ['Yezzi', 'Min l3b', 'ymin@cocococo.com'],
   ];
 
   useEffect(() => {
@@ -53,6 +54,28 @@ const Rides: FC = () => {
         }
       }
 
+      const ingo = Object.entries(csvData || {}).map(([, bp], j) => {
+        const data = [
+          {
+            x: 'test',
+            y: 'test',
+          },
+        ];
+
+        const test: string[][] = [];
+        test.push(['x', 'y']);
+
+        data.forEach((datapoint) => {
+          test.push([datapoint.x, datapoint.y]);
+        });
+
+        console.log(test);
+        console.log(csvData);
+        return test;
+        //return { data, bounds, label: 'r-' + TaskId, j };
+      });
+      console.log('hier' + ingo);
+
       setLoading(false);
       return temp;
     };
@@ -72,32 +95,31 @@ const Rides: FC = () => {
           ({ hasValue, name, palette }: ActiveMeasProperties, i: number) =>
             hasValue && (
               <CSVLink
-                data={Object.entries(paths[name] || {}).map(
-                  ([TaskId, bp], j) => {
-                    const { path, bounds } = bp;
-                    const x = (p: PointData) =>
-                      new Date(p.metadata.timestamp).getTime();
-                    const data: GraphData = path
-                      .map((p) => [x(p), p.value || 0] as GraphPoint)
-                      .sort(([x1, y1], [x2, y2]) =>
-                        x1 < x2 ? -1 : x1 === x2 ? 0 : 1,
-                      );
+                data={Object.entries(paths[name] || {}).map(([, bp], j) => {
+                  const { path, bounds } = bp;
+                  const x = (p: PointData) =>
+                    new Date(p.metadata.timestamp).getTime();
+                  const data: GraphData = path
+                    .map((p) => [x(p), p.value || 0] as GraphPoint)
+                    .sort(([x1, y1], [x2, y2]) =>
+                      x1 < x2 ? -1 : x1 === x2 ? 0 : 1,
+                    );
 
-                    const test: any[] = [];
+                  const test: string[][] = [];
+                  test.push(['x', 'y']);
 
-                    data.forEach((datapoint) => {
-                      test.push({
-                        xKey: datapoint[0],
-                        yKey: datapoint[1],
-                      });
-                    });
+                  data.forEach((datapoint) => {
+                    test.push([
+                      datapoint[0].toString(),
+                      datapoint[1].toString(),
+                    ]);
+                  });
 
-                    console.log(test);
-                    return test;
-                    //return { data, bounds, label: 'r-' + TaskId, j };
-                  },
-                )}
-                headers={headers}
+                  console.log(test);
+                  console.log(csvData);
+                  return test;
+                  //return { data, bounds, label: 'r-' + TaskId, j };
+                })}
               >
                 Download me
               </CSVLink>
