@@ -1,11 +1,13 @@
 // components
-import {CarCrash, Landscape, RemoveRoad, SquareFoot} from "@mui/icons-material";
-
-// ----------------------------------------------------------------------
+import {CarCrash, Landscape, RemoveRoad, SquareFoot, Dashboard} from "@mui/icons-material";
 
 const navConfig = [
-    // ROADS
-    // ----------------------------------------------------------------------
+    {
+      subheader: 'My Lira',
+        items: [
+            {title: 'User Dashboard', path: '/user/dashboard', icon: <Dashboard/>},
+        ],
+    },
     {
         subheader: 'roads',
         items: [
