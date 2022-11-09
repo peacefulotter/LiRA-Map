@@ -1,7 +1,5 @@
-import React, { FC, useEffect, useState, ReactNode, useCallback } from 'react';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { List, ListRowRenderer } from 'react-virtualized';
-import { RiDeleteBack2Line } from 'react-icons/ri';
-
 import Checkbox from '../Checkbox';
 
 import { RideMeta, TripsOptions } from '../../models/models';
@@ -9,8 +7,6 @@ import { RideMeta, TripsOptions } from '../../models/models';
 import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import OptionsSelector from './OptionsSelector';
-import { CgTemplate } from 'react-icons/cg';
-import { filteredData } from './SearchFilterOptions';
 
 interface CardsProps {
   showMetas: SelectMeta[];
@@ -57,48 +53,62 @@ interface SelectMeta extends RideMeta {
 
 const RideCards: FC = () => {
   const { metas, selectedMetas, setSelectedMetas } = useMetasCtx();
-  //console.log('🇩🇰', useMetasCtx());
   const [showMetas, setShowMetas] = useState<SelectMeta[]>([]);
+  const [isNight, setIsNight] = useState<boolean>(false);
 
   useEffect(() => {
-    setShowMetas(metas.map((m) => ({ ...m, selected: false })));
-  }, [metas]);
-
-  const onChange = (
-    { taskId, postalCode, distanceKm, startCity, endCity, startDate, endDate, reversed }: TripsOptions,
-
-
-
-    key: keyof TripsOptions,
-  ) => {
-    const updatedMetas = metas;
-    const temp: SelectMeta[] = updatedMetas
+    const temp = metas
       .filter((meta: RideMeta) => {
-        let inSearch;
-        console.log('key', key);
-        if (key.includes('distanceKm')) {
-          const searchedValue = Number(taskId);
-          if (isNaN(searchedValue)) {
-            inSearch = taskId === '' || meta.TaskId.toString().includes(taskId);
-          } else {
-            inSearch = meta.DistanceKm > searchedValue;
-          }
-        } else {
-          inSearch = taskId === '' || meta.TaskId.toString().includes(taskId);
+        const startTime = new Date(meta.StartTimeUtc).getHours();
+        const endTime = new Date(meta.EndTimeUtc).getHours();
+        if (
+          (startTime >= 20 && endTime <= 6) ||
+          (startTime >= 20 && endTime <= 0) ||
+          (startTime >= 0 && endTime <= 6)
+        ) {
+          return isNight;
         }
-        const date = new Date(meta.Created_Date).getTime();
-        const inDate = date >= startDate.getTime() && date <= endDate.getTime();
-        //filteredData(metas, selectedMetas);
-        return inSearch && inDate;
+        return !isNight;
       })
       .map((meta: RideMeta) => {
         const selected =
           selectedMetas.find(({ TripId }) => meta.TripId === TripId) !==
           undefined;
-        //console.log('🇩🇰', { ...meta, selected });
         return { ...meta, selected };
       });
-    setShowMetas(reversed ? temp.reverse() : temp);
+    setShowMetas(temp);
+  }, [isNight]);
+
+  useEffect(() => {
+    setShowMetas(metas.map((m) => ({ ...m, selected: false })));
+  }, [metas]);
+
+  const onChange = (tripOptions: TripsOptions) => {
+    const temp: SelectMeta[] = metas
+      .filter((meta: RideMeta) => {
+        if (tripOptions.taskId.length === 0) {
+          return true;
+        }
+        return meta.TaskId.toString().includes(tripOptions.taskId);
+      })
+      .filter((meta: RideMeta) => {
+        if (!tripOptions.distanceKm) {
+          return true;
+        }
+        const minimumDistance = Number(tripOptions.distanceKm);
+        if (isNaN(minimumDistance)) {
+          return true;
+        }
+        return meta.DistanceKm > minimumDistance;
+      })
+
+      .map((meta: RideMeta) => {
+        const selected =
+          selectedMetas.find(({ TripId }) => meta.TripId === TripId) !==
+          undefined;
+        return { ...meta, selected };
+      });
+    setShowMetas(tripOptions.reversed ? temp.reverse() : temp);
   };
 
   const onClick = (md: SelectMeta, i: number, isChecked: boolean) => {
@@ -116,6 +126,11 @@ const RideCards: FC = () => {
   return (
     <div className="ride-list">
       <OptionsSelector onChange={onChange} />
+      <Checkbox
+        className="ride-sort-cb"
+        html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
+        onClick={setIsNight}
+      />
       <Cards showMetas={showMetas} onClick={onClick} />
     </div>
   );

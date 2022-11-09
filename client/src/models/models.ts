@@ -37,5 +37,4 @@ export interface TripsOptions {
   postalCode: number | undefined;
   startCity: string;
   endCity: string;
-
 }
