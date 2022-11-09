@@ -34,8 +34,9 @@ export default class GLine {
     onHover: (d: DotHover | undefined) => void,
     time: boolean | undefined,
     useMarkers: Dispatch<{ plot: string; data: MarkerData }>,
+    selectedTaskID: number,
+    selectedMeasurementName: string,
   ) {
-    console.log('We are in the marker');
     const color = getColor(0, i);
     const hoverColor = 'url(#line-gradient)';
 
@@ -101,19 +102,14 @@ export default class GLine {
         pathData[idx],
         pathData[idx + 1],
       );
-      console.log('coords found');
-      // TODO: Once graphs are individual replace the key below with the actual graph data
       useMarkers({
-        plot: 'TaskID-Meas',
+        plot: `${selectedTaskID}-${selectedMeasurementName}`,
         data: {
           lat: point.lat,
           lng: point.lng,
           index: idx,
         },
       });
-
-      console.log('data[i] =     ' + data[idx][0]);
-      console.log('data[i + 1] = ' + data[idx + 1][0]);
     });
 
     const binarySearch = (

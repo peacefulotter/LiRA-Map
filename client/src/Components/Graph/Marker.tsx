@@ -20,8 +20,6 @@ const Marker: FC<IMarker> = ({ svg, marker, data, xAxis, yAxis }) => {
       xAxis(data[marker.index][0]),
       yAxis(data[marker.index][1]),
     );
-    console.log(marker);
-    console.log('marker at', data[marker.index]);
 
     return () => {
       _marker.remove();

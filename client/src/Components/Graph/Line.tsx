@@ -22,6 +22,8 @@ interface ILine {
   label: string;
   i: number;
   time: boolean | undefined;
+  selectedTaskID: number;
+  selectedMeasurementName: string;
 }
 
 const Line: FC<ILine> = ({
@@ -34,6 +36,8 @@ const Line: FC<ILine> = ({
   label,
   i,
   time,
+  selectedTaskID,
+  selectedMeasurementName,
 }) => {
   const { addBounds, remBounds, setDotHover, useMarkers } = useGraph();
 
@@ -65,6 +69,8 @@ const Line: FC<ILine> = ({
       onHover,
       time,
       useMarkers,
+      selectedTaskID,
+      selectedMeasurementName,
     );
 
     return () => {

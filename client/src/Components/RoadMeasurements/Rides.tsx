@@ -5,7 +5,7 @@ import { GraphProvider } from '../../context/GraphContext';
 import { useMetasCtx } from '../../context/MetasContext';
 
 import { ActiveMeasProperties } from '../../models/properties';
-import { MeasMetaPath, PointData } from '../../models/path';
+import { MeasMetaPath, Path, PointData } from '../../models/path';
 
 import { GraphData, GraphPoint } from '../../assets/graph/types';
 
@@ -15,6 +15,14 @@ import Graph from '../Graph/Graph';
 import RidesMap from './RidesMap';
 import useToast from '../createToast';
 import Loading from '../Loading';
+import GraphSelector from '../Graph/GraphSelector';
+
+const getGraphData = (path: Path): GraphData => {
+  const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
+  return path
+    .map((p) => [x(p), p.value || 0] as GraphPoint)
+    .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
+};
 
 const Rides: FC = () => {
   const { selectedMetas } = useMetasCtx();
@@ -22,6 +30,10 @@ const Rides: FC = () => {
 
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
+
+  const [selectedTaskID, setSelectedTaskID] = useState<number>();
+  const [selectedMeasurementName, setSelectedMeasurementName] =
+    useState<string>();
 
   useEffect(() => {
     const updatePaths = async () => {
@@ -51,6 +63,35 @@ const Rides: FC = () => {
     updatePaths().then(setPaths);
   }, [selectedMetas, selectedMeasurements]);
 
+  useEffect(() => {
+    if (
+      selectedMetas.length > 0 &&
+      !selectedMetas.some((meta) => meta.TaskId === selectedTaskID)
+    ) {
+      setSelectedTaskID(selectedMetas[0].TaskId);
+    } else if (selectedMetas.length === 0) {
+      setSelectedTaskID(undefined);
+    }
+    if (
+      selectedMeasurements.length > 0 &&
+      !selectedMeasurements.some(
+        (meas) => meas.name === selectedMeasurementName,
+      )
+    ) {
+      setSelectedMeasurementName(selectedMeasurements[0].name);
+    } else if (selectedMeasurements.length === 0) {
+      setSelectedMeasurementName(undefined);
+    }
+  }, [selectedMetas, selectedMeasurements]);
+
+  const selectedMeasurement = selectedMeasurements.find(
+    (meas) => meas.name === selectedMeasurementName,
+  );
+
+  // TODO: Fix colors of the map now that the graph is changed
+  // TODO: Change to correct graph when a marker is made
+  // TODO: When a marker is made from the graph zoom to the appropriate place on the map
+
   return (
     <GraphProvider>
       <div className="map-container">
@@ -59,40 +100,42 @@ const Rides: FC = () => {
           selectedMetas={selectedMetas}
           selectedMeasurements={selectedMeasurements}
         />
-
-        {selectedMeasurements.map(
-          ({ hasValue, name, palette }: ActiveMeasProperties, i: number) =>
-            hasValue && (
-              <Graph
-                key={`graph-${i}`}
-                labelX="Time (h:m:s)"
-                labelY={name}
-                absolute={true}
-                time={true}
-                palette={palette}
-                plots={Object.entries(paths[name] || {}).map(
-                  ([TaskId, bp], j) => {
-                    const { path, bounds } = bp;
-                    const x = (p: PointData) =>
-                      new Date(p.metadata.timestamp).getTime();
-                    const data: GraphData = path
-                      .map((p) => [x(p), p.value || 0] as GraphPoint)
-                      .sort(([x1, y1], [x2, y2]) =>
-                        x1 < x2 ? -1 : x1 === x2 ? 0 : 1,
-                      );
-                    return {
-                      pathData: path,
-                      data,
-                      bounds,
-                      label: 'r-' + TaskId,
-                      j,
-                      measName: name,
-                      taskId: TaskId,
-                    };
-                  },
-                )}
-              />
-            ),
+        <GraphSelector
+          onMeasurementChange={setSelectedMeasurementName}
+          onTripChange={setSelectedTaskID}
+          taskIds={selectedMetas.map((meta) => meta.TaskId)}
+          measNames={selectedMeasurements
+            .filter((meas) => meas.hasValue)
+            .map((meas) => meas.name)}
+        />
+        {!selectedMeasurementName || !selectedTaskID ? (
+          <span>
+            Select at least one trip and one measurement to display data.
+          </span>
+        ) : !(selectedMeasurementName in paths) ||
+          !(selectedTaskID in paths[selectedMeasurementName]) ? (
+          <span>
+            This combination trip doesn&apos;t contain data for this
+            measurement.
+          </span>
+        ) : (
+          <Graph
+            labelX="Time (h:m:s)"
+            labelY={selectedMeasurementName}
+            absolute={true}
+            time={true}
+            palette={selectedMeasurement?.palette}
+            plot={{
+              pathData: paths[selectedMeasurementName][selectedTaskID].path,
+              data: getGraphData(
+                paths[selectedMeasurementName][selectedTaskID].path,
+              ),
+              bounds: paths[selectedMeasurementName][selectedTaskID].bounds,
+              label: 'r-' + selectedTaskID,
+            }}
+            selectedTaskID={selectedTaskID}
+            selectedMeasurementName={selectedMeasurementName}
+          />
         )}
       </div>
       <Loading loading={loading} />
