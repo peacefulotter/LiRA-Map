@@ -5,12 +5,13 @@ import Link from 'react-csv/components/Link';
 
 const zoomGap = 0.5;
 
-interface IZoom {
+interface IGraphButtons {
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   setCSV: string[][];
+  labelY: string;
 }
 
-const Zoom: FC<IZoom> = ({ setZoom, setCSV }) => {
+const GraphButtons: FC<IGraphButtons> = ({ setZoom, setCSV, labelY }) => {
   const zoomIn = () => setZoom((z) => z + zoomGap);
   const zoomOut = () => setZoom((z) => Math.max(1, z - zoomGap));
   const resetZoom = () => setZoom(1);
@@ -40,6 +41,7 @@ const Zoom: FC<IZoom> = ({ setZoom, setCSV }) => {
       <CSVLink
         data={setCSV}
         key={`${name}`}
+        filename={labelY + '.csv'}
         className="hidden"
         ref={myRef}
         hidden
@@ -51,4 +53,4 @@ const Zoom: FC<IZoom> = ({ setZoom, setCSV }) => {
   );
 };
 
-export default Zoom;
+export default GraphButtons;

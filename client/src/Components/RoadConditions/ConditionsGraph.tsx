@@ -19,6 +19,8 @@ import { Color, Palette } from 'react-leaflet-hotline';
 import { Line } from 'react-chartjs-2';
 
 import { ConditionType } from '../../models/graph';
+import { CSVLink } from 'react-csv';
+import { FiDownload } from 'react-icons/fi';
 
 Chart.register(
   CategoryScale,
@@ -72,6 +74,27 @@ interface Props {
 const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
   const ref = useRef<Chart<'line', number[], number>>(null);
 
+  const csvData: string[][] = [[type.name, 'distance[m]']];
+
+  const csvDataFunction = () => {
+    console.log(data);
+    if (data != undefined) {
+      if (data.datasets != undefined && data.labels != undefined) {
+        for (let i = 0; i < data.datasets[0].data.length; i++) {
+          csvData.push([
+            data.datasets[0].data[i].toString(),
+            data.labels[i].toString(),
+          ]);
+        }
+      }
+    }
+    console.log(csvData);
+
+    return csvData;
+  };
+
+  //console.log(data);
+
   const addPaletteChart =
     (palette: Palette) =>
     (chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
@@ -95,6 +118,7 @@ const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
     const chart = ref.current;
     addPaletteChart(palette)(chart);
     chart.update();
+    csvDataFunction();
   }, [ref, data, palette]);
 
   // attach events to the graph options
@@ -123,9 +147,30 @@ const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
 
   return (
     <div className="road-conditions-graph">
-      {data && (
-        <Line ref={ref} data={data} options={graphOptions} plugins={plugins} />
-      )}
+      <div className="csv-btns">
+        <div className="btn csv-btn">
+          <FiDownload />
+        </div>
+        <CSVLink
+          data={csvDataFunction()}
+          className="hidden"
+          hidden
+          aria-hidden={true}
+        >
+          Download me!
+        </CSVLink>
+      </div>
+
+      <div>
+        {data && (
+          <Line
+            ref={ref}
+            data={data}
+            options={graphOptions}
+            plugins={plugins}
+          />
+        )}
+      </div>
     </div>
   );
 };

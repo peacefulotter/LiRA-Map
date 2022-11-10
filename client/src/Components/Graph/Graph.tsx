@@ -15,7 +15,7 @@ import Line from './Line';
 import useAxis from './Hooks/useAxis';
 
 import '../../css/graph.css';
-import Zoom from './Zoom';
+import GraphButtons from './GraphButtons';
 import { FiMinusCircle } from 'react-icons/fi';
 import { PointData } from '../../models/path';
 import { CSVLink } from 'react-csv';
@@ -50,7 +50,7 @@ const Graph: FC<IGraph> = ({
 
   const { xAxis, yAxis } = useAxis(zoom, w, h);
 
-  const csvData = [['x', 'y']];
+  const csvData = [[labelX, labelY]];
 
   const csvDataFunction = () => {
     if (plots != undefined) {
@@ -68,7 +68,11 @@ const Graph: FC<IGraph> = ({
     <>
       <Tooltip />
       <div className="graph-wrapper" ref={wrapperRef}>
-        <Zoom setZoom={setZoom} setCSV={csvDataFunction()} />
+        <GraphButtons
+          setZoom={setZoom}
+          setCSV={csvDataFunction()}
+          labelY={labelY}
+        />
         <SVGWrapper
           isLeft={true}
           zoom={zoom}
