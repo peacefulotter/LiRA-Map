@@ -4,7 +4,6 @@ import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 import { GraphProvider } from '../../context/GraphContext';
 import { useMetasCtx } from '../../context/MetasContext';
 
-import { ActiveMeasProperties } from '../../models/properties';
 import { Bounds, MeasMetaPath, Path, PointData } from '../../models/path';
 
 import { GraphData, GraphPoint } from '../../assets/graph/types';
@@ -16,7 +15,7 @@ import RidesMap from './RidesMap';
 import useToast from '../createToast';
 import Loading from '../Loading';
 import GraphSelector from '../Graph/GraphSelector';
-import { bounds } from 'Leaflet.MultiOptionsPolyline';
+import { UseMarkersAction } from '../../models/graph';
 
 const getGraphData = (path: Path): GraphData => {
   const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
@@ -39,6 +38,26 @@ const Rides: FC = () => {
     useState<Bounds>();
 
   useEffect(() => {
+    // Checks if the selected graph is no longer present - if it isn't then set it to something that is there
+    if (
+      selectedMetas.length > 0 &&
+      !selectedMetas.some((meta) => meta.TaskId === selectedTaskID)
+    ) {
+      setSelectedTaskID(selectedMetas[0].TaskId);
+    } else if (selectedMetas.length === 0) {
+      setSelectedTaskID(undefined);
+    }
+    if (
+      selectedMeasurements.length > 0 &&
+      !selectedMeasurements.some(
+        (meas) => meas.name === selectedMeasurementName,
+      )
+    ) {
+      setSelectedMeasurementName(selectedMeasurements[0].name);
+    } else if (selectedMeasurements.length === 0) {
+      setSelectedMeasurementName(undefined);
+    }
+
     const updatePaths = async () => {
       setLoading(true);
       const temp = {} as MeasMetaPath;
@@ -66,27 +85,7 @@ const Rides: FC = () => {
     updatePaths().then(setPaths);
   }, [selectedMetas, selectedMeasurements]);
 
-  useEffect(() => {
-    if (
-      selectedMetas.length > 0 &&
-      !selectedMetas.some((meta) => meta.TaskId === selectedTaskID)
-    ) {
-      setSelectedTaskID(selectedMetas[0].TaskId);
-    } else if (selectedMetas.length === 0) {
-      setSelectedTaskID(undefined);
-    }
-    if (
-      selectedMeasurements.length > 0 &&
-      !selectedMeasurements.some(
-        (meas) => meas.name === selectedMeasurementName,
-      )
-    ) {
-      setSelectedMeasurementName(selectedMeasurements[0].name);
-    } else if (selectedMeasurements.length === 0) {
-      setSelectedMeasurementName(undefined);
-    }
-  }, [selectedMetas, selectedMeasurements]);
-
+  // Calculates the correct bounds for all paths - this should probably be completely refactored as bound are no longer properly used
   useEffect(() => {
     if (
       selectedMetas.length > 0 &&
@@ -108,10 +107,6 @@ const Rides: FC = () => {
     (meas) => meas.name === selectedMeasurementName,
   );
 
-  // TODO: Fix colors of the map now that the graph is changed
-  // TODO: Change to correct graph when a marker is made
-  // TODO: When a marker is made from the graph zoom to the appropriate place on the map
-
   return (
     <GraphProvider>
       <div className="map-container">
@@ -127,6 +122,8 @@ const Rides: FC = () => {
           measNames={selectedMeasurements
             .filter((meas) => meas.hasValue)
             .map((meas) => meas.name)}
+          taskId={selectedTaskID}
+          measName={selectedMeasurementName}
         />
         {!selectedMeasurementName || !selectedTaskID ? (
           <span>

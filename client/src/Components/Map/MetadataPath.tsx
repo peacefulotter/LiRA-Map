@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, useMap } from 'react-leaflet';
 import { Path as PathType, PathProps } from '../../models/path';
 import Path from './Path';
 import { useGraph } from '../../context/GraphContext';
@@ -66,13 +66,16 @@ const MetadataPath: FC<IMetadataPath> = ({
   taskID,
   measurementName,
 }) => {
-  const { markers, useMarkers } = useGraph();
+  const { markers, useMarkers, lastMarkersAction } = useGraph();
+  const map = useMap();
 
   // Onclick is called 4 times
   const onClick = () => (e: any) => {
     const { lat, lng } = e.latlng;
     useMarkers({
-      plot: `${taskID}-${measurementName}`,
+      taskID,
+      measurementName,
+      source: 'MAP',
       data: {
         lat,
         lng,
@@ -80,6 +83,20 @@ const MetadataPath: FC<IMetadataPath> = ({
       },
     });
   };
+
+  useEffect(() => {
+    if (
+      !lastMarkersAction ||
+      lastMarkersAction.source === 'MAP' ||
+      !(
+        lastMarkersAction.taskID === taskID &&
+        lastMarkersAction.measurementName === measurementName
+      )
+    )
+      return;
+
+    map.setView([lastMarkersAction.data.lat, lastMarkersAction.data.lng], 15);
+  }, [lastMarkersAction]);
 
   const marker = markers[`${taskID}-${measurementName}`];
   const point = path[marker?.index || 0];

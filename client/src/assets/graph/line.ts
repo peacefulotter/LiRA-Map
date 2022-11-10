@@ -13,6 +13,7 @@ import {
   MarkersRecord,
   PathOptions,
   SVG,
+  UseMarkersAction,
 } from './types';
 import { range } from 'd3';
 import { isBreakOrContinueStatement } from 'typescript';
@@ -33,7 +34,7 @@ export default class GLine {
     yAxis: Axis,
     onHover: (d: DotHover | undefined) => void,
     time: boolean | undefined,
-    useMarkers: Dispatch<{ plot: string; data: MarkerData }>,
+    useMarkers: Dispatch<UseMarkersAction>,
     selectedTaskID: number,
     selectedMeasurementName: string,
   ) {
@@ -103,7 +104,9 @@ export default class GLine {
         pathData[idx + 1],
       );
       useMarkers({
-        plot: `${selectedTaskID}-${selectedMeasurementName}`,
+        taskID: selectedTaskID,
+        measurementName: selectedMeasurementName,
+        source: 'GRAPH',
         data: {
           lat: point.lat,
           lng: point.lng,

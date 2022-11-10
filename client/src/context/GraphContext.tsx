@@ -3,7 +3,6 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
-  useEffect,
   useReducer,
   useState,
 } from 'react';
@@ -12,9 +11,9 @@ import useMinMaxAxis from '../hooks/useMinMaxAxis';
 import {
   AddMinMaxFunc,
   DotHover,
-  MarkerData,
   MarkersRecord,
   RemMinMaxFunc,
+  UseMarkersAction,
 } from '../assets/graph/types';
 
 interface ContextProps {
@@ -29,7 +28,8 @@ interface ContextProps {
   dotHover: DotHover | undefined;
   setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
   markers: MarkersRecord;
-  useMarkers: Dispatch<{ plot: string; data: MarkerData }>;
+  useMarkers: Dispatch<UseMarkersAction>;
+  lastMarkersAction: UseMarkersAction | undefined;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -39,10 +39,13 @@ const GraphContext = createContext({} as ContextProps);
 export const GraphProvider = ({ children }: any) => {
   const { bounds, addBounds, remBounds } = useMinMaxAxis();
   const [dotHover, setDotHover] = useState<DotHover>();
+  const [lastMarkersAction, setLastMarkersAction] =
+    useState<UseMarkersAction>();
   const [markers, useMarkers] = useReducer(
-    (state: MarkersRecord, action: { plot: string; data: MarkerData }) => {
+    (state: MarkersRecord, action: UseMarkersAction) => {
       // If the data already is as requested then don't update
-      const existingMarker = state[action.plot];
+      const existingMarker =
+        state[`${action.taskID}-${action.measurementName}`];
       if (
         existingMarker &&
         existingMarker.lat === action.data.lat &&
@@ -51,7 +54,8 @@ export const GraphProvider = ({ children }: any) => {
       )
         return state;
       const newState = { ...state };
-      newState[action.plot] = action.data;
+      newState[`${action.taskID}-${action.measurementName}`] = action.data;
+      setLastMarkersAction(action);
       return newState;
     },
     {},
@@ -72,6 +76,7 @@ export const GraphProvider = ({ children }: any) => {
         setDotHover,
         markers,
         useMarkers,
+        lastMarkersAction,
       }}
     >
       {children}

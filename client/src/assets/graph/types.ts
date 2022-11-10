@@ -72,3 +72,10 @@ export interface MarkerData {
   index: number;
 }
 export type MarkersRecord = Record<string, MarkerData>;
+
+export interface UseMarkersAction {
+  taskID: number;
+  measurementName: string;
+  data: MarkerData;
+  source: 'GRAPH' | 'MAP';
+}
