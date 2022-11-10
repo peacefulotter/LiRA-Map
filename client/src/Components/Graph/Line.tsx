@@ -47,8 +47,8 @@ const Line: FC<ILine> = ({
     const _bounds: Required<Bounds> = Object.assign({
       minX: Math.min(...data.map((d) => d[0])),
       maxX: Math.max(...data.map((d) => d[0])),
-      minY: Math.min(...data.map((d) => d[1])),
-      maxY: Math.max(...data.map((d) => d[1])),
+      minY: bounds?.minY,
+      maxY: bounds?.maxY,
     });
 
     addBounds(label, _bounds);

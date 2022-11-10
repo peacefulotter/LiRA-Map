@@ -5,7 +5,7 @@ import { GraphProvider } from '../../context/GraphContext';
 import { useMetasCtx } from '../../context/MetasContext';
 
 import { ActiveMeasProperties } from '../../models/properties';
-import { MeasMetaPath, Path, PointData } from '../../models/path';
+import { Bounds, MeasMetaPath, Path, PointData } from '../../models/path';
 
 import { GraphData, GraphPoint } from '../../assets/graph/types';
 
@@ -16,6 +16,7 @@ import RidesMap from './RidesMap';
 import useToast from '../createToast';
 import Loading from '../Loading';
 import GraphSelector from '../Graph/GraphSelector';
+import { bounds } from 'Leaflet.MultiOptionsPolyline';
 
 const getGraphData = (path: Path): GraphData => {
   const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
@@ -34,6 +35,8 @@ const Rides: FC = () => {
   const [selectedTaskID, setSelectedTaskID] = useState<number>();
   const [selectedMeasurementName, setSelectedMeasurementName] =
     useState<string>();
+  const [selectedMeasurementBounds, setSelectedMeasurementBounds] =
+    useState<Bounds>();
 
   useEffect(() => {
     const updatePaths = async () => {
@@ -84,6 +87,23 @@ const Rides: FC = () => {
     }
   }, [selectedMetas, selectedMeasurements]);
 
+  useEffect(() => {
+    if (
+      selectedMetas.length > 0 &&
+      selectedMeasurementName &&
+      paths[selectedMeasurementName]
+    ) {
+      const temp = paths[selectedMeasurementName];
+      const minY = Math.min(
+        ...(Object.keys(temp).map((k) => temp[+k].bounds?.minY) as number[]),
+      );
+      const maxY = Math.max(
+        ...(Object.keys(temp).map((k) => temp[+k].bounds?.maxY) as number[]),
+      );
+      setSelectedMeasurementBounds({ minY: minY, maxY: maxY });
+    }
+  }, [paths, selectedMeasurementName]);
+
   const selectedMeasurement = selectedMeasurements.find(
     (meas) => meas.name === selectedMeasurementName,
   );
@@ -125,6 +145,7 @@ const Rides: FC = () => {
             absolute={true}
             time={true}
             palette={selectedMeasurement?.palette}
+            bounds={selectedMeasurementBounds}
             plot={{
               pathData: paths[selectedMeasurementName][selectedTaskID].path,
               data: getGraphData(

@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Palette } from 'react-leaflet-hotline';
+import { Bounds } from '../../models/path';
 
 import SVGWrapper from './SVGWrapper';
 import Tooltip from './Tooltip';
@@ -24,6 +25,7 @@ interface IGraph {
   labelY: string;
   plot: Plot;
   palette?: Palette;
+  bounds?: Bounds;
   absolute?: boolean;
   time?: boolean;
   selectedTaskID: number;
@@ -31,7 +33,6 @@ interface IGraph {
 }
 
 const margin = { top: 20, right: 30, bottom: 70, left: 100 };
-const margin2 = { top: 0, right: 30, bottom: 40, left: 100 };
 const paddingRight = 50;
 
 const Graph: FC<IGraph> = ({
@@ -39,6 +40,7 @@ const Graph: FC<IGraph> = ({
   labelY,
   plot,
   palette,
+  bounds,
   absolute,
   time,
   selectedTaskID,
@@ -119,6 +121,7 @@ const Graph: FC<IGraph> = ({
                 selectedTaskID={selectedTaskID}
                 selectedMeasurementName={selectedMeasurementName}
                 {...plot}
+                bounds={bounds}
               />
               <Marker
                 key={'marker-' + 0}
