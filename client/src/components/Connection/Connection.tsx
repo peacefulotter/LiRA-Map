@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from "react";
 
 import { getConnection } from "../../queries/connection";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import PendingIcon from '@mui/icons-material/Pending';
+//import { Error, CheckCircle, Pending } from "@mui/icons-material";
+import { Circle } from '@mui/icons-material';
 import { green, yellow, red } from '@mui/material/colors'
 
 const Connection: FC = () => {
@@ -18,17 +17,8 @@ const Connection: FC = () => {
         };
     }, []);
 
-    if (connection === true) return (
-        <CheckCircleOutlineIcon sx={{ m: 1, color: green[500] }}>
-        </CheckCircleOutlineIcon>
-    )
-    else if (connection === false) return (
-        <ErrorOutlineIcon sx={{ m: 1, color: red[500] }}>
-        </ErrorOutlineIcon>
-    )
-    else return (
-        <PendingIcon sx={{ m: 1, color: yellow[500]}}>
-        </PendingIcon>
+    return (
+        <Circle stroke={'white'} strokeWidth={2} sx={{ fontSize: 15, color: (connection === true) ? green[500] : (connection === false ? red[500] : yellow[500]) }}/>
     )
 }
 

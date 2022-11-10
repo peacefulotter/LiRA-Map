@@ -10,7 +10,7 @@ import useCollapseDrawer from '../../hooks/useCollapseDrawer';
 // config
 import { HEADER, NAVBAR } from '../../config';
 //
-import DashboardHeader from './header';
+//import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
 
@@ -44,7 +44,7 @@ const MainStyle = styled('main', {
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
-  const { collapseClick, isCollapse } = useCollapseDrawer();
+  const { collapseClick, isCollapsed } = useCollapseDrawer();
 
   const { themeLayout } = useSettings();
 
