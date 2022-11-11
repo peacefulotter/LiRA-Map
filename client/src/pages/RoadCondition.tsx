@@ -11,6 +11,7 @@ import { ChartData } from "chart.js";
 
 import ConditionsMap from "../components/RoadConditions/ConditionsMap";
 import ConditionsGraph from "../components/RoadConditions/ConditionsGraph";
+import RoadProfile from "../components/RoadProfiles/RoadProfile";
 
 import { ConditionType } from "../models/graph";
 
@@ -21,6 +22,9 @@ import "../css/map.css"
 import "../css/road_conditions.css"
 import "../css/palette.css"
 
+import Button from "@mui/material/Button";
+import * as React from "react";
+
 // ----------------------------------------------------------------------
 
 export default function RoadCondition() {
@@ -28,6 +32,7 @@ export default function RoadCondition() {
 
     const [palette, setPalette] = useState<Palette>([])
     const [wayData, setWayData] = useState<ChartData<"line", number[], number>>()
+    const [openRoadProfile, setOpenRoadProfile] = useState(false);
 
     const type: ConditionType = {
         name: 'IRI',
@@ -45,6 +50,16 @@ export default function RoadCondition() {
                   <ConditionsGraph type={type} palette={palette} data={wayData} />
               </div>
           </GraphProvider>
+         <Button variant="contained"
+                 onClick={() => {
+                     setOpenRoadProfile(!openRoadProfile);
+                 }}
+             >
+             Open Road Profile
+         </Button>
+        {openRoadProfile ? <RoadProfile>
+
+        </RoadProfile>: <p></p> }
     </Page>
   );
 }
