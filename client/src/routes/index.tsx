@@ -14,16 +14,26 @@ const Loadable = (Component: ElementType) => (props: any) => {
     const {pathname} = useLocation();
 
     return (
-        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')}/>}>
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('*')}/>}>
             <Component {...props} />
         </Suspense>
     );
 };
 
+// export const ProtectedRoute = ({children}: any) => {
+//   const user = useSelector((state: RootState) => state.user)
+//   const isAuthenticated = user.email !== null && user.email !== undefined && user.email !== "";
+//   if (!isAuthenticated) {
+//     // user is not authenticated
+//     return <Navigate to="/login"/>;
+//   }
+//   return children;
+// };
+
 export default function Router() {
   return useRoutes([
     {
-      path: '/',
+      path: '/login',
       element: <Login />
     },
     {
@@ -57,6 +67,10 @@ export default function Router() {
         { path: 'condition', element: <RoadCondition /> },
         { path: 'altitude', element: <RoadAltitude /> },
       ],
+    },
+    {
+      path: '/',
+      element: <Navigate to="/road/measurement" replace />,
     },
     {
       path: '*',
