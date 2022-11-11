@@ -12,6 +12,7 @@ import {
     BarController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
+import {Segment} from "../../pages/RoadCondition";
 
 ChartJS.register(
     LinearScale,
@@ -25,38 +26,28 @@ ChartJS.register(
     BarController
 );
 
-function generate(min: number, max: number) {
-    return Math.random() * (max - min + 1) + min;
-}
+export default  function Graph(
+    segments : Segment[]
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November'];
+){
 
-export const data = {
+    const labels = segments.map( segment => "Segment "+segment.segmentId+1)
+
+    const data = {
     labels: labels,
     datasets: [
         {
-            order: 2,
+            order: 1,
             type: 'bar' as const,
-            data: labels.map(() => generate(10, 100)),
+            data: segments.map((segment) => segment.data),
             label: 'Metric A',
             backgroundColor: 'rgba(83, 136, 216, 0.6)',
             borderWidth: 2
         },
-        {
-            order: 1,
-            type: 'line' as const,
-            data: labels.map(() => generate(5, 100)),
-            label: 'Metric B',
-            borderColor: 'rgba(253, 59, 59, 1)',
-            borderWidth: 3,
-            fill: false,
-            lineTension: 0.4
-        }
     ]
 };
 
 
-export default function RoadConditionsChart() {
     return (
         <Chart
             type='bar'

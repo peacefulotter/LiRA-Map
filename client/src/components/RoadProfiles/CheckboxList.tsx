@@ -5,25 +5,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import {index} from "d3";
+import {boolean} from "../../_mock/boolean";
+
+
 
 export default function CheckboxList(
-    checked: number[],
-    setChecked: (arg0: any[]) => void
+    checked : boolean[],
+    setChecked :  React.Dispatch<React.SetStateAction<boolean[]>>
+
 ) {
-
     const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
-
-
+        setChecked(checked.map((check, index) => index === value ? !check : check));
     };
 
     return (
@@ -38,7 +31,7 @@ export default function CheckboxList(
                 '& ul': { padding: 0 },
             }}
             subheader={<li />}>
-            {[0, 1, 2, 3, 4, 5, 6, 7].map((value) => {
+            {checked.map((check,value) => {
                 const labelId = `checkbox-list-label-${value}`;
 
                 return (
@@ -51,7 +44,7 @@ export default function CheckboxList(
                             <ListItemIcon >
                                 <Checkbox
                                     edge="start"
-                                    checked={checked.indexOf(value) !== -1}
+                                    checked={check}
                                     tabIndex={-1}
                                     disableRipple
                                     inputProps={{ 'aria-labelledby': labelId }}

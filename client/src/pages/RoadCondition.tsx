@@ -27,6 +27,54 @@ import * as React from "react";
 
 // ----------------------------------------------------------------------
 
+////---------------------------------------------------------------------
+//Fake roadProfile
+
+function generate(min: number, max: number) {
+    return Math.random() * (max - min + 1) + min;
+}
+
+const fakeRoad : RoadData = {
+    roadId : 797,
+    roadName : "Åkandevej",
+    segmentList : [{
+        segmentId : 0,
+        data : generate(5, 100)
+    },{
+        segmentId : 1,
+        data : generate(5, 100)
+    },{
+        segmentId : 2,
+        data : generate(5, 100)
+    },{
+        segmentId : 3,
+        data : generate(5, 100)
+    },{
+        segmentId : 4,
+        data : generate(5, 100)
+    },{
+        segmentId : 5,
+        data : generate(5, 100)
+    }]
+
+}
+
+////---------------------------------------------------------------------
+
+
+export interface Segment {
+    segmentId : number
+    data: number
+}
+
+export interface RoadData {
+    roadId : number
+    roadName : string
+    segmentList : Segment[]
+}
+
+
+
 export default function RoadCondition() {
   const { themeStretch } = useSettings();
 
@@ -57,8 +105,7 @@ export default function RoadCondition() {
              >
              Open Road Profile
          </Button>
-        {openRoadProfile ? <RoadProfile>
-
+        {openRoadProfile ? <RoadProfile roadData = {fakeRoad}>
         </RoadProfile>: <p></p> }
     </Page>
   );

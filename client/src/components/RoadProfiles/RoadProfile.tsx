@@ -14,40 +14,31 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import CheckboxList from "./CheckboxList";
 import Graph from "./Graph";
-import {useEffect} from "react";
+import {useEffect,useState} from "react";
+import {RoadData, Segment} from "../../pages/RoadCondition";
+import segments from "../CarData/Segments";
 
-export default function RoadProfile(props) {
+export default function RoadProfile(roadData:RoadData) {
 
-    const {roadId,openRoadProfile,setOpenRoadProfile} = props;
+    const [checked, setChecked] = useState<boolean[]>(new Array(roadData.segmentList.length).fill(true));
 
-    const [checked, setChecked] = React.useState([0]);
 
-    const [value, setValue] = React.useState('1');
-    const checkedList = React.useState([0]);
+    const [value, setValue] = useState('1');
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 
-    function printArray(list) {
-        return list.map((list) => <li>{list}</li>);
-    }
-
-    useEffect ( () => {
-
-    }, [])
-
-
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
-                <Typography variant="h5">Road Name</Typography>
+                <Typography variant="h5">{roadData.roadName}</Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={2}>
                         <Button variant="outlined">ADD TO LIST</Button>
 
                         <CheckboxList
-                            setChecked = {setChecked}
                             checked = {checked}
+                            setChecked = {setChecked}
                         >
                         </CheckboxList>
                     </Grid>
@@ -60,20 +51,18 @@ export default function RoadProfile(props) {
                                 <Tab label="Aviation" value="4" />
                             </TabList>
                             <TabPanel value="1">
-                                <div> {printArray(checkedList)} </div>
-                                <Graph
-
-                                ></Graph>
+                                <div> </div>
+                                <Graph segments = {roadData.segmentList}></Graph>
                             </TabPanel>
                             <TabPanel value="2">
-                                <Graph></Graph>
+                                <Graph segments = {roadData.segmentList}></Graph>
                             </TabPanel>
                             <TabPanel value="3">
-                                <div> {printArray(checkedList)} </div>
-                                <Graph></Graph>
+                                <div> </div>
+                                <Graph segments = {roadData.segmentList}></Graph>
                             </TabPanel>
                             <TabPanel value="4">
-                                <Graph></Graph>
+                                <Graph segments = {roadData.segmentList}></Graph>
                             </TabPanel>
                         </TabContext>
                     </Grid>
