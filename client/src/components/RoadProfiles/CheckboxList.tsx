@@ -8,12 +8,11 @@ import Checkbox from '@mui/material/Checkbox';
 import {index} from "d3";
 import {boolean} from "../../_mock/boolean";
 
-
-
-export default function CheckboxList(
+export interface CheckboxListProps {
     checked : boolean[],
-    setChecked :  React.Dispatch<React.SetStateAction<boolean[]>>
-
+    setChecked :   React.Dispatch<React.SetStateAction<boolean[]>>
+}
+export default function CheckboxList({checked, setChecked} : CheckboxListProps
 ) {
     const handleToggle = (value: number) => () => {
         setChecked(checked.map((check, index) => index === value ? !check : check));

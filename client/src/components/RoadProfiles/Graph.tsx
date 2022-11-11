@@ -12,7 +12,7 @@ import {
     BarController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import {Segment} from "../../pages/RoadCondition";
+import {RoadData, Segment} from "../../pages/RoadCondition";
 
 ChartJS.register(
     LinearScale,
@@ -26,10 +26,11 @@ ChartJS.register(
     BarController
 );
 
-export default  function Graph(
+export interface GraphProps {
     segments : Segment[]
+}
 
-){
+export default  function Graph({segments}:GraphProps){
 
     const labels = segments.map( segment => "Segment "+segment.segmentId+1)
 

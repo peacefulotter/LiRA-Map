@@ -1,21 +1,21 @@
 // @mui
-import { Container } from '@mui/material';
+import {Container} from '@mui/material';
 // hooks
 import useSettings from '../hooks/useSettings';
 // components
 import Page from '../components/Page';
 
-import { useState } from "react";
-import { Palette } from "react-leaflet-hotline";
-import { ChartData } from "chart.js";
+import {useState} from "react";
+import {Palette} from "react-leaflet-hotline";
+import {ChartData} from "chart.js";
 
 import ConditionsMap from "../components/RoadConditions/ConditionsMap";
 import ConditionsGraph from "../components/RoadConditions/ConditionsGraph";
 import RoadProfile from "../components/RoadProfiles/RoadProfile";
 
-import { ConditionType } from "../models/graph";
+import {ConditionType} from "../models/graph";
 
-import { GraphProvider } from "../context/GraphContext";
+import {GraphProvider} from "../context/GraphContext";
 
 import "leaflet/dist/leaflet.css"
 import "../css/map.css"
@@ -34,27 +34,27 @@ function generate(min: number, max: number) {
     return Math.random() * (max - min + 1) + min;
 }
 
-const fakeRoad : RoadData = {
-    roadId : 797,
-    roadName : "Åkandevej",
-    segmentList : [{
-        segmentId : 0,
-        data : generate(5, 100)
-    },{
-        segmentId : 1,
-        data : generate(5, 100)
-    },{
-        segmentId : 2,
-        data : generate(5, 100)
-    },{
-        segmentId : 3,
-        data : generate(5, 100)
-    },{
-        segmentId : 4,
-        data : generate(5, 100)
-    },{
-        segmentId : 5,
-        data : generate(5, 100)
+const fakeRoad: RoadData = {
+    roadId: 797,
+    roadName: "Åkandevej",
+    segmentList: [{
+        segmentId: 0,
+        data: generate(5, 100)
+    }, {
+        segmentId: 1,
+        data: generate(5, 100)
+    }, {
+        segmentId: 2,
+        data: generate(5, 100)
+    }, {
+        segmentId: 3,
+        data: generate(5, 100)
+    }, {
+        segmentId: 4,
+        data: generate(5, 100)
+    }, {
+        segmentId: 5,
+        data: generate(5, 100)
     }]
 
 }
@@ -63,20 +63,19 @@ const fakeRoad : RoadData = {
 
 
 export interface Segment {
-    segmentId : number
+    segmentId: number
     data: number
 }
 
 export interface RoadData {
-    roadId : number
-    roadName : string
-    segmentList : Segment[]
+    roadId: number
+    roadName: string
+    segmentList: Segment[]
 }
 
 
-
 export default function RoadCondition() {
-  const { themeStretch } = useSettings();
+    const {themeStretch} = useSettings();
 
     const [palette, setPalette] = useState<Palette>([])
     const [wayData, setWayData] = useState<ChartData<"line", number[], number>>()
@@ -90,23 +89,23 @@ export default function RoadCondition() {
         samples: 40
     }
 
-  return (
-    <Page title="Road Condition">
-          <GraphProvider>
-              <div className="road-conditions-wrapper">
-                  <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData} />
-                  <ConditionsGraph type={type} palette={palette} data={wayData} />
-              </div>
-          </GraphProvider>
-         <Button variant="contained"
-                 onClick={() => {
-                     setOpenRoadProfile(!openRoadProfile);
-                 }}
-             >
-             Open Road Profile
-         </Button>
-        {openRoadProfile ? <RoadProfile roadData = {fakeRoad}>
-        </RoadProfile>: <p></p> }
-    </Page>
-  );
+    return (
+        <Page title="Road Condition">
+            <GraphProvider>
+                <div className="road-conditions-wrapper">
+                    <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData}/>
+                    <ConditionsGraph type={type} palette={palette} data={wayData}/>
+                </div>
+            </GraphProvider>
+            <Button variant="contained"
+                    onClick={() => {
+                        setOpenRoadProfile(!openRoadProfile);
+                    }}
+            >
+                Open Road Profile
+            </Button>
+            {openRoadProfile ? <RoadProfile roadData={fakeRoad}/>
+                : <p></p>}
+        </Page>
+    );
 }
