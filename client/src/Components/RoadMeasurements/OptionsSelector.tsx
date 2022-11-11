@@ -4,61 +4,54 @@ import { TripsOptions } from '../../models/models';
 import Checkbox from '../Checkbox';
 
 const defaultOptions: TripsOptions = {
-  search: '',
+  taskId: '',
   startDate: new Date('2020-01-01'),
   endDate: new Date(),
   reversed: false,
-  distanceKm: 0,
+  distanceKm: undefined,
+  startCity: '',
+  endCity: '',
+  postalCode: undefined,
 };
-
-let choice: keyof TripsOptions = 'search';
 interface IOptionsSelector {
-  onChange: (options: TripsOptions, key: keyof TripsOptions) => void;
+  onChange: (options: TripsOptions) => void;
 }
-
 const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 
-  const _onChange = (key: keyof TripsOptions, choice: keyof TripsOptions) => {
+  const _onChange = (key: keyof TripsOptions) => {
     return function <T>(value: T) {
       const temp = { ...options } as any;
       temp[key] = value;
-      console.log(key);
+      console.log('🇩🇰', temp);
       setOptions(temp);
-      onChange(temp, choice);
+      onChange(temp);
     };
   };
 
   return (
     <div className="rides-options">
-      <select
-        onChange={(o) => {
-          choice = o.target.value as keyof TripsOptions;
-          console.log(choice);
-        }}
-      >
-        {Object.keys(defaultOptions).map((key, _) => {
-          return (
-            <option value={key} key={key}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
       <input
         className="ride-search-input"
-        placeholder="Search.."
-        value={options.search}
-        onChange={(e) => _onChange('search', choice)(e.target.value)}
+        placeholder="TaskID"
+        value={options.taskId}
+        onChange={(e) => _onChange('taskId')(e.target.value)}
       />
 
+      <input
+        className="ride-search-input"
+        placeholder="Distance Km"
+        value={options.distanceKm}
+        onChange={(e) => _onChange('distanceKm')(e.target.value)}
+      />
+      
       <DatePicker
-        onChange={_onChange('startDate', choice)}
+        onChange={_onChange('startDate')}
         value={options.startDate}
         className="options-date-picker"
       />
       <DatePicker
-        onChange={_onChange('endDate', choice)}
+        onChange={_onChange('endDate')}
         value={options.endDate}
         className="options-date-picker"
       />
@@ -66,10 +59,32 @@ const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
       <Checkbox
         className="ride-sort-cb"
         html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-        onClick={_onChange('reversed', choice)}
+        onClick={_onChange('reversed')}
       />
     </div>
   );
 };
 
 export default OptionsSelector;
+
+/*
+The remaining inputs that are missing functions.
+<input
+        className="ride-search-input"
+        placeholder="Start City"
+        value={options.startCity}
+        onChange={(e) => _onChange('startCity')(e.target.value)}
+      />
+      <input
+        className="ride-search-input"
+        placeholder="Destination City"
+        value={options.endCity}
+        onChange={(e) => _onChange('endCity')(e.target.value)}
+      />
+      <input
+        className="ride-search-input"
+        placeholder="Postal Code"
+        value={options.postalCode}
+        onChange={(e) => _onChange('postalCode')(e.target.value)}
+      />
+*/
