@@ -45,6 +45,8 @@ const RidesMap: FC<IRidesMap> = ({
               path={bp.path}
               properties={meas}
               metadata={meta}
+              taskID={meta.TaskId}
+              measurementName={meas.name}
             />
           ),
       )}
