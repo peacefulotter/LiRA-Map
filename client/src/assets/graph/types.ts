@@ -1,7 +1,8 @@
 import { Selection } from 'd3';
 import { FC } from 'react';
 import { Color } from 'react-leaflet-hotline';
-import { Bounds } from '../../models/path';
+import { Bounds, Path } from '../../models/path';
+import { PointData } from '../../models/path';
 
 // SVG
 export type SVG = d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -25,6 +26,7 @@ export type GraphAxis = [Axis, Axis];
 export type GraphPoint = [number, number];
 export type GraphData = GraphPoint[];
 export interface Plot {
+  pathData: Path;
   data: GraphData;
   bounds?: Bounds;
   label: string;
@@ -62,3 +64,18 @@ export type RemMinMaxFunc = (label: string) => void;
 
 // Callback
 export type D3Callback = (event: any, d: GraphPoint) => void;
+
+// Markers map
+export interface MarkerData {
+  lat: number;
+  lng: number;
+  index: number;
+}
+export type MarkersRecord = Record<string, MarkerData>;
+
+export interface UseMarkersAction {
+  taskID: number;
+  measurementName: string;
+  data: MarkerData;
+  source: 'GRAPH' | 'MAP';
+}

@@ -44,7 +44,7 @@ function LatLngHotline<T>({
     };
   }, [handlers]);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <Hotline
