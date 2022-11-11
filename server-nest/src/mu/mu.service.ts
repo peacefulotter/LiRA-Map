@@ -17,7 +17,7 @@ export class MuService implements OnApplicationBootstrap {
       .orderBy('TaskId');
     for (const ride of rides) {
       const data = await this.knex
-        .select(['Description', 'lat', 'lon', 'T', 'TS_or_Distance', 'message'])
+        .select('*')
         .from({ public: 'Measurements' })
         .where({ FK_Trip: ride.TripId })
         .whereIn('T', ['obd.rpm_fr', 'obd.spd'])
@@ -40,29 +40,56 @@ export class MuService implements OnApplicationBootstrap {
         Description: number;
       }[] = [];
       for (let i = 0; i < Math.min(rpms.length / 5, spds.length); i++) {
+        const Speed = parseFloat(spds[i].Description);
+        const RPM = parseFloat(rpms[i * 5].Description);
         const mu = Math.log(
           (beta_front_right * wheel_radius) /
-            (wheel_radius * rpms[i * 5].Description - spds[i].Description) +
+            (wheel_radius * RPM - Speed / 3.6) +
             1,
         );
-        if (isNaN(mu) || mu === Infinity) continue;
+        const MeasurementId = randomUUID();
+        const spdMessage = JSON.parse(spds[i].message);
+        const message = JSON.stringify({
+          id: spdMessage.id,
+          start_time_utc: spdMessage.start_time_utc,
+          end_time_utc: spdMessage.end_time_utc,
+          '@vid': spdMessage['@vid'],
+          '@uid': MeasurementId,
+          '@ts': spds[i].TS_or_Distance,
+          '@t': 'mu',
+          'mu.value': mu,
+          '@rec': spdMessage['@rec'],
+        });
+
+        //Logger.debug('\n Message', message);
+        if (isNaN(mu) || mu === Infinity || RPM === 0 || Speed === 0) continue;
+
         points.push({
-          MeasurementId: randomUUID(),
+          MeasurementId: MeasurementId,
           TS_or_Distance: spds[i].TS_or_Distance,
           T: 'mu',
           lat: spds[i].lat,
           lon: spds[i].lon,
-          message: JSON.stringify({
-            ...JSON.parse(spds[i].message),
-            'mu.value': mu,
-          }),
+          message: message,
           isComputed: true,
           FK_Trip: ride.TripId,
           FK_MeasurementType: '59644af0-34da-4f03-b08c-456d38b0c56e',
-          Created_Date: this.knex.fn.now(),
-          Updated_Date: this.knex.fn.now(),
+          Created_Date: spds[i].Created_Date,
+          Updated_Date: spds[i].Updated_Date,
           Description: mu,
         });
+        //Logger.debug('\n Updated Date', spds[i].Updated_Date);
+        //Logger.debug('FK_Trip', ride.TripId);
+        if (mu < 0)
+          Logger.debug(
+            'Speed \t' +
+              spds[i].Description +
+              '\n RPM \t' +
+              rpms[i * 5].Description +
+              '\n Mu \t' +
+              mu +
+              '\n',
+          );
       }
       this.knex.batchInsert('Measurements', points);
     }
