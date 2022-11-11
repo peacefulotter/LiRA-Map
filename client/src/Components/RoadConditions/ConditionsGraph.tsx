@@ -74,27 +74,31 @@ interface Props {
 const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
   const ref = useRef<Chart<'line', number[], number>>(null);
 
-  const csvData: string[][] = [[type.name, 'distance[m]']];
+  const csvData: string[][] = [['distance[m]', type.name]];
+
+  const myRef = useRef(null);
+  const handleClick = () => {
+    if (myRef.current != undefined) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      myRef.current.link.click();
+    }
+  };
 
   const csvDataFunction = () => {
-    console.log(data);
     if (data != undefined) {
       if (data.datasets != undefined && data.labels != undefined) {
         for (let i = 0; i < data.datasets[0].data.length; i++) {
           csvData.push([
-            data.datasets[0].data[i].toString(),
             data.labels[i].toString(),
+            data.datasets[0].data[i].toString(),
           ]);
         }
       }
     }
-    console.log(csvData);
 
     return csvData;
   };
-
-  //console.log(data);
-
   const addPaletteChart =
     (palette: Palette) =>
     (chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
@@ -146,31 +150,33 @@ const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
   ];
 
   return (
-    <div className="road-conditions-graph">
-      <div className="csv-btns">
-        <div className="btn csv-btn">
-          <FiDownload />
-        </div>
-        <CSVLink
-          data={csvDataFunction()}
-          className="hidden"
-          hidden
-          aria-hidden={true}
-        >
-          Download me!
-        </CSVLink>
-      </div>
-
-      <div>
-        {data && (
+    <div>
+      {data && (
+        <div className="road-conditions-graph">
           <Line
+            className="road-conditions-graph-margin"
             ref={ref}
             data={data}
             options={graphOptions}
             plugins={plugins}
-          />
-        )}
-      </div>
+          ></Line>
+          <div className="csv-btns">
+            <div className="btn csv-btn">
+              <FiDownload onClick={handleClick} />
+            </div>
+            <CSVLink
+              data={csvDataFunction()}
+              className="hidden"
+              hidden
+              aria-hidden={true}
+              ref={myRef}
+              filename={type.name + '.csv'}
+            >
+              Download me!
+            </CSVLink>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
