@@ -49,7 +49,7 @@ const ConditionsMap: FC<Props> = ( { type, palette, setPalette, setWayData } ) =
     }, [] )
 
     return (
-        <div ref={ref}>
+        <div style={{ marginTop: '20px' }} ref={ref}>
             <PaletteEditor
                 defaultPalette={RENDERER_PALETTE}
                 width={width}
