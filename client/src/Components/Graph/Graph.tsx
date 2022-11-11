@@ -29,8 +29,8 @@ interface IGraph {
   time?: boolean;
 }
 
-const margin = { top: 20, right: 30, bottom: 70, left: 100 };
-const paddingRight = 50;
+const margin = { top: 20, right: 30, bottom: 70, left: 115 };
+const paddingRight = 33;
 
 const Graph: FC<IGraph> = ({
   labelX,
