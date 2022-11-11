@@ -44,7 +44,7 @@ export default  function Graph({segments,type}:GraphProps){
         {
             order: 1,
             type: 'bar' as const,
-            data: segments.map((segment) => segment.data),
+            data: segments.map((segment) => segment.data[type]),
             label: names[type],
             backgroundColor: colors[type],
             borderWidth: 2

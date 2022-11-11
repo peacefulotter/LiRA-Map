@@ -39,22 +39,22 @@ const fakeRoad: RoadData = {
     roadName: "Åkandevej",
     segmentList: [{
         segmentId: 0,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }, {
         segmentId: 1,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }, {
         segmentId: 2,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }, {
         segmentId: 3,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }, {
         segmentId: 4,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }, {
         segmentId: 5,
-        data: generate(5, 100)
+        data: [generate(5, 100),generate(5, 100),generate(5, 100),generate(5, 100)]
     }]
 
 }
@@ -64,7 +64,7 @@ const fakeRoad: RoadData = {
 
 export interface Segment {
     segmentId: number
-    data: number
+    data: number[]
 }
 
 export interface RoadData {
