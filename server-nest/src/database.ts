@@ -34,8 +34,8 @@ const BASE_CONFIG = {
 export const LIRA_DB_CONFIG = {
     ...BASE_CONFIG,
     connection: {
-        host : "liradb.compute.dtu.dk", // "liradbdev.compute.dtu.dk",
-        port: 5435,
+        host : "se2-c.compute.dtu.dk", // "liradbdev.compute.dtu.dk",
+        port: 5432, // "liradbdev.compute.dtu.dk",
         user : DB_USER,
         password : DB_PASSWORD,
         database : "postgres",

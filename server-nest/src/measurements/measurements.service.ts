@@ -19,7 +19,10 @@ export class MeasurementsService {
     const file = await readFile(this.path, 'utf-8');
     return JSON.parse(file);
   }
-
+  async getMeasurement() {
+    const file = await readFile(this.path, 'utf-8');
+    return JSON.parse(file);
+  }
   async addMeasurement(measurement: Measurement) {
     const measurements = await this.getMeasurements();
     const updatedFile = [...measurements, measurement];

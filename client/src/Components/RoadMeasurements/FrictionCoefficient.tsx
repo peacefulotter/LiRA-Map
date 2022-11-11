@@ -1,45 +1,44 @@
 import React, { FC, useEffect, useState } from 'react';
-import { MeasProperties, ActiveMeasProperties } from '../models/properties';
-import { get, put } from './fetch';
+import { ActiveMeasProperties } from '../models/properties';
+
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
-import { useMetasCtx } from '../../context/MetasContext';
-
-import { ActiveMeasProperties } from '../../models/properties';
-import { MeasMetaPath, PointData } from '../../models/path';
-
-import { GraphData, GraphPoint } from '../../assets/graph/types';
-
-
-import { getMeasurements } from '../../queries/measurements';
-
-const [paths, setPaths] = useState<MeasMetaPath>({});
+import { MeasMetaPath } from '../../models/path';
+import { addMeasurement, getMeasurement } from '../../queries/measurements';
 
 
 
 
-type RPM_Unit = rev/minute
-const beta_front_right = 3 rev/min;
+const [measurement, setMeasurement] = useState<ActiveMeasProperties>({});
+
+const RPM_Front_Right = "obd.rpm_fr";
+const RPM_Rear_Right = "obd.rpm_rr";
+const Car_Velocity = "obd.spd_veh";
+
+const beta_front_right = 3 ;
 const beta_zero = 1;
-const wheel_radius = 0.31 meter;
+const wheel_radius = 0.31;
 
-
-const { RPM_Front_Right, RPM_Rear_Right, Car_Velocity } = getMeasurements();
-
-interface mu {
-  RPM_Front_Right: any,
-  RPM_Rear_Right,
-  Car_Velocity
+const chooseMeasurement: ActiveMeasProperties = (dbName:string) => {
+  getMeasurement((data) => {
+    setMeasurement(data);
+  }, dbName) 
 }
 
-const mu_function: mu = ({
-  RPM_Front_Right,
-  RPM_Rear_Right,
-  Car_Velocity
-}) => {
-  return (
-    (ln((beta_front_right * wheel_radius)/(wheel_radius * RPM_Front_Right - Car_Velocity)) + 1)
+export const mu_function = () => {
+  
 
-
+useEffect(() => {
+  const rpm_fr = chooseMeasurement(RPM_Front_Right) 
+  const rpm_rr = chooseMeasurement(RPM_Rear_Right)
+  const spd_veh = chooseMeasurement(Car_Velocity)
+  
+  const mu_value = (Math.log((beta_front_right * wheel_radius)/(wheel_radius * rpm_fr - spd_veh)) + 1)
+  return addMeasurement(mu_value);
+}
+)
+ 
+  return ( 
+    
   )
-}*/
+}
 

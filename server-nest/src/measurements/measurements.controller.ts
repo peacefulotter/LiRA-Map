@@ -14,6 +14,11 @@ export class MeasurementsController
     {
         return this.service.getMeasurements();
     }
+    @Get()
+    getMeasurement(): Promise<Measurement> 
+    {
+        return this.service.getMeasurement();
+    }
 
     @Put('/add')
     addtMeasurement( @Query() query: { measurement: Measurement } ): Promise<any> 

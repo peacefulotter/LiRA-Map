@@ -14,6 +14,20 @@ export const getMeasurements = (
   });
 };
 
+export const getMeasurement = (
+  callback: React.Dispatch<React.SetStateAction<ActiveMeasProperties>>,
+  dbName: string,
+) => {
+  get('/measurements/' + dbName, (data: MeasProperties) => {
+    console.log(data);
+    callback(
+      data.map((meas: ActiveMeasProperties) => {
+        return { meas, isActive: false };
+      }),
+    );
+  });
+};
+
 export const addMeasurement = (measurement: MeasProperties) => {
   put('/measurements/add', measurement);
 };
