@@ -27,15 +27,15 @@ const chooseMeasurement: ActiveMeasProperties = (dbName:string) => {
 export const mu_function = () => {
   
 
-useEffect(() => {
+  useEffect(() => {
   const rpm_fr = chooseMeasurement(RPM_Front_Right) 
   const rpm_rr = chooseMeasurement(RPM_Rear_Right)
   const spd_veh = chooseMeasurement(Car_Velocity)
   
   const mu_value = (Math.log((beta_front_right * wheel_radius)/(wheel_radius * rpm_fr - spd_veh)) + 1)
   return addMeasurement(mu_value);
-}
-)
+  }
+  )
  
   return ( 
     

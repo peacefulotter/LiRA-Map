@@ -28,7 +28,6 @@ export interface RendererOptions extends PathProperties {
 }
 
 export interface MeasProperties extends PathProperties {
-  [x: string]: any;
   // measurement as it is in the database
   dbName: string;
   // human friendly name of the measurement
