@@ -6,7 +6,7 @@ import Tooltip from './Tooltip';
 import XAxis from './XAxis';
 import YAxis from './YAxis';
 
-import { Plot, SVG } from '../../assets/graph/types';
+import { GraphData, GraphPoint, Plot, SVG } from '../../assets/graph/types';
 import useSize from '../../hooks/useSize';
 
 import Gradient from './Gradient';
@@ -15,7 +15,10 @@ import Line from './Line';
 import useAxis from './Hooks/useAxis';
 
 import '../../css/graph.css';
-import Zoom from './Zoom';
+import GraphButtons from './GraphButtons';
+import { FiMinusCircle } from 'react-icons/fi';
+import { PointData } from '../../models/path';
+import { CSVLink } from 'react-csv';
 
 interface IGraph {
   labelX: string;
@@ -26,8 +29,8 @@ interface IGraph {
   time?: boolean;
 }
 
-const margin = { top: 20, right: 30, bottom: 70, left: 100 };
-const paddingRight = 50;
+const margin = { top: 20, right: 30, bottom: 70, left: 115 };
+const paddingRight = 33;
 
 const Graph: FC<IGraph> = ({
   labelX,
@@ -47,12 +50,29 @@ const Graph: FC<IGraph> = ({
 
   const { xAxis, yAxis } = useAxis(zoom, w, h);
 
+  const csvData = [[labelX, labelY]];
+
+  const csvDataFunction = () => {
+    if (plots != undefined) {
+      plots.forEach((plot) => {
+        plot.data.forEach((data) => {
+          csvData.push([data[0].toString(), data[1].toString()]);
+        });
+      });
+    }
+
+    return csvData;
+  };
+
   return (
     <>
       <Tooltip />
       <div className="graph-wrapper" ref={wrapperRef}>
-        <Zoom setZoom={setZoom} />
-
+        <GraphButtons
+          setZoom={setZoom}
+          setCSV={csvDataFunction()}
+          labelY={labelY}
+        />
         <SVGWrapper
           isLeft={true}
           zoom={zoom}

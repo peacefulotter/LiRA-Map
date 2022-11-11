@@ -16,12 +16,15 @@ import RidesMap from './RidesMap';
 import useToast from '../createToast';
 import Loading from '../Loading';
 
+import { CSVLink, CSVDownload } from 'react-csv';
+
 const Rides: FC = () => {
   const { selectedMetas } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
 
   const [paths, setPaths] = useState<MeasMetaPath>({});
   const [loading, setLoading] = useState(false);
+  const headers = ['x', 'y'];
 
   useEffect(() => {
     const updatePaths = async () => {
@@ -50,6 +53,28 @@ const Rides: FC = () => {
 
     updatePaths().then(setPaths);
   }, [selectedMetas, selectedMeasurements]);
+
+  const csvData = (measurement: string, tripId: number) => {
+    const { path } = paths[measurement][tripId];
+    const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
+    const data: GraphData = path
+      .map((p) => [x(p), p.value || 0] as GraphPoint)
+      .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
+
+    const csvData: string[][] = [];
+    csvData.push(['x', 'y']);
+
+    data.forEach((datapoint) => {
+      csvData.push([datapoint[0].toString(), datapoint[1].toString()]);
+    });
+
+    console.error(csvData);
+    console.log(csvData);
+
+    return csvData;
+  };
+
+  console.log('paths', paths);
 
   return (
     <GraphProvider>
