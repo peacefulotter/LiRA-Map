@@ -28,9 +28,13 @@ ChartJS.register(
 
 export interface GraphProps {
     segments : Segment[]
+    type : number
 }
 
-export default  function Graph({segments}:GraphProps){
+const colors = ['rgba(83, 136, 216, 0.6)','rgba(83, 216, 136, 0.6)','rgba(216, 83, 83, 0.6)','rgba(136, 136, 136, 0.6)'];
+const names = ['Conditions','Energy','Friction','Aviation']
+
+export default  function Graph({segments,type}:GraphProps){
 
     const labels = segments.map( segment => "Segment "+segment.segmentId+1)
 
@@ -41,8 +45,8 @@ export default  function Graph({segments}:GraphProps){
             order: 1,
             type: 'bar' as const,
             data: segments.map((segment) => segment.data),
-            label: 'Metric A',
-            backgroundColor: 'rgba(83, 136, 216, 0.6)',
+            label: names[type],
+            backgroundColor: colors[type],
             borderWidth: 2
         },
     ]

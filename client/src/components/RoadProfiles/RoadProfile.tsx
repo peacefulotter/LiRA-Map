@@ -55,17 +55,21 @@ export default function RoadProfile({roadData} : RoadProfileProps) {
                             </TabList>
                             <TabPanel value="1">
                                 <div></div>
-                                <Graph segments={roadData.segmentList}/>
+                                <Graph segments={roadData.segmentList}
+                                       type={0}/>
                             </TabPanel>
                             <TabPanel value="2">
-                                <Graph segments={roadData.segmentList}/>
+                                <Graph segments={roadData.segmentList}
+                                       type={1}/>
                             </TabPanel>
                             <TabPanel value="3">
                                 <div></div>
-                                <Graph segments={roadData.segmentList}/>
+                                <Graph segments={roadData.segmentList}
+                                       type={2}/>
                             </TabPanel>
                             <TabPanel value="4">
-                                <Graph segments={roadData.segmentList}/>
+                                <Graph segments={roadData.segmentList}
+                                       type={3}/>
                             </TabPanel>
                         </TabContext>
                     </Grid>
