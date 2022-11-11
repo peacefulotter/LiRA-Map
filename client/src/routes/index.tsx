@@ -14,7 +14,7 @@ const Loadable = (Component: ElementType) => (props: any) => {
     const {pathname} = useLocation();
 
     return (
-        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')}/>}>
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('*')}/>}>
             <Component {...props} />
         </Suspense>
     );
@@ -67,6 +67,10 @@ export default function Router() {
         { path: 'condition', element: <RoadCondition /> },
         { path: 'altitude', element: <RoadAltitude /> },
       ],
+    },
+    {
+      path: '/',
+      element: <Navigate to="/road/measurement" replace />,
     },
     {
       path: '*',
