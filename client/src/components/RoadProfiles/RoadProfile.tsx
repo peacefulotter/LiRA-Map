@@ -14,7 +14,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import CheckboxList from "./CheckboxList";
 import Graph from "./Graph";
-import {useEffect, useState} from "react";
+import {useEffect, useState, SyntheticEvent} from "react";
 import {RoadData, Segment} from "../../pages/RoadCondition";
 import segments from "../CarData/Segments";
 import {boolean} from "../../_mock/boolean";
@@ -29,9 +29,10 @@ export default function RoadProfile({roadData} : RoadProfileProps) {
 
 
     const [value, setValue] = useState('1');
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (event: SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
+
 
     return (
         <Card sx={{minWidth: 275}}>
@@ -51,24 +52,24 @@ export default function RoadProfile({roadData} : RoadProfileProps) {
                                 <Tab label="Condition" value="1"/>
                                 <Tab label="Energy" value="2"/>
                                 <Tab label="Friction" value="3"/>
-                                <Tab label="Aviation" value="4"/>
+                                <Tab label="Altitude" value="4"/>
                             </TabList>
                             <TabPanel value="1">
                                 <div></div>
-                                <Graph segments={roadData.segmentList}
+                                <Graph segments={roadData.segmentList.filter((segment,index) => checked[index])}
                                        type={0}/>
                             </TabPanel>
                             <TabPanel value="2">
-                                <Graph segments={roadData.segmentList}
+                                <Graph segments={roadData.segmentList.filter((segment,index) => checked[index])}
                                        type={1}/>
                             </TabPanel>
                             <TabPanel value="3">
                                 <div></div>
-                                <Graph segments={roadData.segmentList}
+                                <Graph segments={roadData.segmentList.filter((segment,index) => checked[index])}
                                        type={2}/>
                             </TabPanel>
                             <TabPanel value="4">
-                                <Graph segments={roadData.segmentList}
+                                <Graph segments={roadData.segmentList.filter((segment,index) => checked[index])}
                                        type={3}/>
                             </TabPanel>
                         </TabContext>

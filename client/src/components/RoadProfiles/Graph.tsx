@@ -12,7 +12,7 @@ import {
     BarController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import {RoadData, Segment} from "../../pages/RoadCondition";
+import {Segment} from "../../pages/RoadCondition";
 
 ChartJS.register(
     LinearScale,
@@ -32,11 +32,11 @@ export interface GraphProps {
 }
 
 const colors = ['rgba(83, 136, 216, 0.6)','rgba(83, 216, 136, 0.6)','rgba(216, 83, 83, 0.6)','rgba(136, 136, 136, 0.6)'];
-const names = ['Conditions','Energy','Friction','Aviation']
+const names = ['Conditions','Energy','Friction','Altitude']
 
 export default  function Graph({segments,type}:GraphProps){
 
-    const labels = segments.map( segment => "Segment "+segment.segmentId+1)
+    const labels = segments.map( segment => "Segment "+(1+segment.segmentId))
 
     const data = {
     labels: labels,
