@@ -4,6 +4,7 @@ import { Knex } from 'knex';
 import { randomUUID } from 'crypto';
 
 const beta_front_right = 3;
+const beta__zero = 1;
 const wheel_radius = 0.31;
 @Injectable()
 export class MuService implements OnApplicationBootstrap {
@@ -42,11 +43,13 @@ export class MuService implements OnApplicationBootstrap {
       for (let i = 0; i < Math.min(rpms.length / 5, spds.length); i++) {
         const Speed = parseFloat(spds[i].Description);
         const RPM = parseFloat(rpms[i * 5].Description);
-        const mu = Math.log(
-          (beta_front_right * wheel_radius) /
-            (wheel_radius * RPM - Speed / 3.6) +
-            1,
-        );
+        const mu =
+          Math.log(
+            (beta_front_right * wheel_radius) /
+              (wheel_radius * RPM - Speed / 3.6) +
+              1,
+          ) ^
+          (1 / beta__zero);
         const MeasurementId = randomUUID();
         const spdMessage = JSON.parse(spds[i].message);
         const message = JSON.stringify({
@@ -91,7 +94,7 @@ export class MuService implements OnApplicationBootstrap {
               '\n',
           );
       }
-      this.knex.batchInsert('Measurements', points);
+      //this.knex.batchInsert('Measurements', points);
     }
   }
 }

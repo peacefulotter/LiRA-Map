@@ -14,16 +14,6 @@ export const getMeasurements = (
   });
 };
 
-export const getMeasurement = (
-  callback: React.Dispatch<React.SetStateAction<MeasProperties>>,
-  dbName: string,
-) => {
-  get('/measurements/' + dbName, (data: MeasProperties) => {
-    console.log(data);
-    callback(data);
-  });
-};
-
 export const addMeasurement = (measurement: MeasProperties) => {
   put('/measurements/add', measurement);
 };
