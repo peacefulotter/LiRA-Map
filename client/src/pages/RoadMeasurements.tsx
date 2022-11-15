@@ -6,17 +6,90 @@ import { MetasProvider } from '../context/MetasContext';
 import RideDetails from '../Components/RoadMeasurements/RideDetails';
 import RideCards from '../Components/RoadMeasurements/RideCards';
 import Rides from '../Components/RoadMeasurements/Rides';
+import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
+import 'flexlayout-react/style/dark.css';
+
+const json: IJsonModel = {
+  global: { tabEnableFloat: true },
+  borders: [],
+  layout: {
+    type: 'row',
+    weight: 100,
+    children: [
+      {
+        type: 'tabset',
+        weight: 25,
+        children: [
+          {
+            type: 'tab',
+            name: 'Two',
+            component: 'ridecards',
+          },
+        ],
+      },
+      {
+        type: 'tabset',
+        weight: 25,
+        children: [
+          {
+            type: 'tab',
+            name: 'Two',
+            component: 'ridedetails',
+          },
+        ],
+      },
+
+      {
+        type: 'tabset',
+        weight: 50,
+        children: [
+          {
+            type: 'tab',
+            name: 'One',
+            component: 'rides',
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const model = Model.fromJson(json);
 
 const RoadMeasurements = () => {
+  const factory = (node: TabNode) => {
+    const component = node.getComponent();
+
+    if (component === 'rides') {
+      return <Rides />;
+    } else if (component === 'ridecards') {
+      return <RideCards />;
+    } else if (component === 'ridedetails') {
+      return <RideDetails />;
+    }
+  }; /*
+
+                                    return (
+                                      <MeasurementsProvider>
+                                        <MetasProvider>
+                                          <div className="rides-wrapper">
+                                            <RideCards />
+
+                                            <RideDetails />
+
+                                            <Rides />
+                                          </div>
+                                        </MetasProvider>
+                                      </MeasurementsProvider>
+                                    );
+
+                                     */
+
   return (
     <MeasurementsProvider>
       <MetasProvider>
         <div className="rides-wrapper">
-          <RideCards />
-
-          <RideDetails />
-
-          <Rides />
+          <Layout model={model} factory={factory} />
         </div>
       </MetasProvider>
     </MeasurementsProvider>

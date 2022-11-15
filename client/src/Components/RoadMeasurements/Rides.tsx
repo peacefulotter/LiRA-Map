@@ -109,27 +109,18 @@ const Rides: FC = () => {
   const selectedMeasurement = selectedMeasurements.find(
     (meas) => meas.name === selectedMeasurementName,
   );
-  const csvData = (measurement: string, tripId: number) => {
-    const { path } = paths[measurement][tripId];
-    const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
-    const data: GraphData = path
-      .map((p) => [x(p), p.value || 0] as GraphPoint)
-      .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
-
-    const csvData: string[][] = [];
-    csvData.push(['x', 'y']);
-
-    data.forEach((datapoint) => {
-      csvData.push([datapoint[0].toString(), datapoint[1].toString()]);
-    });
-
-    console.error(csvData);
-    console.log(csvData);
-
-    return csvData;
-  };
 
   console.log('paths', paths);
+
+  const Mapping = () => {
+    return (
+      <RidesMap
+        paths={paths}
+        selectedMetas={selectedMetas}
+        selectedMeasurements={selectedMeasurements}
+      />
+    );
+  };
 
   return (
     <GraphProvider>
