@@ -49,11 +49,13 @@ const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
         onChange={_onChange('startDate')}
         value={options.startDate}
         className="options-date-picker"
+        format="dd/MM/y"
       />
       <DatePicker
         onChange={_onChange('endDate')}
         value={options.endDate}
         className="options-date-picker"
+        format="dd/MM/y"
       />
 
       <Checkbox
