@@ -83,12 +83,12 @@ const ConditionsGraph: FC<Props> = ( { type, data, palette } ) => {
     } ]
 
     return (
-        <div className="road-conditions-graph">
+        <div style={{ width: '100%', position: 'relative' }}>
             { data && <Line
-                ref={ref} 
-                data={data} 
-                options={graphOptions} 
-                plugins={plugins} />  
+                ref={ref}
+                data={data}
+                options={graphOptions}
+                plugins={plugins} />
             }
         </div>
     )
