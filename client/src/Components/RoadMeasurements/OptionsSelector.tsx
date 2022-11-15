@@ -44,7 +44,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
         value={options.distanceKm}
         onChange={(e) => _onChange('distanceKm')(e.target.value)}
       />
-      
+
       <DatePicker
         onChange={_onChange('startDate')}
         value={options.startDate}

@@ -15,7 +15,7 @@ type Elt = {
   isSublist?: boolean;
 };
 
-const DATE_MD = ['StartTimeUtc', 'EndTimeUtc'];
+const DATE_MD = ['StartTimeUtc', 'EndTimeUtc', 'Created_Date', 'Updated_Date'];
 
 const POSITION_MD = ['StartPositionDisplay', 'EndPositionDisplay'];
 
@@ -31,13 +31,13 @@ const formatDate = (val: string) => {
   return (
     date.getDate() +
     '/' +
-    date.getMonth() +
+    (date.getMonth() + 1) +
     '/' +
     date.getFullYear() +
     '  ' +
-    date.getHours() +
+    date.getHours().toString().padStart(2, '0') +
     ':' +
-    date.getMinutes()
+    date.getMinutes().toString().padStart(2, '0')
   );
 };
 
