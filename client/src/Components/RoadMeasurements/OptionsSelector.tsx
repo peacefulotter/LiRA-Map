@@ -3,20 +3,14 @@ import DatePicker from 'react-date-picker';
 import { TripsOptions } from '../../models/models';
 import Checkbox from '../Checkbox';
 
-const defaultOptions: TripsOptions = {
-  taskId: '',
-  startDate: new Date('2020-01-01'),
-  endDate: new Date(),
-  reversed: false,
-  distanceKm: undefined,
-  startCity: '',
-  endCity: '',
-  postalCode: undefined,
-};
 interface IOptionsSelector {
   onChange: (options: TripsOptions) => void;
+  defaultOptions: TripsOptions;
 }
-const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
+const OptionsSelector: FC<IOptionsSelector> = ({
+  onChange,
+  defaultOptions,
+}) => {
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 
   const _onChange = (key: keyof TripsOptions) => {
