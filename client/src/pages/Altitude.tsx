@@ -20,7 +20,7 @@ const Altitude = () => {
 
     useEffect( () => {
         getAltitudes( (data: WaysConditions) => {
-            console.log(data);
+            // console.log(data);
             setAltitudes( data )
         } )
     }, [] )

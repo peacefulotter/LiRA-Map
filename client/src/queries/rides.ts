@@ -20,13 +20,13 @@ export const getRide = async (
     const { dbName, name, hasValue } = measurement
     const { TripId: tripId, TaskId: taskId } = meta;
 
-    console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
+    // console.log('Querying measurement: ', name, '\nTaskId: ', taskId );
     
     const { data } = await asyncPost<BoundedPath>( '/rides/ride', { tripId, dbName } )         
         
     const { path } = data;
 
-    console.log("Got data for ride: ", taskId, "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
+    // console.log("Got data for ride: ", taskId, "\nLength: ", path.length, '\nMeasurement: ', name, '\nHasValue?: ', hasValue ); 
 
     if ( path.length === 0 )
     {

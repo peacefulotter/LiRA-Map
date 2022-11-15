@@ -117,7 +117,7 @@ export class RCService {
   ) {
     const { minLat, maxLat, minLng, maxLng } = bounds;
     const url = `http://20.93.26.82/rdCondition/getbyframe/minLon/${minLng}/minLat/${minLat}/maxLon/${maxLng}/maxLat/${maxLat}/zoom/${zoom}`;
-    console.log(url);
+    // console.log(url);
 
     const { data } = await axios.get<{ [key: WayId]: BoundedCondition }>(url, {
       params: { type },

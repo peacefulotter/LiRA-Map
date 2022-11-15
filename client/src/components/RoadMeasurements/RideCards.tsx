@@ -48,8 +48,8 @@ const RideCards: FC = () => {
     const [showMetas, setShowMetas] = useState<SelectMeta[]>([])
 
     useEffect(() => {
-        console.log("Metas:\n");
-        console.log(metas); // ProdURL
+        // console.log("Metas:\n");
+        // console.log(metas); // ProdURL
         setShowMetas(metas.map(m => ({...m, selected: false})))
     }, [metas])
 
