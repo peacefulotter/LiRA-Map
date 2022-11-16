@@ -10,7 +10,7 @@ export const GetSegmentsAndAverageValuesInAPolygon = async (points: LatLng[], ty
     // const northWestString = points[3].lat + " " + points[3].lng;
     const bounds = points.map( p => p.lat + ' ' + p.lng ).join(';')
     const path = '/segments/polygon/'+ bounds + '?type=' + type +  '&aggregation=' + aggregation +  '&direction=' + direction;
-    console.log(path)
+    // console.log(path)
     const res = await fetch(path)
     return await res.json();
 }
@@ -46,7 +46,7 @@ export const GetAggregationTypesOfSegment = async (dataType: string, segment_id:
 
 export const GetSegmentAndAggregateValue = async (type: string, aggregation: string, segment_id: number): Promise<Segment> => {
     const path = '/segments/'+ segment_id + '?type=' + type +  '&aggregation=' + aggregation;
-    console.log(path)
+    // console.log(path)
     const res = await fetch(path)
     const data = await res.json();
     return data

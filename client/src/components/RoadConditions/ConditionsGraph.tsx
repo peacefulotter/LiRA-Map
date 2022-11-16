@@ -52,7 +52,7 @@ const ConditionsGraph: FC<Props> = ( { type, data, palette } ) => {
     const addPaletteChart = (palette: Palette) => (chart: Chart<keyof ChartTypeRegistry, number[], unknown>) => {
         const dataset = chart.data.datasets[0];
         const gradient = chart.ctx.createLinearGradient(0, chart.chartArea.bottom, 0, 0);
-        console.log(...palette);
+        // console.log(...palette);
         palette.forEach( (c: Color) => {
             gradient.addColorStop(c.t, `rgb(${c.r}, ${c.g}, ${c.b})`);
         })
@@ -74,7 +74,7 @@ const ConditionsGraph: FC<Props> = ( { type, data, palette } ) => {
             if ( elts.length === 0 ) return;
             const elt = elts[0] // doesnt work if multiple datasets
             const pointIndex = elt.index
-            console.log(pointIndex, event, elts);
+            // console.log(pointIndex, event, elts);
         }
     }), [] )
 

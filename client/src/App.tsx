@@ -11,6 +11,8 @@ import {Provider} from "react-redux";
 import {store} from "./store";
 import { SnackbarProvider } from 'notistack'
 
+import "./App.css";
+
 // ----------------------------------------------------------------------
 
 export default function App() {

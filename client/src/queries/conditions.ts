@@ -27,6 +27,6 @@ export const getConditions = ( wayId: string, type: string, setConditions: (data
 }
 
 export const getBoundedWaysConditions = async ( bounds: MapBounds, type: string, zoom: number ) => {
-    console.log(bounds);
+    // console.log(bounds);
     return await asyncPost<WaysConditions>( '/conditions/bounded/ways', { ...bounds, type, zoom } )
 }

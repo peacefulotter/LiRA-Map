@@ -32,7 +32,7 @@ export default function RoadAltitude() {
 
     useEffect( () => {
         getAltitudes( (data: WaysConditions) => {
-            console.log(data);
+            // console.log(data);
             setAltitudes( data )
         } )
     }, [] )

@@ -40,7 +40,7 @@ export class SignupController {
       .catch((error) => {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       });
-    console.log(userResponse);
+    // console.log(userResponse);
     return JSON.stringify(userResponse);
   }
 
