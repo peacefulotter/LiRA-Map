@@ -22,6 +22,21 @@ const Rides: FC = () => {
     const { selectedMeasurements } = useMeasurementsCtx()
 
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
+    const [ data, setData ] = useState({})
+
+    useEffect(() => {
+        setData(selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue &&
+            Object.entries(paths[name] || {}).map(([TaskId, bp], j) => {
+                const {path, bounds} = bp;
+                const x = (p: PointData) => new Date(p.metadata.timestamp).getTime()
+                const data: GraphData = path
+                    .map( p => [x(p), p.value || 0] as GraphPoint )
+                    .sort( ([x1, y1], [x2, y2]) => (x1 < x2) ? -1 : (x1 === x2) ? 0 : 1 )
+                return {data}
+            })
+        ))
+        console.log(data)
+    }, [selectedMeasurements]);
 
     const popup = usePopup()
 
@@ -65,10 +80,11 @@ const Rides: FC = () => {
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                <RideGraphCard />
+                <RideGraphCard data={data}/>
 
                 {/*
                 { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue &&
+
                     <Graph
                         key={`graph-${i}`}
                         labelX="Time (h:m:s)" 
