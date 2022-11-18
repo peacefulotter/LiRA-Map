@@ -25,7 +25,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
             <div>
               <b>{meta.TaskId}</b>
               <br></br>
-              {new Date(meta.Created_Date).toLocaleDateString()}
+              {new Date(meta.StartTimeUtc).toLocaleDateString()}
             </div>
           }
           onClick={(isChecked) => {
