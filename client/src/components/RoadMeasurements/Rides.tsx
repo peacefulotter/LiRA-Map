@@ -14,6 +14,7 @@ import { getRide } from "../../queries/rides";
 import Graph from "../Graph/Graph";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
+import RideGraphCard from "./RideGraphCard";
 
 const Rides: FC = () => {
     
@@ -64,8 +65,11 @@ const Rides: FC = () => {
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue && 
-                    <Graph 
+                <RideGraphCard />
+
+                {/*
+                { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue &&
+                    <Graph
                         key={`graph-${i}`}
                         labelX="Time (h:m:s)" 
                         labelY={name}
@@ -84,6 +88,7 @@ const Rides: FC = () => {
                         }
                     />
                 ) }
+                */}
             </div>
         </GraphProvider>
   )

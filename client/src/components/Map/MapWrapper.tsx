@@ -15,6 +15,8 @@ const MapWrapper = (props: any) => {
     <MapContainer
       style={{
         height: "75vh",
+        position: "static",
+        zIndex: 1,
         WebkitFilter:
           themeMode === "dark"
             ? "invert(100%) hue-rotate(190deg) brightness(1)"
