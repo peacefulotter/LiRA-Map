@@ -10,6 +10,7 @@ import {
 } from './EnergyInterfaces';
 import { Measurement } from '../models';
 import * as Console from 'console';
+import { calcWhlTrq, linearInterpolate } from './EnergyMath';
 
 @Injectable()
 export class EnergyService {
@@ -22,16 +23,6 @@ export class EnergyService {
 
   private readonly measTypes = [this.accLongTag, this.spdTag, this.whlTrqTag];
 
-  // https://en.wikipedia.org/wiki/Linear_interpolation#Linear_interpolation_between_two_known_points
-  private linearInterpolate(
-    x: number,
-    [x0, y0]: [number, number],
-    [x1, y1]: [number, number],
-  ): number {
-    // assert x0 <= x1
-    return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
-  }
-
   private getMeasVal(meas: MeasurementEntity): number {
     const valueTag: string = meas.T + '.value';
     const message: JSON = meas.message;
@@ -39,66 +30,6 @@ export class EnergyService {
     if (message.hasOwnProperty(valueTag)) {
       return message[valueTag];
     }
-  }
-
-  private calcSpd(
-    spdBefore: MeasurementEntity,
-    spdAfter: MeasurementEntity,
-    curPower: MeasurementEntity,
-  ) {
-    const dateBefore = spdBefore.Created_Date.getTime();
-    const spdBeforeMPS = this.getMeasVal(spdBefore) / 3.6;
-
-    const dateAfter = spdAfter.Created_Date.getTime();
-    const spdAfterMPS = this.getMeasVal(spdAfter) / 3.6;
-
-    return this.linearInterpolate(
-      curPower.Created_Date.getTime(),
-      [dateBefore, spdBeforeMPS],
-      [dateAfter, spdAfterMPS],
-    );
-  }
-
-  private calcAcc(
-    accBefore: MeasurementEntity,
-    accAfter: MeasurementEntity,
-    curPower: MeasurementEntity,
-  ) {
-    const dateBefore = accBefore.Created_Date.getTime();
-    const accBeforeVal = (this.getMeasVal(accBefore) - 2 * 198) * 0.05;
-
-    const dateAfter = accAfter.Created_Date.getTime();
-    const accAfterVal = (this.getMeasVal(accBefore) - 2 * 198) * 0.05;
-
-    return this.linearInterpolate(
-      curPower.Created_Date.getTime(),
-      [dateBefore, accBeforeVal],
-      [dateAfter, accAfterVal],
-    );
-  }
-
-  private calcPower(curPower: MeasurementEntity) {
-    return (this.getMeasVal(curPower) - 160) * 1000;
-  }
-
-  private calcWhlTrq(
-    whlTrqBefore: MeasurementEntity,
-    whlTrqAfter: MeasurementEntity,
-    curPower: MeasurementEntity,
-  ) {
-    const dateBefore = whlTrqBefore.Created_Date.getTime();
-    const whlTrqBeforeVal = this.getMeasVal(whlTrqBefore);
-
-    const dateAfter = whlTrqBefore.Created_Date.getTime();
-    const whlTrqAfterVal = this.getMeasVal(whlTrqAfter);
-
-    return (
-      this.linearInterpolate(
-        curPower.Created_Date.getTime(),
-        [dateBefore, whlTrqBeforeVal],
-        [dateAfter, whlTrqAfterVal],
-      ) - 51300
-    );
   }
 
   public async get(tripId: string): Promise<any> {
