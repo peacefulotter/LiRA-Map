@@ -4,7 +4,7 @@ export interface MeasurementEntity {
   T: string;
   lat: number;
   lon: number;
-  message: Message;
+  message: JSON;
   isComputed: boolean;
   FK_Trip: string;
   FK_MeasurementType: string;
@@ -23,10 +23,8 @@ export interface Message {
   '@rec': string;
 }
 
-export interface AccelerationMessage extends Message {
-  'acc.xyz.z'?: number;
-  'acc.xyz.y'?: number;
-  'acc.xyz.x'?: number;
+export interface AccLongMessage extends Message {
+  'obd.acc_long.value'?: number;
 }
 
 export interface SpeedMessage extends Message {
