@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
+import { knex } from 'knex'
 import { AppModule } from './app.module';
 
-const pg = require('knex')({
+const pg = knex({
   client: 'pg',
   connection: {
     host : 'se2-e.compute.dtu.dk',

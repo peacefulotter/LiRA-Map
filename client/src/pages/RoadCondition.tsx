@@ -1,7 +1,3 @@
-// @mui
-import { Container } from '@mui/material';
-// hooks
-import useSettings from '../hooks/useSettings';
 // components
 import Page from '../components/Page';
 
@@ -18,13 +14,12 @@ import { GraphProvider } from "../context/GraphContext";
 
 import "leaflet/dist/leaflet.css"
 import "../css/map.css"
-import "../css/road_conditions.css"
-import "../css/palette.css"
+//import "../css/road_conditions.css"
+//import "../css/palette.css"
 
 // ----------------------------------------------------------------------
 
 export default function RoadCondition() {
-  const { themeStretch } = useSettings();
 
     const [palette, setPalette] = useState<Palette>([])
     const [wayData, setWayData] = useState<ChartData<"line", number[], number>>()
@@ -40,7 +35,7 @@ export default function RoadCondition() {
   return (
     <Page title="Road Condition">
           <GraphProvider>
-              <div className="road-conditions-wrapper">
+              <div style={{ width: '100%' }}>
                   <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData} />
                   <ConditionsGraph type={type} palette={palette} data={wayData} />
               </div>

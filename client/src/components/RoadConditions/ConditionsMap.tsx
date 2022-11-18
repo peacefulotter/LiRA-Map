@@ -1,4 +1,3 @@
-
 import { FC, useCallback, useRef } from "react";
 import { ChartData } from "chart.js";
 import { Palette } from "react-leaflet-hotline";
@@ -15,7 +14,6 @@ import { Condition } from "../../models/path";
 
 import { getConditions } from "../../queries/conditions";
 
-
 interface Props {
     type: ConditionType;
     palette: Palette;
@@ -31,10 +29,10 @@ const ConditionsMap: FC<Props> = ( { type, palette, setPalette, setWayData } ) =
     const [width, _] = useSize(ref)
 
     const onClick = useCallback( (way_id: string, way_length: number) => {
-        console.log('onclick called');
+        // console.log('onclick called');
         
         getConditions( way_id, name, (wc: Condition[]) => {
-            console.log('getConditions called');
+            // console.log('getConditions called');
             setWayData( {
                 labels: wc.map( p => p.way_dist * way_length ),
                 datasets: [ {
@@ -51,8 +49,8 @@ const ConditionsMap: FC<Props> = ( { type, palette, setPalette, setWayData } ) =
     }, [] )
 
     return (
-        <div className="road-conditions-map" ref={ref}>
-            <PaletteEditor 
+        <div style={{ marginTop: '20px' }} ref={ref}>
+            <PaletteEditor
                 defaultPalette={RENDERER_PALETTE}
                 width={width}
                 cursorOptions={ { scale: max, grid, samples } }
