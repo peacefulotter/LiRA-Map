@@ -47,13 +47,14 @@ export class MuService implements OnApplicationBootstrap {
       ) {
         const RPM_rear = parseFloat(rpms_rear[i * 5].Description);
         const RPM_front = parseFloat(rpms_front[i * 5].Description);
-        const mu_right =
+        const mu_right = Math.pow(
           Math.log(
             (beta_front_right * wheel_radius) /
               (wheel_radius * (RPM_front - RPM_rear)) +
               1,
-          ) ^
-          (1 / beta__zero);
+          ),
+          1 / beta__zero,
+        );
         const MeasurementId = randomUUID();
         const spdMessage = JSON.parse(rpms_rear[i].message);
         const message = JSON.stringify({
