@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/webstorm,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=webstorm,react
 
+.vscode/*
+
 ### react ###
 .DS_*
 *.log
@@ -132,3 +134,5 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,react
 server-nest/.env
+
+.fake

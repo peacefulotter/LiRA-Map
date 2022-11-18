@@ -15,18 +15,21 @@ import * as Console from "console";
 export class EnergyService {
   constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
-  private readonly accKey = 'acc.xyz';
-  private readonly spdKey = 'obd.spd_veh';
-  private readonly consKey = 'obd.trac_cons';
+  private readonly accLongTag = 'obd.acc_long';
+  private readonly spdTag = 'obd.spd_veh';
+  private readonly consTag = 'obd.trac_cons';
+  private readonly whlTrqTag = 'obd.whl_trq_est';
+
+  private readonly measTypes = [this.accLongTag, this.spdTag, this.whlTrqTag]
 
   public async get(tripId: string): Promise<any> {
     const relevantMeasurements: MeasurementEntity[] = await this.knex
       .select('*')
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
-      .whereIn('T', [this.accKey, this.spdKey, this.consKey])
+      .whereIn('T', [ this.consTag ].concat(this.measTypes))
       .orderBy('Created_Date')
-      .limit(30);
+      .limit(1000);
 
     // For intial testing.
     return await this.collect(relevantMeasurements);
@@ -34,84 +37,51 @@ export class EnergyService {
 
   private async collect(
     sortedMeasurements: MeasurementEntity[],
-    maxTimeDelta = 10000,
   ): Promise<any[]> {
     const assigned: any[] = [];
 
-    let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consKey);
+    let powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consTag);
     if (powerIndex == -1) {
       return [];
     }
 
-    let accs = [];
-    let spds = [];
+    for (let i = powerIndex; i < sortedMeasurements.length; i++) {
+      const curMeasType: string = sortedMeasurements[i].T;
 
-    let first = true;
+      if (curMeasType == this.consTag) {
+        // The current measurement is a power measurement, and we now begin traversing first backwards, 
+        // then forwards, to find closest relevant values to use for interpolation.
+        
+        const currentPower = sortedMeasurements[i];
 
-    for (let i = 0; i < sortedMeasurements.length; i++) {
-      const type: string = sortedMeasurements[i].T;
+        // begin backwards traversal, until we have found all needed measurements.
+        let foundAll : Boolean = false
+        
+        const measBefore = new Map<string, number>();
 
-      if (type == this.spdKey) {
-        spds.push(i);
-      } else if (type == this.accKey) {
-        accs.push(i);
-      }
+        for (let j = i; !foundAll && j >= 0; j--) {
+          const curMeas = sortedMeasurements[j];
+          const curMeasType: string = curMeas.T
 
-      if (type == this.consKey && first) {
-        first = false;
-      } else if (type == this.consKey || i == sortedMeasurements.length - 1) {
-        // Have reached the next powerIndex. Add the current
-        const currentPower = sortedMeasurements[powerIndex];
+          // Is this one of the measurement types that we are looking for?
+          //console.log(this.measTypes)
+          //console.log(curMeasType)
+          if (this.measTypes.includes(curMeasType)) {
+            // Did we already record this?
+            if (!measBefore.has(curMeasType)) {
+              // No, record it!
+              
+              measBefore[curMeasType] = curMeas
+            }
+          }
 
-        let spds1 = spds
-          .sort(
-            (a, b) =>
-              Math.abs(
-                sortedMeasurements[a].Created_Date.getTime() -
-                  currentPower.Created_Date.getTime(),
-              ) -
-              Math.abs(
-                sortedMeasurements[b].Created_Date.getTime() -
-                  currentPower.Created_Date.getTime(),
-              ),
-          ).slice(0, 2);
-
-        let accs1 = accs
-          .sort(
-            (a, b) =>
-              Math.abs(
-                sortedMeasurements[a].Created_Date.getTime() -
-                  currentPower.Created_Date.getTime(),
-              ) -
-              Math.abs(
-                sortedMeasurements[b].Created_Date.getTime() -
-                  currentPower.Created_Date.getTime(),
-              ),
-          )
-          .slice(0, 2);
-
-        assigned.push([spds1, accs1]);
-
-        spds = spds.filter((index) => index > powerIndex);
-        accs = accs.filter((index) => index > powerIndex);
-
-        Console.log(powerIndex);
-
-        powerIndex = i;
-
-        Console.log(powerIndex);
-
+          // Check if we're done.
+          foundAll = this.measTypes.every( (value) => {measBefore.has(value)})
+        }
+        console.log(measBefore)
       }
     }
 
     return assigned;
-  }
-
-  private timeDeltaExceeded(
-    dateA: Date,
-    dateB: Date,
-    timeDelta: number,
-  ): boolean {
-    return Math.abs(dateA.getTime() - dateB.getTime()) > timeDelta;
   }
 }
