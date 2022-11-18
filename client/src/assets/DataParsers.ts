@@ -15,7 +15,7 @@ export const parseSegments = (data: any): JSONProps[] => {
     // lonb: 12.4866143
 
     return data.rows.map( (row:any) => {
-        console.log(row);
+        // console.log(row);
         const pointA: PointData = { lat: row.lata, lng: row.lona }
         const pointB: PointData = { lat: row.latb, lng: row.lonb }
         const properties: PathProperties = { rendererName: RendererName.line, color:"#00000", width: 4 }

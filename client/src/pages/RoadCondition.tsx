@@ -19,8 +19,8 @@ import {GraphProvider} from "../context/GraphContext";
 
 import "leaflet/dist/leaflet.css"
 import "../css/map.css"
-import "../css/road_conditions.css"
-import "../css/palette.css"
+//import "../css/road_conditions.css"
+//import "../css/palette.css"
 
 import Button from "@mui/material/Button";
 import * as React from "react";
