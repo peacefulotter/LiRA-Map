@@ -34,7 +34,6 @@ export interface TripsOptions {
   endDate: Date;
   reversed: boolean;
   distanceKm: number | undefined;
-  postalCode: number | undefined;
   startCity: string;
   endCity: string;
 }

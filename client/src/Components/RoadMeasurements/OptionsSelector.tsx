@@ -38,6 +38,18 @@ const OptionsSelector: FC<IOptionsSelector> = ({
         value={options.distanceKm}
         onChange={(e) => _onChange('distanceKm')(e.target.value)}
       />
+      <input
+        className="ride-search-input"
+        placeholder="Start City"
+        value={options.startCity}
+        onChange={(e) => _onChange('startCity')(e.target.value)}
+      />
+      <input
+        className="ride-search-input"
+        placeholder="Destination City"
+        value={options.endCity}
+        onChange={(e) => _onChange('endCity')(e.target.value)}
+      />
 
       <DatePicker
         onChange={_onChange('startDate')}
@@ -63,24 +75,3 @@ const OptionsSelector: FC<IOptionsSelector> = ({
 
 export default OptionsSelector;
 
-/*
-The remaining inputs that are missing functions.
-<input
-        className="ride-search-input"
-        placeholder="Start City"
-        value={options.startCity}
-        onChange={(e) => _onChange('startCity')(e.target.value)}
-      />
-      <input
-        className="ride-search-input"
-        placeholder="Destination City"
-        value={options.endCity}
-        onChange={(e) => _onChange('endCity')(e.target.value)}
-      />
-      <input
-        className="ride-search-input"
-        placeholder="Postal Code"
-        value={options.postalCode}
-        onChange={(e) => _onChange('postalCode')(e.target.value)}
-      />
-*/
