@@ -11,7 +11,6 @@ const defaultOptions: TripsOptions = {
   endDate: new Date(),
   reversed: false,
   distanceKm: undefined,
-  postalCode: undefined,
   startCity: '',
   endCity: '',
 };
