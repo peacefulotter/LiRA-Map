@@ -24,52 +24,76 @@ const OptionsSelector: FC<IOptionsSelector> = ({
   };
 
   return (
-    <div className="rides-options">
-      <input
-        className="ride-search-input"
-        placeholder="TaskID"
-        value={options.taskId}
-        onChange={(e) => _onChange('taskId')(e.target.value)}
-      />
-
-      <input
-        className="ride-search-input"
-        placeholder="Distance Km"
-        value={options.distanceKm}
-        onChange={(e) => _onChange('distanceKm')(e.target.value)}
-      />
-      <input
-        className="ride-search-input"
-        placeholder="Start City"
-        value={options.startCity}
-        onChange={(e) => _onChange('startCity')(e.target.value)}
-      />
-      <input
-        className="ride-search-input"
-        placeholder="Destination City"
-        value={options.endCity}
-        onChange={(e) => _onChange('endCity')(e.target.value)}
-      />
-
-      <DatePicker
-        onChange={_onChange('startDate')}
-        value={options.startDate}
-        className="options-date-picker"
-        format="dd/MM/y"
-      />
-      <DatePicker
-        onChange={_onChange('endDate')}
-        value={options.endDate}
-        className="options-date-picker"
-        format="dd/MM/y"
-      />
-
-      <Checkbox
-        className="ride-sort-cb"
-        html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-        onClick={_onChange('reversed')}
-      />
+    <div>
+      <div className="rides-options">
+        <input
+          className="ride-search-input"
+          placeholder="TaskID"
+          value={options.taskId}
+          onChange={(e) => _onChange('taskId')(e.target.value)}
+        />
+      </div>
+      <div id="menuToggle">
+      <input type="checkbox" />
+      
+      <span></span>
+      <span></span>
+      <span></span>
+      
+      <ul id="menu">
+        <div id = "ride-search-menu">
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Distance Km"
+              value={options.distanceKm}
+              onChange={(e) => _onChange('distanceKm')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Start City"
+              value={options.startCity}
+              onChange={(e) => _onChange('startCity')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Destination City"
+              value={options.endCity}
+              onChange={(e) => _onChange('endCity')(e.target.value)}
+            />
+          </li>
+          <li>
+            <DatePicker
+              onChange={_onChange('startDate')}
+              value={options.startDate}
+              className="options-date-picker"
+              format="dd/MM/y"
+            />
+          </li>
+          <li>
+            <DatePicker
+              onChange={_onChange('endDate')}
+              value={options.endDate}
+              className="options-date-picker"
+              format="dd/MM/y"
+            />
+          </li>
+          <li>
+            <Checkbox
+              className="ride-sort-cb"
+              html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
+              onClick={_onChange('reversed')}
+            />
+          </li>
+        </div>
+      </ul>
     </div>
+  </div>
+    
   );
 };
 
