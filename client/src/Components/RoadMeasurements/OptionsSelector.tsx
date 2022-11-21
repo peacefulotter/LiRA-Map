@@ -93,7 +93,6 @@ const OptionsSelector: FC<IOptionsSelector> = ({
       </ul>
     </div>
   </div>
-    
   );
 };
 
