@@ -3,14 +3,21 @@ import { InjectConnection, Knex } from 'nestjs-knex';
 import { RideMeta } from '../rides/models.rides';
 import {
   AccLongMessage,
-  MeasurementEntity,
+  MeasEnt,
   Message,
   SpeedMessage,
   Test,
 } from './EnergyInterfaces';
 import { Measurement } from '../models';
 import * as Console from 'console';
-import { calcWhlTrq, linearInterpolate } from './EnergyMath';
+import {
+  calcAcc,
+  calcPower,
+  calcSpd,
+  calcWhlTrq,
+  linInterp,
+} from './EnergyMath';
+import { of, toArray } from 'rxjs';
 
 @Injectable()
 export class EnergyService {
@@ -23,31 +30,28 @@ export class EnergyService {
 
   private readonly measTypes = [this.accLongTag, this.spdTag, this.whlTrqTag];
 
-  private getMeasVal(meas: MeasurementEntity): number {
-    const valueTag: string = meas.T + '.value';
-    const message: JSON = meas.message;
+  public async get(tripId: string): Promise<any> {
+    const relevantMeasurements: MeasEnt[] = await this.getRelevantMeasurements(
+      tripId,
+    );
 
-    if (message.hasOwnProperty(valueTag)) {
-      return message[valueTag];
-    }
+    console.log(this.measTypes);
+
+    // For intial testing.
+    return await this.collectMeas(relevantMeasurements);
   }
 
-  public async get(tripId: string): Promise<any> {
-    const relevantMeasurements: MeasurementEntity[] = await this.knex
+  private async getRelevantMeasurements(tripId: string) {
+    return this.knex
       .select('*')
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
       .orderBy('Created_Date')
-      .limit(1000);
-
-    // For intial testing.
-    return await this.collect(relevantMeasurements);
+      .limit(20);
   }
 
-  private async collect(
-    sortedMeasurements: MeasurementEntity[],
-  ): Promise<any[]> {
+  private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
     const assigned: any[] = [];
 
     const powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consTag);
@@ -57,65 +61,45 @@ export class EnergyService {
 
     for (let i = powerIndex; i < sortedMeasurements.length; i++) {
       const curMeasType: string = sortedMeasurements[i].T;
-
       if (curMeasType == this.consTag) {
-        // The current measurement is a power measurement, and we now begin traversing first backwards,
-        // then forwards, to find closest relevant values to use for interpolation.
-
-        const currentPower = sortedMeasurements[i];
-
-        // begin backwards traversal, until we have found all needed measurements.
-        let foundAll = false;
-
-        const measBefore = new Map<string, number>();
-
-        for (let j = i; !foundAll && j >= 0; j--) {
-          const curMeas = sortedMeasurements[j];
-          const curMeasType: string = curMeas.T;
-
-          // Is this one of the measurement types that we are looking for?
-          //console.log(this.measTypes)
-          //console.log(curMeasType)
-          if (this.measTypes.includes(curMeasType)) {
-            // Did we already record this?
-            if (!measBefore.has(curMeasType)) {
-              // No, record it!
-
-              measBefore[curMeasType] = curMeas;
-            }
-          }
-
-          // Check if we're done.
-          foundAll = this.measTypes.every((value) => {
-            measBefore.has(value);
-          });
-        }
-        console.log(measBefore);
-
-        const measAfter = new Map<string, number>();
-        foundAll = false;
-
-        for (let j = i; !foundAll && j < sortedMeasurements.length; j++) {
-          const curMeas = sortedMeasurements[j];
-          const curMeasType: string = curMeas.T;
-
-          // Is this one of the measurement types that we are looking for?
-          if (this.measTypes.includes(curMeasType)) {
-            // Did we already record this?
-            if (!measAfter.has(curMeasType)) {
-              // No, record it!
-              measAfter[curMeasType] = curMeas;
-            }
-          }
-
-          // Check if we're done.
-          foundAll = this.measTypes.every((value) => {
-            measAfter.has(value);
-          });
-        }
+        const measBefore: Map<string, number> = this.findMeas(
+          sortedMeasurements,
+          i,
+          'before',
+        );
+        const measAfter: Map<string, number> = this.findMeas(
+          sortedMeasurements,
+          i,
+          'after',
+        );
+        assigned.push([i, measBefore, measAfter]);
       }
     }
 
     return assigned;
+  }
+
+  private findMeas(
+    meas: MeasEnt[],
+    index: number,
+    direction: 'before' | 'after',
+  ) {
+    let measMap: Map<string, number> = new Map<string, number>();
+    let foundAll = false;
+
+    const guard: (_: number) => boolean = (n) =>
+      direction == 'after' ? n < meas.length : n >= 0;
+    const update: (_: number) => number = (n) =>
+      direction == 'after' ? n + 1 : n - 1;
+
+    for (let i = index; !foundAll && guard(i); i = update(i)) {
+      const curMeas = meas[i];
+      const curMeasType: string = curMeas.T;
+      if (!measMap.has(curMeasType) && this.measTypes.includes(curMeasType)) {
+        measMap = measMap.set(curMeasType.toString(), i);
+      }
+      foundAll = this.measTypes.every((value) => measMap.has(value));
+    }
+    return measMap;
   }
 }
