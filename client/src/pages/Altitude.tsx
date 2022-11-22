@@ -23,21 +23,18 @@ const Altitude = () => {
         });
     }, []);
 
-    const toggleShowHotline = () => {
-        console.log("fucking virk nu for helvede");
-        setShowHotline((prev) => !prev);
-    };
+    const toggleShowHotline = () => {setShowHotline((prev) => !prev);};
     const toggleShowHeatmap = () => setShowHeatmap((prev) => !prev);
 
     return (
       <div className="altitude-wrapper">
           <MapWrapper>
-              <Panel
-                showHotline={showHotline}
-                showHeatmap={showHeatmap}
-                toggleShowHotline={toggleShowHotline}
-                toggleShowHeatmap={toggleShowHeatmap}
-              />
+              {/*<Panel*/}
+              {/*  showHotline={showHotline}*/}
+              {/*  showHeatmap={showHeatmap}*/}
+              {/*  toggleShowHotline={toggleShowHotline}*/}
+              {/*  toggleShowHeatmap={toggleShowHeatmap}*/}
+              {/*/>*/}
               {showHotline && altitudes ? (
                 <DistHotline
                   way_ids={altitudes.way_ids}
