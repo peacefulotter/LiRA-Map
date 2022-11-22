@@ -1,4 +1,4 @@
-export interface MeasurementEntity {
+export interface MeasEnt {
   MeasurementId: string;
   TS_or_Distance: string;
   T: string;
