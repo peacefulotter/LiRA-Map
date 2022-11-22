@@ -168,7 +168,7 @@ span.hamburger {
   margin: -40px 0 0 -70px;
   padding: 5px;
   padding-top: 40px;
-  background-color: var(--background);
+  background-color: var(--background-2);
   list-style-type: none;
   -webkit-font-smoothing: antialiased;
   transform-origin: 0% 0%;
