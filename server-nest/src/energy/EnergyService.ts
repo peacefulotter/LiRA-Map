@@ -15,7 +15,12 @@ import {
   calcPower,
   calcSpd,
   calcWhlTrq,
+  calcEnergyAero,
   linInterp,
+  calcEnergyWhlTrq,
+  calcEnergySlope,
+  calcEnergyInertia,
+  getMeasVal,
 } from './EnergyMath';
 import { of, toArray } from 'rxjs';
 
@@ -34,11 +39,60 @@ export class EnergyService {
     const relevantMeasurements: MeasEnt[] = await this.getRelevantMeasurements(
       tripId,
     );
+    const assignments: Array<
+      [number, Map<string, number>, Map<string, number>]
+    > = await this.collectMeas(relevantMeasurements);
 
-    console.log(this.measTypes);
+    assignments.forEach(([i, before, after]) => {
+      console.log(i);
+      console.log(Array.from(before));
+      console.log(Array.from(after));
+    });
 
-    // For intial testing.
-    return await this.collectMeas(relevantMeasurements);
+    const delta = assignments.reduce((sum: number, [i, m0, m1], index) => {
+      if (i < assignments.length - 1) {
+        const current = relevantMeasurements[i].Created_Date.getTime();
+        const nextIndex = assignments[index + 1][0];
+        const next = relevantMeasurements[nextIndex].Created_Date.getTime();
+        return sum + (next - current);
+      }
+
+      return sum;
+    }, 0);
+
+    return assignments.map(([i, before, after]) => {
+      const pwr = relevantMeasurements[i];
+      const pwrVal = getMeasVal(pwr) * delta;
+
+      console.log(pwrVal);
+
+      const spdBefore = relevantMeasurements[before.get(this.spdTag)];
+      const spdAfter = relevantMeasurements[after.get(this.spdTag)];
+      const spd = calcSpd(spdBefore, spdAfter, pwr);
+
+      console.log(spd);
+
+      const accBefore = relevantMeasurements[before.get(this.accLongTag)];
+      const accAfter = relevantMeasurements[after.get(this.accLongTag)];
+      const acc = calcAcc(accBefore, accAfter, pwr);
+
+      console.log(acc);
+
+      const whlTrqBefore = relevantMeasurements[before.get(this.whlTrqTag)];
+      const whlTrqAfter = relevantMeasurements[after.get(this.whlTrqTag)];
+      const whlTrq = calcWhlTrq(whlTrqBefore, whlTrqAfter, pwr);
+
+      console.log(whlTrq);
+
+      const energyWhlTrq = calcEnergyWhlTrq(whlTrq);
+      const energySlope = calcEnergySlope(0, 0);
+      const energyInertia = calcEnergyInertia(acc);
+      const energyAero = calcEnergyAero(spd);
+      const pwrNormalised =
+        pwrVal - energyWhlTrq - energySlope - energyInertia - energyAero;
+
+      return pwrNormalised;
+    });
   }
 
   private async getRelevantMeasurements(tripId: string) {
@@ -48,31 +102,27 @@ export class EnergyService {
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
       .orderBy('Created_Date')
-      .limit(20);
+      .limit(100000);
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
-    const assigned: any[] = [];
-
     const powerIndex = sortedMeasurements.findIndex((m) => m.T == this.consTag);
     if (powerIndex == -1) {
       return [];
     }
 
+    const assigned: any[] = [];
+
+    let measBefore: Map<string, number>;
+    let measAfter: Map<string, number>;
     for (let i = powerIndex; i < sortedMeasurements.length; i++) {
       const curMeasType: string = sortedMeasurements[i].T;
       if (curMeasType == this.consTag) {
-        const measBefore: Map<string, number> = this.findMeas(
-          sortedMeasurements,
-          i,
-          'before',
-        );
-        const measAfter: Map<string, number> = this.findMeas(
-          sortedMeasurements,
-          i,
-          'after',
-        );
-        assigned.push([i, measBefore, measAfter]);
+        measBefore = this.findMeas(sortedMeasurements, i, 'before');
+        measAfter = this.findMeas(sortedMeasurements, i, 'after');
+        if (measBefore && measAfter) {
+          assigned.push([i, measBefore, measAfter]);
+        }
       }
     }
 
@@ -96,10 +146,15 @@ export class EnergyService {
       const curMeas = meas[i];
       const curMeasType: string = curMeas.T;
       if (!measMap.has(curMeasType) && this.measTypes.includes(curMeasType)) {
-        measMap = measMap.set(curMeasType.toString(), i);
+        measMap = measMap.set(curMeasType, i);
       }
-      foundAll = this.measTypes.every((value) => measMap.has(value));
+      foundAll = this.measTypes.every((key) => measMap.has(key));
     }
-    return measMap;
+
+    if (foundAll) {
+      return measMap;
+    }
+
+    return null;
   }
 }

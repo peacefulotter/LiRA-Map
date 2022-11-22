@@ -6,27 +6,33 @@ export function linInterp(
   [x0, y0]: [number, number],
   [x1, y1]: [number, number],
 ): number {
-  // assert x0 <= x1
-  return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
+  if (x0 < x1) {
+    return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
+  }
+
+  if (x0 > x1) {
+    return (y1 * (x0 - x) + y0 * (x - x1)) / (x0 - x1);
+  }
+
+  return (y0 + y1) / 2;
 }
 
-function getMeasVal(meas: MeasEnt): number {
+export function getMeasVal(meas: MeasEnt): number {
   const valueTag: string = meas.T + '.value';
-  const message: JSON = meas.message;
-
+  const message = JSON.parse(meas.message);
   if (message.hasOwnProperty(valueTag)) {
-    return message[valueTag];
+    return message[valueTag] as number;
   }
 }
 
 export function interpMeas(time: Date, meas1: MeasEnt, meas2: MeasEnt) {
-  const x1 = meas1.Created_Date.getTime();
-  const y1 = getMeasVal(meas1);
+  const x0 = meas1.Created_Date.getTime();
+  const y0 = getMeasVal(meas1);
 
-  const x2 = meas2.Created_Date.getTime();
-  const y2 = getMeasVal(meas2);
+  const x1 = meas2.Created_Date.getTime();
+  const y1 = getMeasVal(meas2);
 
-  return linInterp(time.getTime(), [x1, y1], [x2, y2]);
+  return linInterp(time.getTime(), [x0, y0], [x1, y1]);
 }
 
 export function calcWhlTrq(
@@ -35,10 +41,10 @@ export function calcWhlTrq(
   curPower: MeasEnt,
 ) {
   const dateBefore = whlTrqBefore.Created_Date.getTime();
-  const whlTrqBeforeVal = this.getMeasVal(whlTrqBefore);
+  const whlTrqBeforeVal = getMeasVal(whlTrqBefore);
 
   const dateAfter = whlTrqBefore.Created_Date.getTime();
-  const whlTrqAfterVal = this.getMeasVal(whlTrqAfter);
+  const whlTrqAfterVal = getMeasVal(whlTrqAfter);
 
   return (
     linInterp(
@@ -55,10 +61,10 @@ export function calcSpd(
   curPower: MeasEnt,
 ) {
   const dateBefore = spdBefore.Created_Date.getTime();
-  const spdBeforeMPS = this.getMeasVal(spdBefore) / 3.6;
+  const spdBeforeMPS = getMeasVal(spdBefore) / 3.6;
 
   const dateAfter = spdAfter.Created_Date.getTime();
-  const spdAfterMPS = this.getMeasVal(spdAfter) / 3.6;
+  const spdAfterMPS = getMeasVal(spdAfter) / 3.6;
 
   return linInterp(
     curPower.Created_Date.getTime(),
@@ -73,10 +79,10 @@ export function calcAcc(
   curPower: MeasEnt,
 ) {
   const dateBefore = accBefore.Created_Date.getTime();
-  const accBeforeVal = (this.getMeasVal(accBefore) - 2 * 198) * 0.05;
+  const accBeforeVal = (getMeasVal(accBefore) - 2 * 198) * 0.05;
 
   const dateAfter = accAfter.Created_Date.getTime();
-  const accAfterVal = (this.getMeasVal(accBefore) - 2 * 198) * 0.05;
+  const accAfterVal = (getMeasVal(accAfter) - 2 * 198) * 0.05;
 
   return linInterp(
     curPower.Created_Date.getTime(),
@@ -86,5 +92,37 @@ export function calcAcc(
 }
 
 export function calcPower(curPower: MeasEnt) {
-  return (this.getMeasVal(curPower) - 160) * 1000;
+  return (getMeasVal(curPower) - 160) * 1000;
+}
+
+const vehicleMass = 1584;
+
+export function forceToEnergy(force: number, window: number) {
+  return (1 / 3600) * force * window;
+}
+
+export function calcEnergyWhlTrq(whrTrq: number, window = 10) {
+  const whlRadius = 0.3;
+  const force: number = whrTrq / whlRadius;
+  return forceToEnergy(force, window);
+}
+
+export function calcEnergySlope(lat: number, lon: number, window = 10) {
+  const g = 9.80665;
+  const slope = 0; // TODO Implement
+  const force = vehicleMass * g * slope;
+  return forceToEnergy(force, window);
+}
+
+export function calcEnergyInertia(acc: number, window = 10) {
+  const force = vehicleMass * acc;
+  return forceToEnergy(force, window);
+}
+
+export function calcEnergyAero(spd: number, window = 10) {
+  const dragCoef = 0.29;
+  const airDens = 1.225;
+  const crossSec = 2.3316;
+  const force = 0.5 * airDens * crossSec * dragCoef * (spd * spd);
+  return forceToEnergy(force, window);
 }

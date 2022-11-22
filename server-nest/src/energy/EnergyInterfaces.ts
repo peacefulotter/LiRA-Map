@@ -4,7 +4,7 @@ export interface MeasEnt {
   T: string;
   lat: number;
   lon: number;
-  message: JSON;
+  message: string;
   isComputed: boolean;
   FK_Trip: string;
   FK_MeasurementType: string;
