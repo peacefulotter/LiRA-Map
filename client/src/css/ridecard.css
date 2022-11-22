@@ -72,6 +72,7 @@
   display: block;
   position: relative;
   left: 70px;
+  top: 7px;
 
   z-index: 1;
 
@@ -79,10 +80,10 @@
   user-select: none;
 }
 
-/*Make div with id checkbox hit this!*/
-.div#menuToggle input {
+input.menuCheck {
   display: block;
   width: 40px;
+  height: 30px;
   position: absolute;
   top: -7px;
   left: -5px;
@@ -90,6 +91,26 @@
   opacity: 0;
   z-index: 2;
   -webkit-touch-callout: none;
+}
+
+span.hamburger
+{
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  
+  background: #cdcdcd;
+  border-radius: 3px;
+  
+  z-index: 1;
+  
+  transform-origin: 4px 0px;
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
 }
 
 #menuToggle li + input.ride-search-input {
@@ -146,7 +167,7 @@
 #menu {
   position: absolute;
   width: 160px;
-  margin: -50px 0 0 -70px;
+  margin: -40px 0 0 -70px;
   padding: 5px;
   padding-top: 50px;
   background-color: var(--background);

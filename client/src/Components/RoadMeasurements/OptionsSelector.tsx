@@ -34,11 +34,11 @@ const OptionsSelector: FC<IOptionsSelector> = ({
         />
       </div>
       <div id="menuToggle">
-      <input type="checkbox" />
+      <input className ="menuCheck"type="checkbox" />
       
-      <span></span>
-      <span></span>
-      <span></span>
+      <span className="hamburger"></span>
+      <span className="hamburger"></span>
+      <span className="hamburger"></span>
       
       <ul id="menu">
         <div id = "ride-search-menu">
