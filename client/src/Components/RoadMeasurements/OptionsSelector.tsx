@@ -33,6 +33,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({
           onChange={(e) => _onChange('taskId')(e.target.value)}
         />
       </div>
+      <div id = "spacing"></div>
       <div id="menuToggle">
       <input className ="menuCheck"type="checkbox" />
       
@@ -45,9 +46,17 @@ const OptionsSelector: FC<IOptionsSelector> = ({
           <li>
             <input
               className="ride-search-input"
-              placeholder="Distance Km"
-              value={options.distanceKm}
-              onChange={(e) => _onChange('distanceKm')(e.target.value)}
+              placeholder="Min Distance Km"
+              value={options.minDistanceKm}
+              onChange={(e) => _onChange('minDistanceKm')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Max Distance Km"
+              value={options.maxDistanceKm}
+              onChange={(e) => _onChange('maxDistanceKm')(e.target.value)}
             />
           </li>
           <li>

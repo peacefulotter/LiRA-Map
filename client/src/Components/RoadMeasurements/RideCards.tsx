@@ -56,7 +56,8 @@ const defaultOptions: TripsOptions = {
   startDate: new Date('2020-01-01'),
   endDate: new Date(),
   reversed: false,
-  distanceKm: undefined,
+  minDistanceKm: undefined,
+  maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
 };
@@ -87,10 +88,15 @@ const RideCards: FC = () => {
     );
   };
 
-  const distanceFilter = (meta: RideMeta) =>
-    !tripOptions.distanceKm ||
-    isNaN(tripOptions.distanceKm) ||
-    meta.DistanceKm >= tripOptions.distanceKm;
+  const minDistanceFilter = (meta: RideMeta) =>
+    !tripOptions.minDistanceKm ||
+    isNaN(tripOptions.minDistanceKm) ||
+    meta.DistanceKm >= tripOptions.minDistanceKm;
+
+  const maxDistanceFilter = (meta: RideMeta) =>
+    !tripOptions.maxDistanceKm ||
+    isNaN(tripOptions.maxDistanceKm) ||
+    meta.DistanceKm <= tripOptions.maxDistanceKm;
 
   //Author: Mads, Martin
   const startCityFilter = (meta: RideMeta) => 
@@ -120,7 +126,8 @@ const RideCards: FC = () => {
           (meta) =>
             taskIDFilter(meta) &&
             isNightFilter(meta) &&
-            distanceFilter(meta) &&
+            minDistanceFilter(meta) &&
+            maxDistanceFilter(meta) &&
             dateFilter(meta) &&
             startCityFilter(meta) &&
             endCityFilter(meta),
