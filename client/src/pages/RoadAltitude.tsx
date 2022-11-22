@@ -25,33 +25,30 @@ import '../css/altitude.css';
 
 export default function RoadAltitude() {
 	const { themeStretch } = useSettings();
-
 	const [altitudes, setAltitudes] = useState<WaysConditions>();
 	const [showHotline, setShowHotline] = useState<boolean>(false);
 	const [showHeatmap, setShowHeatmap] = useState<boolean>(false);
 
 	useEffect(() => {
 		getAltitudes((data: WaysConditions) => {
-			// console.log(data);
 			setAltitudes(data);
 		});
 	}, []);
-
-	// const toggleShowHotline = () => setShowHotline(prev => !prev)
-	// const toggleShowHeatmap = () => setShowHeatmap(prev => !prev)
-	const toggleShowHotline = (e: React.MouseEvent<HTMLElement>, prev: boolean) => {
-		console.log('toggleShowHotline');
-		setShowHotline(prev => !prev);
-	};
-	const toggleShowHeatmap = (e: React.MouseEvent<HTMLElement>, prev: boolean) => {
-		console.log('toggleShowHeatmap');
-		setShowHeatmap(prev => !prev);
-	};
 
 	const options = [
 		{ name: 'Hotline', isSelected: showHotline, toggle: toggleShowHotline },
 		{ name: 'Heatmap', isSelected: showHeatmap, toggle: toggleShowHeatmap },
 	];
+
+	function toggleShowHeatmap() {
+		console.log(`Toggling showHeatMap => ${!showHeatmap}`);
+		setShowHeatmap(!showHeatmap);
+	}
+
+	function toggleShowHotline() {
+		console.log(`Toggling showHotline => ${!showHotline}`);
+		setShowHotline(!showHotline);
+	}
 
 	return (
 		<Page title='Road Altitude'>

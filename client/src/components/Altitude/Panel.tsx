@@ -4,7 +4,7 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 interface Option {
 	name: string;
 	isSelected: boolean;
-	toggle: (e: React.MouseEvent<HTMLElement>, isSelected: boolean) => void;
+	toggle: () => void;
 }
 
 const Panel = (props: { options: Option[] }) => {
