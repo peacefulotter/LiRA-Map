@@ -5,7 +5,7 @@ import { GraphProvider } from "../../context/GraphContext";
 import { useMetasCtx } from "../../context/MetasContext";
 
 import { ActiveMeasProperties } from "../../models/properties";
-import { MeasMetaPath /*, PointData*/ } from "../../models/path";
+import {MeasMetaPath, PointData /*, PointData*/} from "../../models/path";
 
 //import { GraphData, GraphPoint } from "../../assets/graph/types";
 
@@ -14,7 +14,7 @@ import { getRide } from "../../queries/rides";
 //import Graph from "../Graph/Graph";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
-import RideGraphCard, {IGraph} from "./RideGraphCard";
+import RideGraphCard, {IRideGraphCard} from "./RideGraphCard";
 
 const Rides: FC = () => {
     
@@ -22,49 +22,61 @@ const Rides: FC = () => {
     const { selectedMeasurements } = useMeasurementsCtx()
 
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
-    const [ data, setData ] = useState<IGraph[]>()
+    const [ graphData, setGraphData ] = useState<[string, number][]>()
+    const [ graphType, setGraphType] = useState<string>()
 
     useEffect(() => {
         if (!selectedMeasurements || selectedMeasurements.length === 0) {
-            console.log("Returned")
-            setData(undefined)
+            //console.log("Returned")
+            setGraphData(undefined)
             return
         }
-        console.log("Selected Measurements\n");
-        console.log(selectedMeasurements);
+        //console.log("Selected Measurements\n");
+        //console.log(selectedMeasurements);
 
         const { hasValue, name }: ActiveMeasProperties = selectedMeasurements[0]
         if (!hasValue) {
-            console.log("Returned")
-            setData(undefined)
+            //console.log("Returned")
+            setGraphData(undefined)
             return
         }
-        console.log("Name\n")
-        console.log(name)
+        //console.log("Name\n")
+        //console.log(name)
 
         if(!paths[name] || Object.keys(paths[name]).length === 0) {
-            console.log("Returned")
-            setData(undefined)
+            //console.log("Returned")
+            setGraphData(undefined)
             return
         }
-        console.log("Paths\n")
-        console.log(paths[name])
+        //console.log("Paths\n")
+        //console.log(paths[name])
 
         const o = Object.values(paths[name])[0]
-        console.log("Object\n")
-        console.log(o)
+        //console.log("Object\n")
+        //console.log(o)
 
         const { path } = o
 
-        console.log("Data\n")
-        console.log(path)
+        //console.log("Data\n")
+        //console.log(path)
 
-        setData(path.map(o => {
-            const time: string = Object(Object(o)["metadata"])["timestamp"];
-            const val: number = Object(o)["value"];
-            const data: IGraph = {x: time, y: val};
-            return data
-        }))
+        // Date format
+        const date_format = new Intl.DateTimeFormat('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        const data = path.map(o => {
+            const t: [string, number] = [date_format.format(new Date(o.metadata.timestamp)), o.value ? o.value : 0]
+            return t
+        })
+
+        //console.log("Mapped\n")
+        //console.log(map1)
+
+        setGraphType(name)
+        setGraphData(data)
     }, [selectedMeasurements, paths]);
 
     const popup = usePopup()
@@ -106,31 +118,7 @@ const Rides: FC = () => {
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                <RideGraphCard data={data}/>
-
-                {/*
-                { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue &&
-
-                    <Graph
-                        key={`graph-${i}`}
-                        labelX="Time (h:m:s)" 
-                        labelY={name}
-                        absolute={true}
-                        time={true}
-                        palette={palette}
-                        plots={ Object.entries(paths[name] || {})
-                            .map( ([TaskId, bp], j) => {
-                                const { path, bounds } = bp;
-                                const x = (p: PointData) => new Date(p.metadata.timestamp).getTime()
-                                const data: GraphData = path
-                                    .map( p => [x(p), p.value || 0] as GraphPoint )
-                                    .sort( ([x1, y1], [x2, y2]) => (x1 < x2) ? -1 : (x1 === x2) ? 0 : 1 )
-                                return { data, bounds, label: 'r-' + TaskId, j }
-                            } ) 
-                        }
-                    />
-                ) }
-                */}
+                <RideGraphCard type={graphType} data={graphData}/>
             </div>
         </GraphProvider>
   )

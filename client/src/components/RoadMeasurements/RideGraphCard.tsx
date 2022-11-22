@@ -32,18 +32,14 @@ ChartJS.register(
     BarController
 );
 
-export interface IGraph {
-    x: string;
-    y: number;
+export interface IRideGraphCard {
+    type?: string;
+    data?: [string, number][];
 }
 
-export interface RideGraphCardProps {
-    data?: IGraph[];
-}
-
-const RideGraphCard: React.FC<RideGraphCardProps> = ({data} ) => {
+const RideGraphCard: React.FC<IRideGraphCard> = ({ type, data }): JSX.Element | null => {
     return (
-        (data && data.length > 0) ? (
+        (type && data && data.length > 0) ? (
             <Card sx={{ width: '50vw', position: 'absolute', bottom: '10px', right: '10px', zIndex: 2 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -52,13 +48,12 @@ const RideGraphCard: React.FC<RideGraphCardProps> = ({data} ) => {
                     <Chart
                         type='bar'
                         data={{
-                            labels: data.map(({x: timestamp, y: _}) => timestamp),
                             datasets: [
                                 {
                                     order: 1,
                                     type: 'line' as const,
-                                    data: data.map(({x: _, y: value}) => value),
-                                    label: 'Measurement Type',
+                                    data: data,
+                                    label: type,
                                     borderColor: 'rgba(253, 59, 59, 1)',
                                     borderWidth: 3,
                                     fill: false,
