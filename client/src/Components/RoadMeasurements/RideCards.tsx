@@ -145,14 +145,15 @@ const RideCards: FC = () => {
 
   return (
     <div className="ride-list">
-      <OptionsSelector
-        onChange={setTripOptions}
-        defaultOptions={defaultOptions}
-      />
+      
       <Checkbox
         className="ride-sort-cb"
         html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
         onClick={setIsNight}
+      />
+      <OptionsSelector
+        onChange={setTripOptions}
+        defaultOptions={defaultOptions}
       />
       <Cards showMetas={filteredMetas} onClick={onClick} />
     </div>

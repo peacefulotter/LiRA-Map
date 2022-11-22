@@ -101,6 +101,8 @@ const OptionsSelector: FC<IOptionsSelector> = ({
         </div>
       </ul>
     </div>
+    <div id = "spacing"></div>
+    <div id = "spacing"></div>
   </div>
   );
 };
