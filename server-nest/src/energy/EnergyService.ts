@@ -41,13 +41,13 @@ export class EnergyService {
     );
     const assignments: Array<
       [number, Map<string, number>, Map<string, number>]
-    > = await this.collectMeas(relevantMeasurements);
+      > = await this.collectMeas(relevantMeasurements);
 
-    assignments.forEach(([i, before, after]) => {
-      console.log(i);
-      console.log(Array.from(before));
-      console.log(Array.from(after));
-    });
+    // assignments.forEach(([i, before, after]) => {
+    //   console.log(i);
+    //   console.log(Array.from(before));
+    //   console.log(Array.from(after));
+    // });
 
     const delta = assignments.reduce((sum: number, [i, m0, m1], index) => {
       if (i < assignments.length - 1) {
@@ -64,25 +64,17 @@ export class EnergyService {
       const pwr = relevantMeasurements[i];
       const pwrVal = getMeasVal(pwr) * delta;
 
-      console.log(pwrVal);
-
       const spdBefore = relevantMeasurements[before.get(this.spdTag)];
       const spdAfter = relevantMeasurements[after.get(this.spdTag)];
       const spd = calcSpd(spdBefore, spdAfter, pwr);
-
-      console.log(spd);
 
       const accBefore = relevantMeasurements[before.get(this.accLongTag)];
       const accAfter = relevantMeasurements[after.get(this.accLongTag)];
       const acc = calcAcc(accBefore, accAfter, pwr);
 
-      console.log(acc);
-
       const whlTrqBefore = relevantMeasurements[before.get(this.whlTrqTag)];
       const whlTrqAfter = relevantMeasurements[after.get(this.whlTrqTag)];
       const whlTrq = calcWhlTrq(whlTrqBefore, whlTrqAfter, pwr);
-
-      console.log(whlTrq);
 
       const energyWhlTrq = calcEnergyWhlTrq(whlTrq);
       const energySlope = calcEnergySlope(0, 0);
@@ -101,8 +93,7 @@ export class EnergyService {
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
-      .orderBy('Created_Date')
-      .limit(100000);
+      .orderBy('Created_Date');
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
