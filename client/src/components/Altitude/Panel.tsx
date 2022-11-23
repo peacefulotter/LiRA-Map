@@ -12,7 +12,7 @@ const Panel = (props: { options: Option[] }) => {
 
 	return (
 		<ToggleButtonGroup
-			sx={{ position: 'absolute', top: 16, left: 16, zIndex: 'tooltip' }}
+			sx={{ position: 'absolute', top: 16, left: 16, zIndex: 1000 }}
 			aria-multiselectable={'true'}
 			orientation={'vertical'}
 		>
