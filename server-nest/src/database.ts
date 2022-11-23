@@ -71,7 +71,7 @@ export const VISUAL_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
     host: "liravisualization.postgres.database.azure.com",
-    port: 5434,
+    port: 5432,
     user: DB_USER_VIS,
     password: DB_PASSWORD_VIS,
     database: "postgres",
@@ -83,7 +83,7 @@ export const POSTGIS_DB_CONFIG = {
   ...BASE_CONFIG,
   connection: {
     host: "liradb.postgres.database.azure.com",
-    port: 5434,
+    port: 5432,
     user: DB_USER_POSTGIS,
     password: DB_PWD_POSTGIS,
     database: "postgis",
