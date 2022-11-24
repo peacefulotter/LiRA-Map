@@ -101,25 +101,25 @@ export function forceToEnergy(force: number, window: number) {
   return (1 / 3600) * force * window;
 }
 
-export function calcEnergyWhlTrq(whrTrq: number, window = 10) {
+export function calcEnergyWhlTrq(whrTrq: number, window: number) {
   const whlRadius = 0.3;
   const force: number = whrTrq / whlRadius;
   return forceToEnergy(force, window);
 }
 
-export function calcEnergySlope(lat: number, lon: number, window = 10) {
+export function calcEnergySlope(lat: number, lon: number, window: number) {
   const g = 9.80665;
   const slope = 0; // TODO Implement
   const force = vehicleMass * g * slope;
   return forceToEnergy(force, window);
 }
 
-export function calcEnergyInertia(acc: number, window = 10) {
+export function calcEnergyInertia(acc: number, window: number) {
   const force = vehicleMass * acc;
   return forceToEnergy(force, window);
 }
 
-export function calcEnergyAero(spd: number, window = 10) {
+export function calcEnergyAero(spd: number, window: number) {
   const dragCoef = 0.29;
   const airDens = 1.225;
   const crossSec = 2.3316;
