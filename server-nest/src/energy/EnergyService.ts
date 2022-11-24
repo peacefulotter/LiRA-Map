@@ -23,6 +23,7 @@ import {
   getMeasVal,
 } from './EnergyMath';
 import { of, toArray } from 'rxjs';
+import { isUUID } from '@nestjs/common/utils/is-uuid';
 
 @Injectable()
 export class EnergyService {
@@ -41,7 +42,7 @@ export class EnergyService {
     );
     const assignments: Array<
       [number, Map<string, number>, Map<string, number>]
-      > = await this.collectMeas(relevantMeasurements);
+    > = await this.collectMeas(relevantMeasurements);
 
     // assignments.forEach(([i, before, after]) => {
     //   console.log(i);
@@ -49,24 +50,29 @@ export class EnergyService {
     //   console.log(Array.from(after));
     // });
 
-    const delta = assignments.reduce((sum: number, [i, m0, m1], index) => {
-      if (i < assignments.length - 1) {
-        const current = relevantMeasurements[i].Created_Date.getTime();
-        const nextIndex = assignments[index + 1][0];
-        const next = relevantMeasurements[nextIndex].Created_Date.getTime();
-        return sum + (next - current);
-      }
+    const sumOfPeriods =
+      assignments.reduce((sum: number, [i, m0, m1], index) => {
+        if (i < assignments.length - 1) {
+          const current = relevantMeasurements[i].Created_Date.getTime();
+          const nextIndex = assignments[index + 1][0];
+          const next = relevantMeasurements[nextIndex].Created_Date.getTime();
+          return sum + (next - current);
+        }
 
-      return sum;
-    }, 0);
+        return sum;
+      }, 0);
+    const sumOfPeriodsSeconds = sumOfPeriods / 1000;
+    const delta = sumOfPeriodsSeconds / assignments.length;
 
-    return assignments.map(([i, before, after]) => {
+    return assignments.map(([i, before, after], index) => {
       const pwr = relevantMeasurements[i];
       const pwrVal = getMeasVal(pwr) * delta;
 
       const spdBefore = relevantMeasurements[before.get(this.spdTag)];
       const spdAfter = relevantMeasurements[after.get(this.spdTag)];
       const spd = calcSpd(spdBefore, spdAfter, pwr);
+
+      const dist = delta * spd;
 
       const accBefore = relevantMeasurements[before.get(this.accLongTag)];
       const accAfter = relevantMeasurements[after.get(this.accLongTag)];
@@ -76,10 +82,10 @@ export class EnergyService {
       const whlTrqAfter = relevantMeasurements[after.get(this.whlTrqTag)];
       const whlTrq = calcWhlTrq(whlTrqBefore, whlTrqAfter, pwr);
 
-      const energyWhlTrq = calcEnergyWhlTrq(whlTrq);
-      const energySlope = calcEnergySlope(0, 0);
-      const energyInertia = calcEnergyInertia(acc);
-      const energyAero = calcEnergyAero(spd);
+      const energyWhlTrq = calcEnergyWhlTrq(whlTrq, dist);
+      const energySlope = calcEnergySlope(0, 0, dist);
+      const energyInertia = calcEnergyInertia(acc, dist);
+      const energyAero = calcEnergyAero(spd, dist);
       const pwrNormalised =
         pwrVal - energyWhlTrq - energySlope - energyInertia - energyAero;
 
@@ -93,7 +99,8 @@ export class EnergyService {
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
-      .orderBy('Created_Date');
+      .orderBy('Created_Date')
+      .limit(100000);
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
