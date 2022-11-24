@@ -50,8 +50,8 @@ export class EnergyService {
     //   console.log(Array.from(after));
     // });
 
-    const sumOfPeriods =
-      assignments.reduce((sum: number, [i, m0, m1], index) => {
+    const sumOfPeriods = assignments.reduce(
+      (sum: number, [i, m0, m1], index) => {
         if (i < assignments.length - 1) {
           const current = relevantMeasurements[i].Created_Date.getTime();
           const nextIndex = assignments[index + 1][0];
@@ -60,7 +60,9 @@ export class EnergyService {
         }
 
         return sum;
-      }, 0);
+      },
+      0,
+    );
     const sumOfPeriodsSeconds = sumOfPeriods / 1000;
     const delta = sumOfPeriodsSeconds / assignments.length;
 
@@ -99,8 +101,7 @@ export class EnergyService {
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
-      .orderBy('Created_Date')
-      .limit(100000);
+      .orderBy('Created_Date');
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
