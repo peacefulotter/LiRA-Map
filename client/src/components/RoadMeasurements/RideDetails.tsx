@@ -1,85 +1,83 @@
-import React, { FC, useState } from "react";
-
-import useMeasPopup from "./Popup/useMeasPopup";
-import Checkbox from "../Checkbox";
-import MetaData from "./MetaData";
-
-import { useMeasurementsCtx } from "../../context/MeasurementsContext";
-import { useMetasCtx } from "../../context/MetasContext";
-
-import { addMeasurement } from "../../queries/measurements";
-import { MeasProperties, ActiveMeasProperties } from "../../models/properties";
-import { RideMeta } from "../../models/models";
-
-import { RENDERER_MEAS_PROPERTIES } from "../Map/constants";
-
-import MeasCheckbox from "./MeasCheckbox";
+import React, {useEffect, useState} from "react";
+import {Autocomplete, Box, FormControl, List, ListItem, Stack, TextField} from "@mui/material";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import {useDispatch, useSelector} from "react-redux";
+import {Dispatch, RootState} from "../../store";
+import RideListComponent from "./RideListComponent";
+import RideListComponentDetails from "./RideListComponentDetails";
+import {Ride} from "../../models/ride";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 
 
-const RideDetails: FC = () => {
+export default function RideDetails() {
+	const filters = ["Track position", "Interpolation", "Engine RPM"];
+	const [dateFrom, setDateFrom] = React.useState<Date | null>(() => new Date(Date.now()));
+	const [dateTo, setDateTo] = React.useState<Date | null>(() => new Date(Date.now()));
+	const dispatch = useDispatch<Dispatch>();
 
-	const { selectedMetas } = useMetasCtx()
+	const [selectedRide, setSelectedRide] = useState<Ride>({});
 
-	const { measurements, setMeasurements } = useMeasurementsCtx()
-	const [ addChecked, setAddChecked ] = useState<boolean>(false)
-	
-	const popup = useMeasPopup()
+	let rides = useSelector(
+		(state: RootState) => state.rides
+	)
 
-	const editMeasurement = (meas: ActiveMeasProperties, i: number) => (e: React.MouseEvent) => {
-		e.preventDefault()
-		e.stopPropagation()
+	useEffect(() => {
+		dispatch.rides.fetchRides();
+	}, [dispatch.rides]);
 
-		popup( 
-			(newMeas: ActiveMeasProperties) => {
-				const temp = [...measurements]
-				temp[i] = newMeas;
-				setMeasurements( temp )
-			}, 
-			{ ...RENDERER_MEAS_PROPERTIES, ...meas } 
-		)
+	const handleChangeTo = (newDate: Date) => {
+		setDateTo(newDate)
 	}
 
-	const showAddMeasurement = () => {
-		setAddChecked(true) 
-		popup( 
-			(newMeasurement: ActiveMeasProperties ) => {
-				setAddChecked(false) 
-				// update the state in RideDetails
-				setMeasurements( prev => [...prev, newMeasurement])
-				// and add the measurement to the measurements.json file
-				addMeasurement(newMeasurement);
-			},
-			RENDERER_MEAS_PROPERTIES 
-		)
-	}
-
-    const selectMeasurement = (i: number) => (isChecked: boolean) => {        
-        const temp = [...measurements]
-        temp[i].isActive = isChecked
-        setMeasurements(temp)
-    }
-
-    return (
-		<div className="meta-data">
-			{ measurements.map( (m: ActiveMeasProperties, i: number) =>
-				<MeasCheckbox 
-					key={`meas-checkbox-${i}`}
-					meas={m}
-					selectMeasurement={selectMeasurement(i)}
-					editMeasurement={editMeasurement(m, i)} />
-			) }
-
-			<Checkbox 
-				className='ride-metadata-checkbox md-checkbox-add'
-				html={<div>+</div>}
-				forceState={addChecked}
-				onClick={showAddMeasurement} />
-			
-			{ selectedMetas.map( (meta: RideMeta, i: number) =>
-				<MetaData md={meta} key={`md-${Math.random()}`} />
-			) }
-        </div>
-  )
+	return (
+		<Stack sx={{width: 350, height: 700}} spacing={2}>
+			<FormControl variant="standard">
+				<Autocomplete
+					multiple
+					renderInput={(params) => (
+						<TextField
+							{...params}
+							variant="standard"
+							label="Measurement types"
+						/>
+					)} options={filters}
+				/>
+			</FormControl>
+			<Stack justifyContent="space-between" direction="row">
+				<LocalizationProvider dateAdapter={AdapterDateFns}>
+					<DatePicker
+						label="From"
+						value={dateFrom}
+						onChange={(newDate) => {
+							setDateFrom((newDate))
+						}}
+						renderInput={(params: any) => <TextField variant="standard" sx={{maxWidth: 125}}{...params} />}
+					/>
+					<DatePicker
+						label="To"
+						value={dateTo}
+						onChange={(newDate) => {
+							setDateTo(newDate)
+						}}
+						renderInput={(params: any) => <TextField variant="standard" sx={{maxWidth: 125}}{...params} />}
+					/>
+				</LocalizationProvider>
+			</Stack>
+			<Stack direction="row" style={{maxHeight: '100%', overflow: 'auto'}}>
+				<Box>
+					{
+						rides?.map((ride) => {
+							return <ListItem onClick={() => {setSelectedRide(ride)}}>
+								<RideListComponent ride={ride}/>
+							</ListItem>
+						})
+					}
+				</Box>
+				{
+					selectedRide.TripId && <RideListComponentDetails ride={selectedRide} />
+				}
+			</Stack>
+		</Stack>
+	);
 }
-
-export default RideDetails;

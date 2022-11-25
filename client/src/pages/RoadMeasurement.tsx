@@ -7,9 +7,9 @@ import { MeasurementsProvider } from "../context/MeasurementsContext";
 import { MetasProvider } from "../context/MetasContext";
 
 import RideDetails from "../components/RoadMeasurements/RideDetails";
-import RideCards from "../components/RoadMeasurements/RideCards";
+//import RideCards from "../components/RoadMeasurements/RideCards";
 import Rides from "../components/RoadMeasurements/Rides";
-
+import {Stack} from "@mui/material";
 /*
 import "../css/map.css"
 import "../css/rides.css"
@@ -27,9 +27,10 @@ export default function RoadMeasurement() {
                   <div className="rides-wrapper">
                       {/*
                       <RideCards />
-
-                      <RideDetails  />
                       */}
+                      <Stack direction="row" className="rides-wrapper">
+                          <RideDetails/>
+                      </Stack>
 
                       <Rides />
 
