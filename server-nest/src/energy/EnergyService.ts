@@ -12,7 +12,7 @@ import { Measurement } from '../models';
 import * as Console from 'console';
 import {
   calcAcc,
-  calcPower,
+  calibratePower,
   calcSpd,
   calcWhlTrq,
   calcEnergyAero,
@@ -22,12 +22,11 @@ import {
   calcEnergyInertia,
   getMeasVal,
 } from './EnergyMath';
-import { of, toArray } from 'rxjs';
-import { isUUID } from '@nestjs/common/utils/is-uuid';
 
 @Injectable()
 export class EnergyService {
-  constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
+  constructor(@InjectConnection('lira-main') private readonly knex: Knex) {
+  }
 
   private readonly accLongTag = 'obd.acc_long';
   private readonly spdTag = 'obd.spd_veh';
@@ -40,9 +39,7 @@ export class EnergyService {
     const relevantMeasurements: MeasEnt[] = await this.getRelevantMeasurements(
       tripId,
     );
-    const assignments: Array<
-      [number, Map<string, number>, Map<string, number>]
-    > = await this.collectMeas(relevantMeasurements);
+    const assignments: Array<[number, Map<string, number>, Map<string, number>]> = await this.collectMeas(relevantMeasurements);
 
     // assignments.forEach(([i, before, after]) => {
     //   console.log(i);
@@ -58,7 +55,6 @@ export class EnergyService {
           const next = relevantMeasurements[nextIndex].Created_Date.getTime();
           return sum + (next - current);
         }
-
         return sum;
       },
       0,
@@ -68,7 +64,8 @@ export class EnergyService {
 
     return assignments.map(([i, before, after], index) => {
       const pwr = relevantMeasurements[i];
-      const pwrVal = getMeasVal(pwr) * delta;
+      const pwrVal = calibratePower(pwr);
+      const energyVal = (pwrVal * delta) / 3600;
 
       const spdBefore = relevantMeasurements[before.get(this.spdTag)];
       const spdAfter = relevantMeasurements[after.get(this.spdTag)];
@@ -89,9 +86,16 @@ export class EnergyService {
       const energyInertia = calcEnergyInertia(acc, dist);
       const energyAero = calcEnergyAero(spd, dist);
       const pwrNormalised =
-        pwrVal - energyWhlTrq - energySlope - energyInertia - energyAero;
+        energyVal - energyWhlTrq - energySlope - energyInertia - energyAero;
 
-      return pwrNormalised;
+      return {
+        result: pwrNormalised,
+        prev_power: energyVal,
+        whlTrq: energyWhlTrq,
+        slope: energySlope,
+        inertia: energyInertia,
+        aero: energyAero,
+      };
     });
   }
 
@@ -102,6 +106,8 @@ export class EnergyService {
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
       .orderBy('Created_Date');
+      // .limit(1000)
+      // .offset(10000);
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {

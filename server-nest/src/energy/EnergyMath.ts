@@ -6,13 +6,9 @@ export function linInterp(
   [x0, y0]: [number, number],
   [x1, y1]: [number, number],
 ): number {
-  if (x0 < x1) {
-    return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
-  }
+  if (x0 < x1) return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
 
-  if (x0 > x1) {
-    return (y1 * (x0 - x) + y0 * (x - x1)) / (x0 - x1);
-  }
+  if (x0 > x1) return (y1 * (x0 - x) + y0 * (x - x1)) / (x0 - x1);
 
   return (y0 + y1) / 2;
 }
@@ -51,7 +47,7 @@ export function calcWhlTrq(
       curPower.Created_Date.getTime(),
       [dateBefore, whlTrqBeforeVal],
       [dateAfter, whlTrqAfterVal],
-    ) - 51300
+    ) - (12800 * 0.5) - 12700
   );
 }
 
@@ -91,7 +87,7 @@ export function calcAcc(
   );
 }
 
-export function calcPower(curPower: MeasEnt) {
+export function calibratePower(curPower: MeasEnt) {
   return (getMeasVal(curPower) - 160) * 1000;
 }
 
