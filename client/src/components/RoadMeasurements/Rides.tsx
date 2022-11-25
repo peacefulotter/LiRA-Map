@@ -14,7 +14,7 @@ import { getRide } from "../../queries/rides";
 //import Graph from "../Graph/Graph";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
-import RideGraphCard, {IRideGraphCard} from "./RideGraphCard";
+import RideGraphCard from "./RideGraphCard";
 
 const Rides: FC = () => {
     
@@ -22,7 +22,7 @@ const Rides: FC = () => {
     const { selectedMeasurements } = useMeasurementsCtx()
 
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
-    const [ graphData, setGraphData ] = useState<[string, number][]>()
+    const [ graphData, setGraphData ] = useState<[Date, number][]>()
     const [ graphType, setGraphType] = useState<string>()
 
     useEffect(() => {
@@ -61,19 +61,18 @@ const Rides: FC = () => {
         //console.log(path)
 
         // Date format
+        /*
         const date_format = new Intl.DateTimeFormat('en-GB', {
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit', fractionalSecondDigits: 3,
         });
+        */
 
-        const data = path.map(o => {
-            const t: [string, number] = [date_format.format(new Date(o.metadata.timestamp)), o.value ? o.value : 0]
-            return t
-        })
+        const data: [Date, number][] = path.map(o => [new Date(o.metadata.timestamp), o.value ? o.value : 0])
 
-        //console.log("Mapped\n")
-        //console.log(map1)
+        //console.log("Mapped Data\n")
+        //console.log(data)
 
         setGraphType(name)
         setGraphData(data)
