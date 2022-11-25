@@ -10,7 +10,7 @@ import useCollapseDrawer from '../../hooks/useCollapseDrawer';
 // config
 import {HEADER, NAVBAR} from '../../config';
 //
-import DashboardHeader from './header';
+//import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
 import {RootState} from "../../store";
@@ -51,7 +51,7 @@ export default function DashboardLayout() {
         (state: RootState) => state.access
     )
 
-    const {collapseClick, isCollapse} = useCollapseDrawer();
+    const {collapseClick, isCollapsed} = useCollapseDrawer();
 
     const {themeLayout} = useSettings();
 
@@ -63,12 +63,10 @@ export default function DashboardLayout() {
 
     if (!isValidToken(userCredentials?.user?.stsTokenManager?.accessToken)) {
         return <Navigate to="/login"/>;
-    }
-
-    if (verticalLayout) {
-        return (
-            <>
-                <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout}/>
+    }if (verticalLayout) {
+    return (
+      <>
+          {/*<DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout}/>*/}
 
                 {isDesktop ? (
                     <NavbarHorizontal/>
@@ -96,14 +94,14 @@ export default function DashboardLayout() {
         );
     }
 
-    return (
-        <Box
-            sx={{
-                display: {lg: 'flex'},
-                minHeight: {lg: 1},
-            }}
-        >
-            <DashboardHeader isCollapse={isCollapse} onOpenSidebar={() => setOpen(true)}/>
+  return (
+    <Box
+      sx={{
+        display: { lg: 'flex' },
+        minHeight: { lg: 1 },
+      }}
+    >
+        {/*<DashboardHeader isCollapse={isCollapse} onOpenSidebar={() => setOpen(true)} /> */}
 
             <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)}/>
 

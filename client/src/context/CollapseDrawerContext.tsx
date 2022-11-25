@@ -5,7 +5,7 @@ import useResponsive from '../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 export type CollapseDrawerContextProps = {
-  isCollapse: boolean;
+  isCollapsed: boolean;
   collapseClick: boolean;
   collapseHover: boolean;
   onToggleCollapse: VoidFunction;
@@ -14,7 +14,7 @@ export type CollapseDrawerContextProps = {
 };
 
 const initialState: CollapseDrawerContextProps = {
-  isCollapse: false,
+  isCollapsed: false,
   collapseClick: false,
   collapseHover: false,
   onToggleCollapse: () => {},
@@ -32,7 +32,7 @@ function CollapseDrawerProvider({ children }: CollapseDrawerProviderProps) {
   const isDesktop = useResponsive('up', 'lg');
 
   const [collapse, setCollapse] = useState({
-    click: false,
+    click: true,
     hover: false,
   });
 
@@ -62,7 +62,7 @@ function CollapseDrawerProvider({ children }: CollapseDrawerProviderProps) {
   return (
     <CollapseDrawerContext.Provider
       value={{
-        isCollapse: collapse.click && !collapse.hover,
+        isCollapsed: collapse.click && !collapse.hover,
         collapseClick: collapse.click,
         collapseHover: collapse.hover,
         onToggleCollapse: handleToggleCollapse,

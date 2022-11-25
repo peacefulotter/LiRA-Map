@@ -90,7 +90,7 @@ export default function RoadCondition() {
     }
 
     return (
-        <Page title="Road Condition">
+        <Page title="Road Condition" style={{ margin: '-24px -16px -24px -16px' }}>
             <GraphProvider>
                 <div className="road-conditions-wrapper">
                     <ConditionsMap type={type} palette={palette} setPalette={setPalette} setWayData={setWayData}/>

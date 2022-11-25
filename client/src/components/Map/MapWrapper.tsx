@@ -1,9 +1,10 @@
 import useSettings from "../../hooks/useSettings";
 import { MapContainer, ScaleControl, TileLayer } from "react-leaflet";
-
 import Zoom from "./Zoom";
 
 import { MAP_OPTIONS } from "./constants";
+
+import 'leaflet/dist/leaflet.css';
 
 const MapWrapper = (props: any) => {
   const { children } = props;
@@ -14,7 +15,7 @@ const MapWrapper = (props: any) => {
   return (
     <MapContainer
       style={{
-        height: "75vh",
+        height: "100vh",
         WebkitFilter:
           themeMode === "dark"
             ? "invert(100%) hue-rotate(190deg) brightness(1)"
