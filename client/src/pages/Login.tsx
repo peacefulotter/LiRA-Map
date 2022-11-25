@@ -14,8 +14,11 @@ import Logo from "../components/Logo";
 import Page from '../components/Page';
 import {Dispatch, RootState} from "../store";
 import {useDispatch, useSelector} from "react-redux";
+import { useEffect } from 'react';
+import { useSnackbar } from 'notistack'
 
 export default function Login() {
+    const { enqueueSnackbar } = useSnackbar() // Todo should be moved to a global component listening for errors
     const navigate = useNavigate();
     const dispatch = useDispatch<Dispatch>()
 
@@ -28,13 +31,20 @@ export default function Login() {
         const data = new FormData(event.currentTarget);
         const loginObject = {email: data.get('email') as string, password: data.get('password') as string}
         await dispatch.access.login(loginObject)
+    };
+
+    useEffect(() => {
         if (error) {
-            console.log(error)
+            // @ts-ignore
+            enqueueSnackbar(error?.response.data.code, {variant: 'error'})
         }
+    },[error])
+
+    useEffect(() => {
         if (success) {
             navigate("/road/measurement");
         }
-    };
+    },[success])
 
     return (
         <Page title="Log in">

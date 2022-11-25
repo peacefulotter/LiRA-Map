@@ -18,7 +18,7 @@ export class RidesService {
   }
 
   async getRide(tripId: string, dbName: string): Promise<BoundedPath> {
-    console.log(tripId, dbName);
+    // console.log(tripId, dbName);
 
     const res = await this.knex
       .select(['message', 'lat', 'lon', 'Created_Date'])

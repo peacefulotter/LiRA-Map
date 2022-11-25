@@ -12,9 +12,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error);
-        return Promise.reject(
-            (error.response && error.response.data) || error.message || 'Something went wrong'
+        return Promise.reject(error
+            // (error.response && error.response.data) || error.message || 'Something went wrong'
         );
     }
 );

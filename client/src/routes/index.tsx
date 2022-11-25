@@ -14,16 +14,26 @@ const Loadable = (Component: ElementType) => (props: any) => {
     const {pathname} = useLocation();
 
     return (
-        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')}/>}>
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('*')}/>}>
             <Component {...props} />
         </Suspense>
     );
 };
 
+// export const ProtectedRoute = ({children}: any) => {
+//   const user = useSelector((state: RootState) => state.user)
+//   const isAuthenticated = user.email !== null && user.email !== undefined && user.email !== "";
+//   if (!isAuthenticated) {
+//     // user is not authenticated
+//     return <Navigate to="/login"/>;
+//   }
+//   return children;
+// };
+
 export default function Router() {
   return useRoutes([
     {
-      path: '/',
+      path: '/login',
       element: <Login />
     },
     {
@@ -36,6 +46,8 @@ export default function Router() {
       children: [
         { element: <Navigate to="/settings" replace />, index: true },
         { path: 'settings', element: <Settings /> },
+        { element: <Navigate to="/dashboard" replace />, index: true },
+        { path: 'dashboard', element: <Dashboard /> },
       ],
     },
     {
@@ -57,6 +69,10 @@ export default function Router() {
       ],
     },
     {
+      path: '/',
+      element: <Navigate to="/road/measurement" replace />,
+    },
+    {
       path: '*',
       element: <LogoOnlyLayout />,
       children: [
@@ -76,3 +92,4 @@ const CarData = Loadable(lazy(() => import('../pages/CarData')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const Signup = Loadable(lazy(() => import('../pages/Signup')));
 const Settings = Loadable(lazy(() => import('../pages/Settings')));
+const Dashboard = Loadable(lazy(() => import('../pages/Dashboard')));

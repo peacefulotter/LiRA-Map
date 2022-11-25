@@ -9,11 +9,15 @@ import {ProgressBarStyle} from './components/ProgressBar';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
 import {Provider} from "react-redux";
 import {store} from "./store";
+import { SnackbarProvider } from 'notistack'
+
+import "./App.css";
 
 // ----------------------------------------------------------------------
 
 export default function App() {
     return (
+      <SnackbarProvider>
         <Provider store={store}>
             <MotionLazyContainer>
                 <ThemeProvider>
@@ -25,5 +29,6 @@ export default function App() {
                 </ThemeProvider>
             </MotionLazyContainer>
         </Provider>
+      </SnackbarProvider>
     );
 }
