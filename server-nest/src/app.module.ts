@@ -29,49 +29,49 @@ import { ConnectionController } from './connection/connection.controller';
 import { ConnectionService } from './connection/connection.service';
 
 import {
-  LIRA_DB_CONFIG,
-  POSTGIS_DB_CONFIG,
-  VISUAL_DB_CONFIG,
+    LIRA_DB_CONFIG,
+    POSTGIS_DB_CONFIG,
+    VISUAL_DB_CONFIG,
 } from './database';
 import { LoginController } from './login/login.controller';
 
 const database = (config: any, name: string) => {
-  return KnexModule.forRootAsync(
-    {
-      useFactory: () => ({ config }),
-    },
-    name,
-  );
+    return KnexModule.forRootAsync(
+        {
+            useFactory: () => ({ config }),
+        },
+        name,
+    );
 };
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    database(LIRA_DB_CONFIG, 'lira-main'),
-    database(VISUAL_DB_CONFIG, 'lira-vis'),
-    database(POSTGIS_DB_CONFIG, 'postgis'),
-  ],
-  controllers: [
-    AppController,
-    SegmentsController,
-    TypesController,
-    RidesController,
-    MeasurementsController,
-    RCController,
-    AltitudeController,
-    LoginController,
-    ConnectionController,
-    SignupController,
-  ],
-  providers: [
-    AppService,
-    SegmentsService,
-    ConfigService,
-    TypesService,
-    RidesService,
-    MeasurementsService,
-    RCService,
-    AltitudeService,
-    ConnectionService,
-  ],
+    imports: [
+        ConfigModule.forRoot(),
+        database(LIRA_DB_CONFIG, 'lira-main'),
+        database(VISUAL_DB_CONFIG, 'lira-vis'),
+        database(POSTGIS_DB_CONFIG, 'postgis'),
+    ],
+    controllers: [
+        AppController,
+        SegmentsController,
+        TypesController,
+        RidesController,
+        MeasurementsController,
+        RCController,
+        AltitudeController,
+        LoginController,
+        ConnectionController,
+        SignupController,
+    ],
+    providers: [
+        AppService,
+        SegmentsService,
+        ConfigService,
+        TypesService,
+        RidesService,
+        MeasurementsService,
+        RCService,
+        AltitudeService,
+        ConnectionService,
+    ],
 })
 export class AppModule {}
