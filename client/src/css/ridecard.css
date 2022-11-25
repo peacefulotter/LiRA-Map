@@ -163,7 +163,8 @@ span.hamburger {
 }
 
 #menu {
-  position: absolute;
+  display: none;
+  position: static;
   width: 160px;
   margin: -40px 0 0 -70px;
   padding: 5px;
@@ -171,9 +172,6 @@ span.hamburger {
   background-color: var(--background-2);
   list-style-type: none;
   -webkit-font-smoothing: antialiased;
-  transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
-  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 
 #menu li {
@@ -182,7 +180,8 @@ span.hamburger {
 }
 
 #menuToggle input:checked ~ ul {
-  transform: none;
+    transform: none;
+    display: block;
 }
 
 #spacing {
