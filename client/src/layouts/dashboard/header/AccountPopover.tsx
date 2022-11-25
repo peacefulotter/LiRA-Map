@@ -1,6 +1,6 @@
 import {useState} from 'react';
 // @mui
-import {alpha} from '@mui/material/styles';
+//import {alpha} from '@mui/material/styles';
 import {Avatar, Box, Divider, MenuItem, Typography} from '@mui/material';
 // components
 import MenuPopover from '../../../components/MenuPopover';
@@ -8,6 +8,8 @@ import {IconButtonAnimate} from '../../../components/animate';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store";
 import {Link} from "react-router-dom";
+import useCollapseDrawer from "../../../hooks/useCollapseDrawer";
+import Connection from "../../../components/Connection/Connection";
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +45,8 @@ export default function AccountPopover() {
         setOpen(null);
     };
 
+    const { isCollapsed } = useCollapseDrawer();
+
     return (
         <>
             <IconButtonAnimate
@@ -57,15 +61,23 @@ export default function AccountPopover() {
                             height: '100%',
                             borderRadius: '50%',
                             position: 'absolute',
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
                         },
                     }),
                 }}
             >
-                <Avatar
-                    alt="User"
-                />
+                <Avatar alt="User"/>
+                <Box sx={{ position: 'absolute', top: '20px', left: '25px' }}>
+                    <Connection/>
+                </Box>
             </IconButtonAnimate>
+
+            { !isCollapsed && (
+                <Box sx={{ marginLeft: '10px'}}>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '0.60vw' }}>{userData?.firstName} {userData?.lastName}</Typography>
+                    <Typography></Typography>
+                    <Typography color="gray" sx={{ fontSize: '0.60vw' }}>{userCredentials?.user?.email}</Typography>
+                </Box>)
+            }
 
             <MenuPopover
                 open={Boolean(open)}
