@@ -32,7 +32,7 @@ function CollapseDrawerProvider({ children }: CollapseDrawerProviderProps) {
   const isDesktop = useResponsive('up', 'lg');
 
   const [collapse, setCollapse] = useState({
-    click: false,
+    click: true,
     hover: false,
   });
 
