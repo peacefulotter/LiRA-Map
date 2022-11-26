@@ -11,7 +11,7 @@ import {MeasMetaPath, PointData /*, PointData*/} from "../../models/path";
 
 import { getRide } from "../../queries/rides";
 
-//import Graph from "../Graph/Graph";
+//import Graph.tsx from "../Graph.tsx/Graph.tsx";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
 import RideGraphCard from "./RideGraphCard";
@@ -22,61 +22,6 @@ const Rides: FC = () => {
     const { selectedMeasurements } = useMeasurementsCtx()
 
     const [ paths, setPaths ] = useState<MeasMetaPath>({})
-    const [ graphData, setGraphData ] = useState<[Date, number][]>()
-    const [ graphType, setGraphType] = useState<string>()
-
-    useEffect(() => {
-        if (!selectedMeasurements || selectedMeasurements.length === 0) {
-            //console.log("Returned")
-            setGraphData(undefined)
-            return
-        }
-        //console.log("Selected Measurements\n");
-        //console.log(selectedMeasurements);
-
-        const { hasValue, name }: ActiveMeasProperties = selectedMeasurements[0]
-        if (!hasValue) {
-            //console.log("Returned")
-            setGraphData(undefined)
-            return
-        }
-        //console.log("Name\n")
-        //console.log(name)
-
-        if(!paths[name] || Object.keys(paths[name]).length === 0) {
-            //console.log("Returned")
-            setGraphData(undefined)
-            return
-        }
-        //console.log("Paths\n")
-        //console.log(paths[name])
-
-        const o = Object.values(paths[name])[0]
-        //console.log("Object\n")
-        //console.log(o)
-
-        const { path } = o
-
-        //console.log("Data\n")
-        //console.log(path)
-
-        // Date format
-        /*
-        const date_format = new Intl.DateTimeFormat('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit', fractionalSecondDigits: 3,
-        });
-        */
-
-        const data: [Date, number][] = path.map(o => [new Date(o.metadata.timestamp), o.value ? o.value : 0])
-
-        //console.log("Mapped Data\n")
-        //console.log(data)
-
-        setGraphType(name)
-        setGraphData(data)
-    }, [selectedMeasurements, paths]);
 
     const popup = usePopup()
 
@@ -117,7 +62,7 @@ const Rides: FC = () => {
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                <RideGraphCard type={graphType} data={graphData}/>
+                <RideGraphCard paths={paths} selectedMeasurements={selectedMeasurements}/>
             </div>
         </GraphProvider>
   )
