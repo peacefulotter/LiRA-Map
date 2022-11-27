@@ -11,12 +11,13 @@ import cssStyles from '../../../utils/cssStyles';
 // config
 import { NAVBAR } from '../../../config';
 // components
-import Logo from '../../../components/Logo';
+//import Logo from '../../../components/Logo';
 import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import CollapseButton from './CollapseButton';
+import AccountPopover from "../header/AccountPopover";
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
+  const { isCollapsed, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
   useEffect(() => {
@@ -67,20 +68,20 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
           pb: 2,
           px: 2.5,
           flexShrink: 0,
-          ...(isCollapse && { alignItems: 'center' }),
+          ...(isCollapsed && { alignItems: 'center' }),
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Logo />
+          <AccountPopover />
 
-          {isDesktop && !isCollapse && (
+          {isDesktop && !isCollapsed && (
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
           )}
         </Stack>
 
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapsed} />
 
       <Box sx={{ flexGrow: 1 }} />
 
@@ -91,7 +92,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
     <RootStyle
       sx={{
         width: {
-          lg: isCollapse ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH : NAVBAR.DASHBOARD_WIDTH,
+          lg: isCollapsed ? NAVBAR.DASHBOARD_COLLAPSE_WIDTH : NAVBAR.DASHBOARD_WIDTH,
         },
         ...(collapseClick && {
           position: 'absolute',
@@ -123,7 +124,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
                 theme.transitions.create('width', {
                   duration: theme.transitions.duration.standard,
                 }),
-              ...(isCollapse && {
+              ...(isCollapsed && {
                 width: NAVBAR.DASHBOARD_COLLAPSE_WIDTH,
               }),
               ...(collapseHover && {

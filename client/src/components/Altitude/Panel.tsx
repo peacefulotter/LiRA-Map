@@ -1,25 +1,30 @@
+import * as React from 'react';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-import { FC } from "react"
-import Checkbox from "../Checkbox"
-
-
-interface IPanel {
-    showHotline: boolean;
-    showHeatmap: boolean;
-    toggleShowHotline: (isChecked: boolean) => void;
-    toggleShowHeatmap: (isChecked: boolean) => void;
+interface Option {
+	name: string;
+	isSelected: boolean;
+	toggle: () => void;
 }
 
+const Panel = (props: { options: Option[] }) => {
+	const options: Option[] = props.options;
 
-const Panel: FC<IPanel> = ( { showHotline, showHeatmap, toggleShowHotline, toggleShowHeatmap } ) => {
-    return (
-        <div className="panel-wrapper">
-            <div className="panel-checkboxes">
-                <Checkbox className="panel-checkbox" html={<p>Hotline</p>} forceState={showHotline} onClick={toggleShowHotline}/>
-                <Checkbox className="panel-checkbox" html={<p>Heatmap</p>} forceState={showHeatmap} onClick={toggleShowHeatmap}/>
-            </div>
-        </div>
-    )
-}
+	return (
+		<ToggleButtonGroup
+			sx={{ position: 'absolute', top: 16, left: 16, zIndex: 1000 }}
+			aria-multiselectable={'true'}
+			orientation={'vertical'}
+		>
+			{options.map(o => {
+				return (
+					<ToggleButton key={o.name} value={o.isSelected} selected={o.isSelected} onClick={o.toggle}>
+						{o.name}
+					</ToggleButton>
+				);
+			})}
+		</ToggleButtonGroup>
+	);
+};
 
-export default Panel
+export default Panel;
