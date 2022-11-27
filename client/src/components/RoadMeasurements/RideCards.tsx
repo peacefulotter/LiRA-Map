@@ -80,7 +80,7 @@ const RideCards: FC = () => {
 
 
     return (
-        <div className="ride-list">
+        <div className="ride-list" style={{ position: 'absolute', height: '100vh', zIndex: 500 }}>
             <OptionsSelector onChange={onChange}/>
             <Cards showMetas={showMetas} onClick={onClick}/>
         </div>

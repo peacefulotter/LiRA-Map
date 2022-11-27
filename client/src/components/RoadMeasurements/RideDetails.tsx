@@ -8,13 +8,12 @@ import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { useMetasCtx } from "../../context/MetasContext";
 
 import { addMeasurement } from "../../queries/measurements";
-import { MeasProperties, ActiveMeasProperties } from "../../models/properties";
+import { ActiveMeasProperties } from "../../models/properties";
 import { RideMeta } from "../../models/models";
 
 import { RENDERER_MEAS_PROPERTIES } from "../Map/constants";
 
 import MeasCheckbox from "./MeasCheckbox";
-
 
 const RideDetails: FC = () => {
 
@@ -60,7 +59,7 @@ const RideDetails: FC = () => {
     }
 
     return (
-		<div className="meta-data">
+		<div className="meta-data" style={{ position: 'absolute', left: 188, height: '100vh', backgroundColor: 'white', zIndex: 500 }}>
 			{ measurements.map( (m: ActiveMeasProperties, i: number) =>
 				<MeasCheckbox 
 					key={`meas-checkbox-${i}`}

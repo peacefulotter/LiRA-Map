@@ -65,14 +65,14 @@ const RideGraphCard: React.FC<{paths: MeasMetaPath; selectedMeasurements: Active
         })
 
         //console.log("Mapped")
-        //console.log(newDatasets)
+        //console.log(datasets)
 
         setDatasets(datasets)
     }, [selectedMeasurements, paths]);
 
     return (
         (datasets.length > 0) ? (
-            <Card sx={{ width: '50vw', position: 'absolute', bottom: '10px', right: '10px', zIndex: 2 }}>
+            <Card sx={{ width: 'calc(100vw - 605px)', position: 'absolute', bottom: '10px', right: '10px', zIndex: 1000 }}>
                 <CardContent>
                     <Chart
                         type='line'
@@ -80,7 +80,7 @@ const RideGraphCard: React.FC<{paths: MeasMetaPath; selectedMeasurements: Active
                             datasets: datasets
                         }}
                         options={options}
-                        height={80}
+                        height={'45vh'}
                     />
                 </CardContent>
             </Card>

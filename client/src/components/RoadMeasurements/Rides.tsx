@@ -4,8 +4,8 @@ import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { GraphProvider } from "../../context/GraphContext";
 import { useMetasCtx } from "../../context/MetasContext";
 
-import { ActiveMeasProperties } from "../../models/properties";
-import {MeasMetaPath, PointData /*, PointData*/} from "../../models/path";
+//import { ActiveMeasProperties } from "../../models/properties";
+import {MeasMetaPath} from "../../models/path";
 
 //import { GraphData, GraphPoint } from "../../assets/graph/types";
 
@@ -55,7 +55,7 @@ const Rides: FC = () => {
 
     return (
         <GraphProvider>
-            <div className="map-container">
+            <div className="map-container" style={{ position: 'absolute', left: 0, top: 0, width: 'calc(100vw - 88px)', height: '100vh' }}>
 
                 <RidesMap
                     paths={paths} 
