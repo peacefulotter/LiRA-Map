@@ -29,6 +29,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.0",
     "firebase": "^9.10.0",
+    "geolib": "^3.3.3",
     "knex": "^2.0.0",
     "knex-postgis": "^0.14.3",
     "nest-knexjs": "^0.0.12",

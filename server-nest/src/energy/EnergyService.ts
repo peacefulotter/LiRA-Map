@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
 import { RideMeta } from '../rides/models.rides';
+import { getPreciseDistance } from 'geolib';
 import {
   AccLongMessage,
   MeasEnt,
@@ -22,11 +23,11 @@ import {
   calcEnergyInertia,
   getMeasVal,
 } from './EnergyMath';
+import { GeolibInputCoordinates } from 'geolib/es/types';
 
 @Injectable()
 export class EnergyService {
-  constructor(@InjectConnection('lira-main') private readonly knex: Knex) {
-  }
+  constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
   private readonly accLongTag = 'obd.acc_long';
   private readonly spdTag = 'obd.spd_veh';
@@ -39,26 +40,29 @@ export class EnergyService {
     const relevantMeasurements: MeasEnt[] = await this.getRelevantMeasurements(
       tripId,
     );
-    const assignments: Array<[number, Map<string, number>, Map<string, number>]> = await this.collectMeas(relevantMeasurements);
+    const assignments: Array<
+      [number, Map<string, number>, Map<string, number>]
+    > = await this.collectMeas(relevantMeasurements);
 
-    // assignments.forEach(([i, before, after]) => {
-    //   console.log(i);
-    //   console.log(Array.from(before));
-    //   console.log(Array.from(after));
-    // });
+    const distancesGPS = new Array<number>(assignments.length);
+    distancesGPS[0] = 0;
+    for (let i = 1; i < assignments.length; i++) {
+      const [j] = assignments[i];
+      const curPower = relevantMeasurements[j];
+      const [prev] = assignments[i - 1];
+      const prevPower = relevantMeasurements[prev];
+      const dist = getPreciseDistance(
+        { latitude: curPower.lat, longitude: curPower.lon },
+        { latitude: prevPower.lat, longitude: prevPower.lon },
+        0.5,
+      );
+      distancesGPS[i] =
+        dist < 2 ? distancesGPS[i - 1] : distancesGPS[i - 1] + dist;
+    }
 
-    const sumOfPeriods = assignments.reduce(
-      (sum: number, [i, m0, m1], index) => {
-        if (i < assignments.length - 1) {
-          const current = relevantMeasurements[i].Created_Date.getTime();
-          const nextIndex = assignments[index + 1][0];
-          const next = relevantMeasurements[nextIndex].Created_Date.getTime();
-          return sum + (next - current);
-        }
-        return sum;
-      },
-      0,
-    );
+    const startTime = relevantMeasurements[0].Created_Date.getTime();
+    const endTime = relevantMeasurements.at(-1).Created_Date.getTime();
+    const sumOfPeriods = endTime - startTime;
     const sumOfPeriodsSeconds = sumOfPeriods / 1000;
     const delta = sumOfPeriodsSeconds / assignments.length;
 
@@ -106,8 +110,6 @@ export class EnergyService {
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
       .orderBy('Created_Date');
-      // .limit(1000)
-      // .offset(10000);
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
