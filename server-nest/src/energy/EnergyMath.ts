@@ -7,9 +7,7 @@ export function linInterp(
   [x1, y1]: [number, number],
 ): number {
   if (x0 < x1) return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
-
   if (x0 > x1) return (y1 * (x0 - x) + y0 * (x - x1)) / (x0 - x1);
-
   return (y0 + y1) / 2;
 }
 
@@ -47,7 +45,9 @@ export function calcWhlTrq(
       curPower.Created_Date.getTime(),
       [dateBefore, whlTrqBeforeVal],
       [dateAfter, whlTrqAfterVal],
-    ) - (12800 * 0.5) - 12700
+    ) -
+    12800 * 0.5 -
+    12700
   );
 }
 
