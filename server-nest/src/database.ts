@@ -46,7 +46,7 @@ export const LIRA_DB_CONFIG = {
     host: 'se2-c.compute.dtu.dk', // "liradbdev.compute.dtu.dk",
     port: 5432, // "liradbdev.compute.dtu.dk",
     user: 'lira',
-    password: 'h5vaVt',
+    password: 'h5vaVt', // This should definitely not be here - the repo is public
     database: 'postgres',
   },
 };

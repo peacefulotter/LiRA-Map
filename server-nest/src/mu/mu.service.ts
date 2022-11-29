@@ -1,8 +1,7 @@
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection } from 'nestjs-knex';
 import { Knex } from 'knex';
 import { randomUUID } from 'crypto';
-import { Linter } from 'eslint';
 
 /*
  * Three assumptions are made:
@@ -39,10 +38,17 @@ const wheel_radius = 0.31;
 const wantedFrequency = 50; // Hz
 
 @Injectable()
-export class MuService implements OnApplicationBootstrap {
+export class MuService {
   constructor(@InjectConnection('lira-main') private readonly knex: Knex) {}
 
-  async onApplicationBootstrap() {
+  async calculateMu(): Promise<string> {
+    // Start out by deleting all existing mu measurements in the database
+    await this.knex
+      .delete()
+      .from({ public: 'Measurements' })
+      .whereIn('T', ['mu_right', 'mu_left', 'mu_avg']);
+
+    const insertionPromises: Promise<any>[] = [];
     const rides = await this.knex
       .select('*')
       .from({ public: 'Trips' })
@@ -232,12 +238,16 @@ export class MuService implements OnApplicationBootstrap {
         //         '\n',
         //     );
       }
-      this.knex.batchInsert('Measurements', [
-        ...points_right,
-        ...points_left,
-        ...points_avg,
-      ]);
+      insertionPromises.push(
+        this.knex.batchInsert('Measurements', [
+          ...points_right,
+          ...points_left,
+          ...points_avg,
+        ]),
+      );
     }
-    Logger.debug('DONE');
+    await Promise.allSettled(insertionPromises);
+    Logger.log('Mu calculation done');
+    return 'Mu calculation done';
   }
 }

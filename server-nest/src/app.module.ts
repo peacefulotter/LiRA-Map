@@ -27,6 +27,7 @@ import { TagsService } from './tags/tags.service';
 import { TagsController } from './tags/tags.controller';
 
 import { MuService } from './mu/mu.service';
+import { MuController } from './mu/mu.controller';
 
 import {
   LIRA_DB_CONFIG,
@@ -61,6 +62,7 @@ const database = (config: any, name: string) => {
     RCController,
     AltitudeController,
     TagsController,
+    MuController,
   ],
   providers: [
     AppService,
