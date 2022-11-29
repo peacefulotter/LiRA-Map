@@ -33,6 +33,7 @@ import { EnergyService } from "./energy/EnergyService";
 
 import {
     LIRA_DB_CONFIG,
+    OUR_LIRA_DB_CONFIG,
     POSTGIS_DB_CONFIG,
     VISUAL_DB_CONFIG,
 } from './database';
@@ -50,6 +51,7 @@ const database = (config: any, name: string) => {
   imports: [
     ConfigModule.forRoot(),
     database(LIRA_DB_CONFIG, "lira-main"),
+    database(OUR_LIRA_DB_CONFIG, "our-lira-db"),
     database(VISUAL_DB_CONFIG, "lira-vis"),
     database(POSTGIS_DB_CONFIG, "postgis"),
   ],
