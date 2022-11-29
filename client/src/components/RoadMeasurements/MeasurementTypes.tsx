@@ -55,7 +55,7 @@ const MeasurementTypes: FC = () => {
 
 	return (
 		<div className='meta-data'>
-			<div style={{height:350, overflow:'scroll'}}>
+			<div style={{ height: 350, overflow: 'scroll' }}>
 
 				{measurements.map((m: ActiveMeasProperties, i: number) =>
 					<MeasCheckbox
