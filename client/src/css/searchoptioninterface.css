@@ -1,0 +1,16 @@
+
+.options-date-picker {
+    padding: 5px 0px;
+}
+
+.options-date-picker div {
+    border: none;
+}
+
+.options-date-picker svg {
+    stroke: white;
+}
+
+.options-date-picker input {
+    color: white !important;
+}

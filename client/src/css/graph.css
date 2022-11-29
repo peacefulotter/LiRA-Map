@@ -1,4 +1,9 @@
-
+.graph-selector {
+    padding-block: .5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
 
 .graph-wrapper {
     width: 100%;

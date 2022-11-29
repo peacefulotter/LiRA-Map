@@ -1,70 +1,189 @@
-
-
 .ride-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100%;
-    background-color: rgb(58, 58, 58);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  background-color: rgb(58, 58, 58);
 }
 
 .rides-options {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .options-date-picker {
-    padding: 5px 0px;
+  padding: 5px 0px;
 }
 
 .options-date-picker div {
-    border: none;
+  border: none;
 }
 
 .options-date-picker svg {
-    stroke: white;
+  stroke: white;
 }
 
 .options-date-picker input {
-    color: white !important;
+  color: white !important;
 }
 
 .ride-search-input {
-    width: 90%;
-    padding: 15px 10px;
-    border: none;
-    color: white;
-    font-size: 1em;
-    outline: none;
-    background-color: var(--background-2);
+  width: 90%;
+  padding: 10px 6px;
+  border: none;
+  color: white;
+  font-size: 1em;
+  outline: none;
+  background-color: var(--background-3);
+  border-radius: 2px;
 }
 
 .ride-sort-cb {
-    font-size: 1.1em !important;
-    padding: 10px 30px !important;
-    margin: 10px 0px;
-    background: var(--background-3) !important;
+  font-size: 1.1em !important;
+  padding: 10px 30px !important;
+  margin: 10px 0px;
+  background: var(--background-3) !important;
 }
 
 .ride-sort-cb.btn-checked {
-    background: var(--orange-background) !important;
-    color: var(--orange-text) !important;
+  background: var(--orange-background) !important;
+  color: var(--orange-text) !important;
 }
 
 .ride-card-container {
-    width: 100%;
-    padding: 15px 0px;
-    font-size: 0.9em !important;
-    border-radius: 0px !important;
-    color: lightgrey;
+  width: 100%;
+  padding: 15px 0px;
+  font-size: 0.9em !important;
+  border-radius: 0px !important;
+  color: lightgrey;
 }
 
 .ride-card-container > .jsx-parser > b {
-    color: white;
-    font-size: 1.1em !important;
+  color: white;
+  font-size: 1.1em !important;
 }
 
 .ride-card-container:nth-child(even) {
-    margin: 1px 0px;
+  margin: 1px 0px;
+}
+
+#menuToggle {
+  display: block;
+  position: relative;
+  left: 70px;
+  top: 7px;
+
+  z-index: 1;
+
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input.menuCheck {
+  display: block;
+  width: 40px;
+  height: 30px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 2;
+  -webkit-touch-callout: none;
+}
+
+span.hamburger {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+
+  background: #cdcdcd;
+  border-radius: 3px;
+
+  z-index: 1;
+
+  transform-origin: 4px 0px;
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+}
+
+#menuToggle li + input.ride-search-input {
+  width: 90%;
+  padding: 15px 10px;
+  border: none;
+  color: white;
+  font-size: 1em;
+  outline: none;
+  background-color: var(--background-2);
+  opacity: 100;
+  position: relative;
+  cursor: text;
+}
+
+/* And make sure this also covers the topmost one to create hamburger icon */
+#menuToggle span :nth-child(3) {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  background: #cdcdcd;
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+}
+
+#menuToggle span:first-child {
+  transform-origin: 0% 0%;
+}
+
+#menuToggle span:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+#menuToggle input:checked ~ span {
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #cdcdcd;
+}
+
+#menuToggle input:checked ~ span:nth-last-child(3) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#menuToggle input:checked ~ span:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+#menu {
+  display: none;
+  position: static;
+  width: 160px;
+  margin: -40px 0 0 -70px;
+  padding: 5px;
+  padding-top: 40px;
+  background-color: var(--background-2);
+  list-style-type: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#menu li {
+  padding: 5px;
+  border-radius: 2px;
+}
+
+#menuToggle input:checked ~ ul {
+    transform: none;
+    display: block;
+}
+
+#spacing {
+  height: 5px;
 }

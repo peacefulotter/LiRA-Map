@@ -29,9 +29,12 @@ export interface LatLng {
 }
 
 export interface TripsOptions {
-  search: string;
+  taskId: string;
   startDate: Date;
   endDate: Date;
   reversed: boolean;
-  distanceKm: number;
+  minDistanceKm: number | undefined;
+  maxDistanceKm: number | undefined;
+  startCity: string;
+  endCity: string;
 }

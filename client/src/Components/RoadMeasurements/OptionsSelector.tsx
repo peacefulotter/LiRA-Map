@@ -3,73 +3,109 @@ import DatePicker from 'react-date-picker';
 import { TripsOptions } from '../../models/models';
 import Checkbox from '../Checkbox';
 
-const defaultOptions: TripsOptions = {
-  search: '',
-  startDate: new Date('2020-01-01'),
-  endDate: new Date(),
-  reversed: false,
-  distanceKm: 0,
-};
-
-let choice: keyof TripsOptions = 'search';
 interface IOptionsSelector {
-  onChange: (options: TripsOptions, key: keyof TripsOptions) => void;
+  onChange: (options: TripsOptions) => void;
+  defaultOptions: TripsOptions;
 }
-
-const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
+const OptionsSelector: FC<IOptionsSelector> = ({
+  onChange,
+  defaultOptions,
+}) => {
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 
-  const _onChange = (key: keyof TripsOptions, choice: keyof TripsOptions) => {
+  const _onChange = (key: keyof TripsOptions) => {
     return function <T>(value: T) {
       const temp = { ...options } as any;
       temp[key] = value;
-      console.log(key);
+      console.log('🇩🇰', temp);
       setOptions(temp);
-      onChange(temp, choice);
+      onChange(temp);
     };
   };
 
   return (
-    <div className="rides-options">
-      <select
-        onChange={(o) => {
-          choice = o.target.value as keyof TripsOptions;
-          console.log(choice);
-        }}
-      >
-        {Object.keys(defaultOptions).map((key, _) => {
-          return (
-            <option value={key} key={key}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
-      <input
-        className="ride-search-input"
-        placeholder="Search.."
-        value={options.search}
-        onChange={(e) => _onChange('search', choice)(e.target.value)}
-      />
-
-      <DatePicker
-        onChange={_onChange('startDate', choice)}
-        value={options.startDate}
-        className="options-date-picker"
-      />
-      <DatePicker
-        onChange={_onChange('endDate', choice)}
-        value={options.endDate}
-        className="options-date-picker"
-      />
-
-      <Checkbox
-        className="ride-sort-cb"
-        html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-        onClick={_onChange('reversed', choice)}
-      />
+    <div>
+      <div className="rides-options">
+        <input
+          className="ride-search-input"
+          placeholder="TaskID"
+          value={options.taskId}
+          onChange={(e) => _onChange('taskId')(e.target.value)}
+        />
+      </div>
+      <div id = "spacing"></div>
+      <div id="menuToggle">
+      <input className ="menuCheck"type="checkbox" />
+      
+      <span className="hamburger"></span>
+      <span className="hamburger"></span>
+      <span className="hamburger"></span>
+      
+      <ul id="menu">
+        <div id = "ride-search-menu">
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Min Distance Km"
+              value={options.minDistanceKm}
+              onChange={(e) => _onChange('minDistanceKm')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Max Distance Km"
+              value={options.maxDistanceKm}
+              onChange={(e) => _onChange('maxDistanceKm')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Start City"
+              value={options.startCity}
+              onChange={(e) => _onChange('startCity')(e.target.value)}
+            />
+          </li>
+          <li>
+            <input
+              className="ride-search-input"
+              placeholder="Destination City"
+              value={options.endCity}
+              onChange={(e) => _onChange('endCity')(e.target.value)}
+            />
+          </li>
+          <li>
+            <DatePicker
+              onChange={_onChange('startDate')}
+              value={options.startDate}
+              className="options-date-picker"
+              format="dd/MM/y"
+            />
+          </li>
+          <li>
+            <DatePicker
+              onChange={_onChange('endDate')}
+              value={options.endDate}
+              className="options-date-picker"
+              format="dd/MM/y"
+            />
+          </li>
+          <li>
+            <Checkbox
+              className="ride-sort-cb"
+              html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
+              onClick={_onChange('reversed')}
+            />
+          </li>
+        </div>
+      </ul>
     </div>
+    <div id = "spacing"></div>
+    <div id = "spacing"></div>
+  </div>
   );
 };
 
 export default OptionsSelector;
+
