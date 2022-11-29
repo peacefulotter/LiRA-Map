@@ -3,6 +3,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useReducer,
   useState,
 } from 'react';
@@ -15,6 +16,11 @@ import {
   RemMinMaxFunc,
   UseMarkersAction,
 } from '../assets/graph/types';
+import { MeasMetaPath } from '../models/path';
+import { getRide } from '../queries/rides';
+import useToast from '../Components/createToast';
+import { useMetasCtx } from './MetasContext';
+import { useMeasurementsCtx } from './MeasurementsContext';
 
 interface ContextProps {
   minX: number;
@@ -30,6 +36,8 @@ interface ContextProps {
   markers: MarkersRecord;
   useMarkers: Dispatch<UseMarkersAction>;
   lastMarkersAction: UseMarkersAction | undefined;
+
+  paths: MeasMetaPath;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -63,6 +71,40 @@ export const GraphProvider = ({ children }: any) => {
 
   const { minX, maxX, minY, maxY } = bounds;
 
+  const { selectedMetas } = useMetasCtx();
+  const { selectedMeasurements } = useMeasurementsCtx();
+
+  const [paths, setPaths] = useState<MeasMetaPath>({});
+  const [loading, setLoading] = useState(false);
+
+  const updatePaths = async () => {
+    setLoading(true);
+    const temp = {} as MeasMetaPath;
+
+    for (const meas of selectedMeasurements) {
+      const { name } = meas;
+      temp[name] = {};
+
+      for (const meta of selectedMetas) {
+        const { TaskId } = meta;
+
+        if (Object.hasOwn(paths, name) && Object.hasOwn(paths[name], TaskId))
+          temp[name][TaskId] = paths[name][TaskId];
+        else {
+          const bp = await getRide(meas, meta, useToast);
+          if (bp !== undefined) temp[name][TaskId] = bp;
+        }
+      }
+    }
+
+    setLoading(false);
+    return temp;
+  };
+
+  useEffect(() => {
+    updatePaths().then(setPaths);
+  }, [selectedMetas, selectedMeasurements]);
+
   return (
     <GraphContext.Provider
       value={{
@@ -77,6 +119,7 @@ export const GraphProvider = ({ children }: any) => {
         markers,
         useMarkers,
         lastMarkersAction,
+        paths,
       }}
     >
       {children}

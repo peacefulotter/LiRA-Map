@@ -66,6 +66,10 @@ const RoadMeasurements = () => {
       return <RideCards />;
     } else if (component === 'ridedetails') {
       return <RideDetails />;
+    } else if (component === 'ridemap') {
+      return; //;
+    } else if (component === 'ride') {
+      return; //;
     }
   }; /*
 

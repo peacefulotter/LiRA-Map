@@ -27,11 +27,6 @@ const getGraphData = (path: Path): GraphData => {
 import { CSVLink, CSVDownload } from 'react-csv';
 
 const Rides: FC = () => {
-  const { selectedMetas } = useMetasCtx();
-  const { selectedMeasurements } = useMeasurementsCtx();
-
-  const [paths, setPaths] = useState<MeasMetaPath>({});
-  const [loading, setLoading] = useState(false);
   const headers = ['x', 'y'];
 
   const [selectedTaskID, setSelectedTaskID] = useState<number>();
@@ -61,32 +56,7 @@ const Rides: FC = () => {
       setSelectedMeasurementName(undefined);
     }
 
-    const updatePaths = async () => {
-      setLoading(true);
-      const temp = {} as MeasMetaPath;
 
-      for (const meas of selectedMeasurements) {
-        const { name } = meas;
-        temp[name] = {};
-
-        for (const meta of selectedMetas) {
-          const { TaskId } = meta;
-
-          if (Object.hasOwn(paths, name) && Object.hasOwn(paths[name], TaskId))
-            temp[name][TaskId] = paths[name][TaskId];
-          else {
-            const bp = await getRide(meas, meta, useToast);
-            if (bp !== undefined) temp[name][TaskId] = bp;
-          }
-        }
-      }
-
-      setLoading(false);
-      return temp;
-    };
-
-    updatePaths().then(setPaths);
-  }, [selectedMetas, selectedMeasurements]);
 
   // Calculates the correct bounds for all paths - this should probably be completely refactored as bound are no longer properly used
   useEffect(() => {
@@ -111,16 +81,6 @@ const Rides: FC = () => {
   );
 
   console.log('paths', paths);
-
-  const Mapping = () => {
-    return (
-      <RidesMap
-        paths={paths}
-        selectedMetas={selectedMetas}
-        selectedMeasurements={selectedMeasurements}
-      />
-    );
-  };
 
   return (
     <GraphProvider>
