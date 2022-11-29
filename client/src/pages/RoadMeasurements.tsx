@@ -18,22 +18,22 @@ const json: IJsonModel = {
     children: [
       {
         type: 'tabset',
-        weight: 25,
+        weight: 18,
         children: [
           {
             type: 'tab',
-            name: 'Two',
+            name: 'Trips',
             component: 'ridecards',
           },
         ],
       },
       {
         type: 'tabset',
-        weight: 25,
+        weight: 22,
         children: [
           {
             type: 'tab',
-            name: 'Two',
+            name: 'Measurements',
             component: 'ridedetails',
           },
         ],
@@ -41,11 +41,11 @@ const json: IJsonModel = {
 
       {
         type: 'tabset',
-        weight: 50,
+        weight: 60,
         children: [
           {
             type: 'tab',
-            name: 'One',
+            name: 'Measurements Map',
             component: 'rides',
           },
         ],

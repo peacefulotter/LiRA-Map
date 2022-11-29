@@ -1,8 +1,19 @@
 
 .road-conditions-wrapper {
-    height: calc(100vh - var(--navbar-height));
+    height: calc(100vh - 6vh);
     display: grid;
     grid-template-rows: auto min(40vh, 400px);
+}
+
+
+.road-conditions-map {
+    display: grid;
+    height: 100%;
+
+}
+
+
+.palette-wrapper {
 }
 
 .road-conditions-graph {
@@ -33,6 +44,13 @@
     padding: 5px !important;
     background: var(--background-3) !important;
 }
+
+
+.flexlayout__tabset_tabbar_inner_tab_container {
+    z-index: var(--navbar-z-index);
+}
+
+
 
 
 

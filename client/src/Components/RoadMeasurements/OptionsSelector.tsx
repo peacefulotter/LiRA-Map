@@ -13,9 +13,11 @@ const defaultOptions: TripsOptions = {
   endCity: '',
   postalCode: undefined,
 };
+
 interface IOptionsSelector {
   onChange: (options: TripsOptions) => void;
 }
+
 const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 
@@ -44,7 +46,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({ onChange }) => {
         value={options.distanceKm}
         onChange={(e) => _onChange('distanceKm')(e.target.value)}
       />
-      
+
       <DatePicker
         onChange={_onChange('startDate')}
         value={options.startDate}

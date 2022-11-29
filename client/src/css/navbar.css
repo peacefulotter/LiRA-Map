@@ -1,5 +1,4 @@
 
-
 .nav-wrapper {
     position: sticky;
     top: 0;
@@ -39,3 +38,4 @@
     color: var(--highlight-text);
     background: var(--highlight-background);
 }
+
