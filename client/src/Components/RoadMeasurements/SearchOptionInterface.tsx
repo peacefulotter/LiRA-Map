@@ -10,7 +10,8 @@ const defaultOptions: TripsOptions = {
   startDate: new Date(),
   endDate: new Date(),
   reversed: false,
-  distanceKm: undefined,
+  minDistanceKm: undefined,
+  maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
 };
