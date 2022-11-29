@@ -29,6 +29,10 @@ const RidesGraph: FC = () => {
       .sort(([x1, y1], [x2, y2]) => (x1 < x2 ? -1 : x1 === x2 ? 0 : 1));
   };
 
+  const selectedMeasurement = selectedMeasurements.find(
+    (meas) => meas.name === selectedMeasurementName,
+  );
+
   return (
     <GraphProvider>
       <div className="map-container">
