@@ -33,8 +33,8 @@ export interface TripsOptions {
   startDate: Date;
   endDate: Date;
   reversed: boolean;
-  distanceKm: number | undefined;
-  postalCode: number | undefined;
+  minDistanceKm: number | undefined;
+  maxDistanceKm: number | undefined;
   startCity: string;
   endCity: string;
 }
