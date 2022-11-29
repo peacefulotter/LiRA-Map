@@ -81,7 +81,7 @@ const RideCards: FC = () => {
 
     return (
         <div className="ride-list">
-            <OptionsSelector onChange={onChange}/>
+            {/*<OptionsSelector onChange={onChange}/>*/}
             <Cards showMetas={showMetas} onClick={onClick}/>
         </div>
     )

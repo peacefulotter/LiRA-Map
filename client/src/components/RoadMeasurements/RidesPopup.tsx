@@ -4,6 +4,7 @@ import { Card, CardContent, Grid } from '@mui/material';
 import RideCardsA from './RideCardsA';
 import RideDetailsA from './RideDetailsA';
 import MeasurementTypes from './MeasurementTypes';
+import OptionsSelector from './OptionsSelector';
 
 export default function RidesPopup() {
 	return (
@@ -17,6 +18,9 @@ export default function RidesPopup() {
 				<Grid container spacing={2}>
 					<Grid item xs={12} sx={{ background: 'blue' }}>
 						<MeasurementTypes/>
+					</Grid>
+					<Grid item xs={12} sx={{ background: 'pink' }}>
+						<OptionsSelector/>
 					</Grid>
 					<Grid item xs={6} sx={{ background: 'red' }}>
 						<RideCardsA />

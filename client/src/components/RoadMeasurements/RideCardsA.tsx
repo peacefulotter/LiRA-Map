@@ -6,7 +6,6 @@ import Checkbox from '../Checkbox';
 import {RideMeta, TripsOptions} from '../../models/models'
 
 import {useMetasCtx} from "../../context/MetasContext";
-import OptionsSelector from "./OptionsSelector";
 
 
 interface CardsProps {
@@ -43,30 +42,15 @@ interface SelectMeta extends RideMeta {
 
 const RideCards: FC = () => {
 
-	const {metas, selectedMetas, setSelectedMetas} = useMetasCtx();
+	const {metas, selectedMetas, setSelectedMetas, showMetas, setShowMetas} = useMetasCtx();
 
-	const [showMetas, setShowMetas] = useState<SelectMeta[]>([])
+	// const [showMetas, setShowMetas] = useState<SelectMeta[]>([])
 
 	useEffect(() => {
 		// console.log("Metas:\n");
 		// console.log(metas); // ProdURL
 		setShowMetas(metas.map(m => ({...m, selected: false})))
 	}, [metas])
-
-	const onChange = ({search, startDate, endDate, reversed}: TripsOptions) => {
-		const temp: SelectMeta[] = metas
-			.filter((meta: RideMeta) => {
-				const inSearch = search === "" || meta.TaskId.toString().includes(search)
-				const date = new Date(meta.Created_Date).getTime()
-				const inDate = date >= startDate.getTime() && date <= endDate.getTime()
-				return inSearch && inDate
-			})
-			.map((meta: RideMeta) => {
-				const selected = selectedMetas.find(({TripId}) => meta.TripId === TripId) !== undefined
-				return {...meta, selected}
-			})
-		setShowMetas(reversed ? temp.reverse() : temp)
-	}
 
 	const onClick = (md: SelectMeta, i: number, isChecked: boolean) => {
 		const temp = [...showMetas]
@@ -81,7 +65,6 @@ const RideCards: FC = () => {
 
 	return (
 		<div className="ride-list">
-			<OptionsSelector onChange={onChange}/>
 			<Cards showMetas={showMetas} onClick={onClick}/>
 		</div>
 	)
