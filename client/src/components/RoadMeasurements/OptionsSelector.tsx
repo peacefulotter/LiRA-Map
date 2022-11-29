@@ -38,11 +38,10 @@ const OptionsSelector: FC<IOptionsSelector> = ( { onChange } ) => {
 
             <DatePicker onChange={_onChange('startDate')} value={options.startDate} className="options-date-picker" />
             <DatePicker onChange={_onChange('endDate')} value={options.endDate} className="options-date-picker" />
-
-            <Checkbox
+            <Checkbox style={{width:50}}
                 className="ride-sort-cb"
                 html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-                onClick={_onChange('reversed')} />
+                onClick={_onChange('reversed')}/>
         </div>
         
     )
