@@ -6,6 +6,7 @@ import { RideMeta, TripsOptions } from '../../models/models';
 
 import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 import OptionsSelector from './OptionsSelector';
 
 interface CardsProps {
@@ -14,6 +15,19 @@ interface CardsProps {
 }
 
 const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
+  const { setFocusedMeta } = useMetasCtx();
+  const { selectedMeasurements } = useMeasurementsCtx();
+
+  /* @author Benjamin Lumbye s204428 */
+  const onFocusClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    meta: SelectMeta,
+  ) => {
+    setFocusedMeta(meta.TaskId);
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const renderRow: ListRowRenderer = ({ index, key, style }): ReactNode => {
     const meta = showMetas[index];
     return (
@@ -23,6 +37,14 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
           className="ride-card-container"
           html={
             <div>
+              {meta.selected && selectedMeasurements.length > 0 ? (
+                <button
+                  className="focus-trip-button"
+                  onClick={(e) => onFocusClick(e, meta)}
+                >
+                  📍
+                </button>
+              ) : null}
               <b>{meta.TaskId}</b>
               <br></br>
               {new Date(meta.StartTimeUtc).toLocaleDateString()}

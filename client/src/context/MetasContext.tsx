@@ -14,6 +14,8 @@ interface ContextProps {
   metas: RideMeta[];
   selectedMetas: RideMeta[];
   setSelectedMetas: Dispatch<SetStateAction<RideMeta[]>>;
+  focusedMeta: number;
+  setFocusedMeta: Dispatch<SetStateAction<number>>;
 }
 
 const MetasContext = createContext({} as ContextProps);
@@ -22,6 +24,7 @@ export const MetasProvider = ({ children }: any) => {
   const [metas, setMetas] = useState<RideMeta[]>([]);
   const [selectedMetas, setSelectedMetas] = useState<RideMeta[]>([]);
   const [loading, setLoading] = useState(true);
+  const [focusedMeta, setFocusedMeta] = useState(0);
 
   // fetch the metadata of all the rides
   useEffect(
@@ -39,6 +42,8 @@ export const MetasProvider = ({ children }: any) => {
         metas,
         selectedMetas,
         setSelectedMetas,
+        focusedMeta,
+        setFocusedMeta,
       }}
     >
       {children}

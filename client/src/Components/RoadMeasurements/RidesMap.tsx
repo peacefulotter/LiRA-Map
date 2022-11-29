@@ -10,6 +10,8 @@ import { RENDERER_PALETTE } from '../Map/constants';
 import MetadataPath from '../Map/MetadataPath';
 import MapWrapper from '../Map/MapWrapper';
 
+import '../../css/rides_map.css';
+
 interface IRidesMap {
   paths: MeasMetaPath;
   selectedMetas: RideMeta[];
@@ -36,21 +38,24 @@ const RidesMap: FC<IRidesMap> = ({
   }, [paths]);
 
   return (
-    <MapWrapper>
-      {memoPaths.map(
-        ({ bp, meas, meta }) =>
-          bp && (
-            <MetadataPath
-              key={`ride-mp-${meta.TaskId}-${meas.name}`}
-              path={bp.path}
-              properties={meas}
-              metadata={meta}
-              taskID={meta.TaskId}
-              measurementName={meas.name}
-            />
-          ),
-      )}
-    </MapWrapper>
+    <div className="road-measurements-map">
+      <button className="focus-trips-button">Focus Selected Trips</button>
+      <MapWrapper>
+        {memoPaths.map(
+          ({ bp, meas, meta }) =>
+            bp && (
+              <MetadataPath
+                key={`ride-mp-${meta.TaskId}-${meas.name}`}
+                path={bp.path}
+                properties={meas}
+                metadata={meta}
+                taskID={meta.TaskId}
+                measurementName={meas.name}
+              />
+            ),
+        )}
+      </MapWrapper>
+    </div>
   );
 };
 

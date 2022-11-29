@@ -1,9 +1,10 @@
 import React, { FC, useEffect } from 'react';
 
-import { Marker, Popup, useMap } from 'react-leaflet';
+import { Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { Path as PathType, PathProps } from '../../models/path';
 import Path from './Path';
 import { useGraph } from '../../context/GraphContext';
+import { useMetasCtx } from '../../context/MetasContext';
 
 const parseMD = (mds: any) => {
   if (typeof mds === 'object' && Array.isArray(mds)) {
@@ -67,7 +68,15 @@ const MetadataPath: FC<IMetadataPath> = ({
   measurementName,
 }) => {
   const { markers, useMarkers, lastMarkersAction } = useGraph();
+  const { focusedMeta, setFocusedMeta } = useMetasCtx();
   const map = useMap();
+
+  /* @author Mads Westermann s174508 */
+  useMapEvents({
+    dragend: () => {
+      setFocusedMeta(-1);
+    },
+  });
 
   // Onclick is called 4 times
   const onClick = () => (e: any) => {
@@ -97,6 +106,16 @@ const MetadataPath: FC<IMetadataPath> = ({
 
     map.setView([lastMarkersAction.data.lat, lastMarkersAction.data.lng], 15);
   }, [lastMarkersAction]);
+
+  /* @author Benjamin Lumbye s204428 */
+  useEffect(() => {
+    if (focusedMeta === taskID) {
+      map.flyToBounds([
+        [path[0].lat, path[0].lng],
+        [path[path.length - 1].lat, path[path.length - 1].lng],
+      ]);
+    }
+  }, [focusedMeta]);
 
   const marker = markers[`${taskID}-${measurementName}`];
   const point = path[marker?.index || 0];

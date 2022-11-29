@@ -7,7 +7,7 @@ const Zoom = () => {
 
   return (
     <>
-      <div className="map-zoom">{zoom}</div>
+      <div className="map-zoom">{zoom ? Math.round(zoom) : zoom}</div>
       <ZoomControl position="topright" />
     </>
   );
