@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { write } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
 import { Measurement } from 'src/models';
@@ -26,10 +27,17 @@ export class MeasurementsService {
     return await this.writeFile(updatedFile);
   }
 
-  async editMeasurement(index: number, measurement: Measurement) {
+  async editMeasurement(measurement: Measurement) {
     const measurements = await this.getMeasurements();
     const updatedFile = [...measurements];
+    const index = updatedFile.findIndex((m) => m.id === measurement.id)
     updatedFile[index] = measurement;
     return await this.writeFile(updatedFile);
+  }
+
+  async deleteMeasurement(measurementID: string) {
+    const measurements = await this.getMeasurements();
+    const filteredArray = measurements.filter((measurement) => measurement.id !== measurementID);
+    return await this.writeFile(filteredArray);
   }
 }
