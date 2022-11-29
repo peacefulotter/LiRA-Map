@@ -33,6 +33,9 @@ export class EnergyService {
   private readonly spdTag = 'obd.spd_veh';
   private readonly consTag = 'obd.trac_cons';
   private readonly whlTrqTag = 'obd.whl_trq_est';
+  private readonly brkTrqTag = 'obd.brk_trq_req_elec';
+  private readonly accYawTag = 'obd.acc_long';
+  private readonly gpsTag = 'track.pos';
 
   private readonly measTypes = [this.accLongTag, this.spdTag, this.whlTrqTag];
 
@@ -47,10 +50,10 @@ export class EnergyService {
     const distancesGPS = new Array<number>(assignments.length);
     distancesGPS[0] = 0;
     for (let i = 1; i < assignments.length; i++) {
-      const [j] = assignments[i];
-      const curPower = relevantMeasurements[j];
-      const [prev] = assignments[i - 1];
-      const prevPower = relevantMeasurements[prev];
+      const [curMeasIndex] = assignments[i];
+      const curPower = relevantMeasurements[curMeasIndex];
+      const [prevMeasIndex] = assignments[i - 1];
+      const prevPower = relevantMeasurements[prevMeasIndex];
       const dist = getPreciseDistance(
         { latitude: curPower.lat, longitude: curPower.lon },
         { latitude: prevPower.lat, longitude: prevPower.lon },
@@ -60,14 +63,38 @@ export class EnergyService {
         dist < 2 ? distancesGPS[i - 1] : distancesGPS[i - 1] + dist;
     }
 
-    const startTime = relevantMeasurements[0].Created_Date.getTime();
-    const endTime = relevantMeasurements.at(-1).Created_Date.getTime();
-    const sumOfPeriods = endTime - startTime;
-    const sumOfPeriodsSeconds = sumOfPeriods / 1000;
-    const delta = sumOfPeriodsSeconds / assignments.length;
+    // let assignmentsFiltered = [];
+    const window = 10;
+    const af: number[] = [0];
+    distancesGPS.forEach((d, i) => {
+      const prevIndex = af[af.length - 1];
+      const a = Math.ceil(distancesGPS[prevIndex] / window);
+      const b = Math.ceil(d / window);
+      if (b - a >= 1) {
+        af.push(i);
+      }
+    });
 
-    return assignments.map(([i, before, after], index) => {
+    // const startTime = relevantMeasurements[0].Created_Date.getTime();
+    // const endTime = relevantMeasurements.at(-1).Created_Date.getTime();
+    // const sumOfPeriods = endTime - startTime;
+    // const sumOfPeriodsSeconds = sumOfPeriods / 1000;
+    // const delta = sumOfPeriodsSeconds / assignments.length;
+
+    return af.map((a, index) => {
+      const [i, before, after] = assignments[a];
       const pwr = relevantMeasurements[i];
+
+      let delta: number;
+      if (index == 0) {
+        delta = 0;
+      } else {
+        const [iPrev] = assignments[af[index - 1]];
+        const prevPwr = relevantMeasurements[iPrev];
+        delta =
+          (pwr.Created_Date.getTime() - prevPwr.Created_Date.getTime()) / 1000;
+      }
+
       const pwrVal = calibratePower(pwr);
       const energyVal = (pwrVal * delta) / 3600;
 
@@ -75,7 +102,7 @@ export class EnergyService {
       const spdAfter = relevantMeasurements[after.get(this.spdTag)];
       const spd = calcSpd(spdBefore, spdAfter, pwr);
 
-      const dist = delta * spd;
+      const dist = 10;
 
       const accBefore = relevantMeasurements[before.get(this.accLongTag)];
       const accAfter = relevantMeasurements[after.get(this.accLongTag)];
@@ -109,7 +136,9 @@ export class EnergyService {
       .from({ public: 'Measurements' })
       .where('FK_Trip', tripId)
       .whereIn('T', [this.consTag].concat(this.measTypes))
-      .orderBy('Created_Date');
+      .orderBy('Created_Date')
+      .limit(10000)
+      .offset(1000);
   }
 
   private async collectMeas(sortedMeasurements: MeasEnt[]): Promise<any[]> {
@@ -118,8 +147,7 @@ export class EnergyService {
       return [];
     }
 
-    const assigned: any[] = [];
-
+    const assigned: [number, Map<string, number>, Map<string, number>][] = [];
     let measBefore: Map<string, number>;
     let measAfter: Map<string, number>;
     for (let i = powerIndex; i < sortedMeasurements.length; i++) {
@@ -144,12 +172,9 @@ export class EnergyService {
     let measMap: Map<string, number> = new Map<string, number>();
     let foundAll = false;
 
-    const guard: (_: number) => boolean = (n) =>
-      direction == 'after' ? n < meas.length : n >= 0;
-    const update: (_: number) => number = (n) =>
-      direction == 'after' ? n + 1 : n - 1;
+    const incWith = direction == 'after' ? 1 : -1;
 
-    for (let i = index; !foundAll && guard(i); i = update(i)) {
+    for (let i = index; !foundAll && i < meas.length && i >= 0; i += incWith) {
       const curMeas = meas[i];
       const curMeasType: string = curMeas.T;
       if (!measMap.has(curMeasType) && this.measTypes.includes(curMeasType)) {
