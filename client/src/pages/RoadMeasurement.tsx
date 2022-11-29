@@ -10,6 +10,7 @@ import RideDetails from "../components/RoadMeasurements/RideDetails";
 //import RideCards from "../components/RoadMeasurements/RideCards";
 import Rides from "../components/RoadMeasurements/Rides";
 import {Stack} from "@mui/material";
+import RideCards from '../components/RoadMeasurements/RideCards';
 /*
 import "../css/map.css"
 import "../css/rides.css"
@@ -25,15 +26,9 @@ export default function RoadMeasurement() {
           <MeasurementsProvider>
               <MetasProvider>
                   <div className="rides-wrapper">
-                      {/*
-                      <RideCards />
-                      */}
-                      <Stack direction="row" className="rides-wrapper">
-                          <RideDetails/>
-                      </Stack>
-
+                      {/*<RideCards />*/}
+                      {/*<RideDetails/>*/}
                       <Rides />
-
                   </div>
               </MetasProvider>
           </MeasurementsProvider>

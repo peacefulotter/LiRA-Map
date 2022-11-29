@@ -31,7 +31,7 @@ export default function RideDetails() {
 	}
 
 	return (
-		<Stack sx={{width: 350, height: 700}} spacing={2}>
+		<Stack sx={{width: 350, height: 700}} spacing={2} padding={2}>
 			<FormControl variant="standard">
 				<Autocomplete
 					multiple

@@ -9,6 +9,8 @@ import PaletteEditor from "../Palette/PaletteEditor";
 import { RENDERER_PALETTE } from "../Map/constants";
 import MetadataPath from "../Map/MetadataPath";
 import MapWrapper from "../Map/MapWrapper";
+import { Card } from '@mui/material';
+import RideDetails from './RideDetails';
 
 interface IRidesMap {
     paths: MeasMetaPath;
@@ -34,7 +36,12 @@ const RidesMap: FC<IRidesMap> = ( { paths, selectedMetas, selectedMeasurements }
     }, [paths] )
 
     return (
+        
         <MapWrapper>
+        <Card sx={{ left:10,  zIndex:1000, width: 350, height: 700}}>
+            {/* TODO: Temp solution, should not be in RidesMap */}
+            <RideDetails />
+        </Card>
             { memoPaths.map( ({bp, meas, meta}) => bp && 
                 <MetadataPath 
                     key={`ride-mp-${meta.TaskId}-${meas.name}`} 
