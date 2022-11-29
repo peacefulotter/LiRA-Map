@@ -11,6 +11,7 @@ import { ActiveMeasProperties } from '../../models/properties';
 import { RENDERER_MEAS_PROPERTIES } from '../Map/constants';
 
 import MeasCheckbox from './MeasCheckbox';
+import { Autocomplete, FormControl, TextField } from '@mui/material';
 
 
 const MeasurementTypes: FC = () => {
@@ -52,26 +53,39 @@ const MeasurementTypes: FC = () => {
 		temp[i].isActive = isChecked;
 		setMeasurements(temp);
 	};
+	const filters = ['Track position', 'Interpolation', 'Engine RPM'];
 
 	return (
-		<div className='meta-data'>
-			<div style={{ height: 350, overflow: 'scroll' }}>
-
-				{measurements.map((m: ActiveMeasProperties, i: number) =>
-					<MeasCheckbox
-						key={`meas-checkbox-${i}`}
-						meas={m}
-						selectMeasurement={selectMeasurement(i)}
-						editMeasurement={editMeasurement(m, i)} />,
-				)}
-			</div>
-
-			<Checkbox
-				className='ride-metadata-checkbox md-checkbox-add'
-				html={<div>+</div>}
-				forceState={addChecked}
-				onClick={showAddMeasurement} />
-		</div>
+		<FormControl variant='standard' fullWidth={true}>
+			<Autocomplete
+				multiple
+				renderInput={(params) => (
+					<TextField
+						{...params}
+						variant='standard'
+						label='Measurement types'
+					/>
+				)} options={filters}
+			/>
+		</FormControl>
+		// <div className='meta-data'>
+		// 	<div style={{ height: 350, overflow: 'scroll' }}>
+		//
+		// 		{measurements.map((m: ActiveMeasProperties, i: number) =>
+		// 			<MeasCheckbox
+		// 				key={`meas-checkbox-${i}`}
+		// 				meas={m}
+		// 				selectMeasurement={selectMeasurement(i)}
+		// 				editMeasurement={editMeasurement(m, i)} />,
+		// 		)}
+		// 	</div>
+		//
+		// 	<Checkbox
+		// 		className='ride-metadata-checkbox md-checkbox-add'
+		// 		html={<div>+</div>}
+		// 		forceState={addChecked}
+		// 		onClick={showAddMeasurement} />
+		// </div>
 	);
 };
 

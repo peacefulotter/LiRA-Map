@@ -6,6 +6,8 @@ import Checkbox from '../Checkbox';
 import { RideMeta } from '../../models/models';
 
 import { useMetasCtx } from '../../context/MetasContext';
+import { ListItem, ListItemButton, ToggleButton } from '@mui/material';
+// import Checkbox from '@mui/material/Checkbox';
 
 
 interface CardsProps {
@@ -17,8 +19,15 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
 	const renderRow: ListRowRenderer = ({ index, key, style }): ReactNode => {
 		const meta = showMetas[index];
 		return <div key={key} style={style}>
+			{/*<ToggleButton value={meta.selected} onClick={(isChecked) => {*/}
+			{/*	onClick(meta, index, isChecked);*/}
+			{/*}}/>*/}
+		
+			{/*<ListItem onSelect={(isSelected) => onClick(<meta>index,isSelected)} />*/}
+			
 			<Checkbox
 				forceState={meta.selected}
+				// value={meta.selected} name={"hej"}
 				className='ride-card-container'
 				html={<div><b>{meta.TaskId}</b><br></br>{new Date(meta.Created_Date).toLocaleDateString()}</div>}
 				onClick={(isChecked) => {

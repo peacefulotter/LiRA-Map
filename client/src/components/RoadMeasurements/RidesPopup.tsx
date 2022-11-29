@@ -12,20 +12,20 @@ export default function RidesPopup() {
 			zIndex: 1000,
 			position: 'absolute',
 			width: 450,
-			height: 700,
+			height: 900,
 		}}>
 			<CardContent>
 				<Grid container spacing={2}>
-					<Grid item xs={12} sx={{ background: 'blue' }}>
+					<Grid item xs={12} sx={{ }}>
 						<MeasurementTypes/>
 					</Grid>
-					<Grid item xs={12} sx={{ background: 'pink' }}>
+					<Grid item xs={12} sx={{  }}>
 						<OptionsSelector/>
 					</Grid>
-					<Grid item xs={6} sx={{ background: 'red' }}>
+					<Grid item xs={6} sx={{  }}>
 						<RideCardsA />
 					</Grid>
-					<Grid item xs={6} sx={{ background: 'green' }}>
+					<Grid item xs={6} sx={{  }}>
 						<RideDetailsA />
 					</Grid>
 				</Grid>
