@@ -24,7 +24,7 @@ export const MetasProvider = ({ children }: any) => {
   const [metas, setMetas] = useState<RideMeta[]>([]);
   const [selectedMetas, setSelectedMetas] = useState<RideMeta[]>([]);
   const [loading, setLoading] = useState(true);
-  const [focusedMeta, setFocusedMeta] = useState(0);
+  const [focusedMeta, setFocusedMeta] = useState(-1); // -1 is none, 0 is all, other value is specific trip
 
   // fetch the metadata of all the rides
   useEffect(

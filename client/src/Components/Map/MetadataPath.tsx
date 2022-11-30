@@ -71,13 +71,6 @@ const MetadataPath: FC<IMetadataPath> = ({
   const { focusedMeta, setFocusedMeta } = useMetasCtx();
   const map = useMap();
 
-  /* @author Mads Westermann s174508 */
-  useMapEvents({
-    dragend: () => {
-      setFocusedMeta(-1);
-    },
-  });
-
   // Onclick is called 4 times
   const onClick = () => (e: any) => {
     const { lat, lng } = e.latlng;
@@ -114,6 +107,8 @@ const MetadataPath: FC<IMetadataPath> = ({
         [path[0].lat, path[0].lng],
         [path[path.length - 1].lat, path[path.length - 1].lng],
       ]);
+
+      setFocusedMeta(-1);
     }
   }, [focusedMeta]);
 

@@ -5,9 +5,12 @@ import { MeasProperties, ActiveMeasProperties } from '../../models/properties';
 import { BoundedPath, MeasMetaPath } from '../../models/path';
 import { RideMeta } from '../../models/models';
 
+import { useMetasCtx } from '../../context/MetasContext';
+
 import PaletteEditor from '../Palette/PaletteEditor';
 import { RENDERER_PALETTE } from '../Map/constants';
 import MetadataPath from '../Map/MetadataPath';
+import MetadataHelper from '../Map/MetadataHelper';
 import MapWrapper from '../Map/MapWrapper';
 
 import '../../css/rides_map.css';
@@ -23,6 +26,8 @@ const RidesMap: FC<IRidesMap> = ({
   selectedMetas,
   selectedMeasurements,
 }) => {
+  const { setFocusedMeta } = useMetasCtx();
+
   const memoPaths = useMemo(() => {
     const temp: { meas: MeasProperties; meta: RideMeta; bp: BoundedPath }[] =
       [];
@@ -37,24 +42,46 @@ const RidesMap: FC<IRidesMap> = ({
     return temp;
   }, [paths]);
 
+  const metadataPaths = memoPaths.map(
+    ({ bp, meas, meta }) =>
+      bp && (
+        <MetadataPath
+          key={`ride-mp-${meta.TaskId}-${meas.name}`}
+          path={bp.path}
+          properties={meas}
+          metadata={meta}
+          taskID={meta.TaskId}
+          measurementName={meas.name}
+        />
+      ),
+  );
+
+  const lat0list = memoPaths.map(({ bp }) => bp.path[0].lat);
+  const lat1list = memoPaths.map(({ bp }) => bp.path[bp.path.length - 1].lat);
+  const lng0list = memoPaths.map(({ bp }) => bp.path[0].lng);
+  const lng1list = memoPaths.map(({ bp }) => bp.path[bp.path.length - 1].lng);
+
+  const metadataHelper = (
+    <MetadataHelper
+      key={'metadatahelper'}
+      boundLats={[...lat0list, ...lat1list]}
+      boundLngs={[...lng0list, ...lng1list]}
+    />
+  );
+
   return (
     <div className="road-measurements-map">
-      <button className="focus-trips-button">Focus Selected Trips</button>
-      <MapWrapper>
-        {memoPaths.map(
-          ({ bp, meas, meta }) =>
-            bp && (
-              <MetadataPath
-                key={`ride-mp-${meta.TaskId}-${meas.name}`}
-                path={bp.path}
-                properties={meas}
-                metadata={meta}
-                taskID={meta.TaskId}
-                measurementName={meas.name}
-              />
-            ),
-        )}
-      </MapWrapper>
+      {selectedMetas.length > 0 && selectedMeasurements.length > 0 ? (
+        <button
+          className="focus-trips-button"
+          onClick={() => {
+            setFocusedMeta(0);
+          }}
+        >
+          Focus Selected Trips
+        </button>
+      ) : null}
+      <MapWrapper>{[...metadataPaths, metadataHelper]}</MapWrapper>
     </div>
   );
 };
