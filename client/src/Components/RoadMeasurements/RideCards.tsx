@@ -120,7 +120,7 @@ const RideCards: FC = () => {
     isNaN(tripOptions.maxDistanceKm) ||
     meta.DistanceKm <= tripOptions.maxDistanceKm;
 
-  //Author: Mads, Martin
+  //Author: Mads M, Martin
   const startCityFilter = (meta: RideMeta) =>
     tripOptions.startCity.length === 0 ||
     (JSON.parse(meta.StartPositionDisplay).city !== null &&
@@ -128,7 +128,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.startCity.toLowerCase()));
 
-  //Author: Mads, Martin
+  //Author: Mads M, Martin
   const endCityFilter = (meta: RideMeta) =>
     tripOptions.endCity.length === 0 ||
     (JSON.parse(meta.EndPositionDisplay).city !== null &&
