@@ -5,7 +5,7 @@ const development =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 const devURL = 'http://localhost:3002';
-const prodURL = 'http://lirase2.compute.dtu.dk:3002';
+const prodURL = 'http://se2-c.compute.dtu.dk:3002';
 
 const getPath = (p: string) => (development ? devURL : prodURL) + p;
 
@@ -20,6 +20,15 @@ export async function asyncPost<T>(
         .map((key: any) => new URLSearchParams(`${key}=${params[key]}`))
         .join('&'),
   });
+  request.catch(() => createToast({ title: `Connection to server failed` }));
+  return request;
+}
+
+export async function realAsyncPost<T>(
+  path: string,
+  data: any,
+): Promise<AxiosResponse<T, any>> {
+  const request = axios.post<T>(getPath(path), data);
   request.catch(() => createToast({ title: `Connection to server failed` }));
   return request;
 }

@@ -18,7 +18,7 @@ import MeasCheckbox from './MeasCheckbox';
 import { v4 as uuidv4 } from 'uuid';
 import '../../css/ridedetails.css';
 
-import '../../css/ridedetails.css';
+import CalculateMu from './CalculateMu';
 
 const RideDetails: FC = () => {
   const { selectedMetas } = useMetasCtx();
@@ -76,6 +76,8 @@ const RideDetails: FC = () => {
 
   return (
     <div className="meta-data">
+      <CalculateMu />
+
       {measurements.map((m: ActiveMeasProperties) => (
         <MeasCheckbox
           key={`meas-checkbox-${m.id}`}
