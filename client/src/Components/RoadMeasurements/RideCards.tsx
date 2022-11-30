@@ -98,18 +98,21 @@ const RideCards: FC = () => {
     isNaN(tripOptions.maxDistanceKm) ||
     meta.DistanceKm <= tripOptions.maxDistanceKm;
 
-  //Author: Mads, Martin
-  const startCityFilter = (meta: RideMeta) => 
+  //Author: Mads M, Martin
+  const startCityFilter = (meta: RideMeta) =>
     tripOptions.startCity.length === 0 ||
-    JSON.parse(meta.StartPositionDisplay).city !== null &&
-    (JSON.parse(meta.StartPositionDisplay).city||'').toLowerCase().includes(tripOptions.startCity.toLowerCase());
-  
-  //Author: Mads, Martin
-  const endCityFilter = (meta: RideMeta) => 
+    (JSON.parse(meta.StartPositionDisplay).city !== null &&
+      (JSON.parse(meta.StartPositionDisplay).city || '')
+        .toLowerCase()
+        .includes(tripOptions.startCity.toLowerCase()));
+
+  //Author: Mads M, Martin
+  const endCityFilter = (meta: RideMeta) =>
     tripOptions.endCity.length === 0 ||
-    JSON.parse(meta.EndPositionDisplay).city !== null &&
-    (JSON.parse(meta.EndPositionDisplay).city||'').toLowerCase().includes(tripOptions.endCity.toLowerCase());
-  
+    (JSON.parse(meta.EndPositionDisplay).city !== null &&
+      (JSON.parse(meta.EndPositionDisplay).city || '')
+        .toLowerCase()
+        .includes(tripOptions.endCity.toLowerCase()));
 
   const dateFilter = (meta: RideMeta) => {
     const date = new Date(meta.StartTimeUtc).getTime();
@@ -119,33 +122,29 @@ const RideCards: FC = () => {
     );
   };
 
-  const filteredMetas = useMemo<SelectMeta[]>(
-    () => {
-      const filtered = metas
-        .filter(
-          (meta) =>
-            taskIDFilter(meta) &&
-            isNightFilter(meta) &&
-            minDistanceFilter(meta) &&
-            maxDistanceFilter(meta) &&
-            dateFilter(meta) &&
-            startCityFilter(meta) &&
-            endCityFilter(meta),
-        )
-        .map((meta: RideMeta) => {
-          const selected = selectedMetas.some(
-            ({ TripId }) => meta.TripId === TripId,
-          );
-          return { ...meta, selected };
-        });
-      return tripOptions.reversed ? filtered.reverse() : filtered;
-    },
-    [metas, tripOptions, isNight, selectedMetas],
-  );
+  const filteredMetas = useMemo<SelectMeta[]>(() => {
+    const filtered = metas
+      .filter(
+        (meta) =>
+          taskIDFilter(meta) &&
+          isNightFilter(meta) &&
+          minDistanceFilter(meta) &&
+          maxDistanceFilter(meta) &&
+          dateFilter(meta) &&
+          startCityFilter(meta) &&
+          endCityFilter(meta),
+      )
+      .map((meta: RideMeta) => {
+        const selected = selectedMetas.some(
+          ({ TripId }) => meta.TripId === TripId,
+        );
+        return { ...meta, selected };
+      });
+    return tripOptions.reversed ? filtered.reverse() : filtered;
+  }, [metas, tripOptions, isNight, selectedMetas]);
 
   return (
     <div className="ride-list">
-      
       <Checkbox
         className="ride-sort-cb"
         html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
