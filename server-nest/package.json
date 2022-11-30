@@ -31,7 +31,7 @@
     "knex-postgis": "^0.14.3",
     "nestjs-knex": "^2.0.0",
     "nodemon": "^2.0.16",
-    "pg": "^8.7.3",
+    "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.2",
     "rimraf": "^3.0.2",
