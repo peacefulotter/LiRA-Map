@@ -9,18 +9,15 @@ import PaletteEditor from '../Palette/PaletteEditor';
 import { RENDERER_PALETTE } from '../Map/constants';
 import MetadataPath from '../Map/MetadataPath';
 import MapWrapper from '../Map/MapWrapper';
+import { useGraph } from '../../context/GraphContext';
+import { useMetasCtx } from '../../context/MetasContext';
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 
-interface IRidesMap {
-  paths: MeasMetaPath;
-  selectedMetas: RideMeta[];
-  selectedMeasurements: ActiveMeasProperties[];
-}
+const RidesMap: FC = () => {
+  const { selectedMetas } = useMetasCtx();
+  const { selectedMeasurements } = useMeasurementsCtx();
+  const { paths } = useGraph();
 
-const RidesMap: FC<IRidesMap> = ({
-  paths,
-  selectedMetas,
-  selectedMeasurements,
-}) => {
   const memoPaths = useMemo(() => {
     const temp: { meas: MeasProperties; meta: RideMeta; bp: BoundedPath }[] =
       [];

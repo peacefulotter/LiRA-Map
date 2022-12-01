@@ -84,6 +84,10 @@ const Line: FC<ILine> = ({
     };
   }, [svg, xAxis, yAxis, data, label, bounds, i, setDotHover]);
 
+  useEffect(() => {
+    console.log('test');
+  }, [data]);
+
   return null;
 };
 

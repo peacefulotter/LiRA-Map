@@ -1,38 +1,40 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useGraph } from '../../context/GraphContext';
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
+import { useMetasCtx } from '../../context/MetasContext';
 
-interface IGraphSelector {
-  onTripChange: (value: number) => void;
-  onMeasurementChange: (value: string) => void;
-  taskIds: number[];
-  measNames: string[];
-  taskId: number | undefined;
-  measName: string | undefined;
-}
-
-const GraphSelector: FC<IGraphSelector> = ({
-  onTripChange,
-  onMeasurementChange,
-  taskIds,
-  measNames,
-  taskId,
-  measName,
-}) => {
+const GraphSelector: FC = () => {
   const [selectedTrip, setSelectedTrip] = useState<number>();
   const [selectedMeasurement, setSelectedMeasurement] = useState<string>();
 
-  const { lastMarkersAction } = useGraph();
+  const { selectedMetas } = useMetasCtx();
+  const { selectedMeasurements } = useMeasurementsCtx();
+  const {
+    lastMarkersAction,
+    setSelectedMeasurementName,
+    setSelectedTaskID,
+    selectedTaskID,
+    selectedMeasurementName,
+  } = useGraph();
 
-  useEffect(() => setSelectedTrip(taskId), [taskId]);
-  useEffect(() => setSelectedMeasurement(measName), [measName]);
+  useEffect(() => setSelectedTrip(selectedTaskID), [selectedTaskID]);
+  useEffect(
+    () => setSelectedMeasurement(selectedMeasurementName),
+    [selectedMeasurementName],
+  );
 
   useEffect(() => {
     if (!lastMarkersAction || lastMarkersAction?.source === 'GRAPH') return;
     if (lastMarkersAction.taskID !== selectedTrip)
-      onTripChange(lastMarkersAction.taskID);
+      setSelectedTaskID(lastMarkersAction.taskID);
     if (lastMarkersAction.measurementName !== selectedMeasurement)
-      onMeasurementChange(lastMarkersAction.measurementName);
+      setSelectedMeasurementName(lastMarkersAction.measurementName);
   }, [lastMarkersAction]);
+
+  const taskIds = selectedMetas.map((meta) => meta.TaskId);
+  const measNames = selectedMeasurements
+    .filter((meas) => meas.hasValue)
+    .map((meas) => meas.name);
 
   return (
     <div className="graph-selector">
@@ -40,7 +42,7 @@ const GraphSelector: FC<IGraphSelector> = ({
         <span>Trip: </span>
         <select
           value={selectedTrip}
-          onChange={(e) => onTripChange(parseInt(e.target.value))}
+          onChange={(e) => setSelectedTaskID(parseInt(e.target.value))}
         >
           {taskIds.map((taskId) => (
             <option key={taskId} value={taskId}>
@@ -53,7 +55,7 @@ const GraphSelector: FC<IGraphSelector> = ({
         <span>Measurement: </span>
         <select
           value={selectedMeasurement}
-          onChange={(e) => onMeasurementChange(e.target.value)}
+          onChange={(e) => setSelectedMeasurementName(e.target.value)}
         >
           {measNames.map((measName) => (
             <option key={measName} value={measName}>

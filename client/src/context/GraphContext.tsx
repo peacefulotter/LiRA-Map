@@ -4,6 +4,7 @@ import React, {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
   useState,
 } from 'react';
@@ -16,11 +17,13 @@ import {
   RemMinMaxFunc,
   UseMarkersAction,
 } from '../assets/graph/types';
-import { MeasMetaPath } from '../models/path';
+import { Bounds, MeasMetaPath } from '../models/path';
 import { getRide } from '../queries/rides';
 import useToast from '../Components/createToast';
 import { useMetasCtx } from './MetasContext';
 import { useMeasurementsCtx } from './MeasurementsContext';
+import Loading from '../Components/Loading';
+import { ActiveMeasProperties } from '../models/properties';
 
 interface ContextProps {
   minX: number;
@@ -38,6 +41,13 @@ interface ContextProps {
   lastMarkersAction: UseMarkersAction | undefined;
 
   paths: MeasMetaPath;
+
+  selectedMeasurementName: string | undefined;
+  setSelectedMeasurementName: Dispatch<SetStateAction<string | undefined>>;
+  selectedTaskID: number | undefined;
+  setSelectedTaskID: Dispatch<SetStateAction<number | undefined>>;
+  selectedMeasurementBounds: Bounds | undefined;
+  selectedMeasurement: ActiveMeasProperties | undefined;
 }
 
 const GraphContext = createContext({} as ContextProps);
@@ -75,6 +85,9 @@ export const GraphProvider = ({ children }: any) => {
   const { selectedMeasurements } = useMeasurementsCtx();
 
   const [paths, setPaths] = useState<MeasMetaPath>({});
+  const [selectedTaskID, setSelectedTaskID] = useState<number>();
+  const [selectedMeasurementName, setSelectedMeasurementName] =
+    useState<string>();
   const [loading, setLoading] = useState(false);
 
   const updatePaths = async () => {
@@ -102,8 +115,56 @@ export const GraphProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
+    // Checks if the selected graph is no longer present - if it isn't then set it to something that is there
+    if (
+      selectedMetas.length > 0 &&
+      !selectedMetas.some((meta) => meta.TaskId === selectedTaskID)
+    ) {
+      setSelectedTaskID(selectedMetas[0].TaskId);
+    } else if (selectedMetas.length === 0) {
+      setSelectedTaskID(undefined);
+    }
+    if (
+      selectedMeasurements.length > 0 &&
+      !selectedMeasurements.some(
+        (meas) => meas.name === selectedMeasurementName,
+      )
+    ) {
+      setSelectedMeasurementName(selectedMeasurements[0].name);
+    } else if (selectedMeasurements.length === 0) {
+      setSelectedMeasurementName(undefined);
+    }
+
     updatePaths().then(setPaths);
   }, [selectedMetas, selectedMeasurements]);
+
+  // Calculates the correct bounds for all paths - this should probably be completely refactored as bound are no longer properly used
+  const selectedMeasurementBounds: Bounds | undefined = useMemo(() => {
+    if (
+      selectedMetas.length > 0 &&
+      selectedMeasurementName &&
+      paths[selectedMeasurementName]
+    ) {
+      const temp = paths[selectedMeasurementName];
+      const minY = Math.min(
+        ...(Object.keys(temp).map((k) => temp[+k].bounds?.minY) as number[]),
+      );
+      const maxY = Math.max(
+        ...(Object.keys(temp).map((k) => temp[+k].bounds?.maxY) as number[]),
+      );
+      return { minY: minY, maxY: maxY };
+    } else {
+      return selectedMeasurementBounds;
+    }
+  }, [paths, selectedMeasurementName]);
+
+  const selectedMeasurement = useMemo(
+    () =>
+      selectedMeasurements.find(
+        (meas) => meas.name === selectedMeasurementName,
+      ),
+    [selectedMeasurements, selectedMeasurementName],
+  );
 
   return (
     <GraphContext.Provider
@@ -120,9 +181,16 @@ export const GraphProvider = ({ children }: any) => {
         useMarkers,
         lastMarkersAction,
         paths,
+        selectedMeasurementName,
+        setSelectedMeasurementName,
+        selectedTaskID,
+        setSelectedTaskID,
+        selectedMeasurementBounds,
+        selectedMeasurement,
       }}
     >
       {children}
+      <Loading loading={loading} />
     </GraphContext.Provider>
   );
 };

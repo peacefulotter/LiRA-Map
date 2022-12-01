@@ -8,6 +8,10 @@ import RideCards from '../Components/RoadMeasurements/RideCards';
 import Rides from '../Components/RoadMeasurements/Rides';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 import 'flexlayout-react/style/dark.css';
+import { GraphProvider } from '../context/GraphContext';
+import RidesMap from '../Components/RoadMeasurements/RidesMap';
+import Graph from '../Components/Graph/Graph';
+import GraphSelector from '../Components/Graph/GraphSelector';
 
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
@@ -38,15 +42,31 @@ const json: IJsonModel = {
           },
         ],
       },
-
       {
-        type: 'tabset',
+        type: 'row',
         weight: 60,
         children: [
           {
-            type: 'tab',
-            name: 'Measurements Map',
-            component: 'rides',
+            type: 'tabset',
+            weight: 65,
+            children: [
+              {
+                type: 'tab',
+                name: 'Measurements Map',
+                component: 'ridemap',
+              },
+            ],
+          },
+          {
+            type: 'tabset',
+            weight: 35,
+            children: [
+              {
+                type: 'tab',
+                name: 'Graph',
+                component: 'graph',
+              },
+            ],
           },
         ],
       },
@@ -67,11 +87,18 @@ const RoadMeasurements = () => {
     } else if (component === 'ridedetails') {
       return <RideDetails />;
     } else if (component === 'ridemap') {
-      return; //;
-    } else if (component === 'ride') {
-      return; //;
+      return <RidesMap />; //;
+    } else if (component === 'graph') {
+      return (
+        <>
+          <GraphSelector />
+          <Graph />
+        </>
+      ); //;
     }
-  }; /*
+  };
+
+  /*
 
                                     return (
                                       <MeasurementsProvider>
@@ -92,9 +119,11 @@ const RoadMeasurements = () => {
   return (
     <MeasurementsProvider>
       <MetasProvider>
-        <div className="rides-wrapper">
-          <Layout model={model} factory={factory} />
-        </div>
+        <GraphProvider>
+          <div className="rides-wrapper">
+            <Layout model={model} factory={factory} />
+          </div>
+        </GraphProvider>
       </MetasProvider>
     </MeasurementsProvider>
   );
