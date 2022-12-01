@@ -100,13 +100,18 @@ const MetadataPath: FC<IMetadataPath> = ({
     map.setView([lastMarkersAction.data.lat, lastMarkersAction.data.lng], 15);
   }, [lastMarkersAction]);
 
-  /* @author Benjamin Lumbye s204428 */
+  /* @author Benjamin Lumbye s204428 + Mads Westermann s174508 */
   useEffect(() => {
     if (focusedMeta === taskID) {
-      map.flyToBounds([
-        [path[0].lat, path[0].lng],
-        [path[path.length - 1].lat, path[path.length - 1].lng],
+      const lat0 = path[0].lat;
+      const lat1 = path[path.length - 1].lat;
+      const lng0 = path[0].lng;
+      const lng1 = path[path.length - 1].lng;
+      const zoom = map.getBoundsZoom([
+        [lat0, lng0],
+        [lat1, lng1],
       ]);
+      map.setView([(lat0 + lat1) / 2, (lng0 + lng1) / 2], zoom);
 
       setFocusedMeta(-1);
     }
