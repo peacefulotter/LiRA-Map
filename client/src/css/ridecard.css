@@ -187,3 +187,19 @@ span.hamburger {
 #spacing {
   height: 5px;
 }
+
+
+.focus-trip-button { /* @author: Mads Westermann s174508*/
+    position: absolute;
+    right: 0px;
+    padding: 5px;
+    border: 0px;
+    margin: 1px 0px;
+    border-radius: 3px;
+    background-color: var(--background-3);
+    cursor: pointer;
+}
+
+.focus-trip-button:hover { /* @author: Mads Westermann s174508*/
+    background-color: #555561cc;;
+}
