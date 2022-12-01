@@ -2,7 +2,7 @@ import { knex } from 'knex'
 
 export interface MeasurementRow {
     MeasurementId: string
-    TS_or_Distance: Date
+    TS_or_Distance: string
     Created_Date: Date
     Updated_Date: Date
     lat: number
@@ -27,27 +27,14 @@ export class EnergyDB {
         searchPath: ['knex', 'public', 'lira'],
     });
 
-
-    public async persist(data?: any) {
-        var measurement : MeasurementRow = {
-            MeasurementId: "00000000-0000-0000-0000-000000000000",
-            TS_or_Distance: new Date("2021-04-28 09:22:26.876 +0200"),
-            Created_Date: new Date("2021-04-28 09:22:26.876 +0200"),
-            Updated_Date: new Date("2021-04-28 09:22:26.876 +0200"),
-            lat: 55.72779,
-            lon: 12.52296,
-            isComputed: true,
-            FK_Trip: "00000000-0000-0000-0000-000000000000",
-            FK_MeasurementType: "00000000-0000-0000-0000-000000000000",
-            T: "obd.rpm",
-            message: '{"id":"someid"}'
-        }
-        this.liradb.insert(measurement).into('measurements')
+    public async persist(data: MeasurementRow) {
+        console.log(`[${new Date().toLocaleString('da')}] Writing calculated power measurement ${data.MeasurementId} to database.`)
+        this.liradb.insert(data).into('measurements')
             .then(() => {
-                console.log('PostgreSQL connected');
+                //console.log(`${new Date().toLocaleString('da')}: Succesfully wrote calculated power measurement to database.`);
             })
             .catch((e) => {
-                console.log('PostgreSQL not connected');
+                console.log(`[${new Date().toLocaleString('da')}] Something went wrong, most likely not connected to PostgreSQL.`);
                 console.error(e);
             });
     }
