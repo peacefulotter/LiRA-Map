@@ -13,8 +13,8 @@ export default function RoadMeasurement() {
 	const { themeStretch } = useSettings();
 
 	return (
-		<Page title='Road Measurement'> 
-			{/*style={{ margin: '-24px -16px -24px -16px' }}*/}
+		<Page title='Road Measurement' style={{ margin: '-24px -16px -24px -16px' }}> 
+			
 			<MeasurementsProvider>
 				<MetasProvider>
 					<div className='rides-wrapper'>

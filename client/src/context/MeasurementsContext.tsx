@@ -14,6 +14,7 @@ interface ContextProps {
 	measurements: ActiveMeasProperties[];
     setMeasurements: Dispatch<SetStateAction<ActiveMeasProperties[]>>;
 	selectedMeasurements: ActiveMeasProperties[];
+	measurementTypes: string[];
 }
 
 const MeasurementsContext = createContext({} as ContextProps);
@@ -22,6 +23,7 @@ export const MeasurementsProvider = ({ children }: any) => {
 
 	const [ measurements, setMeasurements ] = useState<ActiveMeasProperties[]>([])
 	const [ selectedMeasurements, setSelectedMeasurements ] = useState<ActiveMeasProperties[]>([])
+	const measurementTypes = ["obd.rpm","acc.xyz"] // TODO: Read measurement types from DB instead
 
 	useEffect( () => setSelectedMeasurements( measurements.filter(m => m.isActive)), [measurements] )
 
@@ -32,7 +34,8 @@ export const MeasurementsProvider = ({ children }: any) => {
 			value={{
 				measurements,
 				setMeasurements,
-				selectedMeasurements
+				selectedMeasurements,
+				measurementTypes
 			}}
 		>
 			{children}

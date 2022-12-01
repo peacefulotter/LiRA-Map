@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { RideMeta, TripsOptions } from '../../models/models';
 import { useMetasCtx } from '../../context/MetasContext';
-import { Grid, TextField } from '@mui/material';
+import { Grid, IconButton, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import Checkbox from '../Checkbox';
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
 
 const defaultOptions: TripsOptions = {
 	search: '',
@@ -38,9 +38,33 @@ export default function OptionsSelector() {
 	const [options, setOptions] = useState<TripsOptions>(defaultOptions);
 	const { metas, selectedMetas, setShowMetas } = useMetasCtx();
 
+	const _onToggle = (key: string) => {
+		// TODO: Terrible temp solution lol
+		const optionsNew = { ...options } as any;
+		var currentValue = optionsNew[key];
+		optionsNew[key] = !currentValue;
+		setOptions(optionsNew);
+		const { search, startDate, endDate, reversed } = optionsNew;
+
+		const temp: SelectMeta[] = metas
+			.filter((meta: RideMeta) => {
+				const inSearch = search === '' || meta.TaskId.toString().includes(search);
+				const date = new Date(meta.Created_Date).getTime();
+				const inDate = date >= startDate.getTime() && date <= endDate.getTime();
+				return inSearch && inDate;
+			})
+			.map((meta: RideMeta) => {
+				const selected = selectedMetas.find(({ TripId }) => meta.TripId === TripId) !== undefined;
+				return { ...meta, selected };
+			});
+
+		setShowMetas(reversed ? temp.reverse() : temp);
+	};
+
 	const _onChange = (key: keyof TripsOptions) => {
 		return function <T>(value: T) {
 			console.log(key);
+			console.log(value);
 			const optionsNew = { ...options } as any;
 			optionsNew[key] = value;
 			setOptions(optionsNew);
@@ -80,8 +104,7 @@ export default function OptionsSelector() {
 						<DatePicker onChange={_onChange('endDate')} value={options.endDate}
 									className='options-date-picker'
 									renderInput={(params: any) => <TextField variant='standard'
-																			 sx={{ maxWidth: 125 }}{...params} />}
-						/>
+																			 sx={{ maxWidth: 125 }}{...params} />} />
 
 					</Grid>
 
@@ -91,21 +114,20 @@ export default function OptionsSelector() {
 							placeholder='Search..'
 							value={options.search}
 							onChange={e => _onChange('search')(e.target.value)}
-						/>
+							size={'small'} />
 					</Grid>
 
+					{/*// onClick={_onToggle('reversed')}*/}
 					<Grid item xs={6}>
-						<Checkbox
-							style={{ width: 75 }}
+						<IconButton
 							className='ride-sort-cb'
-
-							// value={'Sort'}
-							html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-							onClick={_onChange('reversed')} />
-
+							onClick={() => _onToggle('reversed')}
+							color={'secondary'}
+							size={'small'}>
+							{options.reversed ? <ArrowDownward /> : <ArrowUpward />}
+						</IconButton>
 					</Grid>
 				</Grid>
-
 			</LocalizationProvider>
 		</div>
 	);
