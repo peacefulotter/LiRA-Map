@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { RideMeta } from '../rides/models.rides';
+//import { RideMeta } from '../rides/models.rides';
 import { getPreciseDistance } from 'geolib';
 import {
   AccLongMessage,
@@ -9,7 +9,7 @@ import {
   SpeedMessage,
   Test,
 } from './EnergyInterfaces';
-import { Measurement } from '../models';
+//import { Measurement } from '../models';
 import * as Console from 'console';
 import {
   calcAcc,
@@ -24,6 +24,7 @@ import {
   getMeasVal,
 } from './EnergyMath';
 import { GeolibInputCoordinates } from 'geolib/es/types';
+import { EnergyDB } from './EnergyDB';
 
 @Injectable()
 export class EnergyService {
@@ -119,13 +120,18 @@ export class EnergyService {
       const pwrNormalised =
         energyVal - energyWhlTrq - energySlope - energyInertia - energyAero;
 
-      return {
+      // test persist to db
+      const energydb = new EnergyDB()
+      energydb.persist()
+
+      return JSON.stringify{{
         result: pwrNormalised,
         prev_power: energyVal,
         whlTrq: energyWhlTrq,
         slope: energySlope,
         inertia: energyInertia,
         aero: energyAero,
+      }
       };
     });
   }
