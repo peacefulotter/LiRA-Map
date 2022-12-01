@@ -1,0 +1,1 @@
+select * from "Measurements" ms where "T" = 'acc.xyz' or "T" = 'obd.spd_veh' fetch next 10 rows only

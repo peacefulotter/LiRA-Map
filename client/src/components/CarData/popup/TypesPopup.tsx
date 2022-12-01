@@ -22,7 +22,7 @@ const TypesPopup: FC<IPopupWrapper> = ( { types, setTypes } ) => {
     const { dataType, aggrType } = types;
     var direction = -1;
     const fetchAggrTypes = (dt: string) => GetAggregationTypes(dt).then( (at) => {
-        console.log(dt, at);
+        // console.log(dt, at);
         setAggrTypes(at); 
     })
         

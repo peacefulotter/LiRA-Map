@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, Knex } from 'nestjs-knex';
-import { RideMeta } from '../rides/models.rides';
+//import { RideMeta } from '../rides/models.rides';
 import { getPreciseDistance } from 'geolib';
 import {
   AccLongMessage,
@@ -9,7 +9,7 @@ import {
   SpeedMessage,
   Test,
 } from './EnergyInterfaces';
-import { Measurement } from '../models';
+//import { Measurement } from '../models';
 import * as Console from 'console';
 import {
   calcAcc,
@@ -24,6 +24,8 @@ import {
   getMeasVal,
 } from './EnergyMath';
 import { GeolibInputCoordinates } from 'geolib/es/types';
+import { EnergyDB, MeasurementRow } from './EnergyDB';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class EnergyService {
@@ -36,6 +38,7 @@ export class EnergyService {
   private readonly brkTrqTag = 'obd.brk_trq_req_elec';
   private readonly accYawTag = 'obd.acc_long';
   private readonly gpsTag = 'track.pos';
+  private readonly energyDB = new EnergyDB()
 
   private readonly measTypes = [this.accLongTag, this.spdTag, this.whlTrqTag];
 
@@ -119,14 +122,32 @@ export class EnergyService {
       const pwrNormalised =
         energyVal - energyWhlTrq - energySlope - energyInertia - energyAero;
 
-      return {
+      const msg = JSON.stringify({
         result: pwrNormalised,
         prev_power: energyVal,
         whlTrq: energyWhlTrq,
         slope: energySlope,
         inertia: energyInertia,
         aero: energyAero,
-      };
+      });
+
+      var measurement : MeasurementRow = {
+        MeasurementId: uuidv4(),
+        TS_or_Distance: pwr.TS_or_Distance,
+        Created_Date: pwr.Created_Date,
+        Updated_Date: pwr.Updated_Date,
+        lat: pwr.lat,
+        lon: pwr.lon,
+        isComputed: pwr.isComputed,
+        FK_Trip: pwr.FK_Trip,
+        FK_MeasurementType: pwr.FK_MeasurementType,
+        T: "gre.pwr",
+        message: msg
+    }
+      
+      this.energyDB.persist(measurement)
+
+      return msg;
     });
   }
 

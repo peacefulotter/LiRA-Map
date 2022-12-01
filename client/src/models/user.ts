@@ -72,7 +72,7 @@ export const access = createModel<RootModel>()({
     },
     effects: (dispatch) => ({
         async login(payload: { email: string, password: string }) {
-            axios.post('/login', payload).then((response) => {
+            return axios.post('/login', payload).then((response) => {
                 dispatch.access.setState(response.data);
             })
         },

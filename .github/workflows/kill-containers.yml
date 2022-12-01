@@ -1,11 +1,11 @@
-name: "kill-lira"
+name: "kill-containers"
 
 on:
   workflow_dispatch:
 
 jobs:
   kill-lira:
-    name: kill-lira
+    name: kill-containers
     runs-on: self-hosted
 
     steps:

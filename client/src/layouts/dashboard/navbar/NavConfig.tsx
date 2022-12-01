@@ -1,21 +1,26 @@
 // components
-import {CarCrash, Landscape, RemoveRoad, SquareFoot} from "@mui/icons-material";
+import {CarCrash, Landscape, RemoveRoad, SquareFoot, Dashboard, Star} from "@mui/icons-material";
 
 // ----------------------------------------------------------------------
 
 const navConfig = [
-    // ROADS
-    // ----------------------------------------------------------------------
     {
-        subheader: 'roads',
+        subheader: 'My Lira',
         items: [
-            {title: 'Road Measurement', path: '/road/measurement', icon: <SquareFoot/>},
-            {title: 'Road Condition', path: '/road/condition', icon: <RemoveRoad/>},
-            {title: 'Altitude', path: '/road/altitude', icon: <Landscape/>},
+            {title: 'User dashboard', path: '/user/dashboard', icon: <Dashboard/>},
+            {title: 'Managed roads', path: '/user/managed', icon: <Star/>}
         ],
     },
     {
-        subheader: 'cars',
+        subheader: 'Roads',
+        items: [
+            {title: 'Road Measurement', path: '/road/measurement', icon: <SquareFoot/>},
+            {title: 'Road Condition', path: '/road/condition', icon: <RemoveRoad/>},
+            {title: 'Altitude', path: '/road/altitude', icon: <Landscape/>}
+        ],
+    },
+    {
+        subheader: 'Cars',
         items: [
             {title: 'Car Data', path: '/car/data', icon: <CarCrash/>}
         ],
