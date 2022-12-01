@@ -58,7 +58,6 @@ const Rides: FC = () => {
     return (
         <GraphProvider>
             <div className="map-container">
-
                 <RidesMap
                     paths={paths} 
                     selectedMetas={selectedMetas} 

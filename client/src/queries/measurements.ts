@@ -7,7 +7,7 @@ export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<A
         // console.log("Data:\n");
         // console.log(data); // DevURL
         callback( data.map( meas => {
-            return { ...meas, isActive: false }
+            return { ...meas, isActive: true }
         } ) )
     })
 }
