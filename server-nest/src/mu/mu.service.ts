@@ -67,7 +67,6 @@ export class MuService {
       const rpms_rr = data.filter((d) => d.T === 'obd.rpm_rr');
       const rpms_fl = data.filter((d) => d.T === 'obd.rpm_fl');
       const rpms_rl = data.filter((d) => d.T === 'obd.rpm_rl');
-      //Logger.debug('\n rpms_fr: ' + JSON.stringify(rpms_fr));
       // Calculate the frequency to resample data for 50 Hz
       const durationDate = new Date(ride.Duration);
       const duration =
