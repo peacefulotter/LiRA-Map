@@ -1,5 +1,5 @@
 import { MeasProperties, ActiveMeasProperties } from '../models/properties';
-import { get, put } from './fetch';
+import { get, put, _delete } from './fetch';
 
 export const getMeasurements = (
   callback: React.Dispatch<React.SetStateAction<ActiveMeasProperties[]>>,
@@ -15,9 +15,13 @@ export const getMeasurements = (
 };
 
 export const addMeasurement = (measurement: MeasProperties) => {
-  put('/measurements/add', measurement);
+  put('/measurements/', { measurement });
 };
 
-export const editMeasurement = (measurement: MeasProperties, index: number) => {
-  put('/measurements/edit', { measurement, index });
+export const editMeasurement = (measurement: MeasProperties) => {
+  put(`/measurements/${measurement.id}`, { measurement });
+};
+
+export const deleteMeasurement = (measurement: MeasProperties) => {
+  _delete(`/measurements/${measurement.id}`);
 };

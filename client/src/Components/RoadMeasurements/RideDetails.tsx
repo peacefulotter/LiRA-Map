@@ -7,7 +7,11 @@ import MetaData from './MetaData';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 import { useMetasCtx } from '../../context/MetasContext';
 
-import { addMeasurement } from '../../queries/measurements';
+import {
+  addMeasurement,
+  deleteMeasurement,
+  editMeasurement,
+} from '../../queries/measurements';
 import { ActiveMeasProperties } from '../../models/properties';
 import { RideMeta } from '../../models/models';
 
@@ -28,15 +32,17 @@ const RideDetails: FC = () => {
 
   const popup = useMeasPopup();
 
-  const editMeasurement =
+  const showEditMeasurement =
     (meas: ActiveMeasProperties) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
       popup(
         (newMeas: ActiveMeasProperties) => {
+          newMeas.id = meas.id;
           const temp = [...measurements];
           temp[temp.findIndex((m) => m.id === newMeas.id)] = newMeas;
+          editMeasurement(newMeas);
           setMeasurements(temp);
         },
         { ...RENDERER_MEAS_PROPERTIES, ...meas },
@@ -56,7 +62,7 @@ const RideDetails: FC = () => {
       { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() },
     );
   };
-  const deleteMeasurement =
+  const showDeleteMeasurement =
     (m: ActiveMeasProperties) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -64,6 +70,7 @@ const RideDetails: FC = () => {
       const elementToRemove = m.id;
 
       const filteredArray = tempArray.filter((m) => m.id !== elementToRemove);
+      deleteMeasurement(m);
       setMeasurements(filteredArray);
     };
 
@@ -83,8 +90,8 @@ const RideDetails: FC = () => {
           key={`meas-checkbox-${m.id}`}
           meas={m}
           selectMeasurement={selectMeasurement(m.id)}
-          editMeasurement={editMeasurement(m)}
-          deleteMeasurement={deleteMeasurement(m)}
+          editMeasurement={showEditMeasurement(m)}
+          deleteMeasurement={showDeleteMeasurement(m)}
         />
       ))}
 

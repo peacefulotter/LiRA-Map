@@ -53,3 +53,9 @@ export const put = (path: string, obj: object): void => {
     .put(getPath(path), { params: obj })
     .catch(() => createToast({ title: `Connection to server failed` }));
 };
+
+export const _delete = (path: string): void => {
+  axios
+    .delete(getPath(path))
+    .catch(() => createToast({ title: `Connection to server failed` }));
+};

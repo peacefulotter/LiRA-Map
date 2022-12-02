@@ -70,7 +70,7 @@ export interface Measurement extends PathProperties {
   name: string;
   // Needs to be specified if the points have a value attached to them
   hasValue?: boolean;
-  // Adding a random uuid to each measurement created
+  // Unique id
   id: string;
 }
 
