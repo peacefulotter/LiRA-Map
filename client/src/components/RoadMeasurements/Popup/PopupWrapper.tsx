@@ -7,6 +7,7 @@ import { RendererName, rendererTypes } from "../../../models/renderers";
 import Checkbox from "../../Checkbox";
 import { ActiveMeasProperties } from "../../../models/properties";
 import { getMeasurementTypes, MeasurementType } from "../../../queries/measurements";
+import { InputLabel, MenuItem, Select } from "@mui/material";
 
 
 interface IPopupWrapper {
@@ -25,9 +26,15 @@ const PopupWrapper: FC<IPopupWrapper> = ( { defaultOptions, setOptions } ) => {
         temp[key] = val;
         setState(temp)
         setOptions(temp)
+        console.log("temp")
+        console.log(temp)
     }
 
-    const inputChange = (key: keyof ActiveMeasProperties) => ({target}: any) => update(key)(target.value)
+    const inputChange = (key: keyof ActiveMeasProperties) => (target: any) => {
+        console.log("target")
+        console.log( target )
+        update(key)( target )
+    }
 
     const [ getMeasTypes, setMeasTypes ] = useState<MeasurementType[]>([])
 
@@ -42,17 +49,30 @@ const PopupWrapper: FC<IPopupWrapper> = ( { defaultOptions, setOptions } ) => {
 		console.log( getMeasTypes )
 	}, [ getMeasTypes ])
 
+    const [ getSelectedMeasType, setSelectedMeasType ] = useState<string>('')
+
+    const handleChange = (event : any, child : any) => {
+        const selectedValue = event.target.value
+        setSelectedMeasType(selectedValue)
+        inputChange('dbName')(selectedValue)
+    }
+
     return (
         <div className="popup-wrapper">    
             <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={name} onChange={inputChange('name')}/>
             
-            <select name="tags" id="tags">
-            <option value="" disabled selected>Tag..</option>
-            {getMeasTypes.map((value, index) => {
-                return ( <option value={value.type}>{value.type}</option> ) 
+            <Select
+                labelId=""
+                id="select-tag-dropdown-menu"
+                value={ getSelectedMeasType }
+                label="Tags"
+                onChange={(handleChange)}
+            >
+                {getMeasTypes.map((value, index) => {
+                return ( <MenuItem value={value.type}>{value.type}</MenuItem> ) 
                             })
-            }
-            </select>
+                }
+            </Select>
 
             <div className="sweetalert-checkboxes">
                 { Object.keys(RendererName).map( (rName: string, i: number) => 
