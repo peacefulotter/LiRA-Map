@@ -111,6 +111,8 @@ export class MuService {
         const RPM_fl = parseFloat(rpms_fl[i * frequency_const].Description);
         const RPM_rl = parseFloat(rpms_rl[closestIndex].Description);
 
+        // NOTE: Currently not using math.pow() since it generate invalid results and that 1/1 = 1 and
+        // something to the power of 1 gives the same result as not putting it to the power of 1.
         // Defining the mus
         const mu = (RPM_front: number, RPM_rear: number) =>
           Math.log(
@@ -118,16 +120,6 @@ export class MuService {
               (wheel_radius * RPM_front - RPM_rear * wheel_radius) +
               1,
           );
-        /*const mu = (RPM_front: number, RPM_rear: number) =>
-          Math.pow(
-            Math.log(
-              (beta_front_right * wheel_radius) /
-                (wheel_radius * (RPM_front - RPM_rear)) +
-                1,
-            ),
-            1 / beta__zero,
-          );*/
-        //Logger.debug('Calculating mu \n');
         const mu_right = mu(RPM_fr, RPM_rr);
         const mu_left = mu(RPM_fl, RPM_rl);
         const mu_avg = (mu_right + mu_left) / 2;
