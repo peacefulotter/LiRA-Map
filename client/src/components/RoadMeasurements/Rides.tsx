@@ -56,7 +56,6 @@ const Rides: FC = () => {
     return (
         <GraphProvider>
             <div className="map-container" style={{ position: 'absolute', left: 0, top: 0, width: 'calc(100vw - 88px)', height: '100vh' }}>
-
                 <RidesMap
                     paths={paths} 
                     selectedMetas={selectedMetas} 
