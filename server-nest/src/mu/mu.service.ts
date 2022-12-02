@@ -179,6 +179,7 @@ export class MuService {
         if (
           !isNaN(mu_right) &&
           mu_right !== Infinity &&
+          !(mu_right < 0) &&
           RPM_fr !== 0 &&
           RPM_rr !== 0
         ) {
@@ -194,6 +195,7 @@ export class MuService {
         if (
           !isNaN(mu_left) &&
           mu_left !== Infinity &&
+          !(mu_left < 0) &&
           RPM_fl !== 0 &&
           RPM_rl !== 0
         ) {
@@ -209,6 +211,7 @@ export class MuService {
         if (
           !isNaN(mu_avg) &&
           mu_avg !== Infinity &&
+          !(mu_avg < 0) &&
           RPM_fr !== 0 &&
           RPM_fl !== 0 &&
           RPM_rl !== 0 &&
