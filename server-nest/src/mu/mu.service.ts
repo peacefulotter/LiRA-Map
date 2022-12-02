@@ -218,20 +218,6 @@ export class MuService {
             Description: mu_avg,
           });
         }
-
-        //Logger.debug('FK_Trip', ride.TripId);
-        //   if (mu_right < 0)
-        //     Logger.debug(
-        //       'Speed \t' +
-        //         rpms_fl[i * frequency_const].Description * wheel_radius_fr +
-        //         '\n RPM_front \t' +
-        //         rpms_fr[i * 5].Description +
-        //         '\n RPM_rear \t' +
-        //         rpms_rr[i * 5].Description +
-        //         '\n Mu \t' +
-        //         mu_right +
-        //         '\n',
-        //     );
       }
       insertionPromises.push(
         this.knex.batchInsert('Measurements', [
