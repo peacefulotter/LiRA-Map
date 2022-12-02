@@ -1,7 +1,4 @@
-
 .rides-wrapper {
-    display: grid;
-    grid-template-columns: 170px 270px auto;
     height: calc(100% - 6vh);
 }
 
