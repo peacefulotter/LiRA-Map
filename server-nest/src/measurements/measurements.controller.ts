@@ -29,4 +29,9 @@ export class MeasurementsController {
         const { index, measurement } = query;
         return this.service.editMeasurement(index, measurement);
     }
+
+    @Get()
+    getMeasurementTypes(): Promise<string[]> {
+        return this.service.getMeasurementTypes();
+    }
 }

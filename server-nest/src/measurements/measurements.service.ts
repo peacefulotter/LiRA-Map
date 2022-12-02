@@ -1,14 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { write } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
+import { Knex } from 'knex';
+import { InjectConnection } from 'nestjs-knex';
 import { Measurement } from './measurements.dto';
+
+export class MeasurementType {
+    MeasurementTypeId: string
+    type: string
+    Created_Date: Date
+}
 
 @Injectable()
 export class MeasurementsService {
     path: string;
 
+    /*
     constructor() {
         this.path = './src/measurements/measurements.json';
+    }
+    */
+
+    
+    constructor(@InjectConnection('our-lira-db') private readonly knex: Knex) {}
+
+    async getMeasurementTypes(): Promise<MeasurementType[]> {
+        return await this.knex
+            .select('*')
+            .from({ public: 'MeasurementTypes' })
+            .orderBy('type');
     }
 
     async writeFile(data: any) {

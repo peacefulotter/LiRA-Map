@@ -27,7 +27,10 @@ export const MeasurementsProvider = ({ children }: any) => {
 
 	useEffect( () => setSelectedMeasurements( measurements.filter(m => m.isActive)), [measurements] )
 
-	useEffect( () => getMeasurements(setMeasurements), [] )
+	useEffect( () => {
+		getMeasurements(setMeasurements)
+		// console.log(getMeasurementTypes())
+	}, [] )
 
 	return (
 		<MeasurementsContext.Provider
