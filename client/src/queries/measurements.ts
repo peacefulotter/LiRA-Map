@@ -19,3 +19,15 @@ export const addMeasurement = (measurement: MeasProperties) => {
 export const editMeasurement = (measurement: MeasProperties, index: number) => {
 	put('/measurements/edit', { measurement, index } )	
 }
+
+export const getMeasurementTypes = () => {
+    console.log(get('/measurements/types', () => {
+        // console.log("Data:\n");
+        // console.log(data); // DevURL
+        /*
+        callback( data.map( meas => {
+            return { ...meas, isActive: true }
+        } ) )
+        */
+    }))
+}

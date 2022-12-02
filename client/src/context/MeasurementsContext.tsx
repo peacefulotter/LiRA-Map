@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { ActiveMeasProperties } from "../models/properties";
-import { getMeasurements } from "../queries/measurements";
+import { getMeasurements, getMeasurementTypes } from "../queries/measurements";
 
 interface ContextProps {
 	measurements: ActiveMeasProperties[];
@@ -29,7 +29,8 @@ export const MeasurementsProvider = ({ children }: any) => {
 
 	useEffect( () => {
 		getMeasurements(setMeasurements)
-		// console.log(getMeasurementTypes())
+		var res = getMeasurementTypes()
+		console.log(res)
 	}, [] )
 
 	return (
