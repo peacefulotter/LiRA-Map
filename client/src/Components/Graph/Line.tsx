@@ -8,6 +8,7 @@ import {
   DotHover,
   GraphAxis,
   GraphData,
+  MinMax,
   SVG,
 } from '../../assets/graph/types';
 import { Bounds } from '../../models/path';
@@ -46,9 +47,15 @@ const Line: FC<ILine> = ({
   useEffect(() => {
     if (xAxis === undefined || yAxis === undefined) return;
 
+    const minMaxX = Object.values(data).reduce(
+      ([accMin, accMax], d) =>
+        [Math.min(accMin, d[0]), Math.max(accMax, d[0])] as MinMax,
+      [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER],
+    ) as MinMax;
+
     const _bounds: Required<Bounds> = Object.assign({
-      minX: Math.min(...data.map((d) => d[0])),
-      maxX: Math.max(...data.map((d) => d[0])),
+      minX: minMaxX[0],
+      maxX: minMaxX[1],
       minY: bounds?.minY,
       maxY: bounds?.maxY,
     });
