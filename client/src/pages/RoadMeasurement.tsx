@@ -17,7 +17,7 @@ export default function RoadMeasurement() {
 			
 			<MeasurementsProvider>
 				<MetasProvider>
-					<div className='rides-wrapper'>
+					<div className='rides-wrapper'  style={{ position: 'absolute', left: 87 }}>
 						<RidesPopup />
 						<Rides />
 					</div>
