@@ -2,8 +2,8 @@ import { FC, useEffect } from 'react';
 
 import { addLabelX, addLabelY } from '../../assets/graph/label';
 
-import { useGraph } from '../../context/GraphContext';
 import { SVG } from '../../assets/graph/types';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 interface ILabels {
   svg: SVG;
@@ -16,7 +16,7 @@ interface ILabels {
 const offsetX = 140;
 
 const Labels: FC<ILabels> = ({ svg, width, height, labelX, labelY }) => {
-  const { maxY } = useGraph();
+  const { maxY } = useGeneralGraphContext();
 
   useEffect(() => {
     const labelW = Math.min(window.innerWidth - offsetX, width);

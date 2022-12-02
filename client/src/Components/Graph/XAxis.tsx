@@ -2,9 +2,9 @@
 import * as d3 from 'd3';
 import { useEffect } from 'react';
 
-import { useGraph } from '../../context/GraphContext';
 import { ReactAxis } from '../../assets/graph/types';
 import { valToTime } from '../../assets/graph/utils';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 const XAxis: ReactAxis = ({
   svg,
@@ -15,7 +15,7 @@ const XAxis: ReactAxis = ({
   absolute,
   time,
 }) => {
-  const { minX, maxX } = useGraph();
+  const { minX, maxX } = useGeneralGraphContext();
 
   useEffect(() => {
     if (svg === undefined || axis === undefined) return;

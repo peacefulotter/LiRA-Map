@@ -28,9 +28,12 @@ const PaletteEditor: FC<IPaletteEditor> = ({
   return (
     <div
       className={`palette-wrapper ${show ? 'palette-show' : ''}`}
-      style={{ width: `${width}px` }}
+      style={{ width: `100vw` }}
     >
-      <div className="palette-container">
+      <div
+        className="palette-container"
+        style={{ visibility: show ? 'visible' : 'hidden' }}
+      >
         <Gradient
           defaultColors={defaultPalette}
           cursorOptions={cursorOptions}

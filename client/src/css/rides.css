@@ -1,19 +1,11 @@
 
-
 .rides-wrapper {
     display: grid;
     grid-template-columns: 170px 270px auto;
     height: calc(100% - 6vh);
 }
 
-
-.map-container {
-    display: grid;
-    grid-template-rows: 65% min-content auto;
-    height: 100%;
-}
-
-.map-container .leaflet-container {
+.leaflet-container {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -24,4 +16,8 @@
     height: 100%;
     /* max-width: 1000px; */
     margin: auto;
+}
+
+.road-measurements-map {
+    height: 100%;
 }

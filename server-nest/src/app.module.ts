@@ -26,6 +26,9 @@ import { AltitudeService } from './altitude/alt.service';
 import { TagsService } from './tags/tags.service';
 import { TagsController } from './tags/tags.controller';
 
+import { MuService } from './mu/mu.service';
+import { MuController } from './mu/mu.controller';
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
@@ -35,7 +38,9 @@ import {
 const database = (config: any, name: string) => {
   return KnexModule.forRootAsync(
     {
-      useFactory: () => ({ config }),
+      useFactory: () => ({
+        config,
+      }),
     },
     name,
   );
@@ -57,6 +62,7 @@ const database = (config: any, name: string) => {
     RCController,
     AltitudeController,
     TagsController,
+    MuController,
   ],
   providers: [
     AppService,
@@ -68,6 +74,7 @@ const database = (config: any, name: string) => {
     RCService,
     AltitudeService,
     TagsService,
+    MuService,
   ],
 })
 export class AppModule {}
