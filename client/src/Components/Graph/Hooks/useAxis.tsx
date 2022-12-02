@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
 import { Axis } from '../../../assets/graph/types';
-import { useGraph } from '../../../context/GraphContext';
+import { useGeneralGraphContext } from '../../../context/GeneralGraphContext';
 
 const useAxis = (zoom: number, w: number, h: number) => {
-  const { minX, maxX, minY, maxY } = useGraph();
+  const { minX, maxX, minY, maxY } = useGeneralGraphContext();
 
   const [axis, setAxis] = useState<[Axis, Axis]>();
 

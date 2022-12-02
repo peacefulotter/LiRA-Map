@@ -2,8 +2,6 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { LeafletEvent, Polyline } from 'leaflet';
 import { HotlineOptions, useCustomHotline } from 'react-leaflet-hotline';
 
-import { useGraph } from '../../../context/GraphContext';
-
 import { Condition, Node, WayId } from '../../../models/path';
 
 import DistRenderer from '../../../assets/hotline/DistRenderer';
@@ -14,6 +12,7 @@ import {
   HotlineEventHandlers,
 } from 'react-leaflet-hotline/lib/types';
 import useZoom from '../Hooks/useZoom';
+import { useGeneralGraphContext } from '../../../context/GeneralGraphContext';
 
 const getLat = (n: Node) => n.lat;
 const getLng = (n: Node) => n.lng;
@@ -48,7 +47,7 @@ const DistHotline: FC<IDistHotline> = ({
   options,
   eventHandlers,
 }) => {
-  const { dotHover } = useGraph();
+  const { dotHover } = useGeneralGraphContext();
   const zoom = useZoom();
 
   const opts = useMemo(

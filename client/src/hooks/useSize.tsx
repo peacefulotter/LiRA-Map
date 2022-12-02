@@ -5,7 +5,7 @@ const useSize = (ref: React.MutableRefObject<null>): [number, number] => {
   const [height, setHeight] = useState<number>(0);
 
   useEffect(() => {
-    if (ref.current === undefined) return;
+    if (!ref.current) return;
 
     const updateSize = () => {
       const { width, height } = (ref.current as any).getBoundingClientRect();
@@ -15,9 +15,10 @@ const useSize = (ref: React.MutableRefObject<null>): [number, number] => {
 
     updateSize();
 
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, [ref]);
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [ref.current]);
 
   return [width, height];
 };

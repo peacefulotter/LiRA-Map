@@ -25,6 +25,7 @@ import DistHotline from '../Map/Renderers/DistHotline';
 import WithBounds from '../Map/WithBounds';
 import { toMapBounds } from '../Map/utils';
 import useZoom from '../Map/Hooks/useZoom';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 interface IWays {
   palette: TRGB[];
@@ -34,7 +35,7 @@ interface IWays {
 
 const BoundedWays: FC<IWays> = ({ palette, type, onClick }) => {
   const zoom = useZoom();
-  const { minY, maxY } = useGraph();
+  const { minY, maxY } = useGeneralGraphContext();
 
   const [ways, setWays] = useState<WaysConditions>();
   const [options, setOptions] = useState<HotlineOptions>({});

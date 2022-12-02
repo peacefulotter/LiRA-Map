@@ -11,6 +11,7 @@ import {
   SVG,
 } from '../../assets/graph/types';
 import { Bounds } from '../../models/path';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 interface ILine {
   svg: SVG;
@@ -39,7 +40,8 @@ const Line: FC<ILine> = ({
   selectedTaskID,
   selectedMeasurementName,
 }) => {
-  const { addBounds, remBounds, setDotHover, useMarkers } = useGraph();
+  const { addBounds, remBounds, setDotHover } = useGeneralGraphContext();
+  const { useMarkers } = useGraph();
 
   useEffect(() => {
     if (xAxis === undefined || yAxis === undefined) return;
@@ -83,6 +85,10 @@ const Line: FC<ILine> = ({
       remBounds(label);
     };
   }, [svg, xAxis, yAxis, data, label, bounds, i, setDotHover]);
+
+  useEffect(() => {
+    console.log('test');
+  }, [data]);
 
   return null;
 };

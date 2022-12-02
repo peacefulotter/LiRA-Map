@@ -1,13 +1,12 @@
 import L from 'leaflet';
 import { useEffect } from 'react';
 
-import { useGraph } from '../../../context/GraphContext';
-
 import { IRenderer } from '../../../models/renderers';
 
 import useCanvas from '../Hooks/useCanvas';
 
 import { formatEventHandlers, getColorOnPalette } from '../utils';
+import { useGeneralGraphContext } from '../../../context/GeneralGraphContext';
 
 function Hotcircles<T>({
   data,
@@ -20,7 +19,7 @@ function Hotcircles<T>({
   const { width, weight, opacity, palette } = options;
 
   const [map, canvas] = useCanvas();
-  const { minY, maxY } = useGraph();
+  const { minY, maxY } = useGeneralGraphContext();
 
   useEffect(() => {
     const circles = data.map((t: T, i: number) => {

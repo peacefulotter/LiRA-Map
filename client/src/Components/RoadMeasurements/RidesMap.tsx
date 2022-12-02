@@ -12,6 +12,8 @@ import { RENDERER_PALETTE } from '../Map/constants';
 import MetadataPath from '../Map/MetadataPath';
 import MetadataHelper from '../Map/MetadataHelper';
 import MapWrapper from '../Map/MapWrapper';
+import { useGraph } from '../../context/GraphContext';
+import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 
 import '../../css/rides_map.css';
 
@@ -21,12 +23,11 @@ interface IRidesMap {
   selectedMeasurements: ActiveMeasProperties[];
 }
 
-const RidesMap: FC<IRidesMap> = ({
-  paths,
-  selectedMetas,
-  selectedMeasurements,
-}) => {
+const RidesMap: FC = () => {
   const { setFocusedMeta } = useMetasCtx();
+  const { selectedMetas } = useMetasCtx();
+  const { selectedMeasurements } = useMeasurementsCtx();
+  const { paths } = useGraph();
 
   const memoPaths = useMemo(() => {
     const temp: { meas: MeasProperties; meta: RideMeta; bp: BoundedPath }[] =
@@ -68,6 +69,8 @@ const RidesMap: FC<IRidesMap> = ({
       boundLngs={[...lng0list, ...lng1list]}
     />
   );
+
+  console.log('test' + selectedMetas);
 
   return (
     <div className="road-measurements-map">
