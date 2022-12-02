@@ -55,7 +55,7 @@ const MeasurementTypes: FC = () => {
 				// update the state in RideDetails
 				setMeasurements(prev => [...prev, newMeasurement]);
 				// and add the measurement to the measurements.json file
-				addMeasurement(newMeasurement);
+				// addMeasurement(newMeasurement); // TODO laura: i disabled this because it creates "null" entries
 			},
 			RENDERER_MEAS_PROPERTIES,
 		);
