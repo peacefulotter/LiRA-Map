@@ -136,13 +136,18 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.endCity.toLowerCase()));
 
-  const dateFilter = (meta: RideMeta) => {
-    const date = new Date(meta.StartTimeUtc).getTime();
-    return (
-      date >= tripOptions.startDate.getTime() &&
-      date <= tripOptions.endDate.getTime()
-    );
-  };
+    //Author: Martin
+    const dateFilter = (meta: RideMeta) => {
+       let startTime;
+       let endTime;
+       const date = new Date(meta.StartTimeUtc).getTime();
+       tripOptions.startDate == null ? startTime = 0 : startTime = tripOptions.startDate.getTime();
+       tripOptions.endDate == null ? endTime = 0 : endTime = tripOptions.endDate.getTime();
+       return (
+         date >= startTime &&
+         date <= endTime
+       );
+     };
 
   const filteredMetas = useMemo<SelectMeta[]>(() => {
     const filtered = metas
