@@ -7,6 +7,7 @@ import { WaysConditions } from '../../models/path';
 import { getWaysConditions } from '../../queries/conditions';
 import useZoom from '../Map/Hooks/useZoom';
 import DistHotline from '../Map/Renderers/DistHotline';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 interface IWays {
   palette: TRGB[];
@@ -16,7 +17,7 @@ interface IWays {
 
 const Ways: FC<IWays> = ({ palette, type, onClick }) => {
   const zoom = useZoom();
-  const { minY, maxY } = useGraph();
+  const { minY, maxY } = useGeneralGraphContext();
 
   const [ways, setWays] = useState<WaysConditions>();
 

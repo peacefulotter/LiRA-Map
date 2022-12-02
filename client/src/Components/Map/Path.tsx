@@ -7,9 +7,10 @@ import { Renderer } from '../../models/renderers';
 
 import { RENDERER_OPTIONS } from './constants';
 import renderers from './renderers';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 const Path: FC<PathProps> = ({ path, properties, onClick }) => {
-  const { minY, maxY } = useGraph();
+  const { minY, maxY } = useGeneralGraphContext();
 
   const FCRenderer = renderers(properties.rendererName) as Renderer<PointData>;
 

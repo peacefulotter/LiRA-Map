@@ -26,16 +26,6 @@ import Loading from '../Components/Loading';
 import { ActiveMeasProperties } from '../models/properties';
 
 interface ContextProps {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
-
-  addBounds: AddMinMaxFunc;
-  remBounds: RemMinMaxFunc;
-
-  dotHover: DotHover | undefined;
-  setDotHover: Dispatch<SetStateAction<DotHover | undefined>>;
   markers: MarkersRecord;
   useMarkers: Dispatch<UseMarkersAction>;
   lastMarkersAction: UseMarkersAction | undefined;
@@ -55,8 +45,6 @@ const GraphContext = createContext({} as ContextProps);
 // TODO: remove bounds / refactor?  -> is it needed really?
 // TODO: generalize DotHover into an "Event State" (to support for more events at once)
 export const GraphProvider = ({ children }: any) => {
-  const { bounds, addBounds, remBounds } = useMinMaxAxis();
-  const [dotHover, setDotHover] = useState<DotHover>();
   const [lastMarkersAction, setLastMarkersAction] =
     useState<UseMarkersAction>();
   const [markers, useMarkers] = useReducer(
@@ -78,8 +66,6 @@ export const GraphProvider = ({ children }: any) => {
     },
     {},
   );
-
-  const { minX, maxX, minY, maxY } = bounds;
 
   const { selectedMetas } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
@@ -169,14 +155,6 @@ export const GraphProvider = ({ children }: any) => {
   return (
     <GraphContext.Provider
       value={{
-        minX,
-        maxX,
-        minY,
-        maxY,
-        addBounds,
-        remBounds,
-        dotHover,
-        setDotHover,
         markers,
         useMarkers,
         lastMarkersAction,

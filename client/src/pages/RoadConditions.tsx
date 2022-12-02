@@ -7,10 +7,9 @@ import ConditionsGraph from '../Components/RoadConditions/ConditionsGraph';
 
 import { ConditionType } from '../models/graph';
 
-import { GraphProvider } from '../context/GraphContext';
-
 import '../css/road_conditions.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
+import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
@@ -79,11 +78,11 @@ const RoadConditions = () => {
   };
 
   return (
-    <GraphProvider>
+    <GeneralGraphProvider>
       <div className="road-conditions-wrapper">
         <Layout model={model} factory={factory} />
       </div>
-    </GraphProvider>
+    </GeneralGraphProvider>
   );
 };
 

@@ -4,6 +4,7 @@ import { Color, Palette } from 'react-leaflet-hotline';
 import { useGraph } from '../../context/GraphContext';
 import { Axis, SVG } from '../../assets/graph/types';
 import { RENDERER_PALETTE } from '../Map/constants';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 export interface IGradient {
   svg: SVG;
@@ -14,7 +15,7 @@ export interface IGradient {
 const gradientId = 'line-gradient';
 
 const Gradient: FC<IGradient> = ({ svg, axis, palette }) => {
-  const { minY, maxY } = useGraph();
+  const { minY, maxY } = useGeneralGraphContext();
 
   const p = palette || RENDERER_PALETTE;
 

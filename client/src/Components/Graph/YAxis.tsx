@@ -2,11 +2,11 @@
 import * as d3 from 'd3';
 import { useEffect } from 'react';
 
-import { useGraph } from '../../context/GraphContext';
 import { ReactAxis } from '../../assets/graph/types';
+import { useGeneralGraphContext } from '../../context/GeneralGraphContext';
 
 const YAxis: ReactAxis = ({ svg, axis, width, height, absolute }) => {
-  const { maxY } = useGraph();
+  const { maxY } = useGeneralGraphContext();
 
   useEffect(() => {
     if (axis === undefined) return;

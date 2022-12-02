@@ -17,3 +17,7 @@
     /* max-width: 1000px; */
     margin: auto;
 }
+
+.road-measurements-map {
+    height: 100%;
+}

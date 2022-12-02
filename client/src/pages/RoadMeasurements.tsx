@@ -12,6 +12,7 @@ import { GraphProvider } from '../context/GraphContext';
 import RidesMap from '../Components/RoadMeasurements/RidesMap';
 import Graph from '../Components/Graph/Graph';
 import GraphSelector from '../Components/Graph/GraphSelector';
+import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
@@ -99,31 +100,33 @@ const RoadMeasurements = () => {
   };
 
   /*
-
-                                    return (
-                                      <MeasurementsProvider>
-                                        <MetasProvider>
-                                          <div className="rides-wrapper">
-                                            <RideCards />
-
-                                            <RideDetails />
-
-                                            <Rides />
-                                          </div>
-                                        </MetasProvider>
-                                      </MeasurementsProvider>
-                                    );
-
-                                     */
+    
+                                          return (
+                                            <MeasurementsProvider>
+                                              <MetasProvider>
+                                                <div className="rides-wrapper">
+                                                  <RideCards />
+    
+                                                  <RideDetails />
+    
+                                                  <Rides />
+                                                </div>
+                                              </MetasProvider>
+                                            </MeasurementsProvider>
+                                          );
+    
+                                           */
 
   return (
     <MeasurementsProvider>
       <MetasProvider>
-        <GraphProvider>
-          <div className="rides-wrapper">
-            <Layout model={model} factory={factory} />
-          </div>
-        </GraphProvider>
+        <GeneralGraphProvider>
+          <GraphProvider>
+            <div className="rides-wrapper">
+              <Layout model={model} factory={factory} />
+            </div>
+          </GraphProvider>
+        </GeneralGraphProvider>
       </MetasProvider>
     </MeasurementsProvider>
   );
