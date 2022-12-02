@@ -13,7 +13,6 @@ import MetadataPath from '../Map/MetadataPath';
 import MetadataHelper from '../Map/MetadataHelper';
 import MapWrapper from '../Map/MapWrapper';
 import { useGraph } from '../../context/GraphContext';
-import { useMetasCtx } from '../../context/MetasContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 
 import '../../css/rides_map.css';
@@ -23,14 +22,12 @@ interface IRidesMap {
   selectedMetas: RideMeta[];
   selectedMeasurements: ActiveMeasProperties[];
 }
-const RidesMap: FC = () => {
 
+const RidesMap: FC = () => {
   const { setFocusedMeta } = useMetasCtx();
   const { selectedMetas } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
   const { paths } = useGraph();
-
-
 
   const memoPaths = useMemo(() => {
     const temp: { meas: MeasProperties; meta: RideMeta; bp: BoundedPath }[] =
