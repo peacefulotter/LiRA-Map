@@ -5,19 +5,19 @@ import { RideMeta } from './models.rides';
 import { BoundedPath } from 'src/models';
 
 @Controller('rides')
-export class RidesController 
-{
+export class RidesController {
+  constructor(private readonly service: RidesService) {}
 
-    constructor(private readonly service: RidesService) {}
+  @Get()
+  getRides(): Promise<RideMeta[]> {
+    return this.service.getRides();
+  }
 
-    @Get()
-    getRides(): Promise<RideMeta[]> {
-        return this.service.getRides();
-    }
-
-    @Get('/ride')
-    getRide( @Query() query: { tripId: string, dbName: string } ): Promise<BoundedPath> {
-        const { tripId, dbName } = query
-        return this.service.getRide( tripId, dbName );
-    }
+  @Get('/ride')
+  getRide(
+    @Query() query: { tripId: string; dbName: string },
+  ): Promise<BoundedPath> {
+    const { tripId, dbName } = query;
+    return this.service.getRide(tripId, dbName);
+  }
 }
