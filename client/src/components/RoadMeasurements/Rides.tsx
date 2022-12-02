@@ -4,16 +4,17 @@ import { useMeasurementsCtx } from "../../context/MeasurementsContext";
 import { GraphProvider } from "../../context/GraphContext";
 import { useMetasCtx } from "../../context/MetasContext";
 
-import { ActiveMeasProperties } from "../../models/properties";
-import { MeasMetaPath, PointData } from "../../models/path";
+//import { ActiveMeasProperties } from "../../models/properties";
+import {MeasMetaPath} from "../../models/path";
 
-import { GraphData, GraphPoint } from "../../assets/graph/types";
+//import { GraphData, GraphPoint } from "../../assets/graph/types";
 
 import { getRide } from "../../queries/rides";
 
-import Graph from "../Graph/Graph";
+//import Graph.tsx from "../Graph.tsx/Graph.tsx";
 import RidesMap from "./RidesMap";
 import usePopup from "../createPopup";
+import RideGraphCard from "./RideGraphCard";
 
 const Rides: FC = () => {
     
@@ -25,17 +26,14 @@ const Rides: FC = () => {
     const popup = usePopup()
 
     useEffect( () => {
-
         const updatePaths = async () => {
             const temp = {} as MeasMetaPath;
 
-            for ( let meas of selectedMeasurements )
-            {
+            for ( let meas of selectedMeasurements ) {
                 const { name } = meas
                 temp[name] = {}
 
-                for ( let meta of selectedMetas )
-                {
+                for ( let meta of selectedMetas ) {
                     const { TaskId } = meta;
     
                     if ( Object.hasOwn(paths, name) && Object.hasOwn(paths[name], TaskId) )
@@ -57,32 +55,13 @@ const Rides: FC = () => {
 
     return (
         <GraphProvider>
-            <div className="map-container">
+            <div className="map-container" style={{ position: 'absolute', left: 0, top: 0, width: 'calc(100vw - 88px)', height: '100vh' }}>
                 <RidesMap
                     paths={paths} 
                     selectedMetas={selectedMetas} 
                     selectedMeasurements={selectedMeasurements}  />
 
-                { selectedMeasurements.map( ({hasValue, name, palette}: ActiveMeasProperties, i: number) => hasValue && 
-                    <Graph 
-                        key={`graph-${i}`}
-                        labelX="Time (h:m:s)" 
-                        labelY={name}
-                        absolute={true}
-                        time={true}
-                        palette={palette}
-                        plots={ Object.entries(paths[name] || {})
-                            .map( ([TaskId, bp], j) => {
-                                const { path, bounds } = bp;
-                                const x = (p: PointData) => new Date(p.metadata.timestamp).getTime()
-                                const data: GraphData = path
-                                    .map( p => [x(p), p.value || 0] as GraphPoint )
-                                    .sort( ([x1, y1], [x2, y2]) => (x1 < x2) ? -1 : (x1 === x2) ? 0 : 1 )
-                                return { data, bounds, label: 'r-' + TaskId, j }
-                            } ) 
-                        }
-                    />
-                ) }
+                <RideGraphCard paths={paths} selectedMeasurements={selectedMeasurements}/>
             </div>
         </GraphProvider>
   )
