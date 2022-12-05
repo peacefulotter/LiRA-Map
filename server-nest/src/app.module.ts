@@ -29,6 +29,9 @@ import { TagsController } from './tags/tags.controller';
 import { MuService } from './mu/mu.service';
 import { MuController } from './mu/mu.controller';
 
+import { DeviceService } from './devices/devices.service';
+import { DeviceController } from './devices/devices.controller';
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
@@ -63,6 +66,7 @@ const database = (config: any, name: string) => {
     AltitudeController,
     TagsController,
     MuController,
+    DeviceController,
   ],
   providers: [
     AppService,
@@ -75,6 +79,7 @@ const database = (config: any, name: string) => {
     AltitudeService,
     TagsService,
     MuService,
+    DeviceService,
   ],
 })
 export class AppModule {}

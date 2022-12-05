@@ -45,6 +45,11 @@ export interface TagProperties {
   readableName: string;
 }
 
+export interface DeviceProperties {
+  DeviceId: string;
+  
+}
+
 export interface ActiveMeasProperties extends MeasProperties {
   isActive: boolean; // true if measurement is displayed, false otherwise
 }
