@@ -1,101 +1,93 @@
-import { FC, useEffect, useState } from "react";
-import { TwitterPicker } from "react-color";
-import { Gradient } from "react-gradient-hook";
+import { FC, useEffect, useState } from 'react';
+import { TwitterPicker } from 'react-color';
+import { Gradient } from 'react-gradient-hook';
 
-import { RendererName, rendererTypes } from "../../../models/renderers";
+import { RendererName, rendererTypes } from '../../../models/renderers';
 
-import Checkbox from "../../Checkbox";
-import { ActiveMeasProperties } from "../../../models/properties";
-import { getMeasurementTypes, MeasurementType } from "../../../queries/measurements";
-import { InputLabel, MenuItem, Select } from "@mui/material";
+import Checkbox from '../../Checkbox';
+import { ActiveMeasProperties } from '../../../models/properties';
+import { getMeasurementTypes, MeasurementType } from '../../../queries/measurements';
+import { MenuItem, Select } from '@mui/material';
 
 
 interface IPopupWrapper {
-    defaultOptions: Required<ActiveMeasProperties>;
-    setOptions: (newOpts: Required<ActiveMeasProperties>) => void;
+	defaultOptions: Required<ActiveMeasProperties>;
+	setOptions: (newOpts: Required<ActiveMeasProperties>) => void;
 }
 
-const PopupWrapper: FC<IPopupWrapper> = ( { defaultOptions, setOptions } ) => {
+const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 
-    const [state, setState] = useState(defaultOptions);
+	const [state, setState] = useState(defaultOptions);
 
-    const { name, dbName, rendererName, color } = state;
+	const { name, dbName, rendererName, color } = state;
 
-    const update = (key: keyof ActiveMeasProperties) => (val: any) => {
-        const temp = { ...state } as any;
-        temp[key] = val;
-        setState(temp)
-        setOptions(temp)
-        console.log("temp")
-        console.log(temp)
-    }
+	const update = (key: keyof ActiveMeasProperties) => (val: any) => {
+		const temp = { ...state } as any;
+		temp[key] = val;
+		setState(temp);
+		setOptions(temp);
+	};
 
-    const inputChange = (key: keyof ActiveMeasProperties) => (target: any) => {
-        console.log("target")
-        console.log( target )
-        update(key)( target )
-    }
+	const inputChange = (key: keyof ActiveMeasProperties) => (target: any) => {
+		update(key)(target);
+	};
 
-    const [ getMeasTypes, setMeasTypes ] = useState<MeasurementType[]>([])
+	const [getMeasTypes, setMeasTypes] = useState<MeasurementType[]>([]);
 
-    useEffect( () => {
+	useEffect(() => {
 		//getMeasurements(setMeasurements)
-		console.log("Getting measurement types from measurements/types")
-		getMeasurementTypes(setMeasTypes)
-	}, [] )
+		console.log('Getting measurement types from measurements/types');
+		getMeasurementTypes(setMeasTypes);
+	}, []);
 
-	useEffect( () => {
-		console.log("Measurement types found in db:")
-		console.log( getMeasTypes )
-	}, [ getMeasTypes ])
+	const [getSelectedMeasType, setSelectedMeasType] = useState<string>('');
 
-    const [ getSelectedMeasType, setSelectedMeasType ] = useState<string>('')
+	const handleChange = (event: any, child: any) => {
+		const selectedValue = event.target.value;
+		setSelectedMeasType(selectedValue);
+		inputChange('dbName')(selectedValue);
+	};
 
-    const handleChange = (event : any, child : any) => {
-        const selectedValue = event.target.value
-        setSelectedMeasType(selectedValue)
-        inputChange('dbName')(selectedValue)
-    }
+	return (
+		<div className='popup-wrapper'>
+			<input className='sweetalert-input' placeholder='Name..' type='text' defaultValue={name}
+				   onChange={inputChange('name')} />
 
-    return (
-        <div className="popup-wrapper">    
-            <input className="sweetalert-input" placeholder="Name.." type='text' defaultValue={name} onChange={inputChange('name')}/>
-            
-            <Select
-                labelId=""
-                id="select-tag-dropdown-menu"
-                value={ getSelectedMeasType }
-                label="Tags"
-                onChange={(handleChange)}
-            >
-                {getMeasTypes.map((value, index) => {
-                return ( <MenuItem value={value.type}>{value.type}</MenuItem> ) 
-                            })
-                }
-            </Select>
+			<Select
+				labelId=''
+				id='select-tag-dropdown-menu'
+				value={getSelectedMeasType}
+				label='Tags'
+				onChange={(handleChange)}
+			>
+				{getMeasTypes.map((value, index) => {
+					return (<MenuItem key={index} value={value.type}>{value.type}</MenuItem>);
+				})
+				}
+			</Select>
 
-            <div className="sweetalert-checkboxes">
-                { Object.keys(RendererName).map( (rName: string, i: number) => 
-                    <Checkbox 
-                        key={`sweetalert-checkbox-${i}`}
-                        className='ride-metadata-checkbox'
-                        html={<div style={{textTransform: "capitalize"}}>{rName}</div>}
-                        forceState={rName === rendererName}
-                        onClick={() => update('rendererName')(rName)} />
-                ) }
-            </div>
+			<div className='sweetalert-checkboxes'>
+				{Object.keys(RendererName).map((rName: string, i: number) =>
+					<Checkbox
+						key={`sweetalert-checkbox-${i}`}
+						className='ride-metadata-checkbox'
+						html={<div style={{ textTransform: 'capitalize' }}>{rName}</div>}
+						forceState={rName === rendererName}
+						onClick={() => update('rendererName')(rName)} />,
+				)}
+			</div>
 
-            { rendererTypes[rendererName].usePalette 
-                ? <Gradient
-                    key={`gradient-${rendererName}`}
-                    defaultColors={rendererTypes[rendererName].defaultPalette} 
-                    cursorOptions={{grid: true, samples: 40}} 
-                    pickerOptions={{showCircles: false}}
-                    onChange={update('palette')} />
-                : <TwitterPicker color={color} onChange={c => update('color')(c.hex)} />
-            }
-        </div>
-    )
-}
+			{rendererTypes[rendererName].usePalette
+				? <Gradient
+					key={`gradient-${rendererName}`}
+					defaultColors={rendererTypes[rendererName].defaultPalette}
+					cursorOptions={{ grid: true, samples: 40 }}
+					pickerOptions={{ showCircles: false }}
+					onChange={update('palette')} />
+				: <TwitterPicker color={color} onChange={c => update('color')(c.hex)} />
+			}
+		</div>
+	);
+};
 
 export default PopupWrapper;
