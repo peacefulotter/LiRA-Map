@@ -29,7 +29,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
 	};
 
 	const inputChange = (key: keyof ActiveMeasProperties) => (target: any) => {
-		update(key)(target);
+		update(key)(target.value);
 	};
 
 	const [getMeasTypes, setMeasTypes] = useState<MeasurementType[]>([]);
