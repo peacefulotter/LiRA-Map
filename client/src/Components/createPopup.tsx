@@ -13,9 +13,13 @@ const createPopup = <T,>() => {
     return swal.fire({
       ...options,
       customClass: {
+        // css class overriding swalalert2 classes
         popup: 'sweetalert-popup',
         title: 'sweetalert-title',
+        actions: 'sweetalert-actions',
+        htmlContainer: 'sweetalert-htmlContainer',
       },
+      heightAuto: false,
     });
   };
 };
