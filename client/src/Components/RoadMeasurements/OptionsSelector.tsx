@@ -1,6 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import DatePicker from 'react-date-picker';
+import Select from 'react-select';
 import { TripsOptions } from '../../models/models';
+import { ActiveMeasProperties, DeviceProperties } from '../../models/properties';
+import { getDevices } from '../../queries/devices';
+import { v4 as uuidv4 } from 'uuid';
 import Checkbox from '../Checkbox';
 
 interface IOptionsSelector {
@@ -11,7 +15,37 @@ const OptionsSelector: FC<IOptionsSelector> = ({
   onChange,
   defaultOptions,
 }) => {
+  const [state, setState] = useState(defaultOptions);
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
+  const [availableDevices, setDevice] = useState<DeviceProperties[]>();
+  const { dbName } = state;
+
+  useEffect(() => {
+    getDevices((data: DeviceProperties[]) => {
+      data.forEach(function (value) {
+        setDevice(data);
+      });
+    });
+  }, []);
+
+  const update = (key: keyof ActiveMeasProperties) => (val: any) => {
+    const temp = { ...state } as any;
+    temp[key] = val;
+    setState(temp);
+    setOptions(temp);
+    temp.id = uuidv4();
+  };
+
+  const deviceChange =
+  (key: keyof ActiveMeasProperties) =>
+  ({ value }: any) =>
+    update(key)(value);
+
+  const deviceOptions = availableDevices?.map((device) => ({
+    value: device.DeviceId.toString(),
+    label:
+      device.DeviceId.toString()
+  }));
 
   const _onChange = (key: keyof TripsOptions) => {
     return function <T>(value: T) {
@@ -73,6 +107,15 @@ const OptionsSelector: FC<IOptionsSelector> = ({
                 placeholder="Destination City"
                 value={options.endCity}
                 onChange={(e) => _onChange('endCity')(e.target.value)}
+              />
+            </li>
+            <li>
+              <Select
+                className="react-select-combobox-filter"
+                placeholder="Devices.."
+                value={dbName ? { value: dbName, label: dbName } : undefined}
+                onChange={deviceChange('dbName')}
+                options={deviceOptions}
               />
             </li>
             <li>

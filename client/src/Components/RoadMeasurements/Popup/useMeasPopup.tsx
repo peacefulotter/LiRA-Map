@@ -32,7 +32,6 @@ const useMeasPopup = () => {
         <PopupWrapper
           defaultOptions={defaultOptions}
           setOptions={(opts) => {
-            console.log('HERE');
             console.log(opts);
             options = opts;
           }}

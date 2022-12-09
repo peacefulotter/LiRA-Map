@@ -14,6 +14,7 @@ const defaultOptions: TripsOptions = {
   maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
+  dbName: '',
 };
 
 console.log('🇩🇰', contracted);

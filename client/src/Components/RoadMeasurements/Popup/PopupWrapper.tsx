@@ -24,7 +24,6 @@ interface IPopupWrapper {
 const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
   const [state, setState] = useState(defaultOptions);
   const [availableTags, setTags] = useState<TagProperties[]>();
-  const [availableDevices, setDevice] = useState<DeviceProperties[]>();
   const { name, dbName, rendererName, color } = state;
 
   const update = (key: keyof ActiveMeasProperties) => (val: any) => {
@@ -43,16 +42,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     });
   }, []);
 
-  useEffect(() => {
-    getDevices((data: DeviceProperties[]) => {
-      data.forEach(function (value) {
-        setDevice(data);
-      });
-    });
-  }, []);
-
-  
-
   const nameChange =
     (key: keyof ActiveMeasProperties) =>
     ({ target }: any) =>
@@ -68,12 +57,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     label:
       tag.type.toString() +
       (tag.readableName ? '\n(' + tag.readableName + ')' : '').toString(),
-  }));
-
-  const deviceOptions = availableDevices?.map((device) => ({
-    value: device.DeviceId.toString(),
-    label:
-      device.DeviceId.toString()
   }));
 
   return (
@@ -93,15 +76,6 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         onChange={tagChange('dbName')}
         options={tagOptions}
       />
-
-      <Select
-        className="react-select-combobox"
-        placeholder="Devices.."
-        value={dbName ? { value: dbName, label: dbName } : undefined}
-        onChange={tagChange('dbName')}
-        options={deviceOptions}
-      />
-
 
       <div className="sweetalert-checkboxes">
         {Object.keys(RendererName).map((rName: string, i: number) => (

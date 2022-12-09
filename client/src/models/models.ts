@@ -37,4 +37,5 @@ export interface TripsOptions {
   maxDistanceKm: number | undefined;
   startCity: string;
   endCity: string;
+  dbName: any;
 }

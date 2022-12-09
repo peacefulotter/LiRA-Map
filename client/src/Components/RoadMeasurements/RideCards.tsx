@@ -82,6 +82,7 @@ const defaultOptions: TripsOptions = {
   maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
+  dbName: '',
 };
 
 const RideCards: FC = () => {
@@ -150,6 +151,10 @@ const RideCards: FC = () => {
     return date >= startTime && date <= endTime;
   };
 
+  const deviceIdFilter = (meta: RideMeta) => 
+    tripOptions.dbName.length === 0 || 
+    tripOptions.dbName.includes(meta.FK_Device);
+
   const filteredMetas = useMemo<SelectMeta[]>(() => {
     const filtered = metas
       .filter(
@@ -160,7 +165,8 @@ const RideCards: FC = () => {
           maxDistanceFilter(meta) &&
           dateFilter(meta) &&
           startCityFilter(meta) &&
-          endCityFilter(meta),
+          endCityFilter(meta) && 
+          deviceIdFilter(meta),
       )
       .map((meta: RideMeta) => {
         const selected = selectedMetas.some(
