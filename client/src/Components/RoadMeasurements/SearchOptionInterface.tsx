@@ -19,7 +19,6 @@ const defaultOptions: TripsOptions = {
   deviceId: '',
 };
 
-
 export const SearchOptionInterface = () => {
   return (
     <DatePicker

@@ -2,7 +2,10 @@ import React, { FC, useEffect, useState } from 'react';
 import DatePicker from 'react-date-picker';
 import Select from 'react-select';
 import { TripsOptions } from '../../models/models';
-import { ActiveMeasProperties, DeviceProperties } from '../../models/properties';
+import {
+  ActiveMeasProperties,
+  DeviceProperties,
+} from '../../models/properties';
 import { getDevices } from '../../queries/devices';
 import { v4 as uuidv4 } from 'uuid';
 import Checkbox from '../Checkbox';
@@ -35,8 +38,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({
   /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const deviceOptions = availableDevices?.map((device) => ({
     value: device.DeviceId.toString(),
-    label:
-      device.DeviceId.toString()
+    label: device.DeviceId.toString(),
   }));
 
   const _onChange = (key: keyof TripsOptions) => {
@@ -104,7 +106,9 @@ const OptionsSelector: FC<IOptionsSelector> = ({
               <Select
                 className="react-select-combobox-filter"
                 placeholder="Devices.."
-                value={deviceId ? { value: deviceId, label: deviceId } : undefined}
+                value={
+                  deviceId ? { value: deviceId, label: deviceId } : undefined
+                }
                 onChange={_onChange('deviceId')}
                 options={deviceOptions}
               />

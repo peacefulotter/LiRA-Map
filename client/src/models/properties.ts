@@ -47,7 +47,6 @@ export interface TagProperties {
 
 export interface DeviceProperties {
   DeviceId: string;
-  
 }
 
 export interface ActiveMeasProperties extends MeasProperties {

@@ -157,9 +157,9 @@ const RideCards: FC = () => {
   };
 
   /* @author Mads Møller s184443, Martin Nielsen s174971 */
-  const deviceIdFilter = (meta: RideMeta) => 
-    tripOptions.deviceId.length === 0 || 
-    meta.FK_Device.toString().includes(tripOptions.deviceId.value)
+  const deviceIdFilter = (meta: RideMeta) =>
+    tripOptions.deviceId.length === 0 ||
+    meta.FK_Device.toString().includes(tripOptions.deviceId.value);
 
   const filteredMetas = useMemo<SelectMeta[]>(() => {
     const filtered = metas
@@ -171,7 +171,7 @@ const RideCards: FC = () => {
           maxDistanceFilter(meta) &&
           dateFilter(meta) &&
           startCityFilter(meta) &&
-          endCityFilter(meta) && 
+          endCityFilter(meta) &&
           deviceIdFilter(meta),
       )
       .map((meta: RideMeta) => {
