@@ -2,11 +2,18 @@
 .sweetalert-popup {
   background: var(--background);
   width: max(700px, 40vw);
+  padding: 0 0 0 0;
+  max-height: fit-content;
 }
 
 .sweetalert-title {
   font-weight: normal;
   font-size: 1.3em;
+  padding: 0 0 0 0;
+}
+
+.sweetalert-htmlContainer {
+  margin: 0.2em 1.6em 0em;
 }
 
 .sweetalert-input {
@@ -15,19 +22,23 @@
   border-radius: 5px;
   width: 70%;
   padding: 7px 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
+.sweetalert-actions {
+  margin: 0.15em auto;
+}
+
 .sweetalert-checkboxes {
-  width: 70%;
+  width: 110%;
   display: grid;
   grid-template-columns: 25% 25% 25%;
   justify-content: space-evenly;
   justify-items: center;
-  margin: 20px 0px;
+  margin: 0.5em 0em;
 }
 
 .react-select-combobox {
@@ -35,7 +46,7 @@
   border: none;
   border-radius: 5px;
   width: 70%;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -59,6 +70,9 @@
 
 .gradient-wrapper {
   width: 90%;
-  margin: 35px auto 15px auto;
+  margin: 35px auto 4px auto;
   color: black;
+}
+p.tiny {
+  font-size: medium;
 }
