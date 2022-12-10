@@ -19,10 +19,8 @@ const useMeasPopup = () => {
 
     popup({
       title: (
-        <p>
-          Enter the name of your measurement and its tag
-          <br />
-          (ex: obd.rpm, acc.xyz)
+        <p className="tiny">
+          Enter measurement name and tag
         </p>
       ),
       showCancelButton: true,
