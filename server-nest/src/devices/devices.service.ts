@@ -6,6 +6,8 @@ import { DeviceMeta } from './models.devices';
 import { BoundedPath, PointData } from 'src/models';
 import { readFile } from 'fs/promises';
 
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
+
 @Injectable()
 export class DeviceService {
 

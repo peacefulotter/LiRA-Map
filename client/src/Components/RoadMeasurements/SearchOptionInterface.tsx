@@ -4,6 +4,8 @@ import DatePicker from 'react-date-picker';
 import { TripsOptions } from '../../models/models';
 import '../../css/searchoptioninterface.css';
 
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
+
 const contracted = true;
 const defaultOptions: TripsOptions = {
   taskId: '',
@@ -14,14 +16,13 @@ const defaultOptions: TripsOptions = {
   maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
-  dbName: '',
+  deviceId: '',
 };
 
-console.log('🇩🇰', contracted);
+
 export const SearchOptionInterface = () => {
   return (
     <DatePicker
-      onChange={() => console.log('dagar')}
       value={defaultOptions.startDate}
       className="options-date-picker"
     />

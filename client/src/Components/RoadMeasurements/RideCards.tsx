@@ -9,6 +9,8 @@ import { useMetasCtx } from '../../context/MetasContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 import OptionsSelector from './OptionsSelector';
 
+/* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
+
 interface CardsProps {
   showMetas: SelectMeta[];
   onClick: (meta: SelectMeta, i: number, isChecked: boolean) => void;
@@ -82,7 +84,7 @@ const defaultOptions: TripsOptions = {
   maxDistanceKm: undefined,
   startCity: '',
   endCity: '',
-  dbName: '',
+  deviceId: '',
 };
 
 const RideCards: FC = () => {
@@ -98,6 +100,7 @@ const RideCards: FC = () => {
         );
   };
 
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const taskIDFilter = (meta: RideMeta) =>
     tripOptions.taskId.length === 0 ||
     meta.TaskId.toString().includes(tripOptions.taskId);
@@ -111,17 +114,19 @@ const RideCards: FC = () => {
     );
   };
 
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const minDistanceFilter = (meta: RideMeta) =>
     !tripOptions.minDistanceKm ||
     isNaN(tripOptions.minDistanceKm) ||
     meta.DistanceKm >= tripOptions.minDistanceKm;
 
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const maxDistanceFilter = (meta: RideMeta) =>
     !tripOptions.maxDistanceKm ||
     isNaN(tripOptions.maxDistanceKm) ||
     meta.DistanceKm <= tripOptions.maxDistanceKm;
 
-  //Author: Mads M, Martin
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const startCityFilter = (meta: RideMeta) =>
     tripOptions.startCity.length === 0 ||
     (JSON.parse(meta.StartPositionDisplay).city !== null &&
@@ -129,7 +134,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.startCity.toLowerCase()));
 
-  //Author: Mads M, Martin
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const endCityFilter = (meta: RideMeta) =>
     tripOptions.endCity.length === 0 ||
     (JSON.parse(meta.EndPositionDisplay).city !== null &&
@@ -137,7 +142,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.endCity.toLowerCase()));
 
-  //Author: Martin
+  /* @author Martin Nielsen s174971 */
   const dateFilter = (meta: RideMeta) => {
     let startTime;
     let endTime;
@@ -151,9 +156,10 @@ const RideCards: FC = () => {
     return date >= startTime && date <= endTime;
   };
 
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const deviceIdFilter = (meta: RideMeta) => 
-    tripOptions.dbName.length === 0 || 
-    tripOptions.dbName.includes(meta.FK_Device);
+    tripOptions.deviceId.length === 0 || 
+    meta.FK_Device.toString().includes(tripOptions.deviceId.value)
 
   const filteredMetas = useMemo<SelectMeta[]>(() => {
     const filtered = metas

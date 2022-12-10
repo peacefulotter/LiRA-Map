@@ -7,18 +7,22 @@ import { getDevices } from '../../queries/devices';
 import { v4 as uuidv4 } from 'uuid';
 import Checkbox from '../Checkbox';
 
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
+
 interface IOptionsSelector {
   onChange: (options: TripsOptions) => void;
   defaultOptions: TripsOptions;
 }
+
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
 const OptionsSelector: FC<IOptionsSelector> = ({
   onChange,
   defaultOptions,
 }) => {
-  const [state, setState] = useState(defaultOptions);
+  const [state] = useState(defaultOptions);
   const [options, setOptions] = useState<TripsOptions>(defaultOptions);
   const [availableDevices, setDevice] = useState<DeviceProperties[]>();
-  const { dbName } = state;
+  const { deviceId } = state;
 
   useEffect(() => {
     getDevices((data: DeviceProperties[]) => {
@@ -28,19 +32,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({
     });
   }, []);
 
-  const update = (key: keyof ActiveMeasProperties) => (val: any) => {
-    const temp = { ...state } as any;
-    temp[key] = val;
-    setState(temp);
-    setOptions(temp);
-    temp.id = uuidv4();
-  };
-
-  const deviceChange =
-  (key: keyof ActiveMeasProperties) =>
-  ({ value }: any) =>
-    update(key)(value);
-
+  /* @author Mads Møller s184443, Martin Nielsen s174971 */
   const deviceOptions = availableDevices?.map((device) => ({
     value: device.DeviceId.toString(),
     label:
@@ -51,7 +43,6 @@ const OptionsSelector: FC<IOptionsSelector> = ({
     return function <T>(value: T) {
       const temp = { ...options } as any;
       temp[key] = value;
-      console.log('🇩🇰', temp);
       setOptions(temp);
       onChange(temp);
     };
@@ -113,8 +104,8 @@ const OptionsSelector: FC<IOptionsSelector> = ({
               <Select
                 className="react-select-combobox-filter"
                 placeholder="Devices.."
-                value={dbName ? { value: dbName, label: dbName } : undefined}
-                onChange={deviceChange('dbName')}
+                value={deviceId ? { value: deviceId, label: deviceId } : undefined}
+                onChange={_onChange('deviceId')}
                 options={deviceOptions}
               />
             </li>
