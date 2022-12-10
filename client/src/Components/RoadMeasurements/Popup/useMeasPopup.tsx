@@ -18,11 +18,7 @@ const useMeasPopup = () => {
     let options = { ...defaultOptions };
 
     popup({
-      title: (
-        <p className="tiny">
-          Enter measurement name and tag
-        </p>
-      ),
+      title: <p className="tiny">Enter measurement name and tag</p>,
       showCancelButton: true,
       cancelButtonColor: '#d33',
       confirmButtonText: 'Add',

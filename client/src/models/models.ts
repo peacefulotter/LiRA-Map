@@ -1,3 +1,5 @@
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
+
 export interface RideMeta {
   TripId: string;
   TaskId: number;
@@ -28,6 +30,7 @@ export interface LatLng {
   lng: number;
 }
 
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
 export interface TripsOptions {
   taskId: string;
   startDate: Date;
@@ -37,4 +40,5 @@ export interface TripsOptions {
   maxDistanceKm: number | undefined;
   startCity: string;
   endCity: string;
+  deviceId: any;
 }

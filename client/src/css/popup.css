@@ -1,3 +1,4 @@
+/* @author Martin Nielsen s174971 */
 .sweetalert-popup {
   background: var(--background);
   width: max(700px, 40vw);
@@ -46,6 +47,19 @@
   border-radius: 5px;
   width: 70%;
   margin-bottom: 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align: left;
+  color: black;
+  white-space: pre-wrap !important;
+}
+
+.react-select-combobox-filter {
+  font-size: 1.1em;
+  border: none;
+  border-radius: 2px;
+  width: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

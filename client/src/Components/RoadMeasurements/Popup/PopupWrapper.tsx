@@ -8,9 +8,11 @@ import { RendererName, rendererTypes } from '../../../models/renderers';
 import Checkbox from '../../Checkbox';
 import {
   ActiveMeasProperties,
+  DeviceProperties,
   TagProperties,
 } from '../../../models/properties';
 import { getTags } from '../../../queries/tags';
+import { getDevices } from '../../../queries/devices';
 
 import { v4 as uuidv4 } from 'uuid';
 
