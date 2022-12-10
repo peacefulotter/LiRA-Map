@@ -80,6 +80,7 @@ const RidesMap: FC = () => {
           onClick={() => {
             setFocusedMeta(0);
           }}
+          title="Show all selected trips at the same time"
         >
           Focus Selected Trips
         </button>

@@ -35,7 +35,7 @@ const OptionsSelector: FC<IOptionsSelector> = ({
       </div>
       <div id="spacing"></div>
       <div id="menuToggle">
-        <input className="menuCheck" type="checkbox" />
+        <input className="menuCheck" type="checkbox" title="Show filters" />
 
         <span className="hamburger"></span>
         <span className="hamburger"></span>

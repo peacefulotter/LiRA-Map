@@ -100,6 +100,7 @@ const RideDetails: FC = () => {
         html={<div>+</div>}
         forceState={addChecked}
         onClick={showAddMeasurement}
+        tooltip="Add a new measurement"
       />
 
       {selectedMetas.map((meta: RideMeta, i: number) => (
