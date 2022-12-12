@@ -178,7 +178,7 @@ const RideCards: FC = () => {
         className="ride-sort-cb"
         html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
         onClick={setIsNight}
-        tooltip="Turn on to only show trips that took place between 20pm and 6am."
+        tooltip="Turn on to only show trips that took place between 20:00 and 06:00."
       />
       <OptionsSelector
         onChange={setTripOptions}
