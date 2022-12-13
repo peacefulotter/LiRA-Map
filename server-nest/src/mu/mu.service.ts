@@ -67,7 +67,6 @@ export class MuService {
       const rpms_rr = data.filter((d) => d.T === 'obd.rpm_rr');
       const rpms_fl = data.filter((d) => d.T === 'obd.rpm_fl');
       const rpms_rl = data.filter((d) => d.T === 'obd.rpm_rl');
-      //Logger.debug('\n rpms_fr: ' + JSON.stringify(rpms_fr));
       // Calculate the frequency to resample data for 50 Hz
       const durationDate = new Date(ride.Duration);
       const duration =
@@ -111,6 +110,8 @@ export class MuService {
         const RPM_fl = parseFloat(rpms_fl[i * frequency_const].Description);
         const RPM_rl = parseFloat(rpms_rl[closestIndex].Description);
 
+        // NOTE: Currently not using math.pow() since it generate invalid results and that 1/1 = 1 and
+        // something to the power of 1 gives the same result as not putting it to the power of 1.
         // Defining the mus
         const mu = (RPM_front: number, RPM_rear: number) =>
           Math.log(
@@ -118,16 +119,6 @@ export class MuService {
               (wheel_radius * RPM_front - RPM_rear * wheel_radius) +
               1,
           );
-        /*const mu = (RPM_front: number, RPM_rear: number) =>
-          Math.pow(
-            Math.log(
-              (beta_front_right * wheel_radius) /
-                (wheel_radius * (RPM_front - RPM_rear)) +
-                1,
-            ),
-            1 / beta__zero,
-          );*/
-        //Logger.debug('Calculating mu \n');
         const mu_right = mu(RPM_fr, RPM_rr);
         const mu_left = mu(RPM_fl, RPM_rl);
         const mu_avg = (mu_right + mu_left) / 2;
@@ -179,6 +170,7 @@ export class MuService {
         if (
           !isNaN(mu_right) &&
           mu_right !== Infinity &&
+          !(mu_right < 0) &&
           RPM_fr !== 0 &&
           RPM_rr !== 0
         ) {
@@ -194,6 +186,7 @@ export class MuService {
         if (
           !isNaN(mu_left) &&
           mu_left !== Infinity &&
+          !(mu_left < 0) &&
           RPM_fl !== 0 &&
           RPM_rl !== 0
         ) {
@@ -209,6 +202,7 @@ export class MuService {
         if (
           !isNaN(mu_avg) &&
           mu_avg !== Infinity &&
+          !(mu_avg < 0) &&
           RPM_fr !== 0 &&
           RPM_fl !== 0 &&
           RPM_rl !== 0 &&
@@ -223,20 +217,6 @@ export class MuService {
             Description: mu_avg,
           });
         }
-
-        //Logger.debug('FK_Trip', ride.TripId);
-        //   if (mu_right < 0)
-        //     Logger.debug(
-        //       'Speed \t' +
-        //         rpms_fl[i * frequency_const].Description * wheel_radius_fr +
-        //         '\n RPM_front \t' +
-        //         rpms_fr[i * 5].Description +
-        //         '\n RPM_rear \t' +
-        //         rpms_rr[i * 5].Description +
-        //         '\n Mu \t' +
-        //         mu_right +
-        //         '\n',
-        //     );
       }
       insertionPromises.push(
         this.knex.batchInsert('Measurements', [

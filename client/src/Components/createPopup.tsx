@@ -4,6 +4,8 @@ import withReactContent from 'sweetalert2-react-content';
 
 import '@sweetalert2/theme-dark';
 
+/* @author Martin Nielsen s174971 */
+
 const swal = withReactContent(Swal);
 
 const createPopup = <T,>() => {
@@ -13,9 +15,13 @@ const createPopup = <T,>() => {
     return swal.fire({
       ...options,
       customClass: {
+        // css class overriding swalalert2 classes
         popup: 'sweetalert-popup',
         title: 'sweetalert-title',
+        actions: 'sweetalert-actions',
+        htmlContainer: 'sweetalert-htmlContainer',
       },
+      heightAuto: false,
     });
   };
 };

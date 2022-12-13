@@ -29,11 +29,16 @@ import { TagsController } from './tags/tags.controller';
 import { MuService } from './mu/mu.service';
 import { MuController } from './mu/mu.controller';
 
+import { DeviceService } from './devices/devices.service';
+import { DeviceController } from './devices/devices.controller';
+
 import {
   LIRA_DB_CONFIG,
   POSTGIS_DB_CONFIG,
   VISUAL_DB_CONFIG,
 } from './database';
+
+/* @author Mads Møller s184443, Martin Nielsen s174971 */
 
 const database = (config: any, name: string) => {
   return KnexModule.forRootAsync(
@@ -63,6 +68,7 @@ const database = (config: any, name: string) => {
     AltitudeController,
     TagsController,
     MuController,
+    DeviceController,
   ],
   providers: [
     AppService,
@@ -75,6 +81,7 @@ const database = (config: any, name: string) => {
     AltitudeService,
     TagsService,
     MuService,
+    DeviceService,
   ],
 })
 export class AppModule {}
