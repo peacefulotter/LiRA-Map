@@ -39,6 +39,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
           className="ride-card-container"
           html={
             <div>
+              {/* @author Mads Westermann s174508 */}
               {meta.selected && selectedMeasurements.length > 0 ? (
                 <button
                   className="focus-trip-button"

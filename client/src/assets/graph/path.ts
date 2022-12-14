@@ -59,6 +59,7 @@ class Path extends Layer<PathOptions> {
     return this;
   }
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   addMouseUp(
     callback: (this: SVGPathElement, event: MouseEvent, d: any) => void,
   ) {

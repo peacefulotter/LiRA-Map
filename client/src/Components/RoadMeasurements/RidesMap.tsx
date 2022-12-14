@@ -1,3 +1,5 @@
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
+
 import React, { FC, useMemo } from 'react';
 import { Palette } from 'react-leaflet-hotline';
 
