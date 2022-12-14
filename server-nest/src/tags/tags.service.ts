@@ -1,3 +1,5 @@
+// @author Matteo Hoffmann s222952, Mads Westerman s174508
+
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from 'nestjs-knex';
 import { Knex } from 'knex';

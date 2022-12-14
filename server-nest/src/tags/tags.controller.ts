@@ -1,3 +1,5 @@
+// @author Matteo Hoffmann s222952, Mads Westerman s174508
+
 import { Controller, Get, Put, Query } from '@nestjs/common';
 import { TagsService } from './tags.service';
 
