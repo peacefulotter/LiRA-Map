@@ -2,7 +2,7 @@
 .palette-wrapper {
     position: fixed;
     top: var(--navbar-z-index);
-    z-index: calc(var(--navbar-z-index) - 3);
+    z-index: calc(var(--navbar-z-index) - 2);
     color: var(--background);
     transform: translateY(-100%);
     transition: transform 200ms ease;
@@ -10,7 +10,7 @@
 
 .palette-show {
     transform: translateY(0%);
-    z-index: calc(var(--navbar-z-index) - 1);
+    z-index: calc(var(--navbar-z-index) - 2);
 }
 
 .palette-container-show {
