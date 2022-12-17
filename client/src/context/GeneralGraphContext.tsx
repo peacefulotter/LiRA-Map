@@ -1,3 +1,4 @@
+// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
 import React, {
   createContext,
   Dispatch,
@@ -31,8 +32,6 @@ interface ContextProps {
 
 const GeneralGraphContext = createContext({} as ContextProps);
 
-// TODO: remove bounds / refactor?  -> is it needed really?
-// TODO: generalize DotHover into an "Event State" (to support for more events at once)
 export const GeneralGraphProvider = ({ children }: any) => {
   const { bounds, addBounds, remBounds } = useMinMaxAxis();
   const [dotHover, setDotHover] = useState<DotHover>();

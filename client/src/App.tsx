@@ -20,6 +20,7 @@ import Rides from './Components/RoadMeasurements/Rides';
 import RideCards from './Components/RoadMeasurements/RideCards';
 import RideDetails from './Components/RoadMeasurements/RideDetails';
 
+// @author Matteo Hoffmann s222952
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
   borders: [],
@@ -60,6 +61,7 @@ const json: IJsonModel = {
 const model = Model.fromJson(json);
 
 const App: FC = () => {
+  // @author Matteo Hoffmann s222952
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -82,22 +84,9 @@ const App: FC = () => {
   return (
     <div className="App">
       <Router>
-        {/*}
-        <Navbar />
-
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => <Redirect to="/road_measurements" />}
-          />
-          <Route exact path="/cardata" component={CarData} />
-          <Route exact path="/road_measurements" component={RoadMeasurements} />
-          <Route exact path="/road_conditions" component={RoadConditions} />
-          <Route exact path="/altitude" component={Altitude} />
-          <Route exact path="/login" component={Login} />
-        </Switch>
-        */}
+        {
+          // @author Matteo Hoffmann s222952
+        }
         <Layout model={model} factory={factory} />
 
         <Toaster containerStyle={{ zIndex: 999999 }} />

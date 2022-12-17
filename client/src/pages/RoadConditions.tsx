@@ -11,6 +11,7 @@ import '../css/road_conditions.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
+// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
   borders: [],
@@ -52,6 +53,7 @@ const RoadConditions = () => {
   const [palette, setPalette] = useState<Palette>([]);
   const [wayData, setWayData] = useState<ChartData<'line', number[], number>>();
 
+  // @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 

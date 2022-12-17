@@ -14,6 +14,7 @@ import Graph from '../Components/Graph/Graph';
 import GraphSelector from '../Components/Graph/GraphSelector';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
+/*@author Matteo Hoffmann s222952*/
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
   borders: [],
@@ -77,6 +78,7 @@ const json: IJsonModel = {
 
 const model = Model.fromJson(json);
 
+/*@author Matteo Hoffmann s222952*/
 const RoadMeasurements = () => {
   const factory = (node: TabNode) => {
     const component = node.getComponent();
@@ -95,27 +97,9 @@ const RoadMeasurements = () => {
           <GraphSelector />
           <Graph />
         </>
-      ); //;
+      );
     }
   };
-
-  /*
-    
-                                          return (
-                                            <MeasurementsProvider>
-                                              <MetasProvider>
-                                                <div className="rides-wrapper">
-                                                  <RideCards />
-    
-                                                  <RideDetails />
-    
-                                                  <Rides />
-                                                </div>
-                                              </MetasProvider>
-                                            </MeasurementsProvider>
-                                          );
-    
-                                           */
 
   return (
     <MeasurementsProvider>

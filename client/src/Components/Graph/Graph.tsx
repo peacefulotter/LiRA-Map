@@ -92,6 +92,7 @@ const Graph: FC = () => {
 
   const csvData = [[labelX, labelY]];
 
+  /*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
   const csvDataFunction = () => {
     if (plot != undefined) {
       plot.data.forEach((data) => {
