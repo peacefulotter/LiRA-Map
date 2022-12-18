@@ -75,6 +75,7 @@ export default class GLine {
       // dots.mouseOut();
     });
 
+    // @author Benjamin Lumbye s204428, Mads Westermann s174508
     hitbox.addMouseUp((event) => {
       if (!hitbox.path.node()) return;
 
@@ -115,6 +116,7 @@ export default class GLine {
       });
     });
 
+    // @author Benjamin Lumbye s204428, Mads Westermann s174508
     const binarySearch = (
       data: GraphData,
       target: number,
@@ -142,6 +144,7 @@ export default class GLine {
       return binarySearch(data, target, iNew, jNew, depth + 1);
     };
 
+    // @author Benjamin Lumbye s204428, Mads Westermann s174508
     const interpolatePoint = (
       value: number,
       neigh1value: number,

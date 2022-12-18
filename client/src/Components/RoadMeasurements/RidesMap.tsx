@@ -1,3 +1,5 @@
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
+
 import React, { FC, useMemo } from 'react';
 import { Palette } from 'react-leaflet-hotline';
 
@@ -80,6 +82,7 @@ const RidesMap: FC = () => {
           onClick={() => {
             setFocusedMeta(0);
           }}
+          title="Show all selected trips at the same time"
         >
           Focus Selected Trips
         </button>

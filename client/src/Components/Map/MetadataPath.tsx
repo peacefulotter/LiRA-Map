@@ -41,6 +41,7 @@ const getPopupLine = (key: string, value: any) => {
   );
 };
 
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
 const calculateClosestIndex = (lat: number, lng: number, path: PathType) => {
   let bestDiff = Infinity;
   let closestIndex = -1;
@@ -71,6 +72,7 @@ const MetadataPath: FC<IMetadataPath> = ({
   const { focusedMeta, setFocusedMeta } = useMetasCtx();
   const map = useMap();
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   // Onclick is called 4 times
   const onClick = () => (e: any) => {
     const { lat, lng } = e.latlng;
@@ -86,6 +88,7 @@ const MetadataPath: FC<IMetadataPath> = ({
     });
   };
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   useEffect(() => {
     if (
       !lastMarkersAction ||
@@ -100,7 +103,7 @@ const MetadataPath: FC<IMetadataPath> = ({
     map.setView([lastMarkersAction.data.lat, lastMarkersAction.data.lng], 15);
   }, [lastMarkersAction]);
 
-  /* @author Benjamin Lumbye s204428 + Mads Westermann s174508 */
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   useEffect(() => {
     if (focusedMeta === taskID) {
       const lat0 = path[0].lat;

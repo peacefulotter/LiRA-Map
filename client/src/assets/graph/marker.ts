@@ -1,3 +1,5 @@
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
+
 import { SVG } from './types';
 
 const color = 'white';

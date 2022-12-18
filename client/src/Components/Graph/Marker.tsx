@@ -1,3 +1,5 @@
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
+
 import { FC, useEffect } from 'react';
 
 import { Axis, GraphData, MarkerData, SVG } from '../../assets/graph/types';

@@ -52,6 +52,7 @@ const Graph: FC = () => {
     paths,
   } = useGraph();
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   const plot = useMemo(() => {
     if (
       !selectedMeasurementName ||
@@ -69,12 +70,14 @@ const Graph: FC = () => {
     };
   }, [paths, selectedMeasurementName, selectedTaskID]);
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   if (!selectedMeasurementName || !selectedTaskID) {
     return (
       <span>Select at least one trip and one measurement to display data.</span>
     );
   }
 
+  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   if (
     !(selectedMeasurementName in paths) ||
     !(selectedTaskID in paths[selectedMeasurementName]) ||
