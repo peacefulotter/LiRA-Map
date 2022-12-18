@@ -41,11 +41,11 @@ const json: IJsonModel = {
             name: 'Road Conditions',
             component: 'roadConditions',
           },
-          {
-            type: 'tab',
-            name: 'Cardata',
-            component: 'carData',
-          },
+          //{
+          //  type: 'tab',
+          //  name: 'Cardata',
+          //  component: 'carData',
+          //},
           {
             type: 'tab',
             name: 'Altitude',

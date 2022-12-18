@@ -6,6 +6,7 @@
   
 .leaflet-container {
     height:100%;
+    z-index: calc( var(--navbar-z-index) - 3 );
 }
 
 .map-zoom {
