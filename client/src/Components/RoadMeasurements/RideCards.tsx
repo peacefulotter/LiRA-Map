@@ -1,13 +1,12 @@
-import React, { FC, ReactNode, useMemo, useState } from 'react';
-import { List, ListRowRenderer } from 'react-virtualized';
+import React, { FC, ReactNode, useMemo } from 'react';
+import { AutoSizer, List, ListRowRenderer } from 'react-virtualized';
 import Checkbox from '../Checkbox';
 
-import { RideMeta, TripsOptions } from '../../models/models';
+import { RideMeta } from '../../models/models';
 
 import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
-import OptionsSelector from './OptionsSelector';
 
 /* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
@@ -63,13 +62,18 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
   };
 
   return (
-    <List
-      width={170}
-      height={2500}
-      rowHeight={61}
-      rowRenderer={renderRow}
-      rowCount={showMetas.length}
-    />
+    <AutoSizer>
+      {({ height, width }) => (
+        <List
+          width={width}
+          height={height}
+          rowHeight={61}
+          rowRenderer={renderRow}
+          rowCount={showMetas.length}
+          className="ride-list"
+        />
+      )}
+    </AutoSizer>
   );
 };
 
@@ -77,22 +81,8 @@ interface SelectMeta extends RideMeta {
   selected: boolean;
 }
 
-const defaultOptions: TripsOptions = {
-  taskId: '',
-  startDate: new Date('2020-01-01'),
-  endDate: new Date(),
-  reversed: false,
-  minDistanceKm: undefined,
-  maxDistanceKm: undefined,
-  startCity: '',
-  endCity: '',
-  deviceId: '',
-};
-
 const RideCards: FC = () => {
-  const { metas, selectedMetas, setSelectedMetas } = useMetasCtx();
-  const [isNight, setIsNight] = useState<boolean>(false);
-  const [tripOptions, setTripOptions] = useState<TripsOptions>(defaultOptions);
+  const { metas, selectedMetas, setSelectedMetas, tripOptions } = useMetasCtx();
 
   const onClick = (md: SelectMeta, i: number, isChecked: boolean) => {
     return isChecked
@@ -107,11 +97,11 @@ const RideCards: FC = () => {
     tripOptions.taskId.length === 0 ||
     meta.TaskId.toString().includes(tripOptions.taskId);
 
-  const isNightFilter = (meta: RideMeta) => {
+  const nightModeFilter = (meta: RideMeta) => {
     const startTime = new Date(meta.StartTimeUtc).getHours();
     const endTime = new Date(meta.EndTimeUtc).getHours();
     return (
-      !isNight ||
+      !tripOptions.nightMode ||
       ((startTime >= 20 || startTime <= 6) && (endTime >= 20 || endTime <= 6))
     );
   };
@@ -168,7 +158,7 @@ const RideCards: FC = () => {
       .filter(
         (meta) =>
           taskIDFilter(meta) &&
-          isNightFilter(meta) &&
+          nightModeFilter(meta) &&
           minDistanceFilter(meta) &&
           maxDistanceFilter(meta) &&
           dateFilter(meta) &&
@@ -183,23 +173,9 @@ const RideCards: FC = () => {
         return { ...meta, selected };
       });
     return tripOptions.reversed ? filtered.reverse() : filtered;
-  }, [metas, tripOptions, isNight, selectedMetas]);
+  }, [metas, tripOptions, selectedMetas]);
 
-  return (
-    <div className="ride-list">
-      <Checkbox
-        className="ride-sort-cb"
-        html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
-        onClick={setIsNight}
-        tooltip="Turn on to only show trips that took place between 20:00 and 06:00."
-      />
-      <OptionsSelector
-        onChange={setTripOptions}
-        defaultOptions={defaultOptions}
-      />
-      <Cards showMetas={filteredMetas} onClick={onClick} />
-    </div>
-  );
+  return <Cards showMetas={filteredMetas} onClick={onClick} />;
 };
 
 export default RideCards;

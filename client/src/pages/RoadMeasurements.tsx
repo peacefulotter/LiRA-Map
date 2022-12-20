@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import { MeasurementsProvider } from '../context/MeasurementsContext';
 import { MetasProvider } from '../context/MetasContext';
@@ -14,6 +14,7 @@ import Graph from '../Components/Graph/Graph';
 import GraphSelector from '../Components/Graph/GraphSelector';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 import help_icon from './icons8-question-mark-64.png'; //source: https://icons8.com/icon/80684/question-mark
+import OptionsSelector from '../Components/RoadMeasurements/OptionsSelector';
 
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
@@ -23,16 +24,36 @@ const json: IJsonModel = {
     weight: 100,
     children: [
       {
-        type: 'tabset',
+        type: 'row',
         weight: 18,
         children: [
           {
-            type: 'tab',
-            name: 'Trips',
-            component: 'ridecards',
-            helpText:
-              'All available trips can be found here. Click a trip to select it. When both a trip and a measurement type is selected they will be shown on the Measurements Map and the Graph.',
-            icon: help_icon,
+            type: 'tabset',
+            weight: 30,
+            children: [
+              {
+                type: 'tab',
+                name: 'Trips Filtering',
+                component: 'optionsselector',
+                helpText:
+                  'Use the different fields to filter the trips. When nothing is typed in a filter it is disregarded.',
+                icon: help_icon,
+              },
+            ],
+          },
+          {
+            type: 'tabset',
+            weight: 70,
+            children: [
+              {
+                type: 'tab',
+                name: 'Trips',
+                component: 'ridecards',
+                helpText:
+                  'All available trips can be found here. Click a trip to select it. When both a trip and a measurement type is selected they will be shown on the Measurements Map and the Graph.',
+                icon: help_icon,
+              },
+            ],
           },
         ],
       },
@@ -98,37 +119,21 @@ const RoadMeasurements = () => {
       return <Rides />;
     } else if (component === 'ridecards') {
       return <RideCards />;
+    } else if (component === 'optionsselector') {
+      return <OptionsSelector />;
     } else if (component === 'ridedetails') {
       return <RideDetails />;
     } else if (component === 'ridemap') {
-      return <RidesMap />; //;
+      return <RidesMap />;
     } else if (component === 'graph') {
       return (
         <>
           <GraphSelector />
           <Graph />
         </>
-      ); //;
+      );
     }
   };
-
-  /*
-    
-                                          return (
-                                            <MeasurementsProvider>
-                                              <MetasProvider>
-                                                <div className="rides-wrapper">
-                                                  <RideCards />
-    
-                                                  <RideDetails />
-    
-                                                  <Rides />
-                                                </div>
-                                              </MetasProvider>
-                                            </MeasurementsProvider>
-                                          );
-    
-                                           */
 
   return (
     <MeasurementsProvider>

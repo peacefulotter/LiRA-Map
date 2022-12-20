@@ -2,36 +2,19 @@ import React, { FC, useEffect, useState } from 'react';
 import DatePicker from 'react-date-picker';
 import Select from 'react-select';
 import { TripsOptions } from '../../models/models';
-import {
-  ActiveMeasProperties,
-  DeviceProperties,
-} from '../../models/properties';
+import { DeviceProperties } from '../../models/properties';
 import { getDevices } from '../../queries/devices';
-import { v4 as uuidv4 } from 'uuid';
 import Checkbox from '../Checkbox';
+import { useMetasCtx } from '../../context/MetasContext';
 
-/* @author Mads Møller s184443, Martin Nielsen s174971 */
-
-interface IOptionsSelector {
-  onChange: (options: TripsOptions) => void;
-  defaultOptions: TripsOptions;
-}
-
-/* @author Mads Møller s184443, Martin Nielsen s174971 */
-const OptionsSelector: FC<IOptionsSelector> = ({
-  onChange,
-  defaultOptions,
-}) => {
-  const [state] = useState(defaultOptions);
-  const [options, setOptions] = useState<TripsOptions>(defaultOptions);
+/* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
+const OptionsSelector: FC = () => {
+  const { tripOptions, setTripOptions } = useMetasCtx();
   const [availableDevices, setDevice] = useState<DeviceProperties[]>();
-  const { deviceId } = state;
 
   useEffect(() => {
     getDevices((data: DeviceProperties[]) => {
-      data.forEach(function (value) {
-        setDevice(data);
-      });
+      setDevice(data);
     });
   }, []);
 
@@ -41,106 +24,99 @@ const OptionsSelector: FC<IOptionsSelector> = ({
     label: device.DeviceId.toString(),
   }));
 
-  const _onChange = (key: keyof TripsOptions) => {
+  const onChange = (key: keyof TripsOptions) => {
     return function <T>(value: T) {
-      const temp = { ...options } as any;
+      const temp = { ...tripOptions } as any;
       temp[key] = value;
-      setOptions(temp);
-      onChange(temp);
+      setTripOptions(temp);
     };
   };
 
   return (
-    <div>
-      <div className="rides-options">
+    <div className="rides-options">
+      <Checkbox
+        className="ride-sort-cb"
+        html={<div>Night mode {tripOptions.nightMode ? 'On' : 'Off'}</div>}
+        onClick={onChange('nightMode')}
+        tooltip="Turn on to only show trips that took place between 20:00 and 06:00."
+      />
+      <label>
+        <span>TaskID</span>
         <input
           className="ride-search-input"
           placeholder="TaskID"
-          value={options.taskId}
-          onChange={(e) => _onChange('taskId')(e.target.value)}
+          value={tripOptions.taskId}
+          onChange={(e) => onChange('taskId')(e.target.value)}
         />
-      </div>
-      <div id="spacing"></div>
-      <div id="menuToggle">
-        <input className="menuCheck" type="checkbox" title="Show filters" />
-
-        <span className="hamburger"></span>
-        <span className="hamburger"></span>
-        <span className="hamburger"></span>
-
-        <ul id="menu">
-          <div id="ride-search-menu">
-            <li>
-              <input
-                className="ride-search-input"
-                placeholder="Min Distance Km"
-                value={options.minDistanceKm}
-                onChange={(e) => _onChange('minDistanceKm')(e.target.value)}
-              />
-            </li>
-            <li>
-              <input
-                className="ride-search-input"
-                placeholder="Max Distance Km"
-                value={options.maxDistanceKm}
-                onChange={(e) => _onChange('maxDistanceKm')(e.target.value)}
-              />
-            </li>
-            <li>
-              <input
-                className="ride-search-input"
-                placeholder="Start City"
-                value={options.startCity}
-                onChange={(e) => _onChange('startCity')(e.target.value)}
-              />
-            </li>
-            <li>
-              <input
-                className="ride-search-input"
-                placeholder="Destination City"
-                value={options.endCity}
-                onChange={(e) => _onChange('endCity')(e.target.value)}
-              />
-            </li>
-            <li>
-              <Select
-                className="react-select-combobox-filter"
-                placeholder="Devices.."
-                value={
-                  deviceId ? { value: deviceId, label: deviceId } : undefined
-                }
-                onChange={_onChange('deviceId')}
-                options={deviceOptions}
-              />
-            </li>
-            <li>
-              <DatePicker
-                onChange={_onChange('startDate')}
-                value={options.startDate}
-                className="options-date-picker"
-                format="dd/MM/y"
-              />
-            </li>
-            <li>
-              <DatePicker
-                onChange={_onChange('endDate')}
-                value={options.endDate}
-                className="options-date-picker"
-                format="dd/MM/y"
-              />
-            </li>
-            <li>
-              <Checkbox
-                className="ride-sort-cb"
-                html={<div>Sort {options.reversed ? '▼' : '▲'}</div>}
-                onClick={_onChange('reversed')}
-              />
-            </li>
-          </div>
-        </ul>
-      </div>
-      <div id="spacing"></div>
-      <div id="spacing"></div>
+      </label>
+      <label>
+        <span>Min Distance Km</span>
+        <input
+          className="ride-search-input"
+          placeholder="Min Distance Km"
+          value={tripOptions.minDistanceKm}
+          onChange={(e) => onChange('minDistanceKm')(e.target.value)}
+        />
+      </label>
+      <label>
+        <span>Max Distance Km</span>
+        <input
+          className="ride-search-input"
+          placeholder="Max Distance Km"
+          value={tripOptions.maxDistanceKm}
+          onChange={(e) => onChange('maxDistanceKm')(e.target.value)}
+        />
+      </label>
+      <label>
+        <span>Start City</span>
+        <input
+          className="ride-search-input"
+          placeholder="Start City"
+          value={tripOptions.startCity}
+          onChange={(e) => onChange('startCity')(e.target.value)}
+        />
+      </label>
+      <label>
+        <span>Destination City</span>
+        <input
+          className="ride-search-input"
+          placeholder="Destination City"
+          value={tripOptions.endCity}
+          onChange={(e) => onChange('endCity')(e.target.value)}
+        />
+      </label>
+      <label>
+        <span>Devices</span>
+        <Select
+          className="react-select-combobox-filter"
+          placeholder="Devices.."
+          onChange={onChange('deviceId')}
+          options={deviceOptions}
+        />
+      </label>
+      <label>
+        <span>From</span>
+        <DatePicker
+          onChange={onChange('startDate')}
+          value={tripOptions.startDate}
+          className="options-date-picker"
+          format="dd/MM/y"
+        />
+      </label>
+      <label>
+        <span>To</span>
+        <DatePicker
+          onChange={onChange('endDate')}
+          value={tripOptions.endDate}
+          className="options-date-picker"
+          format="dd/MM/y"
+        />
+      </label>
+      <Checkbox
+        className="ride-sort-cb"
+        html={<div>Sort {tripOptions.reversed ? '▼' : '▲'}</div>}
+        onClick={onChange('reversed')}
+      />
     </div>
   );
 };

@@ -1,10 +1,8 @@
-/* @author Mads Møller s184443, Martin Nielsen s174971 */
+/* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
 .ride-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   min-height: 100%;
+  padding: 16px;
   background-color: rgb(58, 58, 58);
 }
 
@@ -12,6 +10,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: rgb(58, 58, 58);
+  padding: 16px;
+  gap: 8px;
+  text-align: left;
+}
+
+.rides-options > label {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3px;
+  width: 100%;
+}
+
+.rides-options > label > span {
+  font-size: .85rem;
 }
 
 .options-date-picker {
@@ -31,7 +44,8 @@
 }
 
 .ride-search-input {
-  width: 90%;
+  box-sizing: border-box;
+  width: 100%;
   padding: 10px 6px;
   border: none;
   color: white;
@@ -44,7 +58,6 @@
 .ride-sort-cb {
   font-size: 1.1em !important;
   padding: 10px 30px !important;
-  margin: 10px 0px;
   background: var(--background-3) !important;
 }
 
@@ -69,127 +82,6 @@
 .ride-card-container:nth-child(even) {
   margin: 1px 0px;
 }
-
-#menuToggle {
-  display: block;
-  position: relative;
-  left: 70px;
-  top: 7px;
-
-  z-index: 1;
-
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-input.menuCheck {
-  display: block;
-  width: 40px;
-  height: 30px;
-  position: absolute;
-  top: -7px;
-  left: -5px;
-  cursor: pointer;
-  opacity: 0;
-  z-index: 2;
-  -webkit-touch-callout: none;
-}
-
-span.hamburger {
-  display: block;
-  width: 33px;
-  height: 4px;
-  margin-bottom: 5px;
-  position: relative;
-
-  background: #cdcdcd;
-  border-radius: 3px;
-
-  z-index: 1;
-
-  transform-origin: 4px 0px;
-
-  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
-}
-
-#menuToggle li + input.ride-search-input {
-  width: 90%;
-  padding: 15px 10px;
-  border: none;
-  color: white;
-  font-size: 1em;
-  outline: none;
-  background-color: var(--background-2);
-  opacity: 100;
-  position: relative;
-  cursor: text;
-}
-
-/* And make sure this also covers the topmost one to create hamburger icon */
-#menuToggle span :nth-child(3) {
-  display: block;
-  width: 33px;
-  height: 4px;
-  margin-bottom: 5px;
-  position: relative;
-  background: #cdcdcd;
-  border-radius: 3px;
-  z-index: 1;
-  transform-origin: 4px 0px;
-  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
-}
-
-#menuToggle span:first-child {
-  transform-origin: 0% 0%;
-}
-
-#menuToggle span:nth-last-child(2) {
-  transform-origin: 0% 100%;
-}
-
-#menuToggle input:checked ~ span {
-  opacity: 1;
-  transform: rotate(45deg) translate(-2px, -1px);
-  background: #cdcdcd;
-}
-
-#menuToggle input:checked ~ span:nth-last-child(3) {
-  opacity: 0;
-  transform: rotate(0deg) scale(0.2, 0.2);
-}
-
-#menuToggle input:checked ~ span:nth-last-child(2) {
-  transform: rotate(-45deg) translate(0, -1px);
-}
-
-#menu {
-  display: none;
-  position: static;
-  width: 160px;
-  margin: -40px 0 0 -70px;
-  padding: 5px;
-  padding-top: 40px;
-  background-color: var(--background-2);
-  list-style-type: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-#menu li {
-  padding: 5px;
-  border-radius: 2px;
-}
-
-#menuToggle input:checked ~ ul {
-    transform: none;
-    display: block;
-}
-
-#spacing {
-  height: 5px;
-}
-
 
 .focus-trip-button { /* @author: Mads Westermann s174508*/
     position: absolute;

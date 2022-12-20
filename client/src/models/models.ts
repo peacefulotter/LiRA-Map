@@ -41,4 +41,5 @@ export interface TripsOptions {
   startCity: string;
   endCity: string;
   deviceId: any;
+  nightMode: boolean;
 }
