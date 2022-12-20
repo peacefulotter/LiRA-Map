@@ -6,10 +6,11 @@ interface Props {
   className?: string;
   forceState?: boolean;
   style?: React.CSSProperties;
+  tooltip?: string;
 }
 
 const Checkbox = (props: Props) => {
-  const { forceState, className, html, onClick, style } = props;
+  const { forceState, className, html, onClick, style, tooltip } = props;
   const [isChecked, setChecked] = useState<boolean>(forceState || false);
 
   return (
@@ -23,6 +24,7 @@ const Checkbox = (props: Props) => {
         onClick(update, e);
         setChecked(update);
       }}
+      title={tooltip}
     >
       {html}
     </div>

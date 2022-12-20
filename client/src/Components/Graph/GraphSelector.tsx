@@ -1,3 +1,5 @@
+// @author Benjamin Lumbye s204428, Mads Westermann s174508
+
 import React, { FC, useEffect, useState } from 'react';
 import { useGraph } from '../../context/GraphContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';

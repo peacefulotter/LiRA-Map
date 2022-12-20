@@ -26,16 +26,24 @@ const GraphButtons: FC<IGraphButtons> = ({ setZoom, setCSV, labelY }) => {
 
   return (
     <div className="zoom-btns">
-      <div className="btn zoom-btn" onClick={zoomIn}>
+      <div className="btn zoom-btn" onClick={zoomIn} title="Zoom in on graph">
         <FiPlus />
       </div>
-      <div className="btn zoom-btn" onClick={zoomOut}>
+      <div className="btn zoom-btn" onClick={zoomOut} title="Zoom out on graph">
         <FiMinus />
       </div>
-      <div className="btn zoom-btn" onClick={resetZoom}>
+      <div
+        className="btn zoom-btn"
+        onClick={resetZoom}
+        title="Reset graph view"
+      >
         <FiRotateCcw />
       </div>
-      <div className="btn zoom-btn" onClick={handleClick}>
+      <div
+        className="btn zoom-btn"
+        onClick={handleClick}
+        title="Download graph data"
+      >
         <FiDownload />
       </div>
       <CSVLink

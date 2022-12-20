@@ -39,10 +39,12 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
           className="ride-card-container"
           html={
             <div>
+              {/* @author Mads Westermann s174508 */}
               {meta.selected && selectedMeasurements.length > 0 ? (
                 <button
                   className="focus-trip-button"
                   onClick={(e) => onFocusClick(e, meta)}
+                  title="Find trip on map"
                 >
                   📍
                 </button>
@@ -190,6 +192,7 @@ const RideCards: FC = () => {
         className="ride-sort-cb"
         html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
         onClick={setIsNight}
+        tooltip="Turn on to only show trips that took place between 20:00 and 06:00."
       />
       <OptionsSelector
         onChange={setTripOptions}
