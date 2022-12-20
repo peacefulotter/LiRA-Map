@@ -184,8 +184,7 @@ const RideCards: FC = () => {
       });
     return tripOptions.reversed ? filtered.reverse() : filtered;
   }, [metas, tripOptions, isNight, selectedMetas]);
-  filteredMetas.sort((a, b) => (a.selected > b.selected ? -1 : 1));
-  console.log('🇩🇰', filteredMetas);
+  filteredMetas.sort((a, b) => (a.selected >= b.selected ? -1 : 1));
   return (
     <div className="ride-list">
       <Checkbox
