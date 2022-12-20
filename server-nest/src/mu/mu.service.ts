@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection } from 'nestjs-knex';
 import { Knex } from 'knex';

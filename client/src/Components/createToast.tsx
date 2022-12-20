@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 import toast, { Toast } from 'react-hot-toast';

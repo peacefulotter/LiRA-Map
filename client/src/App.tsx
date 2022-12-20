@@ -1,24 +1,14 @@
 import React, { FC } from 'react';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-import Navbar from './Components/Navbar';
 import RoadMeasurements from './pages/RoadMeasurements';
 import RoadConditions from './pages/RoadConditions';
 import Altitude from './pages/Altitude';
 import CarData from './pages/CarData';
-import Login from './pages/Login';
 
 import './App.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
-import Rides from './Components/RoadMeasurements/Rides';
-import RideCards from './Components/RoadMeasurements/RideCards';
-import RideDetails from './Components/RoadMeasurements/RideDetails';
 
 const json: IJsonModel = {
   global: { tabEnableFloat: true },

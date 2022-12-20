@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React, {
   createContext,
   Dispatch,
@@ -48,7 +50,7 @@ export const GraphProvider = ({ children }: any) => {
   const [lastMarkersAction, setLastMarkersAction] =
     useState<UseMarkersAction>();
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
+  /** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
   const [markers, useMarkers] = useReducer(
     (state: MarkersRecord, action: UseMarkersAction) => {
       // If the data already is as requested then don't update

@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React from 'react';
 
 import { MeasurementsProvider } from '../context/MeasurementsContext';

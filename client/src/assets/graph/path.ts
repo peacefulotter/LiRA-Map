@@ -6,6 +6,7 @@ import { Axis, GraphData, PathOptions, SVG } from './types';
 import { defaultHoverPathOptions, defaultPathOptions } from './constants';
 import { Selection } from 'd3';
 
+/** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
 class Path extends Layer<PathOptions> {
   path: Selection<SVGPathElement, any, null, unknown>;
 
@@ -59,7 +60,6 @@ class Path extends Layer<PathOptions> {
     return this;
   }
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
   addMouseUp(
     callback: (this: SVGPathElement, event: MouseEvent, d: any) => void,
   ) {

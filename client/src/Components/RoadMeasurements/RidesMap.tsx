@@ -1,7 +1,6 @@
-// @author Benjamin Lumbye s204428, Mads Westermann s174508
+/** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
 
 import React, { FC, useMemo } from 'react';
-import { Palette } from 'react-leaflet-hotline';
 
 import { MeasProperties, ActiveMeasProperties } from '../../models/properties';
 import { BoundedPath, MeasMetaPath } from '../../models/path';
@@ -9,8 +8,6 @@ import { RideMeta } from '../../models/models';
 
 import { useMetasCtx } from '../../context/MetasContext';
 
-import PaletteEditor from '../Palette/PaletteEditor';
-import { RENDERER_PALETTE } from '../Map/constants';
 import MetadataPath from '../Map/MetadataPath';
 import MetadataHelper from '../Map/MetadataHelper';
 import MapWrapper from '../Map/MapWrapper';

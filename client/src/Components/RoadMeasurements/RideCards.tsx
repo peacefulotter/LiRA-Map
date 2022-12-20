@@ -8,7 +8,7 @@ import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
 
-/* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
+/** @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
 interface CardsProps {
   showMetas: SelectMeta[];
@@ -19,7 +19,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
   const { setFocusedMeta } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
 
-  /* @author Benjamin Lumbye s204428 */
+  /** @author Benjamin Lumbye s204428 */
   const onFocusClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     meta: SelectMeta,
@@ -38,7 +38,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
           className="ride-card-container"
           html={
             <div>
-              {/* @author Mads Westermann s174508 */}
+              {/*/** @author Mads Westermann s174508 * */}
               {meta.selected && selectedMeasurements.length > 0 ? (
                 <button
                   className="focus-trip-button"
@@ -92,7 +92,7 @@ const RideCards: FC = () => {
         );
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const taskIDFilter = (meta: RideMeta) =>
     tripOptions.taskId.length === 0 ||
     meta.TaskId.toString().includes(tripOptions.taskId);
@@ -106,19 +106,19 @@ const RideCards: FC = () => {
     );
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const minDistanceFilter = (meta: RideMeta) =>
     !tripOptions.minDistanceKm ||
     isNaN(tripOptions.minDistanceKm) ||
     meta.DistanceKm >= tripOptions.minDistanceKm;
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const maxDistanceFilter = (meta: RideMeta) =>
     !tripOptions.maxDistanceKm ||
     isNaN(tripOptions.maxDistanceKm) ||
     meta.DistanceKm <= tripOptions.maxDistanceKm;
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const startCityFilter = (meta: RideMeta) =>
     tripOptions.startCity.length === 0 ||
     (JSON.parse(meta.StartPositionDisplay).city !== null &&
@@ -126,7 +126,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.startCity.toLowerCase()));
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const endCityFilter = (meta: RideMeta) =>
     tripOptions.endCity.length === 0 ||
     (JSON.parse(meta.EndPositionDisplay).city !== null &&
@@ -134,7 +134,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.endCity.toLowerCase()));
 
-  /* @author Martin Nielsen s174971 */
+  /*/** @author Martin Nielsen s174971 * */
   const dateFilter = (meta: RideMeta) => {
     let startTime;
     let endTime;
@@ -148,7 +148,7 @@ const RideCards: FC = () => {
     return date >= startTime && date <= endTime;
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const deviceIdFilter = (meta: RideMeta) =>
     tripOptions.deviceId.length === 0 ||
     meta.FK_Device.toString().includes(tripOptions.deviceId.value);
