@@ -1,6 +1,6 @@
 /** @author Benjamin Lumbye s204428 */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { MeasurementsProvider } from '../context/MeasurementsContext';
 import { MetasProvider } from '../context/MetasContext';
@@ -18,8 +18,8 @@ import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 import help_icon from './icons8-question-mark-64.png'; //source: https://icons8.com/icon/80684/question-mark
 import OptionsSelector from '../Components/RoadMeasurements/OptionsSelector';
 
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
@@ -111,9 +111,24 @@ const json: IJsonModel = {
   },
 };
 
-const model = Model.fromJson(json);
+const layoutKey = 'road-measurements-layout';
 
 const RoadMeasurements = () => {
+  const [model, setModel] = useState<Model>();
+
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
+
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -143,7 +158,13 @@ const RoadMeasurements = () => {
         <GeneralGraphProvider>
           <GraphProvider>
             <div className="rides-wrapper">
-              <Layout model={model} factory={factory} />
+              {model && (
+                <Layout
+                  model={model}
+                  factory={factory}
+                  onModelChange={saveLayout}
+                />
+              )}
             </div>
           </GraphProvider>
         </GeneralGraphProvider>

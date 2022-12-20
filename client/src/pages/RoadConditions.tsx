@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Palette } from 'react-leaflet-hotline';
 import { ChartData } from 'chart.js';
 
@@ -11,8 +11,8 @@ import '../css/road_conditions.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
@@ -46,11 +46,25 @@ const json: IJsonModel = {
   },
 };
 
-const model = Model.fromJson(json);
+const layoutKey = 'road-conditions-layout';
 
 const RoadConditions = () => {
   const [palette, setPalette] = useState<Palette>([]);
   const [wayData, setWayData] = useState<ChartData<'line', number[], number>>();
+  const [model, setModel] = useState<Model>();
+
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
 
   const factory = (node: TabNode) => {
     const component = node.getComponent();
@@ -80,7 +94,9 @@ const RoadConditions = () => {
   return (
     <GeneralGraphProvider>
       <div className="road-conditions-wrapper">
-        <Layout model={model} factory={factory} />
+        {model && (
+          <Layout model={model} factory={factory} onModelChange={saveLayout} />
+        )}
       </div>
     </GeneralGraphProvider>
   );

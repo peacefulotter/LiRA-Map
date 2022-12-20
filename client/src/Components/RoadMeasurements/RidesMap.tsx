@@ -69,8 +69,6 @@ const RidesMap: FC = () => {
     />
   );
 
-  console.log('test' + selectedMetas);
-
   return (
     <div className="road-measurements-map">
       {selectedMetas.length > 0 && selectedMeasurements.length > 0 ? (

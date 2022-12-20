@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
@@ -10,8 +10,8 @@ import CarData from './pages/CarData';
 import './App.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
@@ -46,10 +46,24 @@ const json: IJsonModel = {
     ],
   },
 };
-
-const model = Model.fromJson(json);
+const layoutKey = 'app-layout';
 
 const App: FC = () => {
+  const [model, setModel] = useState<Model>();
+
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
+
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -88,7 +102,9 @@ const App: FC = () => {
           <Route exact path="/login" component={Login} />
         </Switch>
         */}
-        <Layout model={model} factory={factory} />
+        {model && (
+          <Layout model={model} factory={factory} onModelChange={saveLayout} />
+        )}
 
         <Toaster containerStyle={{ zIndex: 999999 }} />
       </Router>
