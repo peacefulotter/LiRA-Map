@@ -15,6 +15,7 @@ import GraphSelector from '../Components/Graph/GraphSelector';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 import help_icon from './icons8-question-mark-64.png'; //source: https://icons8.com/icon/80684/question-mark
 
+/*@author Matteo Hoffmann s222952*/
 const json: IJsonModel = {
   global: { tabEnableFloat: true },
   borders: [],
@@ -90,6 +91,7 @@ const json: IJsonModel = {
 
 const model = Model.fromJson(json);
 
+/*@author Matteo Hoffmann s222952*/
 const RoadMeasurements = () => {
   const factory = (node: TabNode) => {
     const component = node.getComponent();
@@ -108,27 +110,9 @@ const RoadMeasurements = () => {
           <GraphSelector />
           <Graph />
         </>
-      ); //;
+      );
     }
   };
-
-  /*
-    
-                                          return (
-                                            <MeasurementsProvider>
-                                              <MetasProvider>
-                                                <div className="rides-wrapper">
-                                                  <RideCards />
-    
-                                                  <RideDetails />
-    
-                                                  <Rides />
-                                                </div>
-                                              </MetasProvider>
-                                            </MeasurementsProvider>
-                                          );
-    
-                                           */
 
   return (
     <MeasurementsProvider>

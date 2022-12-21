@@ -1,4 +1,4 @@
-import { WaysConditions, ValueLatLng } from '../models/path';
+// @author Matteo Hoffmann s222952, Mads Westerman s174508
 import { get } from './fetch';
 import { TagProperties } from '../models/properties';
 
