@@ -18,6 +18,7 @@ import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 import help_icon from './icons8-question-mark-64.png'; //source: https://icons8.com/icon/80684/question-mark
 import OptionsSelector from '../Components/RoadMeasurements/OptionsSelector';
 
+/** @author Matteo Hoffmann s222952*/
 const defaultLayout: IJsonModel = {
   global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
@@ -113,6 +114,7 @@ const defaultLayout: IJsonModel = {
 
 const layoutKey = 'road-measurements-layout';
 
+/*@author Matteo Hoffmann s222952*/
 const RoadMeasurements = () => {
   const [model, setModel] = useState<Model>();
 
