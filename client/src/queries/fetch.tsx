@@ -24,7 +24,7 @@ export async function asyncPost<T>(
   return request;
 }
 
-// @author Benjamin Lumbye s204428
+/** @author Benjamin Lumbye s204428 */
 export async function realAsyncPost<T>(
   path: string,
   data: any,

@@ -11,7 +11,7 @@ import '../css/road_conditions.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
-// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
 const defaultLayout: IJsonModel = {
   global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
@@ -67,7 +67,7 @@ const RoadConditions = () => {
     localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
   };
 
-  // @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+  /** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 

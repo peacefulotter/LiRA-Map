@@ -1,4 +1,4 @@
-// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
 import React, {
   createContext,
   Dispatch,

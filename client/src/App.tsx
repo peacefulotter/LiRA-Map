@@ -10,7 +10,7 @@ import CarData from './pages/CarData';
 import './App.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 
-// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
 const defaultLayout: IJsonModel = {
   global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
@@ -65,7 +65,7 @@ const App: FC = () => {
     localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
   };
 
-  // @author Matteo Hoffmann s222952
+  /** @author Matteo Hoffmann s222952 */
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
