@@ -1,4 +1,4 @@
-/*/** @author Martin Nielsen s174971 * */
+/** @author Martin Nielsen s174971 */
 .sweetalert-popup {
   background: var(--background);
   width: max(700px, 40vw);
@@ -41,7 +41,7 @@
   margin: 0.5em 0em;
 }
 
-/*/** @author Matteo Hoffmann s222952, Mads Westerman s174508 * */
+/** @author Matteo Hoffmann s222952, Mads Westerman s174508 */
 .react-select-combobox {
   font-size: 1.1em;
   border: none;

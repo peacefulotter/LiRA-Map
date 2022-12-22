@@ -3,7 +3,7 @@ import { DeviceService } from './devices.service';
 
 import { DeviceMeta } from './models.devices';
 
-/*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
+/** @author Mads Møller s184443, Martin Nielsen s174971 */
 
 @Controller('devices')
 export class DeviceController {

@@ -18,7 +18,7 @@ const OptionsSelector: FC = () => {
     });
   }, []);
 
-  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
+  /** @author Mads Møller s184443, Martin Nielsen s174971 */
   const deviceOptions = availableDevices?.map((device) => ({
     value: device.DeviceId.toString(),
     label: device.DeviceId.toString(),

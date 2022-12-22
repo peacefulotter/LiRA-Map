@@ -74,7 +74,7 @@ interface Props {
 const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
   const ref = useRef<Chart<'line', number[], number>>(null);
 
-  /*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
+  /** @author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
 
   const csvData: string[][] = [['distance[m]', type.name]];
   const myRef = useRef(null);
@@ -86,7 +86,7 @@ const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
     }
   };
 
-  /*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
+  /** @author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
   const csvDataFunction = () => {
     if (data != undefined) {
       if (data.datasets != undefined && data.labels != undefined) {
@@ -163,7 +163,7 @@ const ConditionsGraph: FC<Props> = ({ type, data, palette }) => {
             plugins={plugins}
           ></Line>
           <div className="csv-btns">
-            {/*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */}
+            {/** @author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */}
             <div className="btn csv-btn">
               <FiDownload onClick={handleClick} />
             </div>

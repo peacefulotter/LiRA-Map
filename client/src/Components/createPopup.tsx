@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 
 import '@sweetalert2/theme-dark';
 
-/*/** @author Martin Nielsen s174971 * */
+/** @author Martin Nielsen s174971 */
 
 const swal = withReactContent(Swal);
 

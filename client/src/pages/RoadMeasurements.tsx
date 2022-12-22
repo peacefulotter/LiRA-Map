@@ -114,7 +114,7 @@ const defaultLayout: IJsonModel = {
 
 const layoutKey = 'road-measurements-layout';
 
-/*@author Matteo Hoffmann s222952*/
+/** @author Matteo Hoffmann s222952*/
 const RoadMeasurements = () => {
   const [model, setModel] = useState<Model>();
 

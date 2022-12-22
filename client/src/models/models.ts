@@ -1,4 +1,4 @@
-/*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
+/** @author Mads Møller s184443, Martin Nielsen s174971 */
 
 export interface RideMeta {
   TripId: string;
@@ -30,7 +30,7 @@ export interface LatLng {
   lng: number;
 }
 
-/*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
+/** @author Mads Møller s184443, Martin Nielsen s174971 */
 export interface TripsOptions {
   taskId: string;
   startDate: Date;
