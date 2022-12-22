@@ -58,7 +58,7 @@ const RideDetails: FC = () => {
         setMeasurements((prev) => [...prev, newMeasurement]);
         // and add the measurement to the measurements.json file
         addMeasurement(newMeasurement);
-      } /**@author Emil Kim Krarup (s204449) */,
+      } /**@author Emil Kim Krarup (s204449), Lucien Kiven Tamo (s184448) */,
       { ...RENDERER_MEAS_PROPERTIES, id: uuidv4() },
     );
   };
