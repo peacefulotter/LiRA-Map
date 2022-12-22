@@ -1,34 +1,58 @@
-import {
-	createContext,
-	Dispatch,
-	SetStateAction,
-	useContext,
-} from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import Loading from '../Components/Loading';
 
-import useMeasurements from "../Components/Map/Measurements";
-import { RideMeasurement } from "../models/properties";
+import { ActiveMeasProperties } from '../models/properties';
+import { getMeasurements } from '../queries/measurements';
 
 interface ContextProps {
-	measurements: RideMeasurement[];
-    setMeasurements: Dispatch<SetStateAction<RideMeasurement[]>>;
+  measurements: ActiveMeasProperties[];
+  setMeasurements: Dispatch<SetStateAction<ActiveMeasProperties[]>>;
+  selectedMeasurements: ActiveMeasProperties[];
 }
 
 const MeasurementsContext = createContext({} as ContextProps);
 
+/** @author Benjamin Lumbye s204428 */
 export const MeasurementsProvider = ({ children }: any) => {
+  const [measurements, setMeasurements] = useState<ActiveMeasProperties[]>([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState<
+    ActiveMeasProperties[]
+  >([]);
+  const [loading, setLoading] = useState(true);
 
-    const [ measurements, setMeasurements ] = useMeasurements();
+  useEffect(
+    () => setSelectedMeasurements(measurements.filter((m) => m.isActive)),
+    [measurements],
+  );
 
-	return (
-		<MeasurementsContext.Provider
-			value={{
-				measurements,
-				setMeasurements
-			}}
-		>
-			{children}
-		</MeasurementsContext.Provider>
-	);
+  useEffect(
+    () =>
+      getMeasurements((data) => {
+        setMeasurements(data);
+        setLoading(false);
+      }),
+    [],
+  );
+
+  return (
+    <MeasurementsContext.Provider
+      value={{
+        measurements,
+        setMeasurements,
+        selectedMeasurements,
+      }}
+    >
+      {children}
+      <Loading loading={loading} />
+    </MeasurementsContext.Provider>
+  );
 };
 
 export const useMeasurementsCtx = () => useContext(MeasurementsContext);

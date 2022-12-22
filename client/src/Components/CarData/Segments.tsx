@@ -1,32 +1,55 @@
-import { FC } from "react";
+import React, { FC, useEffect, useState } from 'react';
+import { LatLng } from 'leaflet';
 
-import { SegmentsProps } from '../../models/models';
-import Path from "../Map/Path";
+import SegmentPath from './SegmentPath';
+import { useSegment } from '../../context/SegmentContext';
+import { Segment } from '../../models/segment';
 
-import '../../css/rides.css'
+import { GetSegmentsAndAverageValuesInAPolygon } from '../../queries/DataRequests';
 
+import '../../css/rides.css';
 
-const Segments: FC<SegmentsProps> = ( { segments } ) => {
-
-    const getColor = (val: number, maxval: number, minval: number): string => {
-        const v = Math.min(1, Math.max(0, (val - minval) / (maxval - minval))) 
-        const green: number = Math.min(v * 2, 1) * 255;
-        const red: number = (v < 0.5 ? v +  0.5 : 2 - v * 2) * 255;                 
-        return `rgb(${Math.round(green)}, ${Math.round(red)}, 0)`
-    }
-
-    return (
-        <>
-        { segments.map( segment =>{
-            segment.properties.color= getColor(segment.avg, 203, 126);
-            return <Path 
-                key={`Segment${Math.random()}`} 
-                dataPath={segment.dataPath} 
-                properties={segment.properties} 
-            />     
-        } ) }
-        </>
-  )
+interface ISegments {
+  boundaries: LatLng[];
 }
+
+const Segments: FC<ISegments> = ({ boundaries }) => {
+  const [segments, setSegments] = useState<Segment[]>([]);
+
+  const { pathTypes, pathDirection, setSegment } = useSegment();
+
+  useEffect(() => {
+    const { dataType, aggrType } = pathTypes;
+
+    if (
+      dataType === undefined ||
+      aggrType === undefined ||
+      pathDirection === undefined
+    )
+      return;
+
+    GetSegmentsAndAverageValuesInAPolygon(
+      boundaries,
+      dataType,
+      aggrType,
+      pathDirection,
+    ).then(setSegments);
+  }, [boundaries, pathTypes, pathDirection]);
+
+  const onClick = (seg: Segment) => () => () => setSegment(seg);
+
+  return (
+    <>
+      {segments.map((seg: Segment, i: number) => (
+        <SegmentPath
+          key={`segment-${i}`}
+          i={i}
+          seg={seg}
+          onClick={onClick(seg)}
+        />
+      ))}
+    </>
+  );
+};
 
 export default Segments;

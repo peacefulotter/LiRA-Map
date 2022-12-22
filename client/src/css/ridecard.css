@@ -1,69 +1,99 @@
-
+/** @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
 .ride-list {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    background-color: rgb(58, 58, 58);
-    overflow-x: hidden;
+  min-height: 100%;
+  padding: 16px;
+  background-color: rgb(58, 58, 58);
 }
 
-.ride-search-container {
-    display: flex;
-    height: 40px;
-    min-height: 40px;
+.rides-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(58, 58, 58);
+  padding: 16px;
+  gap: 8px;
+  text-align: left;
 }
 
-.ride-search-date-input {
-    width: 50%;
-    background: none;
-    border: none;
+.rides-options > label {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3px;
+  width: 100%;
+}
+
+.rides-options > label > span {
+  font-size: .85rem;
+}
+
+.options-date-picker {
+  padding: 5px 0px;
+}
+
+.options-date-picker div {
+  border: none;
+}
+
+.options-date-picker svg {
+  stroke: white;
+}
+
+.options-date-picker input {
+  color: white !important;
 }
 
 .ride-search-input {
-    width: 100%;
-    padding-left: 10px;
-    border: none;
-    color: white;
-    font-size: 1.1em;
-    background: var(--lightgrey);
-}
-
-.ride-search-cross {
-    width: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    background: var(--lightgrey);
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 6px;
+  border: none;
+  color: white;
+  font-size: 1em;
+  outline: none;
+  background-color: var(--background-3);
+  border-radius: 2px;
 }
 
 .ride-sort-cb {
-    font-size: 1.1em !important;
-    border-radius: 0px !important;
-    padding: 10px 15px !important;
-    background: var(--grey) !important;
+  font-size: 1.1em !important;
+  padding: 10px 30px !important;
+  background: var(--background-3) !important;
 }
 
 .ride-sort-cb.btn-checked {
-    background: var(--orange-background) !important;
-    color: var(--orange-text) !important;
+  background: var(--orange-background) !important;
+  color: var(--orange-text) !important;
 }
 
 .ride-card-container {
-    width: 100%;
-    padding: 15px 0px;
-    font-size: 0.9em !important;
-    border-radius: 0px !important;
-    color: lightgrey;
+  width: 100%;
+  padding: 15px 0px;
+  font-size: 0.9em !important;
+  border-radius: 0px !important;
+  color: lightgrey;
 }
 
 .ride-card-container > .jsx-parser > b {
-    color: white;
-    font-size: 1.1em !important;
+  color: white;
+  font-size: 1.1em !important;
 }
 
 .ride-card-container:nth-child(even) {
+  margin: 1px 0px;
+}
+
+.focus-trip-button { /** @author: Mads Westermann s174508*/
+    position: absolute;
+    right: 0px;
+    padding: 5px;
+    border: 0px;
     margin: 1px 0px;
+    border-radius: 3px;
+    background-color: var(--background-3);
+    cursor: pointer;
+}
+
+.focus-trip-button:hover { /** @author: Mads Westermann s174508*/
+    background-color: #555561cc;;
 }

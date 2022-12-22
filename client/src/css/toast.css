@@ -1,0 +1,33 @@
+/** @author Benjamin Lumbye s204428 */
+
+.toast-warning {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.toast-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.toast-footer {
+  font-size: 0.75em;
+}
+
+.toast-divider {
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.toast-button {
+  background: var(--background-3) !important;
+  color: white;
+  border: none;
+  padding: 8px !important;
+}
+
+.toast-button:hover {
+  background: var(--background-3-hover) !important;
+}

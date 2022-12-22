@@ -1,23 +1,26 @@
+import React from 'react';
+import { LatLng } from 'Leaflet.MultiOptionsPolyline';
+import { Polyline } from 'react-leaflet';
+import { IRenderer } from '../../../models/renderers';
+import { formatEventHandlers } from '../utils';
 
-
-import { Polyline } from 'react-leaflet'
-
-import { DEFAULT_COLOR, DEFAULT_OPACITY, DEFAULT_WIDTH } from '../../../assets/properties';
-import { EventRenderer } from '../../../models/renderers';
-
-
-const Line: EventRenderer = ( { path, properties, onClick } ) => {
-    
-    return <Polyline 
-        positions={path}
-        key={`${Math.random()}-line`}
-        pathOptions={{
-            color: properties.color || DEFAULT_COLOR,
-            weight: properties.width || DEFAULT_WIDTH,
-            opacity: properties.opacity || DEFAULT_OPACITY
-        }} 
-        eventHandlers={{'click': onClick(0)}} />
+function Line<T>({
+  data,
+  getLat,
+  getLng,
+  options,
+  eventHandlers,
+}: IRenderer<T>) {
+  return (
+    <Polyline
+      positions={data.map((t: T, i: number) => ({
+        lat: getLat(t, i),
+        lng: getLng(t, i),
+      }))}
+      pathOptions={{ ...options, stroke: true }}
+      eventHandlers={formatEventHandlers(eventHandlers, 0)}
+    />
+  );
 }
-
 
 export default Line;

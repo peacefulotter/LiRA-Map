@@ -1,16 +1,18 @@
-import { Map } from 'leaflet'
-import { useState } from "react";
-import { useMapEvents } from "react-leaflet";
+import { useEffect, useState } from 'react';
+import { useMapEvents } from 'react-leaflet';
 
+const useZoom = () => {
+  const [zoom, setZoom] = useState<number>();
 
-const useZoom = (): [number, Map] => {
-    const [zoom, setZoom] = useState<number>(0)
+  const update = () => setZoom(map.getZoom());
 
-    const map = useMapEvents({
-        zoom: () => setZoom(map.getZoom())
-    })
+  const map = useMapEvents({
+    zoom: update,
+  });
 
-    return [zoom, map]
-}
+  useEffect(update, []);
+
+  return zoom;
+};
 
 export default useZoom;

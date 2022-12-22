@@ -1,20 +1,27 @@
-import { Measurement, RideMeasurement } from "../models/properties";
-import { get, put } from "./fetch";
+import { MeasProperties, ActiveMeasProperties } from '../models/properties';
+import { get, put, _delete } from './fetch';
 
+export const getMeasurements = (
+  callback: React.Dispatch<React.SetStateAction<ActiveMeasProperties[]>>,
+) => {
+  get('/measurements', (data: MeasProperties[]) => {
+    console.log(data);
+    callback(
+      data.map((meas) => {
+        return { ...meas, isActive: false };
+      }),
+    );
+  });
+};
 
-export const getMeasurements = ( callback: React.Dispatch<React.SetStateAction<RideMeasurement[]>> ) => {
-    get('/measurements', (data: Measurement[]) => {
-        console.log(data);
-        callback( data.map(meas => { 
-            return { ...meas, isActive: false } 
-        } ) )
-    })
-}
+export const addMeasurement = (measurement: MeasProperties) => {
+  put('/measurements/', { measurement });
+};
 
-export const addMeasurement = (measurement: Measurement) => {
-	put('/addmeasurement', measurement)	
-}
+export const editMeasurement = (measurement: MeasProperties) => {
+  put(`/measurements/${measurement.id}`, { measurement });
+};
 
-export const editMeasurement = (measurement: Measurement, index: number) => {
-	put('/editmeasurement', { measurement: measurement, index: index } )	
-}
+export const deleteMeasurement = (measurement: MeasProperties) => {
+  _delete(`/measurements/${measurement.id}`);
+};

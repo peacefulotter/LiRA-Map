@@ -6,7 +6,7 @@
     align-items: center;
     min-height: 100%;
     padding-top: 5px;
-    background-color: rgb(58, 58, 58);
+    background-color: var(--background-2);
     text-align: left;
 }
 
@@ -14,7 +14,7 @@
     max-width: 230px;
     padding: 0px 20px 100px 20px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .ride-metadata-separation {
@@ -55,9 +55,9 @@
 }
 
 .ride-metadata-checkbox {
-    width: 85%;
+    width: 80%;
     margin-bottom: 5px;
-    font-size: 1.1em !important;
+    font-size: 0.9em !important;
     padding: 10px 10px !important;
 }
 
@@ -66,26 +66,37 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2px 5px
+    padding: 1px 3px
+}
+
+.checkbox-text {
+    width: 80%;
+    display: flex;
+    align-items: center;
 }
 
 .checkbox-title {
     display: flex;
     align-items: center;
+    max-width: 65%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
-.edit-meas-btn {
-    width: 23px;
-    height: 23px;
-    margin-right: 3px;
+.edit-meas-btn, .delete-meas-btn {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
     padding: 0px !important;
 }
 
-.edit-meas-btn:hover {
+.edit-meas-btn:hover, .delete-meas-btn:hover {
     stroke-width: 2;
 }
 
-.edit-meas-btn:active {
+.edit-meas-btn:active, .delete-meas-btn:active {
     width: 20px;
     height: 20px;
     padding: 1.5px 0px !important;
@@ -93,11 +104,11 @@
 
 .md-checkbox-add {
     margin-top: 5px;
-    background: rgba(85, 85, 97, 0.5) !important;
+    background: var(--background-3) !important;
 }
 
 .md-checkbox-add:hover {
-    background: rgba(85, 85, 97, 0.8) !important;
+    background: var(--background-3-hover) !important;
 }
 
 .ride-metadata-checkbox .jsx-parser {

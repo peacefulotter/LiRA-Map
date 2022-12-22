@@ -1,0 +1,24 @@
+/** @author Mads Westermann s174508 */
+
+.road-measurements-map {
+    position: relative;
+}
+
+.focus-trips-button {
+    position: absolute;
+    top: var(--navbar-z-index);
+    left: 0px;
+    z-index: 1000;
+    color: white;
+    background: var(--background);
+    font-family: 'Noto Sans JP', sans-serif;
+    border-radius: 5px;
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+    border: 0px;
+    cursor: pointer;
+}
+
+.focus-trips-button:hover {
+    background: var(--background-2);
+};

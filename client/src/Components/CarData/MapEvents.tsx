@@ -1,44 +1,38 @@
-import { FC } from "react";
-import { useMapEvents,  } from 'react-leaflet';
-import {MeasurementData, SegmentProps} from '../../models/models';
-import {GetSegmentsAndAggregatedDataInAPolygon} from '../../queries/DataRequests';
+import { FC } from 'react';
+import { LatLng } from 'Leaflet.MultiOptionsPolyline';
+import { useMapEvents } from 'react-leaflet';
 
 interface MapEventsProps {
-    setMeasurements: (measurements: MeasurementData[]) => void;
-    setSegments: (segments: SegmentProps[]) => void;
+  setBoundaries: (boundaries: [LatLng, LatLng, LatLng, LatLng]) => void;
 }
 
-const MapEvents: FC<MapEventsProps> = (props) => {
+const MapEvents: FC<MapEventsProps> = ({ setBoundaries }) => {
+  let latestZoom = 18;
+  let maxrendered = 100;
 
-    let latestZoom = 18;
-    let maxrendered = 100;
+  const map = useMapEvents({
+    zoomend() {
+      if (map.getZoom() > latestZoom || map.getZoom() >= maxrendered) {
+        return;
+      }
+      maxrendered = map.getZoom();
 
-    const map = useMapEvents({
-        async zoomend() {
+      const bounds = map.getBounds();
+      setBoundaries([
+        bounds.getSouthWest(),
+        bounds.getSouthEast(),
+        bounds.getNorthEast(),
+        bounds.getNorthWest(),
+      ]);
+    },
+    zoomstart() {
+      latestZoom = map.getZoom();
 
-            if(map.getZoom() > latestZoom || (map.getZoom() >= maxrendered)){
-                return;
-            }
-            maxrendered = map.getZoom();            
-                        
-            const bounds = map.getBounds();
-            await GetSegmentsAndAggregatedDataInAPolygon([bounds.getSouthWest(), bounds.getSouthEast(),
-                 bounds.getNorthEast(), bounds.getNorthWest()], 'obd.trac_cons')
-                 .then(res => {
-                   props.setSegments(res);
-                 });
-                 
-        },
-        zoomstart() {
-          latestZoom = map.getZoom();
+      if (map.getZoom() < maxrendered) maxrendered = latestZoom;
+    },
+  });
 
-          if(map.getZoom() < maxrendered)
-            maxrendered = latestZoom;
-        },
-      })
+  return null;
+};
 
-    return null
-  }
-
-
-  export default MapEvents;
+export default MapEvents;

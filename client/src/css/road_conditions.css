@@ -1,0 +1,57 @@
+
+.road-conditions-wrapper {
+    height: calc(100vh - 6vh);
+    display: grid;
+    grid-template-rows: auto min(40vh, 400px);
+}
+
+
+.road-conditions-map {
+    display: grid;
+    height: 100%;
+
+}
+
+
+.palette-wrapper {
+}
+
+.road-conditions-graph {
+    position: relative;
+    width: 100vw;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto 50px;
+}
+
+.road-conditions-graph-margin {
+    margin-left: 30px;
+}
+
+
+.csv-btns {
+    position: absolute;
+    width: 20px;
+}
+
+.csv-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    margin: 10px;
+    padding: 5px !important;
+    background: var(--background-3) !important;
+}
+
+
+.flexlayout__tabset_tabbar_inner_tab_container {
+    z-index: calc(var(--navbar-z-index) - 1);
+}
+
+
+
+
+
+
