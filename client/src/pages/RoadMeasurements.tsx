@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+/** @author Benjamin Lumbye s204428 */
+
+import React, { useEffect, useState } from 'react';
 
 import { MeasurementsProvider } from '../context/MeasurementsContext';
 import { MetasProvider } from '../context/MetasContext';
@@ -14,26 +16,47 @@ import Graph from '../Components/Graph/Graph';
 import GraphSelector from '../Components/Graph/GraphSelector';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 import help_icon from './icons8-question-mark-64.png'; //source: https://icons8.com/icon/80684/question-mark
+import OptionsSelector from '../Components/RoadMeasurements/OptionsSelector';
 
-/*@author Matteo Hoffmann s222952*/
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+/** @author Matteo Hoffmann s222952*/
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
     weight: 100,
     children: [
       {
-        type: 'tabset',
+        type: 'row',
         weight: 18,
         children: [
           {
-            type: 'tab',
-            name: 'Trips',
-            component: 'ridecards',
-            helpText:
-              'All available trips can be found here. Click a trip to select it. When both a trip and a measurement type is selected they will be shown on the Measurements Map and the Graph.',
-            icon: help_icon,
+            type: 'tabset',
+            weight: 30,
+            children: [
+              {
+                type: 'tab',
+                name: 'Trips Filtering',
+                component: 'optionsselector',
+                helpText:
+                  'Use the different fields to filter the trips. When nothing is typed in a filter it is disregarded.',
+                icon: help_icon,
+              },
+            ],
+          },
+          {
+            type: 'tabset',
+            weight: 70,
+            children: [
+              {
+                type: 'tab',
+                name: 'Trips',
+                component: 'ridecards',
+                helpText:
+                  'All available trips can be found here. Click a trip to select it. When both a trip and a measurement type is selected they will be shown on the Measurements Map and the Graph.',
+                icon: help_icon,
+              },
+            ],
           },
         ],
       },
@@ -89,10 +112,25 @@ const json: IJsonModel = {
   },
 };
 
-const model = Model.fromJson(json);
+const layoutKey = 'road-measurements-layout';
 
 /*@author Matteo Hoffmann s222952*/
 const RoadMeasurements = () => {
+  const [model, setModel] = useState<Model>();
+
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
+
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -100,10 +138,12 @@ const RoadMeasurements = () => {
       return <Rides />;
     } else if (component === 'ridecards') {
       return <RideCards />;
+    } else if (component === 'optionsselector') {
+      return <OptionsSelector />;
     } else if (component === 'ridedetails') {
       return <RideDetails />;
     } else if (component === 'ridemap') {
-      return <RidesMap />; //;
+      return <RidesMap />;
     } else if (component === 'graph') {
       return (
         <>
@@ -120,7 +160,13 @@ const RoadMeasurements = () => {
         <GeneralGraphProvider>
           <GraphProvider>
             <div className="rides-wrapper">
-              <Layout model={model} factory={factory} />
+              {model && (
+                <Layout
+                  model={model}
+                  factory={factory}
+                  onModelChange={saveLayout}
+                />
+              )}
             </div>
           </GraphProvider>
         </GeneralGraphProvider>

@@ -1,15 +1,14 @@
-import React, { FC, ReactNode, useMemo, useState } from 'react';
-import { List, ListRowRenderer } from 'react-virtualized';
+import React, { FC, ReactNode, useMemo } from 'react';
+import { AutoSizer, List, ListRowRenderer } from 'react-virtualized';
 import Checkbox from '../Checkbox';
 
-import { RideMeta, TripsOptions } from '../../models/models';
+import { RideMeta } from '../../models/models';
 
 import '../../css/ridecard.css';
 import { useMetasCtx } from '../../context/MetasContext';
 import { useMeasurementsCtx } from '../../context/MeasurementsContext';
-import OptionsSelector from './OptionsSelector';
 
-/* @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
+/** @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
 interface CardsProps {
   showMetas: SelectMeta[];
@@ -20,7 +19,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
   const { setFocusedMeta } = useMetasCtx();
   const { selectedMeasurements } = useMeasurementsCtx();
 
-  /* @author Benjamin Lumbye s204428 */
+  /** @author Benjamin Lumbye s204428 */
   const onFocusClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     meta: SelectMeta,
@@ -39,7 +38,7 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
           className="ride-card-container"
           html={
             <div>
-              {/* @author Mads Westermann s174508 */}
+              {/*/** @author Mads Westermann s174508 * */}
               {meta.selected && selectedMeasurements.length > 0 ? (
                 <button
                   className="focus-trip-button"
@@ -63,13 +62,18 @@ const Cards: FC<CardsProps> = ({ showMetas, onClick }) => {
   };
 
   return (
-    <List
-      width={170}
-      height={2500}
-      rowHeight={61}
-      rowRenderer={renderRow}
-      rowCount={showMetas.length}
-    />
+    <AutoSizer>
+      {({ height, width }) => (
+        <List
+          width={width}
+          height={height}
+          rowHeight={61}
+          rowRenderer={renderRow}
+          rowCount={showMetas.length}
+          className="ride-list"
+        />
+      )}
+    </AutoSizer>
   );
 };
 
@@ -77,22 +81,8 @@ interface SelectMeta extends RideMeta {
   selected: boolean;
 }
 
-const defaultOptions: TripsOptions = {
-  taskId: '',
-  startDate: new Date('2020-01-01'),
-  endDate: new Date(),
-  reversed: false,
-  minDistanceKm: undefined,
-  maxDistanceKm: undefined,
-  startCity: '',
-  endCity: '',
-  deviceId: '',
-};
-
 const RideCards: FC = () => {
-  const { metas, selectedMetas, setSelectedMetas } = useMetasCtx();
-  const [isNight, setIsNight] = useState<boolean>(false);
-  const [tripOptions, setTripOptions] = useState<TripsOptions>(defaultOptions);
+  const { metas, selectedMetas, setSelectedMetas, tripOptions } = useMetasCtx();
 
   const onClick = (md: SelectMeta, i: number, isChecked: boolean) => {
     return isChecked
@@ -102,33 +92,33 @@ const RideCards: FC = () => {
         );
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const taskIDFilter = (meta: RideMeta) =>
     tripOptions.taskId.length === 0 ||
     meta.TaskId.toString().includes(tripOptions.taskId);
 
-  const isNightFilter = (meta: RideMeta) => {
+  const nightModeFilter = (meta: RideMeta) => {
     const startTime = new Date(meta.StartTimeUtc).getHours();
     const endTime = new Date(meta.EndTimeUtc).getHours();
     return (
-      !isNight ||
+      !tripOptions.nightMode ||
       ((startTime >= 20 || startTime <= 6) && (endTime >= 20 || endTime <= 6))
     );
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const minDistanceFilter = (meta: RideMeta) =>
     !tripOptions.minDistanceKm ||
     isNaN(tripOptions.minDistanceKm) ||
     meta.DistanceKm >= tripOptions.minDistanceKm;
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const maxDistanceFilter = (meta: RideMeta) =>
     !tripOptions.maxDistanceKm ||
     isNaN(tripOptions.maxDistanceKm) ||
     meta.DistanceKm <= tripOptions.maxDistanceKm;
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const startCityFilter = (meta: RideMeta) =>
     tripOptions.startCity.length === 0 ||
     (JSON.parse(meta.StartPositionDisplay).city !== null &&
@@ -136,7 +126,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.startCity.toLowerCase()));
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const endCityFilter = (meta: RideMeta) =>
     tripOptions.endCity.length === 0 ||
     (JSON.parse(meta.EndPositionDisplay).city !== null &&
@@ -144,7 +134,7 @@ const RideCards: FC = () => {
         .toLowerCase()
         .includes(tripOptions.endCity.toLowerCase()));
 
-  /* @author Martin Nielsen s174971 */
+  /*/** @author Martin Nielsen s174971 * */
   const dateFilter = (meta: RideMeta) => {
     let startTime;
     let endTime;
@@ -158,7 +148,7 @@ const RideCards: FC = () => {
     return date >= startTime && date <= endTime;
   };
 
-  /* @author Mads Møller s184443, Martin Nielsen s174971 */
+  /*/** @author Mads Møller s184443, Martin Nielsen s174971 * */
   const deviceIdFilter = (meta: RideMeta) =>
     tripOptions.deviceId.length === 0 ||
     meta.FK_Device.toString().includes(tripOptions.deviceId.value);
@@ -168,7 +158,7 @@ const RideCards: FC = () => {
       .filter(
         (meta) =>
           taskIDFilter(meta) &&
-          isNightFilter(meta) &&
+          nightModeFilter(meta) &&
           minDistanceFilter(meta) &&
           maxDistanceFilter(meta) &&
           dateFilter(meta) &&
@@ -183,23 +173,9 @@ const RideCards: FC = () => {
         return { ...meta, selected };
       });
     return tripOptions.reversed ? filtered.reverse() : filtered;
-  }, [metas, tripOptions, isNight, selectedMetas]);
+  }, [metas, tripOptions, selectedMetas]);
 
-  return (
-    <div className="ride-list">
-      <Checkbox
-        className="ride-sort-cb"
-        html={<div>Night mode {isNight ? 'On' : 'Off'}</div>}
-        onClick={setIsNight}
-        tooltip="Turn on to only show trips that took place between 20:00 and 06:00."
-      />
-      <OptionsSelector
-        onChange={setTripOptions}
-        defaultOptions={defaultOptions}
-      />
-      <Cards showMetas={filteredMetas} onClick={onClick} />
-    </div>
-  );
+  return <Cards showMetas={filteredMetas} onClick={onClick} />;
 };
 
 export default RideCards;

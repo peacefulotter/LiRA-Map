@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React, { FC, useEffect, useState } from 'react';
 
 import { RideMeta } from '../../models/models';

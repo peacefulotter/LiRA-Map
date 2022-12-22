@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { Module } from '@nestjs/common';
 import { KnexModule } from 'nestjs-knex';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -38,7 +40,7 @@ import {
   VISUAL_DB_CONFIG,
 } from './database';
 
-/* @author Mads Møller s184443, Martin Nielsen s174971 */
+/** @author Mads Møller s184443, Martin Nielsen s174971 */
 
 const database = (config: any, name: string) => {
   return KnexModule.forRootAsync(

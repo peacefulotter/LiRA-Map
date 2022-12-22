@@ -34,7 +34,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     temp.id = uuidv4();
   };
 
-  // @author Matteo Hoffmann s222952, Mads Westerman s174508
+  /** @author Matteo Hoffmann s222952, Mads Westerman s174508 */
   useEffect(() => {
     getTags((data: TagProperties[]) => {
       data.forEach(function (value) {
@@ -43,19 +43,19 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
     });
   }, []);
 
-  // @author Matteo Hoffmann s222952, Mads Westermann s174508
+  /** @author Matteo Hoffmann s222952, Mads Westermann s174508 */
   const nameChange =
     (key: keyof ActiveMeasProperties) =>
     ({ target }: any) =>
       update(key)(target.value);
 
-  // @author Matteo Hoffmann s222952, Mads Westermann s174508
+  /** @author Matteo Hoffmann s222952, Mads Westermann s174508 */
   const tagChange =
     (key: keyof ActiveMeasProperties) =>
     ({ value }: any) =>
       update(key)(value);
 
-  // @author Matteo Hoffmann s222952, Mads Westermann s174508
+  /** @author Matteo Hoffmann s222952, Mads Westermann s174508 */
   const tagOptions = availableTags?.map((tag) => ({
     value: tag.type.toString(),
     label:

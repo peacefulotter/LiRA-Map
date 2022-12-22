@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { FC, useEffect } from 'react';
 import GLine from '../../assets/graph/line';
 import { useGraph } from '../../context/GraphContext';
@@ -92,10 +94,6 @@ const Line: FC<ILine> = ({
       remBounds(label);
     };
   }, [svg, xAxis, yAxis, data, label, bounds, i, setDotHover]);
-
-  useEffect(() => {
-    console.log('test');
-  }, [data]);
 
   return null;
 };

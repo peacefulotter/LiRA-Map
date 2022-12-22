@@ -1,21 +1,14 @@
-// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
 import React, {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
-  useReducer,
   useState,
 } from 'react';
 
 import useMinMaxAxis from '../hooks/useMinMaxAxis';
-import {
-  AddMinMaxFunc,
-  DotHover,
-  MarkersRecord,
-  RemMinMaxFunc,
-  UseMarkersAction,
-} from '../assets/graph/types';
+import { AddMinMaxFunc, DotHover, RemMinMaxFunc } from '../assets/graph/types';
 
 interface ContextProps {
   minX: number;

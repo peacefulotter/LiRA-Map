@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Palette } from 'react-leaflet-hotline';
 import { ChartData } from 'chart.js';
 
@@ -11,9 +11,9 @@ import '../css/road_conditions.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
 import { GeneralGraphProvider } from '../context/GeneralGraphContext';
 
-// @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
@@ -47,13 +47,27 @@ const json: IJsonModel = {
   },
 };
 
-const model = Model.fromJson(json);
+const layoutKey = 'road-conditions-layout';
 
 const RoadConditions = () => {
   const [palette, setPalette] = useState<Palette>([]);
   const [wayData, setWayData] = useState<ChartData<'line', number[], number>>();
+  const [model, setModel] = useState<Model>();
 
-  // @author Benjamin Lumbye s204428, Matteo Hoffmann s222952
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
+
+  /** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -82,7 +96,9 @@ const RoadConditions = () => {
   return (
     <GeneralGraphProvider>
       <div className="road-conditions-wrapper">
-        <Layout model={model} factory={factory} />
+        {model && (
+          <Layout model={model} factory={factory} onModelChange={saveLayout} />
+        )}
       </div>
     </GeneralGraphProvider>
   );
