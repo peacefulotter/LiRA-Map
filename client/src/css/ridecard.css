@@ -1,4 +1,4 @@
-/*/** @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 * */
+/** @author Benjamin Lumbye s204428, Mads Møller s184443, Martin Nielsen s174971 */
 
 .ride-list {
   min-height: 100%;
@@ -83,7 +83,7 @@
   margin: 1px 0px;
 }
 
-.focus-trip-button { /* @author: Mads Westermann s174508*/
+.focus-trip-button { /** @author: Mads Westermann s174508*/
     position: absolute;
     right: 0px;
     padding: 5px;
@@ -94,6 +94,6 @@
     cursor: pointer;
 }
 
-.focus-trip-button:hover { /* @author: Mads Westermann s174508*/
+.focus-trip-button:hover { /** @author: Mads Westermann s174508*/
     background-color: #555561cc;;
 }

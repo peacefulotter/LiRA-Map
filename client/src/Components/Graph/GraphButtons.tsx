@@ -16,7 +16,7 @@ const GraphButtons: FC<IGraphButtons> = ({ setZoom, setCSV, labelY }) => {
   const zoomOut = () => setZoom((z) => Math.max(1, z - zoomGap));
   const resetZoom = () => setZoom(1);
 
-  /*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
+  /** @author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
   const myRef = useRef(null);
   const handleClick = () => {
     if (myRef.current != null) {
@@ -48,7 +48,7 @@ const GraphButtons: FC<IGraphButtons> = ({ setZoom, setCSV, labelY }) => {
       >
         <FiDownload />
       </div>
-      {/*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */}
+      {/** @author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */}
       <CSVLink
         data={setCSV}
         key={`${name}`}

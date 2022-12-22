@@ -73,7 +73,7 @@ const PopupWrapper: FC<IPopupWrapper> = ({ defaultOptions, setOptions }) => {
         onChange={nameChange('name')}
       />
 
-      {/*@author Matteo Hoffmann s222952, Mads Westermann s174508*/}
+      {/** @author Matteo Hoffmann s222952, Mads Westermann s174508*/}
       <Select
         className="react-select-combobox"
         placeholder="Tag.."

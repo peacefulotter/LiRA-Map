@@ -1,4 +1,4 @@
-/* @author: Mads Westermann s174508 */
+/** @author: Mads Westermann s174508 */
 
 import React, { FC, useEffect } from 'react';
 
