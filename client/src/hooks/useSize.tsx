@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { useEffect, useState } from 'react';
 
 const useSize = (ref: React.MutableRefObject<null>): [number, number] => {

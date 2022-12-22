@@ -19,6 +19,7 @@ interface ContextProps {
 
 const MeasurementsContext = createContext({} as ContextProps);
 
+/** @author Benjamin Lumbye s204428 */
 export const MeasurementsProvider = ({ children }: any) => {
   const [measurements, setMeasurements] = useState<ActiveMeasProperties[]>([]);
   const [selectedMeasurements, setSelectedMeasurements] = useState<

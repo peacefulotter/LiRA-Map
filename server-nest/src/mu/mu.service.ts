@@ -1,8 +1,10 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection } from 'nestjs-knex';
 import { Knex } from 'knex';
 import { randomUUID } from 'crypto';
-
+/**@author Emil Kim Krarup (s204449) */
 /*
  * Three assumptions are made:
  * 1. The time difference between each measurement is almost equal

@@ -1,4 +1,4 @@
-// @author Benjamin Lumbye s204428, Mads Westermann s174508
+/** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
 
 import { SVG } from './types';
 

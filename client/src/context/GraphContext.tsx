@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React, {
   createContext,
   Dispatch,
@@ -25,6 +27,7 @@ import { useMeasurementsCtx } from './MeasurementsContext';
 import Loading from '../Components/Loading';
 import { ActiveMeasProperties } from '../models/properties';
 
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
 interface ContextProps {
   markers: MarkersRecord;
   useMarkers: Dispatch<UseMarkersAction>;
@@ -42,13 +45,11 @@ interface ContextProps {
 
 const GraphContext = createContext({} as ContextProps);
 
-// TODO: remove bounds / refactor?  -> is it needed really?
-// TODO: generalize DotHover into an "Event State" (to support for more events at once)
 export const GraphProvider = ({ children }: any) => {
   const [lastMarkersAction, setLastMarkersAction] =
     useState<UseMarkersAction>();
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
+  /** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
   const [markers, useMarkers] = useReducer(
     (state: MarkersRecord, action: UseMarkersAction) => {
       // If the data already is as requested then don't update

@@ -20,6 +20,7 @@ import Marker from './Marker';
 import { useGraph } from '../../context/GraphContext';
 import GraphButtons from './GraphButtons';
 
+/** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
 const getGraphData = (path: Path): GraphData => {
   const x = (p: PointData) => new Date(p.metadata.timestamp).getTime();
   return path
@@ -52,7 +53,7 @@ const Graph: FC = () => {
     paths,
   } = useGraph();
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
+  /** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
   const plot = useMemo(() => {
     if (
       !selectedMeasurementName ||
@@ -70,14 +71,14 @@ const Graph: FC = () => {
     };
   }, [paths, selectedMeasurementName, selectedTaskID]);
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
+  /** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
   if (!selectedMeasurementName || !selectedTaskID) {
     return (
       <span>Select at least one trip and one measurement to display data.</span>
     );
   }
 
-  // @author Benjamin Lumbye s204428, Mads Westermann s174508
+  /** @author Benjamin Lumbye s204428, Mads Westermann s174508 */
   if (
     !(selectedMeasurementName in paths) ||
     !(selectedTaskID in paths[selectedMeasurementName]) ||
@@ -95,6 +96,7 @@ const Graph: FC = () => {
 
   const csvData = [[labelX, labelY]];
 
+  /*@author Matteo Hoffmann s222952, Lucien Kiven Tamo s184448 */
   const csvDataFunction = () => {
     if (plot != undefined) {
       plot.data.forEach((data) => {

@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { AxiosResponse } from 'axios';
 import { realAsyncPost } from './fetch';
 

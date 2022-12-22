@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { Toast } from 'react-hot-toast';
 
 export type ToastFunc = (

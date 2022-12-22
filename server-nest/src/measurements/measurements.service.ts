@@ -26,18 +26,20 @@ export class MeasurementsService {
     const updatedFile = [...measurements, measurement];
     return await this.writeFile(updatedFile);
   }
-
+  /**@author Emil Kim Krarup (s204449) */
   async editMeasurement(measurement: Measurement) {
     const measurements = await this.getMeasurements();
     const updatedFile = [...measurements];
-    const index = updatedFile.findIndex((m) => m.id === measurement.id)
+    const index = updatedFile.findIndex((m) => m.id === measurement.id);
     updatedFile[index] = measurement;
     return await this.writeFile(updatedFile);
   }
-
+  /**@author Emil Kim Krarup (s204449) */
   async deleteMeasurement(measurementID: string) {
     const measurements = await this.getMeasurements();
-    const filteredArray = measurements.filter((measurement) => measurement.id !== measurementID);
+    const filteredArray = measurements.filter(
+      (measurement) => measurement.id !== measurementID,
+    );
     return await this.writeFile(filteredArray);
   }
 }

@@ -1,27 +1,18 @@
-import React, { FC } from 'react';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import React, { FC, useEffect, useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-import Navbar from './Components/Navbar';
 import RoadMeasurements from './pages/RoadMeasurements';
 import RoadConditions from './pages/RoadConditions';
 import Altitude from './pages/Altitude';
 import CarData from './pages/CarData';
-import Login from './pages/Login';
 
 import './App.css';
 import { IJsonModel, Layout, Model, TabNode } from 'flexlayout-react';
-import Rides from './Components/RoadMeasurements/Rides';
-import RideCards from './Components/RoadMeasurements/RideCards';
-import RideDetails from './Components/RoadMeasurements/RideDetails';
 
-const json: IJsonModel = {
-  global: { tabEnableFloat: true },
+/** @author Benjamin Lumbye s204428, Matteo Hoffmann s222952 */
+const defaultLayout: IJsonModel = {
+  global: { tabEnableFloat: true, tabEnableClose: false },
   borders: [],
   layout: {
     type: 'row',
@@ -56,10 +47,25 @@ const json: IJsonModel = {
     ],
   },
 };
-
-const model = Model.fromJson(json);
+const layoutKey = 'app-layout';
 
 const App: FC = () => {
+  const [model, setModel] = useState<Model>();
+
+  useEffect(() => {
+    const localLayout = localStorage.getItem(layoutKey);
+    if (localLayout === null) {
+      setModel(Model.fromJson(defaultLayout));
+    } else {
+      setModel(Model.fromJson(JSON.parse(localLayout)));
+    }
+  }, []);
+
+  const saveLayout = (newModel: Model) => {
+    localStorage.setItem(layoutKey, JSON.stringify(newModel.toJson()));
+  };
+
+  /** @author Matteo Hoffmann s222952 */
   const factory = (node: TabNode) => {
     const component = node.getComponent();
 
@@ -98,7 +104,10 @@ const App: FC = () => {
           <Route exact path="/login" component={Login} />
         </Switch>
         */}
-        <Layout model={model} factory={factory} />
+        {/** @author Matteo Hoffmann s222952 */}
+        {model && (
+          <Layout model={model} factory={factory} onModelChange={saveLayout} />
+        )}
 
         <Toaster containerStyle={{ zIndex: 999999 }} />
       </Router>

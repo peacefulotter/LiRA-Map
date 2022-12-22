@@ -1,3 +1,5 @@
+/** @author Benjamin Lumbye s204428 */
+
 import React, { FC } from 'react';
 import { calculateMu } from '../../queries/mu';
 import createPopup from '../createPopup';

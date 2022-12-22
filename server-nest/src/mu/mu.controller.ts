@@ -1,5 +1,8 @@
+/** @author Benjamin Lumbye s204428 */
+
 import { Controller, Post } from '@nestjs/common';
 import { MuService } from './mu.service';
+/**@author Emil Kim Krarup (s204449) */
 
 @Controller('mu')
 export class MuController {
