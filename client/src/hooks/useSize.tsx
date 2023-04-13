@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 
@@ -7,7 +8,7 @@ const useSize = (ref:  React.MutableRefObject<null>): [number, number] => {
 
     useEffect( () => {
 
-        if( ref.current === undefined ) return;
+        if ( ref.current === undefined ) return;
 
         const updateSize = () => {
             const { width, height } = (ref.current as any).getBoundingClientRect()
@@ -19,7 +20,7 @@ const useSize = (ref:  React.MutableRefObject<null>): [number, number] => {
 
         window.addEventListener('resize', updateSize)
         return () => window.removeEventListener('resize', updateSize)
-    }, [ref])
+    }, [ref] )
 
     return [width, height]
 }
